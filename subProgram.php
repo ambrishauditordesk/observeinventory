@@ -63,16 +63,17 @@
                 {
                     while($queryrow = $exquery->fetch_assoc())
                     { 
-                        if($con->query("select * from program where parent_id='".$queryrow['id']."'")->num_rows > 0)
+                        if($queryrow['hasChild']==1)
                         {
                             ?>
-            <li id="employees" class="nav-item">
-                <a class="nav-link d-flex align-items-center"
-                    href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
-                    <i class="fas fa-fw fa-dolly-flatbed"></i>
-                    <span><?php echo trim($queryrow['program_name']); ?></span>
-                </a>
-            </li> <?php
+                                <li id="employees" class="nav-item">
+                                    <a class="nav-link d-flex align-items-center"
+                                        href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
+                                        <i class="fas fa-fw fa-dolly-flatbed"></i>
+                                        <span><?php echo trim($queryrow['program_name']); ?></span>
+                                    </a>
+                                </li> 
+                            <?php
                         }
                     } 
                 }
@@ -204,7 +205,7 @@
                         {
                             while($queryrow = $exquery->fetch_assoc())
                             { 
-                               if($con->query("select * from program where parent_id='".$queryrow['id']."'")->num_rows > 0)
+                               if($queryrow['hasChild']==1)
                                {
                                 ?>
                             <div class="list-group">
