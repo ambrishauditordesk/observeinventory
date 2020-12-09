@@ -1,10 +1,12 @@
 <?php
-    include 'dbconnection.php';
-    session_start();
-    if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
-        header("Location: ../login");
-    }
-    $clientName = $_SESSION['cname'];
+include 'dbconnection.php';
+session_start();
+if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
+    header("Location: ../login");
+}
+$clientName = $_SESSION['cname'];
+$wid = $_GET['wid'];
+$_SESSION['breadcrumb'] = array();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,24 +27,8 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-        
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
 
-    <!-- Custom styles for this template-->
-    <style type="text/css">
-        .jstree li > a > .jstree-icon {  display:none !important; } 
-        .jstree-anchor{
-            font-size: 18px;
-            color: black !important;
-            height: 36px !important;
-        }
-        .jstree-open, .jstree-closed{
-            font-weight: bold;
-        }
-        .jstree-leaf{
-            font-weight: 200;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
 
@@ -58,7 +44,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
                 <div class="sidebar-brand-icon">
-                    <a class="navbar-brand navbar-logo" href="admin/dashboard">Audit-EDG</a>
+                    <a class="navbar-brand navbar-logo" href="admin/clientList">Audit-EDG</a>
                 </div>
             </a>
 
@@ -68,7 +54,7 @@
             <li id="employees" class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-dolly-flatbed"></i>
-                    <span>Audit Programme</span>
+                    <span>Audit Program</span>
                 </a>
             </li>
             <!-- <li id="viewupload" class="nav-item">
@@ -137,7 +123,20 @@
                         <div class="col-md-8">
                             <h1>Audit Programme</h1>
                         </div><br>
-                        <div class="col-md-12" id="treeview_json"></div>
+                        <div class="col-md-12">
+                            <?php
+                            $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid'";
+                            $exquery = $con->query($query);
+                            if ($exquery->num_rows != 0) {
+                                while ($queryrow = $exquery->fetch_assoc()) {?>
+                                <div class="list-group">
+                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                        class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                </div>
+                                <?php }}
+                    ?>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,14 +177,14 @@
                             <select class="form-control" name="constitution" required>
                                 <option>Select Constitution !</option>
                                 <?php
-                                                $consQuery = $con->query("select * from constitution");
-                                                while ($consResult = $consQuery->fetch_assoc()) {
-                                            ?>
+$consQuery = $con->query("select * from constitution");
+while ($consResult = $consQuery->fetch_assoc()) {
+    ?>
                                 <option value="<?php echo $consResult['id']; ?>">
                                     <?php echo $consResult['const']; ?></option>
                                 <?php
-                                            }
-                                            ?>
+}
+?>
                             </select>
                         </div>
                         <div class="form-group ">
@@ -193,14 +192,14 @@
                             <select class="form-control" name="industry" required>
                                 <option>Select Industry !</option>
                                 <?php
-                                                $indusQuery = $con->query("select * from industry");
-                                                while ($indusResult = $indusQuery->fetch_assoc()) {
-                                            ?>
+$indusQuery = $con->query("select * from industry");
+while ($indusResult = $indusQuery->fetch_assoc()) {
+    ?>
                                 <option value="<?php echo $indusResult['id']; ?>">
                                     <?php echo $indusResult['industry']; ?></option>
                                 <?php
-                                            }
-                                            ?>
+}
+?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -333,9 +332,9 @@
                                 <textarea id="comments" class="form-control" style="height:200px;"></textarea>
                             </div>
                         </div>
-                        
-                            
-                        
+
+
+
                     </div>
                 </div>
             </div>
@@ -354,7 +353,7 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    
+
     <script src="js/custom.js"></script>
     <script>
     $(document).ready(function() {
@@ -372,32 +371,6 @@
                 i--;
             }
         });
-        $.ajax({
-            type: "GET",
-            url: "ajax.php",
-            data:{id:"<?php echo $_GET['wid']; ?>"},
-            dataType: "json",
-            success: function(response) {
-                var root = response;
-                $('#treeview_json').jstree({ 'core' : {
-                    'data' : function(obj, cb){
-                        cb.call(this, obj.id=="#" ? root: obj.response);
-                    },
-                    'multiple': false
-                } });
-            }
-        });
-
-        $('#treeview_json').on("select_node.jstree", function (e, data) {
-             var programId = data.node.id;
-             console.log(data)
-             if(data.node.children.length == 0){
-                $("#spOpenModal").modal("show");
-                $("'#"+programId+"'").append(" <b>Appended text</b>.");
-             }
-             
-        });
-        
     });
     </script>
 </body>

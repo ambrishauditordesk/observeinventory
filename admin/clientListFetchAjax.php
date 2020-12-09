@@ -1,13 +1,12 @@
 <?php 
 include '../dbconnection.php';
 session_start();
-$column = array('sl','name','const_id','added_by_date','active','action');
-$query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id";
-if(isset($_POST["search"]["value"]))
+$column = array('name','const_id','added_by_date','active','action');
+$query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id ";
+if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
 {
  $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
 }
- $query .= ' group by aname ';
 if(isset($_POST['order']))
 {
  $query .= 'ORDER BY '.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
@@ -29,6 +28,8 @@ $number_filter_row = $statement->num_rows;
 $statement = $con->query($query . $query1);
 //$statement->execute();
 $result = $statement->fetch_all(MYSQLI_ASSOC);
+
+
 $data = array();
 foreach($result as $row)
 {

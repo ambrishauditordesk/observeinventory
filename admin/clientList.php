@@ -380,12 +380,11 @@
                     }
                 });
     }
-
-$(document).ready(function () {
-            get_data();
-        })
     
 $(document).ready(function(){
+    
+    get_data();
+
     var i=1;
     b = i-1;
     $("#add_row").click(function () {
@@ -408,8 +407,6 @@ $(document).on('click','#submit',function(e){
             var type = $("#const_id").val();
             var date = $("#added_by_date").val();
             var active = $("#active").val();
-            
-
             $.ajax({
                 url: "editAClient.php",
                 type: "POST",
@@ -420,7 +417,6 @@ $(document).on('click','#submit',function(e){
                     active:active
                 },
                 success: function(data){
-                    console.log(data);
                     obj = JSON.parse(data);
                     $("#editModal").modal('hide');
                     $("#alertModal").modal('show');
@@ -443,7 +439,7 @@ $(document).on('click','#submit',function(e){
                 obj = JSON.parse(data);
                 id = obj.id;
                 $("#editModal #name").val(obj.name);
-                $("#editModal #const_id").val(obj.const_id);
+                $("#editModal #const_id").val(obj.const);
                 $("#editModal #added_by_date").val(obj.added_by_date);             
                 $("#editModal #active option[value="+obj.active+"]").attr('selected','selected');
                 $("#editModal").modal('show');

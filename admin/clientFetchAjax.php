@@ -1,13 +1,12 @@
 <?php 
 include '../dbconnection.php';
 session_start();
-$column = array('sl','name','const_id','added_by_date','action');
-$query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate FROM client a INNER JOIN constitution b on a.const_id= b.id WHERE active =1";
+$column = array('name','const_id','added_by_date','action');
+$query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate FROM client a INNER JOIN constitution b on a.const_id= b.id WHERE active =1 ";
 if(isset($_POST["search"]["value"]))
 {
  $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
 }
- $query .= ' group by aname ';
 if(isset($_POST['order']))
 {
  $query .= 'ORDER BY '.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';

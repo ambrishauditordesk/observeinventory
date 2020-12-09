@@ -5,6 +5,12 @@
         header("Location: ../login");
     }
     $clientName = $_SESSION['cname'];
+    $prog_id = $_GET['pid'];
+    $prog_parentId = $_GET['parent_id'];
+    $wid=$_GET['wid'];
+    $bread = $_SESSION['breadcrumb'];
+    $tmp = array();
+    $flag = 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,28 +28,14 @@
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
-
-    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
     <link href="css/custom.css" rel="stylesheet">
-    <style type="text/css">
-        .jstree li > a > .jstree-icon {  display:none !important; } 
-        .jstree-anchor{
-            font-size: 18px;
-            color: black !important;
-            height: 36px !important;
-        }
-        .jstree-open, .jstree-closed{
-            font-weight: bold;
-        }
-        .jstree-leaf{
-            font-weight: 200;
-        }
-    </style>
+
 </head>
 
 <body style="overflow-y: scroll">
@@ -56,25 +48,35 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
                 <div class="sidebar-brand-icon">
-                    <a class="navbar-brand navbar-logo" href="admin/dashboard">Audit-EDG</a>
+                    <a class="navbar-brand navbar-logo" href="admin/clientList">Audit-EDG</a>
                 </div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
             <!-- Nav Item - Pages Collapse Menu -->
+
+            <?php
+                $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_parentId' and workspace_log.workspace_id='$wid'";
+                $exquery = $con->query($query);
+                if ($exquery->num_rows != 0) 
+                {
+                    while($queryrow = $exquery->fetch_assoc())
+                    { 
+                        if($con->query("select * from program where parent_id='".$queryrow['id']."'")->num_rows > 0)
+                        {
+                            ?>
             <li id="employees" class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link d-flex align-items-center"
+                    href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
                     <i class="fas fa-fw fa-dolly-flatbed"></i>
-                    <span>Audit Programme</span>
+                    <span><?php echo trim($queryrow['program_name']); ?></span>
                 </a>
-            </li> 
-            <!-- <li id="viewupload" class="nav-item">
-                <a class="nav-link" href="xyz">
-                    <i class="fas fa-fw fa-user-tie"></i>
-                    <span>Audit Member</span>
-                </a>
-            </li> -->
+            </li> <?php
+                        }
+                    } 
+                }
+            ?>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -98,6 +100,10 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
+                            <div class="hori-selector">
+                                <div class="left"></div>
+                                <div class="right"></div>
+                            </div>
                             <!-- <li class="nav-item">
                                 <a class="nav-link" href="#"><i class="fas fa-clipboard"></i>Doodle/Notes</a>
                             </li>
@@ -128,14 +134,109 @@
                     </div><br>
                     <!-- Body Starts -->
                     <div class="container-fluid">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
+                        <div class="row d-flex justify-content-space-between">
+                            <div class="col-md-5">
                                 <h1>Audit Programme</h1>
                             </div>
-                            <div class="panel-body">
-                                <div class="col-md-12" id="treeview_json">
-                                </div>
+                            <div class="col-md-7">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb" style="justify-content:flex-end; background-color:transparent;">
+                                    <?php
+                                        if(sizeof($bread) != 0){
+                                            $y = 0;
+                                            for($x = 0;$x<sizeof($bread); $x++){
+                                                if($bread[$x]['pid'] != $prog_id){
+                                                    $tmp[$y]['pid'] = $bread[$x]['pid'];
+                                                    $tmp[$y]['name'] = $bread[$x]['name'];
+                                                    $tmp[$y++]['parent_id'] = $bread[$x]['parent_id'];
+                                                }
+                                                else{
+                                                    $tmp[$y]['pid'] = $bread[$x]['pid'];
+                                                    $tmp[$y]['name'] = $bread[$x]['name'];
+                                                    $tmp[$y++]['parent_id'] = $bread[$x]['parent_id'];
+                                                    $flag = 1;
+                                                break;
+                                                }
+                                            }
+                                            if(!$flag){
+                                                $i = sizeof($bread);
+                                                $bread[$i]['pid'] = $prog_id;
+                                                $bread[$i]['name'] = $con->query("select program_name from program where id = ".$prog_id)->fetch_assoc()['program_name'];
+                                                $bread[$i++]['parent_id'] = $prog_parentId;
+                                            }
+                                            else{
+                                                $bread = $tmp;
+                                            }
+                                            
+                                        }
+                                        elseif(sizeof($bread) == 0){
+                                            $bread[0]['pid'] = $prog_id;
+                                            $bread[0]['name'] = $con->query("select program_name from program where id = ".$prog_id)->fetch_assoc()['program_name'];
+                                            $bread[0]['parent_id'] = $prog_parentId;
+                                            
+                                        } 
+                                        $_SESSION['breadcrumb'] = $bread;
+                                        // var_dump($bread);
+                                        for($i = 0; $i<sizeof($bread); $i++){
+                                            if($i == sizeof($bread)-1){
+                                                ?>
+                                                <li class="breadcrumb-item font-weight-bold"><span><?php echo $bread[$i]['name']; ?></span></li>
+                                                <?php
+                                            }
+                                            else{
+                                            ?>
+                                            <li class="breadcrumb-item"><a href="subProgram.php?pid=<?php echo $bread[$i]['pid']; ?>&parent_id=<?php echo $bread[$i]['parent_id']; ?>&wid=<?php echo $wid; ?>"><?php echo $bread[$i]['name']; ?></a></li>
+                                            <?php
+                                            }
+                                        }
+
+                                    ?>
+                                    </ol>
+                                </nav>
                             </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <?php
+                        $query = "select program.*,workspace_log.status from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid'";
+                        $exquery = $con->query($query);
+                        if ($exquery->num_rows != 0) 
+                        {
+                            while($queryrow = $exquery->fetch_assoc())
+                            { 
+                               if($con->query("select * from program where parent_id='".$queryrow['id']."'")->num_rows > 0)
+                               {
+                                ?>
+                            <div class="list-group">
+                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                            </div>
+                            <?php 
+                                }
+                                else
+                                {
+                                ?>
+                            <div class="list-group">
+                                <a href="#" data-target="#spOpenModal" data-toggle="modal"
+                                    class="list-group-item list-group-item-action"><?php echo trim($queryrow['program_name']); ?>
+                                    &nbsp;&nbsp; <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
+                                    <?php if($queryrow['status']==1)
+                                        { ?>
+                                    <i class="fas fa-check-circle" style="color:green !important;"></i>
+                                    <?php }  
+                                        else
+                                        { ?>
+                                    <i class="fas fa-times-circle" style="color:red !important;"></i>
+                                    <?php }                                   
+                                    ?>
+                                </a>
+                            </div>
+                            <?php
+                                }
+                            } 
+                        }
+                            ?>
+
                         </div>
                     </div>
                 </div>
@@ -257,11 +358,9 @@
                                     </thead>
                                     <tbody>
                                         <tr id='addr0'>
-                                            <td><input type="text" class="form-control" name="pname[]" required>
-                                            </td>
+                                            <td><input type="text" class="form-control" name="pname[]" required></td>
                                             <td><input type="email" class="form-control" name="email[]" required></td>
-                                            <td><input type="text" class="form-control" name="phone[]" required>
-                                            </td>
+                                            <td><input type="text" class="form-control" name="phone[]" required></td>
                                             <td><input type="text" name='designation[]' class="form-control" required />
                                             </td>
                                         </tr>
@@ -298,7 +397,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="container card bg-light font-2 py-2">
-                        <div class="row  border-bottom py-1 my-2">
+                        <div class="row d-flex justify-content-between">
                             <div class="col-md-6">
                                 <h5>Obtain Client Acceptance Engagement Letter</h5>
                             </div>
@@ -310,13 +409,14 @@
                                     Review
                                 </a>
                             </div>
-
+                        </div>
+                        <div class="row d-flex justify-content-between">
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-8">
                                         <label>Documents</label>
                                     </div>
-                                    <div class="col-md-4 text-right">
+                                    <div class="col-md-12 text-right">
                                         <a class="btn btn-outline-dark btn-sm py-0 menu-02">
                                             <i class="fas fa-upload upload"></i>
                                         </a>
@@ -330,9 +430,12 @@
                             </div>
                             <div class="col-md-6">
                                 <label>Comments</label>
-                                <textarea class="form-control" style="height:200px;"></textarea>
+                                <textarea id="comments" class="form-control" style="height:200px;"></textarea>
                             </div>
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
@@ -346,15 +449,14 @@
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
     <script src="js/custom.js"></script>
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
         var i = 1;
         b = i - 1;
@@ -369,28 +471,6 @@
                 $("#addr" + (i - 1)).html('');
                 i--;
             }
-        });
-
-
-        $.ajax({
-            type: "GET",
-            url: "ajax.php",
-            data:{id:"<?php echo $_GET['wid']; ?>"},
-            dataType: "json",
-            success: function(response) {
-                var root = response;
-                $('#treeview_json').jstree({ 'core' : {
-                    'data' : function(obj, cb){
-                        cb.call(this, obj.id=="#" ? root: obj.response);
-                    },
-                    'multiple': false
-                } });
-            }
-        });
-
-        $('#treeview_json').on("select_node.jstree", function (e, data) {
-             var programId = data.node.id;
-             
         });
     });
     </script>

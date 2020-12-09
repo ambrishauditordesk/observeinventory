@@ -156,7 +156,7 @@ else{
             </div>
             <div class="modal-body">Successfully added <?php echo $_POST['clientname']; ?>.<a href="dashboard">Click Me!</a></div>
             <div class="modal-footer">
-                <a class="btn btn-primary" href="dashboard">OK</a>
+                <a class="btn btn-primary" href="clientList">OK</a>
             </div>
         </div>
     </div>
@@ -173,7 +173,7 @@ else{
             </div>
             <div class="modal-body">Client Addition Failed.</div>
             <div class="modal-footer">
-                <a class="btn btn-primary" href="dashboard">OK</a>
+                <a class="btn btn-primary" href="clientList">OK</a>
             </div>
         </div>
     </div>

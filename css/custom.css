@@ -294,11 +294,6 @@ i {
     color:red !important;
 }
 
-/* Testing */
-
-
-
-
 @media (max-width: 991px){
 	#navbarSupportedContent ul li a{
 		padding: 12px 30px;

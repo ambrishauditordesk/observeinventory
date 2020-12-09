@@ -49,7 +49,9 @@ $clientID = trim($_POST['clientID']);
 $query = "insert into workspace(client_id,datefrom,dateto) values('$clientID','$from','$to')";
 
 if ($con->query($query) === true) {
-    
+    $wid = $con->insert_id;
+    $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program";
+    $con->query($query1);
     echo "<script>
     $(document).ready(function() {
         $('#successModal').modal();
