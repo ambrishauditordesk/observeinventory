@@ -66,14 +66,14 @@
                         if($queryrow['hasChild']==1)
                         {
                             ?>
-                                <li id="employees" class="nav-item">
-                                    <a class="nav-link d-flex align-items-center"
-                                        href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
-                                        <i class="fas fa-fw fa-dolly-flatbed"></i>
-                                        <span><?php echo trim($queryrow['program_name']); ?></span>
-                                    </a>
-                                </li> 
-                            <?php
+            <li id="employees" class="nav-item">
+                <a class="nav-link d-flex align-items-center"
+                    href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
+                    <i class="fas fa-fw fa-dolly-flatbed"></i>
+                    <span><?php echo trim($queryrow['program_name']); ?></span>
+                </a>
+            </li>
+            <?php
                         }
                     } 
                 }
@@ -101,20 +101,16 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
-                            <div class="hori-selector">
-                                <div class="left"></div>
-                                <div class="right"></div>
-                            </div>
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fas fa-clipboard"></i>Doodle/Notes</a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#"><i class="far fa-address-book"></i>Support/Tickets</a>
-                            </li> -->
+                            <?php
+                                if($prog_id != '2' && $prog_id != '20')
+                                {
+                            ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="modal" data-target="#addClientModal"><i
-                                        class="fas fa-user-plus"></i>Add Clients</a>
+                                <a class="nav-link" href="#" data-toggle="modal" data-target="#addProgModal"><i
+                                        class="fas fa-plus-circle"></i>Add Programme</a>
                             </li>
+                            <?php }
+                                ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="admin/clientList"><i class="fas fa-list"></i>List Clients</a>
                             </li>
@@ -135,14 +131,19 @@
                     </div><br>
                     <!-- Body Starts -->
                     <div class="container-fluid">
-                        <div class="row d-flex justify-content-space-between">
+                        <!-- <div class="row">
                             <div class="col-md-5">
                                 <h1>Audit Programme</h1>
                             </div>
-                            <div class="col-md-7">
+                        </div> -->
+                        <div class="row">
+                            <div class="col-md-12">
                                 <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb" style="justify-content:flex-end; background-color:transparent;">
-                                    <?php
+                                    <ol class="breadcrumb" style="background-color:transparent;">
+                                        <li class="breadcrumb-item"><a
+                                                href="clientDashboard.php?wid=<?php echo $wid;?>">Dashboard</a>
+                                        </li>
+                                        <?php
                                         if(sizeof($bread) != 0){
                                             $y = 0;
                                             for($x = 0;$x<sizeof($bread); $x++){
@@ -181,13 +182,17 @@
                                         for($i = 0; $i<sizeof($bread); $i++){
                                             if($i == sizeof($bread)-1){
                                                 ?>
-                                                <li class="breadcrumb-item font-weight-bold"><span><?php echo $bread[$i]['name']; ?></span></li>
-                                                <?php
+                                        <li class="breadcrumb-item font-weight-bold h5">
+                                            <span><?php echo $bread[$i]['name']; ?></span>
+                                        </li>
+                                        <?php
                                             }
                                             else{
                                             ?>
-                                            <li class="breadcrumb-item"><a href="subProgram.php?pid=<?php echo $bread[$i]['pid']; ?>&parent_id=<?php echo $bread[$i]['parent_id']; ?>&wid=<?php echo $wid; ?>"><?php echo $bread[$i]['name']; ?></a></li>
-                                            <?php
+                                        <li class="breadcrumb-item"><a
+                                                href="subProgram.php?pid=<?php echo $bread[$i]['pid']; ?>&parent_id=<?php echo $bread[$i]['parent_id']; ?>&wid=<?php echo $wid; ?>"><?php echo $bread[$i]['name']; ?></a>
+                                        </li>
+                                        <?php
                                             }
                                         }
 
@@ -196,9 +201,9 @@
                                 </nav>
                             </div>
                         </div>
-
-                        <div class="col-md-12">
-                            <?php
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php
                         $query = "select program.*,workspace_log.status from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid'";
                         $exquery = $con->query($query);
                         if ($exquery->num_rows != 0) 
@@ -208,36 +213,38 @@
                                if($queryrow['hasChild']==1)
                                {
                                 ?>
-                            <div class="list-group">
-                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                            </div>
-                            <?php 
+                                <div class="list-group">
+                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                        class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                </div>
+                                <?php 
                                 }
                                 else
                                 {
                                 ?>
-                            <div class="list-group">
-                                <a href="#" data-target="#spOpenModal" data-toggle="modal"
-                                    class="list-group-item list-group-item-action"><?php echo trim($queryrow['program_name']); ?>
-                                    &nbsp;&nbsp; <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
-                                    <?php if($queryrow['status']==1)
+                                <div class="list-group">
+                                    <a href="#" data-target="#spOpenModal" data-toggle="modal"
+                                        class="list-group-item list-group-item-action"><?php echo trim($queryrow['program_name']); ?>
+                                        &nbsp;&nbsp; <i class="fas fa-external-link-alt"
+                                            style="color:blue !important;"></i>
+                                        <?php if($queryrow['status']==1)
                                         { ?>
-                                    <i class="fas fa-check-circle" style="color:green !important;"></i>
-                                    <?php }  
+                                        <i class="fas fa-check-circle" style="color:green !important;"></i>
+                                        <?php }  
                                         else
                                         { ?>
-                                    <i class="fas fa-times-circle" style="color:red !important;"></i>
-                                    <?php }                                   
+                                        <i class="fas fa-times-circle" style="color:red !important;"></i>
+                                        <?php }                                   
                                     ?>
-                                </a>
-                            </div>
-                            <?php
+                                    </a>
+                                </div>
+                                <?php
                                 }
                             } 
                         }
                             ?>
 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -245,146 +252,35 @@
         </div>
 
     </div>
-    <!--Add Client Form -->
-    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!--Add Programme Form -->
+    <div class="modal fade" id="addProgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Fill in the Client details<h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Programme/Step<h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                 </div>
-                <form action="admin/addClient" method="post" id="addClientForm" enctype="multipart/form-data"
-                    autocomplete="off">
+                <form>
                     <div class="modal-body">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Basic Details<h5>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Client Name</label>
-                            <input type="text" class="form-control" name="clientname" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Nick Name</label>
-                            <input type="text" class="form-control" name="nickname">
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Date of Incorporation/ Birth</label>
-                            <input type="date" class="form-control" name="dob" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="country">Constitution</label>
-                            <select class="form-control" name="constitution" required>
-                                <option>Select Constitution !</option>
-                                <?php
-                                                $consQuery = $con->query("select * from constitution");
-                                                while ($consResult = $consQuery->fetch_assoc()) {
-                                            ?>
-                                <option value="<?php echo $consResult['id']; ?>">
-                                    <?php echo $consResult['const']; ?></option>
-                                <?php
-                                            }
-                                            ?>
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label for="country">Industry</label>
-                            <select class="form-control" name="industry" required>
-                                <option>Select Industry !</option>
-                                <?php
-                                                $indusQuery = $con->query("select * from industry");
-                                                while ($indusResult = $indusQuery->fetch_assoc()) {
-                                            ?>
-                                <option value="<?php echo $indusResult['id']; ?>">
-                                    <?php echo $indusResult['industry']; ?></option>
-                                <?php
-                                            }
-                                            ?>
-                            </select>
-                        </div>
                         <div class="form-group">
-                            <label for="name">Address</label>
-                            <input type="text" class="form-control" name="add">
-                        </div>
-                        <div class="form-group">
-                            <label for="country">Country</label>
-                            <input type="text" class="form-control" name="country">
-                        </div>
-                        <div class="form-group" id="stateEntryIdDiv">
-                            <label for="state">State</label>
-                            <input type="text" class="form-control" name="state">
-                        </div>
-                        <div class="form-group" id="citiesEntryIdDiv">
-                            <label for="city">City</label>
-                            <input type="text" class="form-control" name="city">
+                            <label for="name">Programme Name</label>
+                            <input type="text" class="form-control" name="name" id="prog_name" required>
                         </div>
                         <div class="form-group ">
-                            <label for="name">Pincode</label>
-                            <input type="text" class="form-control" name="pincode" required>
-                        </div>
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Pan No.</label>
-                            <input type="text" class="form-control" name="pan" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">GST No.</label>
-                            <input type="text" class="form-control" name="gst" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">TAN No.</label>
-                            <input type="text" class="form-control" name="tan" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">CIN No.</label>
-                            <input type="text" class="form-control" name="cin" required>
-                        </div>
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Contact Person<h5>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <table class="table table-bordered table-hover" id="tab_logic">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center"> Name</th>
-                                            <th class="text-center"> Email</th>
-                                            <th class="text-center"> Phone</th>
-                                            <th class="text-center"> Designation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id='addr0'>
-                                            <td><input type="text" class="form-control" name="pname[]" required></td>
-                                            <td><input type="email" class="form-control" name="email[]" required></td>
-                                            <td><input type="text" class="form-control" name="phone[]" required></td>
-                                            <td><input type="text" name='designation[]' class="form-control" required />
-                                            </td>
-                                        </tr>
-                                        <tr id='addr1'></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <br>
-                        <hr>
-                        <div class="row">
-                            <div class="col d-flex justify-content-between">
-                                <a href="#" id="add_row" class="btn btn-outline-primary pull-left">Add
-                                    Row</a>
-                                <a href="#" id='delete_row' class="btn btn-outline-danger">Delete
-                                    Row</a>
-                            </div>
+                            <label for="name">Programme Type</label>
+                            <select name="addProg" id="prog_type" class="form-control" required>
+                                <option value="">Select Type</option>
+                                <option value="1">Add as Programme</option>
+                                <option value="0">Add as Step</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                        <input class="btn btn-warning" type="reset" value="Reset">
-                        <input class="btn btn-primary" type="submit" id="dataEntrySubmit" value="Done">
+                        <input class="btn btn-primary" type="submit" id="addProgSubmit" value="Done">
                     </div>
                 </form>
             </div>
@@ -396,12 +292,16 @@
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Obtain Client Acceptance Engagement Letter<h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                </div>
                 <div class="modal-body">
                     <div class="container card bg-light font-2 py-2">
                         <div class="row d-flex justify-content-between">
-                            <div class="col-md-6">
-                                <h5>Obtain Client Acceptance Engagement Letter</h5>
-                            </div>
+                            <div class="col-md-6"></div>
                             <div class="col-md-6 text-right">
                                 <a class="btn btn-outline-dark btn-sm py-0 menu-02">
                                     Sign-Off
@@ -414,13 +314,11 @@
                         <div class="row d-flex justify-content-between">
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-8">
-                                        <label>Documents</label>
-                                    </div>
-                                    <div class="col-md-12 text-right">
-                                        <a class="btn btn-outline-dark btn-sm py-0 menu-02">
-                                            <i class="fas fa-upload upload"></i>
-                                        </a>
+                                    <div class="form-group">
+                                        <label for="country">Upload Documents</label>
+                                        <div class="form-group">
+                                            <input type="file" class="form-control-file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf" name="file">
+                                        </div>
                                     </div>
                                 </div>
                                 <ul class="list-group h5">
@@ -434,9 +332,10 @@
                                 <textarea id="comments" class="form-control" style="height:200px;"></textarea>
                             </div>
                         </div>
-
-
-
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="subProgSubmit" value="Done">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -451,6 +350,9 @@
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
@@ -473,6 +375,48 @@
                 i--;
             }
         });
+
+        $('#addProgSubmit').on('click', function(e) {
+            e.preventDefault();
+            var prog_name = $("#prog_name").val();
+            var prog_type = $("#prog_type").val();
+            $.ajax({
+                url: "addProg.php",
+                type: "POST",
+                data: {
+                    prog_id: <?php echo $prog_id; ?>,
+                    wid: <?php echo $wid; ?>,
+                    name: prog_name,
+                    type: prog_type
+                },
+                success: function(response) {
+                    if (response) {
+                        swal({
+                            icon: "success",
+                            text: prog_name + " Added",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: "Failed!",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
     });
     </script>
 </body>

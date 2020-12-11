@@ -50,7 +50,7 @@ $query = "insert into workspace(client_id,datefrom,dateto) values('$clientID','$
 
 if ($con->query($query) === true) {
     $wid = $con->insert_id;
-    $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program";
+    $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
     $con->query($query1);
     echo "<script>
     $(document).ready(function() {
