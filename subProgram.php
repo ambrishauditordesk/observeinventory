@@ -249,6 +249,16 @@
                     </div>
                 </div>
             </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-light">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                                <?php echo date("Y"); ?></strong></span>
+                    </div>
+
+                </div>
+            </footer>
         </div>
 
     </div>
@@ -317,7 +327,9 @@
                                     <div class="form-group">
                                         <label for="country">Upload Documents</label>
                                         <div class="form-group">
-                                            <input type="file" class="form-control-file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf" name="file">
+                                            <input type="file" class="form-control-file"
+                                                accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf"
+                                                name="file">
                                         </div>
                                     </div>
                                 </div>

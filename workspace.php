@@ -29,10 +29,17 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="css/pace-theme.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- JQuery CDN -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+    <!-- Datatable CDN -->
+    <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
 </head>
 
 <body style="overflow-y: scroll">
@@ -74,7 +81,7 @@
         <div class="col-md-4">
             <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
         </div>
-        <div class="col-md-4 text-center font-2 getContent" href="dashboard">
+        <div class="col-md-4 text-center font-2 getContent" href="admin/clientList">
             <h3><?php echo strtoupper($clientName . " Workspace"); ?></h3>
         </div>    
     </div>
@@ -325,18 +332,12 @@
     </div>
 
 
-    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
-    <script src="js/pace.min.js"></script>
     <script src="js/custom.js"></script>
     <script>
         $(document).ready(function(){

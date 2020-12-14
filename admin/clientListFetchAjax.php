@@ -41,13 +41,15 @@ foreach($result as $row)
  {
     if($row['aact'] == 1){
         $sub_array[] = "<span class='badge badge-success small id= '".$row['aact']."''>ACTIVE</span>";
+        $sub_array[] = "<a href='#'><i class='fas fa-edit editClient' id='".$row['aid']."'></i></a>&nbsp;
+     <a href='../workspace.php?cid=".trim($row['aid'])."'><i class='far fa-plus-square'></i></a>";
     }
     else{
         $sub_array[] = "<span class='badge badge-danger small id= '".$row['aact']."''>INACTIVE</span>";
+        $sub_array[] = "<a href='#'><i class='fas fa-edit editClient' id='".$row['aid']."'></i></a>";
     }
 }
-    $sub_array[] = "<a href='#'><i class='fas fa-edit editClient' id='".$row['aid']."'></i></a>&nbsp;
-     <a href='../workspace.php?cid=".trim($row['aid'])."'><i class='far fa-plus-square'></i></a>";
+    
  
  $data[] = $sub_array;
 }

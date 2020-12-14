@@ -17,7 +17,6 @@
 
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="../css/pace-theme.css" rel="stylesheet">
     <link href="../css/custom.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -154,7 +153,7 @@ else{
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Successfully added <?php echo $_POST['clientname']; ?>.<a href="dashboard">Click Me!</a></div>
+            <div class="modal-body">Successfully added <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a></div>
             <div class="modal-footer">
                 <a class="btn btn-primary" href="clientList">OK</a>
             </div>

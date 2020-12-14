@@ -125,24 +125,34 @@ $_SESSION['breadcrumb'] = array();
                         </div><br>
                         <div class="col-md-12">
                             <?php
-                            $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid'";
+                            $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
                             $exquery = $con->query($query);
                             if ($exquery->num_rows != 0) {
                                 while ($queryrow = $exquery->fetch_assoc()) {?>
-                                <div class="list-group">
-                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                        class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                </div>
-                                <?php }}
+                            <div class="list-group">
+                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                            </div>
+                            <?php }}
                     ?>
 
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-light">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                                <?php echo date("Y"); ?></strong></span>
+                    </div>
+                </div>
+            </footer>
         </div>
 
     </div>
+
     <!--Add Client Form -->
     <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -177,14 +187,14 @@ $_SESSION['breadcrumb'] = array();
                             <select class="form-control" name="constitution" required>
                                 <option>Select Constitution !</option>
                                 <?php
-$consQuery = $con->query("select * from constitution");
-while ($consResult = $consQuery->fetch_assoc()) {
-    ?>
+                                    $consQuery = $con->query("select * from constitution");
+                                    while ($consResult = $consQuery->fetch_assoc()) {
+                                        ?>
                                 <option value="<?php echo $consResult['id']; ?>">
                                     <?php echo $consResult['const']; ?></option>
                                 <?php
-}
-?>
+                                    }
+                                    ?>
                             </select>
                         </div>
                         <div class="form-group ">
@@ -192,14 +202,14 @@ while ($consResult = $consQuery->fetch_assoc()) {
                             <select class="form-control" name="industry" required>
                                 <option>Select Industry !</option>
                                 <?php
-$indusQuery = $con->query("select * from industry");
-while ($indusResult = $indusQuery->fetch_assoc()) {
-    ?>
+                                    $indusQuery = $con->query("select * from industry");
+                                    while ($indusResult = $indusQuery->fetch_assoc()) {
+                                        ?>
                                 <option value="<?php echo $indusResult['id']; ?>">
                                     <?php echo $indusResult['industry']; ?></option>
                                 <?php
-}
-?>
+                                    }
+                                    ?>
                             </select>
                         </div>
                         <div class="form-group">
