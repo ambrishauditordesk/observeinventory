@@ -4,7 +4,7 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
-    if (isset($_SESSION['role_id']) && !empty($_SESSION['role_id']) && $_SESSION['role_id'] != '1') {
+    if (isset($_SESSION['accessLevel']) && !empty($_SESSION['accessLevel']) && $_SESSION['accessLevel'] != '1') {
         header('Location: ../login');
     }
     $clientID = $_GET['cid'];

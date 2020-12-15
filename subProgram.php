@@ -204,46 +204,52 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <?php
-                        $query = "select program.*,workspace_log.status from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid'";
-                        $exquery = $con->query($query);
-                        if ($exquery->num_rows != 0) 
-                        {
-                            while($queryrow = $exquery->fetch_assoc())
-                            { 
-                               if($queryrow['hasChild']==1)
-                               {
-                                ?>
-                                <div class="list-group">
-                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                        class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                </div>
-                                <?php 
-                                }
-                                else
+                                $query = "select program.*,workspace_log.status status, workspace_log.active active  from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid'";
+                                $exquery = $con->query($query);
+                                if ($exquery->num_rows != 0) 
                                 {
-                                ?>
-                                <div class="list-group">
-                                    <a href="#" data-target="#spOpenModal" data-toggle="modal"
-                                        class="list-group-item list-group-item-action"><?php echo trim($queryrow['program_name']); ?>
-                                        &nbsp;&nbsp; <i class="fas fa-external-link-alt"
-                                            style="color:blue !important;"></i>
-                                        <?php if($queryrow['status']==1)
-                                        { ?>
-                                        <i class="fas fa-check-circle" style="color:green !important;"></i>
-                                        <?php }  
+                                    while($queryrow = $exquery->fetch_assoc())
+                                    { 
+                                    if($queryrow['hasChild']==1)
+                                    { ?>
+                                            <div class="list-group">
+                                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                            </div> <?php 
+                                        }
                                         else
                                         { ?>
-                                        <i class="fas fa-times-circle" style="color:red !important;"></i>
-                                        <?php }                                   
-                                    ?>
-                                    </a>
-                                </div>
-                                <?php
-                                }
-                            } 
-                        }
-                            ?>
-
+                                            <div class="list-group">
+                                                <div class="list-group-item list-group-item-action">
+                                                    <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                                    <?php 
+                                                    if($queryrow['active'])
+                                                    { ?>
+                                                        <a href="#" data-target="#spOpenModal" data-toggle="modal" style="a:hover {text-decoration: none;}">
+                                                        <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
+                                                        </a> <?php
+                                                        if($queryrow['status'])
+                                                        { ?>
+                                                            <i class="fas fa-check-circle" style="color:green !important;"></i> <?php 
+                                                        }  
+                                                        else
+                                                        { ?>
+                                                        <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
+                                                        } ?>
+                                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i class="fa fa-thumbs-up float-right" 
+                                                        aria-hidden="true" style="color:green !important;"></i></a> <?php
+                                                    }
+                                                    else
+                                                    { ?>
+                                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
+                                                        <i class="fa fa-thumbs-down float-right" aria-hidden="true" style="color:orange !important;"></i></a> <?php
+                                                    }                                                   
+                                                    ?>
+                                                </div>
+                                            </div> <?php
+                                        }
+                                    } 
+                                } ?>
                             </div>
                         </div>
                     </div>
@@ -303,7 +309,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Obtain Client Acceptance Engagement Letter<h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Obtain Client Acceptance Engagement Letter
+                        <h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -387,6 +394,43 @@
                 i--;
             }
         });
+        $(document).on('click', '.buttonActive', function(){
+            var id =$(this).attr('id');
+            $.ajax({
+                url: "updateActive.php",
+                type: "POST",
+                data: {
+                    prog_id: id,
+                    wid: <?php echo $wid; ?>
+                },
+                success: function(response) {
+                    var obj = JSON.parse(response);
+                    if (obj.status) {
+                        swal({
+                            icon: "success",
+                            text: obj.text,
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: obj.text,
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    }
+                }
+            });   
+        }); 
 
         $('#addProgSubmit').on('click', function(e) {
             e.preventDefault();
