@@ -1,2 +1,5 @@
 // Ignoring connection file
 dbconnection.php
+
+//Ignoring Editor extension
+.DS_Store

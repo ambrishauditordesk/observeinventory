@@ -51,7 +51,7 @@ $_SESSION['breadcrumb'] = array();
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
             <!-- Nav Item - Pages Collapse Menu -->
-            <li id="employees" class="nav-item">
+            <li id="employees" class="nav-item active">
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-dolly-flatbed"></i>
                     <span>Audit Program</span>

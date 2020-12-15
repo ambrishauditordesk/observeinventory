@@ -57,7 +57,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
 
             <?php
-                $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_parentId' and workspace_log.workspace_id='$wid'";
+                $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_parentId' and workspace_log.workspace_id='$wid' order by _seq";
                 $exquery = $con->query($query);
                 if ($exquery->num_rows != 0) 
                 {
@@ -66,7 +66,7 @@
                         if($queryrow['hasChild']==1)
                         {
                             ?>
-            <li id="employees" class="nav-item">
+                <li id="employees" class="nav-item  <?php if($queryrow['id'] == $prog_id) echo 'active'; ?>">
                 <a class="nav-link d-flex align-items-center"
                     href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
                     <i class="fas fa-fw fa-dolly-flatbed"></i>
@@ -237,12 +237,12 @@
                                                         <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
                                                         } ?>
                                                         <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i class="fa fa-thumbs-up float-right" 
-                                                        aria-hidden="true" style="color:green !important;"></i></a> <?php
+                                                        aria-hidden="true" style="color:blue !important;"></i></a> <?php
                                                     }
                                                     else
                                                     { ?>
                                                         <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
-                                                        <i class="fa fa-thumbs-down float-right" aria-hidden="true" style="color:orange !important;"></i></a> <?php
+                                                        <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i></a> <?php
                                                     }                                                   
                                                     ?>
                                                 </div>
