@@ -204,52 +204,111 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <?php
-                                $query = "select program.*,workspace_log.status status, workspace_log.active active  from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid'";
-                                $exquery = $con->query($query);
-                                if ($exquery->num_rows != 0) 
+                                if($prog_id == 229){
+                                    $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid'";
+                                    ?>
+                                    <form action="dataSubmit.php" method="post">
+                                        <table class = "table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Asset Accounts</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">Risk</th>
+                                                    <th scope="col">Import</th>
+                                                </tr>
+                                            </thead>
+                                            <?php
+                                            $result = $con->query($query);
+                                            $i=0;
+                                            while($row = $result->fetch_assoc()){
+                                                ?>
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row"><?php echo $row['program_name'] ;?></td>
+                                                    <td scope="row">
+                                                        <input  type="text" name="submitData[amount][]" value= "<?php echo $row['amount'];?>" size="10">
+                                                    </td>
+                                                    <td scope="row">
+                                                        <select name="submitData[type][]" class="form-control" required>
+                                                            <option <?php if($row['type'] == 0) echo "selected"; ?> value="0">Significant</option>
+                                                            <option <?php if($row['type'] == 1) echo "selected"; ?> value="1">Non-Significant</option>
+                                                        </select>
+                                                    </td>
+                                                    <td scope="row">
+                                                        <select name="submitData[risk][]" class="form-control" required>
+                                                            <option <?php if($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
+                                                            <option <?php if($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
+                                                            <option <?php if($row['risk'] == 2) echo "selected"; ?> value="2">High</option>
+                                                        </select>
+                                                    </td>
+                                                    <td scope="row">
+                                                        <select name="submitData[import][]" class="form-control" required>
+                                                            <option <?php if($row['import'] == 0) echo "selected"; ?> value="0">No</option>
+                                                            <option <?php if($row['import'] == 1) echo "selected"; ?> value="1">Yes</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <?php 
+                                            $i++;
+                                            }
+                                            ?>
+                                        </table>
+                                        <input type="submit" value="submit">
+                                    </form>
+                                <?php 
+                                }
+                                else
                                 {
-                                    while($queryrow = $exquery->fetch_assoc())
-                                    { 
-                                    if($queryrow['hasChild']==1)
-                                    { ?>
-                                            <div class="list-group">
-                                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                            </div> <?php 
-                                        }
-                                        else
-                                        { ?>
-                                            <div class="list-group">
-                                                <div class="list-group-item list-group-item-action">
-                                                    <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
-                                                    <?php 
-                                                    if($queryrow['active'])
-                                                    { ?>
-                                                        <a href="#" data-target="#spOpenModal" data-toggle="modal" style="a:hover {text-decoration: none;}">
-                                                        <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
-                                                        </a> <?php
-                                                        if($queryrow['status'])
+                                    $query = "select program.*,workspace_log.status status, workspace_log.active active  from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid' and workspace_log.import= 1";
+                                    $exquery = $con->query($query);
+                                    if ($exquery->num_rows != 0) 
+                                    {
+                                        while($queryrow = $exquery->fetch_assoc())
+                                        { 
+                                            if($queryrow['hasChild']==1)
+                                            { ?>
+                                                    <div class="list-group">
+                                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                                            class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                                    </div> <?php 
+                                            }
+                                            else
+                                            { ?>
+                                                <div class="list-group">
+                                                    <div class="list-group-item list-group-item-action">
+                                                        <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                                        <?php 
+                                                        if($queryrow['active'])
                                                         { ?>
-                                                            <i class="fas fa-check-circle" style="color:green !important;"></i> <?php 
-                                                        }  
+                                                            <a href="#" data-target="#spOpenModal" data-toggle="modal" style="a:hover {text-decoration: none;}">
+                                                            <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
+                                                            </a> <?php
+                                                            if($queryrow['status'])
+                                                            { ?>
+                                                                <i class="fas fa-check-circle" style="color:green !important;"></i> <?php 
+                                                            }  
+                                                            else
+                                                            { ?>
+                                                            <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
+                                                            } ?>
+                                                            <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i class="fa fa-thumbs-up float-right" 
+                                                            aria-hidden="true" style="color:blue !important;"></i></a> <?php
+                                                        }
                                                         else
                                                         { ?>
-                                                        <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
-                                                        } ?>
-                                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i class="fa fa-thumbs-up float-right" 
-                                                        aria-hidden="true" style="color:blue !important;"></i></a> <?php
-                                                    }
-                                                    else
-                                                    { ?>
-                                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
-                                                        <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i></a> <?php
-                                                    }                                                   
-                                                    ?>
-                                                </div>
-                                            </div> <?php
-                                        }
+                                                            <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
+                                                            <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i></a> <?php
+                                                        }                                                   
+                                                        ?>
+                                                    </div>
+                                                </div> <?php
+                                            }
+                                        } 
                                     } 
-                                } ?>
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
