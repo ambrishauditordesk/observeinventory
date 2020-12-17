@@ -23,18 +23,27 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Custom Fav icon -->
-    <!-- <link rel="icon" href="img/atllogo.png" type="image/gif" sizes="16x16"> -->
-
-    <!-- Custom fonts for this template-->
+    <!-- Custom stylesheet-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+
+    <!-- bootstrap cdn -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+
+    <!-- sweetalert cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous"></script>
 
 </head>
 
@@ -207,10 +216,11 @@
                                 if($prog_id == 229){
                                     $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid'";
                                     ?>
-                                    <form action="dataSubmit.php" method="post">
+                                    <form action="dataSubmit.php?&wid=<?php echo $wid; ?>" method="post">
                                         <table class = "table table-hover">
                                             <thead>
                                                 <tr>
+                                                    <th scope="col" hidden>Id</th>
                                                     <th scope="col">Asset Accounts</th>
                                                     <th scope="col">Amount</th>
                                                     <th scope="col">Type</th>
@@ -225,6 +235,9 @@
                                                 ?>
                                             <tbody>
                                                 <tr>
+                                                    <td scope="row" hidden>
+                                                        <input  type="hidden" name="submitData[id][]" value= "<?php echo $row['id'];?>">
+                                                    </td>
                                                     <td scope="row"><?php echo $row['program_name'] ;?></td>
                                                     <td scope="row">
                                                         <input  type="text" name="submitData[amount][]" value= "<?php echo $row['amount'];?>" size="10">
@@ -237,9 +250,9 @@
                                                     </td>
                                                     <td scope="row">
                                                         <select name="submitData[risk][]" class="form-control" required>
-                                                            <option <?php if($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
-                                                            <option <?php if($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
-                                                            <option <?php if($row['risk'] == 2) echo "selected"; ?> value="2">High</option>
+                                                            <option style="color:red !important;" <?php if($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
+                                                            <option style="color:orange !important;"<?php if($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
+                                                            <option style="color:green !important;"<?php if($row['risk'] == 2) echo "selected"; ?> value="2">High</option>
                                                         </select>
                                                     </td>
                                                     <td scope="row">
@@ -255,7 +268,9 @@
                                             }
                                             ?>
                                         </table>
-                                        <input type="submit" value="submit">
+                                        <div class="row d-flex justify-content-center">
+                                            <input type="submit" class="btn btn-primary align-middle" value="Submit">
+                                        </div>
                                     </form>
                                 <?php 
                                 }
@@ -314,6 +329,7 @@
                     </div>
                 </div>
             </div>
+            
             <!-- Footer -->
             <footer class="sticky-footer bg-light">
                 <div class="container my-auto">
@@ -421,22 +437,10 @@
     </div>
     </div>
 
-
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
-        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-        crossorigin="anonymous"></script>
-
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
-
     <script src="js/custom.js"></script>
+
     <script>
     $(document).ready(function() {
         var i = 1;
