@@ -50,23 +50,32 @@ $clientID = trim($_POST['clientID']);
 
 $query = "insert into workspace(client_id,datefrom,dateto) values('$clientID','$from','$to')";
 
-if ($con->query($query) === true) {
+if ($con->query($query) === true) 
+{
     $wid = $con->insert_id;
     $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
-    $con->query($query1);
-    echo "<script>
+    $query2="insert into materiality(name,prog_id,workspace_id) SELECT name,prog_id,'$wid' workspace_id from materiality where def_prog='1'";
+    $res1=$con->query($query1);
+    $res2=$con->query($query2);
+    if($res1 === false && $res2 === false)
+    {
+        $con->query("delete from workspace where id='$wid");
+        $con->query("delete from workspace_log where workspace_id='$wid'");
+        $con->query("delete from materiality where workspace_id='$wid'");
+        echo "<script>
+        $(document).ready(function() {
+            $('#unsuccessModal').modal();
+        });
+        </script>";
+    }
+    else {
+        echo "<script>
     $(document).ready(function() {
         $('#successModal').modal();
     });
     </script>";
+    }
 } 
-else {
-    echo "<script>
-    $(document).ready(function() {
-        $('#unsuccessModal').modal();
-    });
-    </script>";
-}
 ?>
 
 <!--Success Modal-->

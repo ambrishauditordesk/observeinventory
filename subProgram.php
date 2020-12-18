@@ -75,7 +75,7 @@
                         if($queryrow['hasChild']==1)
                         {
                             ?>
-                <li id="employees" class="nav-item  <?php if($queryrow['id'] == $prog_id) echo 'active'; ?>">
+            <li id="employees" class="nav-item  <?php if($queryrow['id'] == $prog_id) echo 'active'; ?>">
                 <a class="nav-link d-flex align-items-center"
                     href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
                     <i class="fas fa-fw fa-dolly-flatbed"></i>
@@ -111,7 +111,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
                             <?php
-                                if($prog_id != '2' && $prog_id != '20')
+                                if($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229')
                                 {
                             ?>
                             <li class="nav-item">
@@ -213,67 +213,168 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <?php
-                                if($prog_id == 229){
+                                if($prog_id == 239){
                                     $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid'";
                                     ?>
-                                    <form action="dataSubmit.php?&wid=<?php echo $wid; ?>" method="post">
-                                        <table class = "table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" hidden>Id</th>
-                                                    <th scope="col">Asset Accounts</th>
-                                                    <th scope="col">Amount</th>
-                                                    <th scope="col">Type</th>
-                                                    <th scope="col">Risk</th>
-                                                    <th scope="col">Import</th>
-                                                </tr>
-                                            </thead>
-                                            <?php
+                                <form action="dataSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" hidden>Id</th>
+                                                <th scope="col">Asset Accounts</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Risk</th>
+                                                <th scope="col">Import</th>
+                                            </tr>
+                                        </thead>
+                                        <?php
                                             $result = $con->query($query);
                                             $i=0;
                                             while($row = $result->fetch_assoc()){
                                                 ?>
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row" hidden>
-                                                        <input  type="hidden" name="submitData[id][]" value= "<?php echo $row['id'];?>">
-                                                    </td>
-                                                    <td scope="row"><?php echo $row['program_name'] ;?></td>
-                                                    <td scope="row">
-                                                        <input  type="text" name="submitData[amount][]" value= "<?php echo $row['amount'];?>" size="10">
-                                                    </td>
-                                                    <td scope="row">
-                                                        <select name="submitData[type][]" class="form-control" required>
-                                                            <option <?php if($row['type'] == 0) echo "selected"; ?> value="0">Significant</option>
-                                                            <option <?php if($row['type'] == 1) echo "selected"; ?> value="1">Non-Significant</option>
-                                                        </select>
-                                                    </td>
-                                                    <td scope="row">
-                                                        <select name="submitData[risk][]" class="form-control" required>
-                                                            <option style="color:red !important;" <?php if($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
-                                                            <option style="color:orange !important;"<?php if($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
-                                                            <option style="color:green !important;"<?php if($row['risk'] == 2) echo "selected"; ?> value="2">High</option>
-                                                        </select>
-                                                    </td>
-                                                    <td scope="row">
-                                                        <select name="submitData[import][]" class="form-control" required>
-                                                            <option <?php if($row['import'] == 0) echo "selected"; ?> value="0">No</option>
-                                                            <option <?php if($row['import'] == 1) echo "selected"; ?> value="1">Yes</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <?php 
-                                            $i++;
+                                        <tbody>
+                                            <tr>
+                                                <td scope="row" hidden>
+                                                    <input type="hidden" name="submitData[id][]"
+                                                        value="<?php echo $row['id'];?>">
+                                                </td>
+                                                <td scope="row"><?php echo $row['program_name'] ;?></td>
+                                                <td scope="row">
+                                                    <input type="text" name="submitData[amount][]"
+                                                        value="<?php echo $row['amount'];?>" size="10">
+                                                </td>
+                                                <td scope="row">
+                                                    <select name="submitData[type][]" class="form-control" required>
+                                                        <option <?php if($row['type'] == 0) echo "selected"; ?>
+                                                            value="0">Significant</option>
+                                                        <option <?php if($row['type'] == 1) echo "selected"; ?>
+                                                            value="1">Non-Significant</option>
+                                                    </select>
+                                                </td>
+                                                <td scope="row">
+                                                    <select name="submitData[risk][]" class="form-control" required>
+                                                        <option <?php if($row['risk'] == 0) echo "selected"; ?> value="0">
+                                                            Low</option>
+                                                        <option <?php if($row['risk'] == 1) echo "selected"; ?> value="1">
+                                                            Moderate</option>
+                                                        <option <?php if($row['risk'] == 2) echo "selected"; ?> value="2">
+                                                            High</option>
+                                                    </select>
+                                                </td>
+                                                <td scope="row">
+                                                    <select name="submitData[import][]" class="form-control" required>
+                                                        <option <?php if($row['import'] == 0) echo "selected"; ?>
+                                                            value="0">No</option>
+                                                        <option <?php if($row['import'] == 1) echo "selected"; ?>
+                                                            value="1">Yes</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <?php 
                                             }
                                             ?>
-                                        </table>
-                                        <div class="row d-flex justify-content-center">
-                                            <input type="submit" class="btn btn-primary align-middle" value="Submit">
-                                        </div>
-                                    </form>
+                                    </table>
+                                    <div class="row d-flex justify-content-center">
+                                        <input type="submit" class="btn btn-primary align-middle" value="Submit">
+                                    </div>
+                                </form>
                                 <?php 
                                 }
+                                elseif($prog_id == 230)
+                                {
+                                    $query = "select * from materiality where workspace_id='$wid' and prog_id='$prog_id'";
+                                    $result = $con->query($query); ?>
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-primary" data-target="#addMethod" data-toggle="modal"
+                                            id="add_new">ADD NEW</button>
+                                    </div>
+                                </div><br>
+                                <form action="materiality.php?&wid=<?php echo $wid;?>" method="post">
+                                    <table class="table table-hover" id="tab_logic">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th scope="col">Methods</th>
+                                                <th scope="col" colspan="2">Standard %</th>
+                                                <th scope="col" colspan="2">Custom %</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>High</th>
+                                                <th>Low</th>
+                                                <th>High</th>
+                                                <th>Low</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="abody">
+                                            <?php 
+                                        while($row = $result->fetch_assoc()){
+                                        ?>
+                                            <tr>
+                                                <td> <label><?php echo $row['name']; ?></label> </td>
+                                                <td> <input type="text" size="10"
+                                                        value="<?php echo $row['standard_low'];?>"> </td>
+                                                <td> <input type="text" size="10"
+                                                        value="<?php echo $row['standard_high'];?>"> </td>
+                                                <td> <input type="text" size="10"
+                                                        value="<?php echo $row['custom_low'];?>"> </td>
+                                                <td> <input type="text" size="10"
+                                                        value="<?php echo $row['custom_high'];?>"> </td>
+                                                <td> <input type="text" size="10" value="<?php echo $row['amount'];?>">
+                                                </td>
+                                                <td> <a href="#" id="<?php echo $row['id'];?>">
+                                                        <i class="fas fa-times-circle"
+                                                            style="color:red !important;"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <?php 
+                                        } 
+                                        ?>
+                                        </tbody>
+                                    </table><br>
+                                    <div class="form-group">
+                                        <div class="container-fluid shadow border border-bottom" stickylevel="0">
+                                            <div class="row pt-1">
+                                                <div class="row text-center">
+                                                    <h5>Reason behind selecting the basis</h5>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <textarea class="form-control" id="textarea" rows="5"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="input1">Balance Assets Scope</label>
+                                            <input type="text" class="form-control" id="input1">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="input2">Balance Liability Scope</label>
+                                            <input type="text" class="form-control" id="input2">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="input3">PL- Income Scope</label>
+                                            <input type="text" class="form-control" id="input3">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="input4">PL- Expenses Scope</label>
+                                            <input type="text" class="form-control" id="input4">
+                                        </div>
+                                    </div>
+                                    <div class="row d-flex justify-content-center">
+                                        <input type="submit" class="btn btn-primary align-middle" value="Submit"> &nbsp;
+                                        <span class="btn btn-primary btn-file"> Browse Files... <input type="file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf"> </span>
+                                    </div>
+                                </form>
+                                <?php } 
                                 else
                                 {
                                     $query = "select program.*,workspace_log.status status, workspace_log.active active  from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid' and workspace_log.import= 1";
@@ -284,41 +385,44 @@
                                         { 
                                             if($queryrow['hasChild']==1)
                                             { ?>
-                                                    <div class="list-group">
-                                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                                            class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                                    </div> <?php 
-                                            }
-                                            else
-                                            { ?>
-                                                <div class="list-group">
-                                                    <div class="list-group-item list-group-item-action">
-                                                        <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
-                                                        <?php 
+                                        <div class="list-group">
+                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                                class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                        </div> <?php 
+                                                    }
+                                                    else
+                                                    { ?>
+                                        <div class="list-group">
+                                            <div class="list-group-item list-group-item-action">
+                                                <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                                <?php 
                                                         if($queryrow['active'])
                                                         { ?>
-                                                            <a href="#" data-target="#spOpenModal" data-toggle="modal" style="a:hover {text-decoration: none;}">
-                                                            <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
-                                                            </a> <?php
+                                        <a href="#" data-target="#spOpenModal" data-toggle="modal"
+                                            style="a:hover {text-decoration: none;}">
+                                            <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
+                                        </a> <?php
                                                             if($queryrow['status'])
                                                             { ?>
-                                                                <i class="fas fa-check-circle" style="color:green !important;"></i> <?php 
+                                        <i class="fas fa-check-circle" style="color:green !important;"></i> <?php 
                                                             }  
                                                             else
                                                             { ?>
-                                                            <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
+                                        <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
                                                             } ?>
-                                                            <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i class="fa fa-thumbs-up float-right" 
-                                                            aria-hidden="true" style="color:blue !important;"></i></a> <?php
+                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i
+                                                class="fa fa-thumbs-up float-right" aria-hidden="true"
+                                                style="color:blue !important;"></i></a> <?php
                                                         }
                                                         else
                                                         { ?>
-                                                            <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
-                                                            <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i></a> <?php
+                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
+                                            <i class="fa fa-ban float-right" aria-hidden="true"
+                                                style="color:orange !important;"></i></a> <?php
                                                         }                                                   
                                                         ?>
-                                                    </div>
-                                                </div> <?php
+                                    </div>
+                                </div> <?php
                                             }
                                         } 
                                     } 
@@ -329,7 +433,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Footer -->
             <footer class="sticky-footer bg-light">
                 <div class="container my-auto">
@@ -343,7 +447,7 @@
         </div>
 
     </div>
-    <!--Add Programme Form -->
+    <!--Add Programme Modal -->
     <div class="modal fade" id="addProgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -372,6 +476,33 @@
                     <div class="modal-footer">
                         <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                         <input class="btn btn-primary" type="submit" id="addProgSubmit" value="Done">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Add Method Modal -->
+    <div class="modal fade" id="addMethod" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Method<h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Method Name</label>
+                            <input type="text" class="form-control" name="name" id="method_name" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                        <input class="btn btn-primary" type="submit" id="addMethodSubmit" value="Done">
                     </div>
                 </form>
             </div>
@@ -409,9 +540,7 @@
                                     <div class="form-group">
                                         <label for="country">Upload Documents</label>
                                         <div class="form-group">
-                                            <input type="file" class="form-control-file"
-                                                accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf"
-                                                name="file">
+                                        <span class="btn btn-primary btn-file"> Browse Files... <input type="file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf"> </span>
                                         </div>
                                     </div>
                                 </div>
@@ -443,22 +572,20 @@
 
     <script>
     $(document).ready(function() {
+        //Add row script
         var i = 1;
-        b = i - 1;
-        $("#add_row").click(function() {
-            $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
-            $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
-            i++;
+        var b = i - 1;
+        var mid = this.value;
+
+        $("#add_row").on('change', function() {
+            alert(mid);
+            $('#abody').append('<tr id="R' + (i + 1) +
+                '"><td class="row-index text-center"></td></tr>');
         });
-        //Delete Row Function for sales add form
-        $("#delete_row").click(function() {
-            if (i > 1) {
-                $("#addr" + (i - 1)).html('');
-                i--;
-            }
-        });
-        $(document).on('click', '.buttonActive', function(){
-            var id =$(this).attr('id');
+
+
+        $(document).on('click', '.buttonActive', function() {
+            var id = $(this).attr('id');
             $.ajax({
                 url: "updateActive.php",
                 type: "POST",
@@ -492,8 +619,8 @@
                         });
                     }
                 }
-            });   
-        }); 
+            });
+        });
 
         $('#addProgSubmit').on('click', function(e) {
             e.preventDefault();
@@ -513,6 +640,45 @@
                         swal({
                             icon: "success",
                             text: prog_name + " Added",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: "Failed!",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        $('#addMethodSubmit').on('click', function(e) {
+            e.preventDefault();
+            var method_name = $("#method_name").val();
+            $.ajax({
+                url: "addMethod.php",
+                type: "POST",
+                data: {
+                    prog_id: <?php echo $prog_id; ?>,
+                    wid: <?php echo $wid; ?>,
+                    name: method_name
+                },
+                success: function(response) {
+                    if (response) {
+                        swal({
+                            icon: "success",
+                            text: method_name + " Added",
                         }).then(function(isConfirm) {
                             if (isConfirm) {
                                 window.location.href = window.location
