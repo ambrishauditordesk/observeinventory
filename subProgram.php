@@ -214,12 +214,25 @@
                             <div class="col-md-12">
                                 <?php
                                 if($prog_id == 239){
-                                    $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid'";
+                                    $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid' order by _seq,id asc";
+                                    $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                                     ?>
-                                <form action="dataSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="input1">Balance Assets Scope</label>
+                                            <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $row1['balance_asset']; ?>" readonly>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="input2">Balance Liability Scope</label>
+                                            <input type="text" class="form-control" name="lScope"
+                                            value="<?php echo $row1['balance_liability']; ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <form action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
                                     <table class="table table-hover">
                                         <thead>
-                                            <tr>
+                                            <tr class="table-secondary">
                                                 <th scope="col" hidden>Id</th>
                                                 <th scope="col">Asset Accounts</th>
                                                 <th scope="col">Amount</th>
@@ -234,44 +247,187 @@
                                             while($row = $result->fetch_assoc()){
                                                 ?>
                                         <tbody>
-                                            <tr>
-                                                <td scope="row" hidden>
-                                                    <input type="hidden" name="submitData[id][]"
-                                                        value="<?php echo $row['id'];?>">
-                                                </td>
-                                                <td scope="row"><?php echo $row['program_name'] ;?></td>
-                                                <td scope="row">
-                                                    <input type="text" name="submitData[amount][]"
-                                                        value="<?php echo $row['amount'];?>" size="10">
-                                                </td>
-                                                <td scope="row">
-                                                    <select name="submitData[type][]" class="form-control" required>
-                                                        <option <?php if($row['type'] == 0) echo "selected"; ?>
-                                                            value="0">Significant</option>
-                                                        <option <?php if($row['type'] == 1) echo "selected"; ?>
-                                                            value="1">Non-Significant</option>
-                                                    </select>
-                                                </td>
-                                                <td scope="row">
-                                                    <select name="submitData[risk][]" class="form-control" required>
-                                                        <option <?php if($row['risk'] == 0) echo "selected"; ?> value="0">
-                                                            Low</option>
-                                                        <option <?php if($row['risk'] == 1) echo "selected"; ?> value="1">
-                                                            Moderate</option>
-                                                        <option <?php if($row['risk'] == 2) echo "selected"; ?> value="2">
-                                                            High</option>
-                                                    </select>
-                                                </td>
-                                                <td scope="row">
-                                                    <select name="submitData[import][]" class="form-control" required>
-                                                        <option <?php if($row['import'] == 0) echo "selected"; ?>
-                                                            value="0">No</option>
-                                                        <option <?php if($row['import'] == 1) echo "selected"; ?>
-                                                            value="1">Yes</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
+                                                <?php 
+                                                if($row['id']==45)
+                                                { ?>
+                                                    <tr class="table-secondary">
+                                                        <th scope="col" hidden>Id</th>
+                                                        <th scope="col">Liability Accounts</th>
+                                                        <th scope="col">Amount</th>
+                                                        <th scope="col">Type</th>
+                                                        <th scope="col">Risk</th>
+                                                        <th scope="col">Import</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[id][]"
+                                                                value="<?php echo $row['id'];?>">
+                                                        </td>
+                                                        <td scope="row"><?php echo $row['program_name'];?></td>    
+                                                        <td scope="row">
+                                                            <input type="text" name="submitData[amount][]"
+                                                                value="<?php echo $row['amount'];?>" size="10">
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[type][]" class="form-control" required>
+                                                                <option <?php if($row['type'] == 0) echo "selected"; ?>
+                                                                    value="0">Significant</option>
+                                                                <option <?php if($row['type'] == 1) echo "selected"; ?>
+                                                                    value="1">Non-Significant</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[risk][]" class="form-control" required>
+                                                                <option <?php if($row['risk'] == 0) echo "selected"; ?>
+                                                                    value="0">
+                                                                    Low</option>
+                                                                <option <?php if($row['risk'] == 1) echo "selected"; ?>
+                                                                    value="1">
+                                                                    Moderate</option>
+                                                                <option <?php if($row['risk'] == 2) echo "selected"; ?>
+                                                                    value="2">
+                                                                    High</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[import][]" class="form-control" required>
+                                                                <option <?php if($row['import'] == 0) echo "selected"; ?>
+                                                                    value="0">No</option>
+                                                                <option <?php if($row['import'] == 1) echo "selected"; ?>
+                                                                    value="1">Yes</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                        <?php   } 
+                                                else 
+                                                { ?>
+                                                    <tr>
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[id][]"
+                                                                value="<?php echo $row['id'];?>">
+                                                        </td>
+                                                        <td scope="row"><?php echo $row['program_name'];?></td>    
+                                                        <td scope="row">
+                                                            <input type="text" name="submitData[amount][]"
+                                                                value="<?php echo $row['amount'];?>" size="10">
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[type][]" class="form-control" required>
+                                                                <option <?php if($row['type'] == 0) echo "selected"; ?>
+                                                                    value="0">Significant</option>
+                                                                <option <?php if($row['type'] == 1) echo "selected"; ?>
+                                                                    value="1">Non-Significant</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[risk][]" class="form-control" required>
+                                                                <option <?php if($row['risk'] == 0) echo "selected"; ?>
+                                                                    value="0">
+                                                                    Low</option>
+                                                                <option <?php if($row['risk'] == 1) echo "selected"; ?>
+                                                                    value="1">
+                                                                    Moderate</option>
+                                                                <option <?php if($row['risk'] == 2) echo "selected"; ?>
+                                                                    value="2">
+                                                                    High</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[import][]" class="form-control" required>
+                                                                <option <?php if($row['import'] == 0) echo "selected"; ?>
+                                                                    value="0">No</option>
+                                                                <option <?php if($row['import'] == 1) echo "selected"; ?>
+                                                                    value="1">Yes</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                           <?php } ?>
                                         </tbody>
+                                        <?php 
+                                            }
+                                            ?>
+                                    </table>
+                                    <div class="row d-flex justify-content-center">
+                                        <input type="submit" class="btn btn-primary align-middle" value="Submit">
+                                    </div>
+                                </form>
+                                <?php 
+                                }
+                                elseif($prog_id == 240){
+                                    $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=34 and workspace_log.workspace_id='$wid' order by _seq,id asc";
+                                    $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                                    ?>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="input1">PL- Income Scope</label>
+                                            <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $row1['pl_income']; ?>" readonly>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="input2">PL- Expense Scope</label>
+                                            <input type="text" class="form-control" name="lScope"
+                                            value="<?php echo $row1['pl_expense']; ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <form action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr class="table-secondary">
+                                                <th scope="col" hidden>Id</th>
+                                                <th scope="col">Asset Accounts</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Risk</th>
+                                                <th scope="col">Import</th>
+                                            </tr>
+                                        </thead>
+                                        <?php
+                                            $result = $con->query($query);
+                                            $i=0;
+                                            while($row = $result->fetch_assoc()){
+                                                ?>
+                                            <tbody>
+                                                <tr>
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[id][]"
+                                                                value="<?php echo $row['id'];?>">
+                                                        </td>
+                                                        <td scope="row"><?php echo $row['program_name'];?></td>    
+                                                        <td scope="row">
+                                                            <input type="text" name="submitData[amount][]"
+                                                                value="<?php echo $row['amount'];?>" size="10">
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[type][]" class="form-control" required>
+                                                                <option <?php if($row['type'] == 0) echo "selected"; ?>
+                                                                    value="0">Significant</option>
+                                                                <option <?php if($row['type'] == 1) echo "selected"; ?>
+                                                                    value="1">Non-Significant</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[risk][]" class="form-control" required>
+                                                                <option <?php if($row['risk'] == 0) echo "selected"; ?>
+                                                                    value="0">
+                                                                    Low</option>
+                                                                <option <?php if($row['risk'] == 1) echo "selected"; ?>
+                                                                    value="1">
+                                                                    Moderate</option>
+                                                                <option <?php if($row['risk'] == 2) echo "selected"; ?>
+                                                                    value="2">
+                                                                    High</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[import][]" class="form-control" required>
+                                                                <option <?php if($row['import'] == 0) echo "selected"; ?>
+                                                                    value="0">No</option>
+                                                                <option <?php if($row['import'] == 1) echo "selected"; ?>
+                                                                    value="1">Yes</option>
+                                                            </select>
+                                                        </td>
+                                                </tr>
+                                            </tbody>
                                         <?php 
                                             }
                                             ?>
@@ -292,10 +448,12 @@
                                             id="add_new">ADD NEW</button>
                                     </div>
                                 </div><br>
-                                <form action="materiality.php?&wid=<?php echo $wid;?>" method="post">
+                                <form action="materialitySubmit.php?&wid=<?php echo $wid;?>" method="post"
+                                    enctype="multipart/form-data">
                                     <table class="table table-hover" id="tab_logic">
                                         <thead class="text-center">
                                             <tr>
+                                                <th scope="col" hidden>Id</th>
                                                 <th scope="col">Methods</th>
                                                 <th scope="col" colspan="2">Standard %</th>
                                                 <th scope="col" colspan="2">Custom %</th>
@@ -303,6 +461,7 @@
                                                 <th scope="col">Action</th>
                                             </tr>
                                             <tr>
+                                                <th hidden></th>
                                                 <th></th>
                                                 <th>High</th>
                                                 <th>Low</th>
@@ -317,18 +476,23 @@
                                         while($row = $result->fetch_assoc()){
                                         ?>
                                             <tr>
-                                                <td> <label><?php echo $row['name']; ?></label> </td>
-                                                <td> <input type="text" size="10"
-                                                        value="<?php echo $row['standard_low'];?>"> </td>
-                                                <td> <input type="text" size="10"
-                                                        value="<?php echo $row['standard_high'];?>"> </td>
-                                                <td> <input type="text" size="10"
-                                                        value="<?php echo $row['custom_low'];?>"> </td>
-                                                <td> <input type="text" size="10"
-                                                        value="<?php echo $row['custom_high'];?>"> </td>
-                                                <td> <input type="text" size="10" value="<?php echo $row['amount'];?>">
+                                                <td scope="row" hidden>
+                                                    <input type="hidden" name="materialityData[id][]"
+                                                        value="<?php echo $row['id'];?>">
                                                 </td>
-                                                <td> <a href="#" id="<?php echo $row['id'];?>">
+                                                <td> <label><?php echo $row['name']; ?></label> </td>
+                                                <td> <input type="text" size="10" name="materialityData[sLow][]"
+                                                        value="<?php echo $row['standard_low'];?>"> </td>
+                                                <td> <input type="text" size="10" name="materialityData[sHigh][]"
+                                                        value="<?php echo $row['standard_high'];?>"> </td>
+                                                <td> <input type="text" size="10" name="materialityData[cLow][]"
+                                                        value="<?php echo $row['custom_low'];?>"> </td>
+                                                <td> <input type="text" size="10" name="materialityData[cHigh][]"
+                                                        value="<?php echo $row['custom_high'];?>"> </td>
+                                                <td> <input type="text" size="10" name="materialityData[amount][]"
+                                                        value="<?php echo $row['amount'];?>">
+                                                </td>
+                                                <td> <a href="#" id="<?php echo $row['id']; ?>" class="deleteMat">
                                                         <i class="fas fa-times-circle"
                                                             style="color:red !important;"></i>
                                                     </a>
@@ -339,6 +503,12 @@
                                         ?>
                                         </tbody>
                                     </table><br>
+                                    <?php
+                                    $query = "select * from sub_materiality where workspace_id='$wid'";
+                                    $result = $con->query($query);
+                                    $row = $result->fetch_assoc() ?>
+                                    <input type="hidden" class="form-control" name="submat_id"
+                                        value="<?php echo $row['id']; ?>">
                                     <div class="form-group">
                                         <div class="container-fluid shadow border border-bottom" stickylevel="0">
                                             <div class="row pt-1">
@@ -347,33 +517,57 @@
                                                 </div>
                                             </div>
                                         </div><br>
-                                        <textarea class="form-control" id="textarea" rows="5"></textarea>
+                                        <textarea class="form-control" id="textarea" rows="5"
+                                            name="comment"><?php echo $row['comments']; ?></textarea>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="input1">Balance Assets Scope</label>
-                                            <input type="text" class="form-control" id="input1">
+                                            <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $row['balance_asset']; ?>">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="input2">Balance Liability Scope</label>
-                                            <input type="text" class="form-control" id="input2">
+                                            <input type="text" class="form-control" name="lScope"
+                                                value="<?php echo $row['balance_liability']; ?>">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="input3">PL- Income Scope</label>
-                                            <input type="text" class="form-control" id="input3">
+                                            <input type="text" class="form-control" name="pliScope"
+                                                value="<?php echo $row['pl_income']; ?>">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="input4">PL- Expenses Scope</label>
-                                            <input type="text" class="form-control" id="input4">
+                                            <input type="text" class="form-control" name="pleScope"
+                                                value="<?php echo $row['pl_expense']; ?>">
                                         </div>
                                     </div>
                                     <div class="row d-flex justify-content-center">
+                                        <input class="btn btn-primary" type="file" name="file"
+                                            accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
+                                        &nbsp;
                                         <input type="submit" class="btn btn-primary align-middle" value="Submit"> &nbsp;
-                                        <span class="btn btn-primary btn-file"> Browse Files... <input type="file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf"> </span>
                                     </div>
-                                </form>
+                                </form><br>
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col-md-5 col-sm-12">
+                                        <?php 
+                                            $query = "select * from materiality_files where workspace_id='$wid'";
+                                            $result = $con->query($query); 
+                                            while($row = $result->fetch_assoc())
+                                            {
+                                            ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item list-group-item-action"><a target="_blank"
+                                                    href="<?php echo "uploads/materiality/".$row['fname'];?>"><?php echo $row['fname']; ?></a>
+                                            </li>
+                                        </ul>
+                                        <?php
+                                            } ?>
+                                    </div>
+                                </div>
                                 <?php } 
                                 else
                                 {
@@ -385,17 +579,17 @@
                                         { 
                                             if($queryrow['hasChild']==1)
                                             { ?>
-                                        <div class="list-group">
-                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                                class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                        </div> <?php 
-                                                    }
-                                                    else
-                                                    { ?>
-                                        <div class="list-group">
-                                            <div class="list-group-item list-group-item-action">
-                                                <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
-                                                <?php 
+                                <div class="list-group">
+                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                        class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                </div> <?php 
+                                                        }
+                                                        else
+                                                        { ?>
+                                <div class="list-group">
+                                    <div class="list-group-item list-group-item-action">
+                                        <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                        <?php 
                                                         if($queryrow['active'])
                                                         { ?>
                                         <a href="#" data-target="#spOpenModal" data-toggle="modal"
@@ -540,7 +734,9 @@
                                     <div class="form-group">
                                         <label for="country">Upload Documents</label>
                                         <div class="form-group">
-                                        <span class="btn btn-primary btn-file"> Browse Files... <input type="file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf"> </span>
+                                            <span class="btn btn-primary btn-file"> Browse Files... <input type="file"
+                                                    accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -702,6 +898,43 @@
             });
         });
 
+        $(document).on('click', '.deleteMat', function() {
+            var id = $(this).attr('id');
+            $.ajax({
+                url: "deleteMat.php",
+                type: "POST",
+                data: {
+                    mat_id: id,
+                    wid: <?php echo $wid; ?>
+                },
+                success: function(response) {
+                    var obj = JSON.parse(response);
+                    if (obj.status) {
+                        swal({
+                            icon: "success",
+                            text: obj.text,
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: obj.text,
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                    .pathname +
+                                    "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            }
+                        });
+                    }
+                }
+            });
+        });
     });
     </script>
 </body>

@@ -55,9 +55,11 @@ if ($con->query($query) === true)
     $wid = $con->insert_id;
     $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
     $query2="insert into materiality(name,prog_id,workspace_id) SELECT name,prog_id,'$wid' workspace_id from materiality where def_prog='1'";
+    $query3="insert into sub_materiality(workspace_id) values ('$wid')";
     $res1=$con->query($query1);
     $res2=$con->query($query2);
-    if($res1 === false && $res2 === false)
+    $res3=$con->query($query3);
+    if($res1 === false && $res2 === false && $res3 === false)
     {
         $con->query("delete from workspace where id='$wid");
         $con->query("delete from workspace_log where workspace_id='$wid'");

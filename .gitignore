@@ -3,3 +3,6 @@ dbconnection.php
 
 //Ignoring Editor extension
 .DS_Store
+
+//Ignoring Uploads 
+uploads/materiality/*
