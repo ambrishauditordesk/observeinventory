@@ -69,9 +69,14 @@
                     <a class="nav-link" href="#" data-toggle="modal" data-target="#addClientModal"><i
                             class="fas fa-user-plus"></i>Add Clients</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="clientList"><i class="fas fa-list"></i>List Clients</a>
-                </li> -->
+                <?php 
+                if($_SESSION['role'] != 3){
+                    ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="members.php"><i class="fas fa-list"></i>Members</a>
+                </li>
+                <?php } 
+                ?>
                 <!-- <li class="nav-item">
                     <a class="nav-link" href="#"><i class="far fa-chart-bar"></i>Profile</a>
                 </li> -->
@@ -360,26 +365,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Alert Modal -->
-    <!-- <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"></h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer">
-                    <a class="btn btn-primary" data-dismiss="modal" href="#" onclick="get_data()">OK</a>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->

@@ -343,7 +343,12 @@ i {
     cursor: inherit;
     display: block;
 }
-
+.nav-link{
+    color: #fafafa !important;
+}
+.nav-link:hover{
+    color: #B8B8B8 !important;
+}
 /* footer{
     position: fixed;
     width: 100%;

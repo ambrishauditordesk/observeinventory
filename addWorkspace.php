@@ -38,8 +38,6 @@
     <script src="js/demo/datatables-demo.js"></script>
     <script src="js/custom.js"></script>
 
-
-
 <?php
 include 'dbconnection.php';
 session_start();

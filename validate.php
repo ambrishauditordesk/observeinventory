@@ -44,7 +44,7 @@
     session_start();
     
     if (isset($_SESSION['email']) && !empty($_SESSION['email'])){
-        if($_SESSION['accessLevel'] == '1'){
+        if($_SESSION['accessLevel'] == '-1'){
             header("Location: admin/clientList");    
         }
         else{
@@ -70,7 +70,7 @@
             $_SESSION['role'] = $usersrow['accessLevel'];
             $_SESSION['reg_date'] = $usersrow['reg_date'];
             $_SESSION['signoff'] = $usersrow['signoff_init'];
-            if($usersrow['accessLevel'] == '1'){
+            if($usersrow['accessLevel'] == '-1'){
                 header('Location: admin/clientList');
             }
             else{
