@@ -143,7 +143,10 @@ $_SESSION['breadcrumb'] = array();
                             <?php
                                 $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=1 and workspace_log.status=1")->fetch_assoc()['cnt'];
                                 $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=1")->fetch_assoc()['cnt'];
-                                $per = ($querys1/$querys)*100;
+                                $per = 0;
+                                if($querys != 0){
+                                    $per = ($querys1/$querys)*100;
+                                }
                             ?>
                             <div class="progress col-md-8 p-0" style="height:30px;">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ceil($per); ?>%;"><?php echo ceil($per)."%"; ?></div>
@@ -163,7 +166,10 @@ $_SESSION['breadcrumb'] = array();
                                 <?php
                                     $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid' and workspace_log.status=1")->fetch_assoc()['cnt'];
                                     $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid'")->fetch_assoc()['cnt'];
-                                    $per = ($querys1/$querys)*100;
+                                    $per = 0;
+                                    if($querys != 0){
+                                        $per = ($querys1/$querys)*100;
+                                    }
                                 ?>
                                 <div class="progress col-md-6 p-0" style="height:30px;">
                                     <div class="progress-bar" role="progressbar" style="width: <?php echo ceil($per); ?>%;" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo ceil($per)."%"; ?></div>
