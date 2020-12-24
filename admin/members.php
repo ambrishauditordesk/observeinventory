@@ -47,27 +47,6 @@
 <body style="overflow-y: scroll">
 
     <!-- Navbar -->
-    <!-- <nav class="navbar navbar-expand-lg navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="clientList">Audit-EDG</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-bars text-white"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <div class="hori-selector">
-                    <div class="left"></div>
-                    <div class="right"></div>
-                </div>
-                <li class="nav-item">
-                    <a class="nav-link" href="clientList"><i class="fas fa-list"></i>List Clients</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav> -->
     <nav class="navbar navbar-expand-lg navbar-mainbg">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
@@ -239,8 +218,16 @@
                             <label for="name">Role</label>
                             <select name="role" id="role" class="form-control" required>
                                 <option value="">Select role</option>
-                                <option value="2">Admin</option>
-                                <option value="3">Member</option>
+                                <?php
+                                if($_SESSION['role'] == -1)
+                                {
+                                ?>
+                                <option value="1">Software Admin</option>
+                                <?php
+                                }
+                                ?>
+                                <option value="2">Audit Admin</option>
+                                <option value="3">Audit Member</option>
                             </select>
                         </div>
                         <div class="form-group ">
@@ -316,15 +303,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Clients<h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
                 </div>
                 <form>
                     <div class="modal-body">
                         <div class="form-group ">
+                            <input type="hidden" id="memberId" name="memberId" value="">
                             <label for="name">Name</label>
-                            <input type="text" id="name2" class="form-control" name="name2" required>
+                            <input type="text" id="name2" class="form-control" name="name2" readonly>
                         </div>
                         <div class="row">
                             <div class="col-md-5">
@@ -374,159 +362,239 @@
     <script src="../js/sb-admin-2.min.js"></script>
     <!-- Page level custom scripts -->
     <script src="../js/custom.js"></script>
+    <!-- MULTISELECT JS -->
+    <script src="../js/multiselect-master/dist/js/multiselect.js"></script>
     <script>
     $(document).ready(function() {
         get_data();
 
         $('#lstview').multiselect();
         $('#lstview_to').multiselect();
-    });
-                
-        $(document).on('click', '.editMember', function() {
-            var id = $(this).attr("id");
-            $("#editModal #active1 > option:selected").removeAttr('selected');
+
+        $(document).on('click','#submit2',function(e){
+            e.preventDefault();
+            var selectedValues = []; 
+            $("#lstview_to option").each(function(){
+                selectedValues.push($(this).val()); 
+            });
+            var id = $("#memberId").val();
+            var name = $("#name2").val(); 
+            
+            $("#allocate").modal('hide');
             $.ajax({
-                url: "editMemberFetchAjax.php",
+                url: "clientAllocate.php",
+                type: "POST",
+                data: {
+                    memberId:id,
+                    name:name,
+                    selectedValues:selectedValues
+                },
+                success: function(data){    
+                    if (data) {
+                    swal({
+                        icon: "success",
+                        text: "Updated",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        }
+                    });
+                }
+                }
+            });    
+        });
+    });
+
+    $(document).on('click', '.editMember', function() {
+        var id = $(this).attr("id");
+        $("#editModal #active1 > option:selected").removeAttr('selected');
+        $.ajax({
+            url: "editMemberFetchAjax.php",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                obj = JSON.parse(data);
+                id = obj.id;
+                $("#editModal #name1").val(obj.name);
+                $("#editModal #email1").val(obj.email);
+                $("#editModal #role1").val(obj.accessLevel);
+                $("#editModal #active1 option[value=" + obj.active + "]").attr(
+                    'selected', 'selected');
+                $("#editModal #signoff1").val(obj.signoff_init);
+                $("#editModal").modal('show');
+            }
+        });
+    });
+
+
+    function get_data() {
+        var dataTable = $('#membersTable').DataTable({
+            "destroy": true,
+            "processing": true,
+            "serverSide": true,
+            "searching": true,
+            "order": [],
+            "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+                $("td:first", nRow).html(iDisplayIndex + 1);
+                return nRow;
+            },
+            "ajax": {
+                url: "memberFetchAjax.php",
+                type: "POST"
+            }
+        });
+    }
+
+    $(document).on('click', '#submit1', function(e) {
+        e.preventDefault();
+        var email = $("#email1").val();
+        var role = $("#role1").val();
+        var active = $("#active1").val();
+        var signoff = $("#signoff1").val();
+        $("#editModal").modal('hide');
+
+        $.ajax({
+            url: "editAMember.php",
+            type: "POST",
+            data: {
+                email: email,
+                role: role,
+                active: active,
+                signoff: signoff
+            },
+            success: function(data) {
+                if (data) {
+                    swal({
+                        icon: "success",
+                        text: "Updated",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        });
+
+
+    });
+
+    $(document).on('click', '.allocate', function() {
+        var id = $(this).attr("id");
+        $.ajax({
+            url: "clientMemberFetchAjax.php",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                obj = JSON.parse(data);
+                id = obj.id;
+                $("#allocate #name2").val(obj.name);
+                $("#allocate #memberId").val(obj.id);
+                fromSelect(id);
+                toSelect(id);
+                $("#allocate").modal('show');
+            }
+        });
+
+        function fromSelect(id) {
+            $("#allocate #lstview").empty();
+            $.ajax({
+                url: "fromClientAjax.php",
                 type: "POST",
                 data: {
                     id: id
                 },
                 success: function(data) {
-                    obj = JSON.parse(data);
-                    id = obj.id;
-                    $("#editModal #name1").val(obj.name);
-                    $("#editModal #email1").val(obj.email);
-                    $("#editModal #role1").val(obj.accessLevel);
-                    $("#editModal #active1 option[value=" + obj.active + "]").attr(
-                        'selected', 'selected');
-                    $("#editModal #signoff1").val(obj.signoff_init);
-                    $("#editModal").modal('show');
-                }
-            });
-        });
-
-       
-        function get_data() {
-            var dataTable = $('#membersTable').DataTable({
-                "destroy": true,
-                "processing": true,
-                "serverSide": true,
-                "searching": true,
-                "order": [],
-                "fnRowCallback": function(nRow, aData, iDisplayIndex) {
-                    $("td:first", nRow).html(iDisplayIndex + 1);
-                    return nRow;
-                },
-                "ajax": {
-                    url: "memberFetchAjax.php",
-                    type: "POST"
+                    //console.log(data);
+                    cObj = JSON.parse(data);
+                    for (var i = 0; i < cObj.length; i++) {
+                        $("#allocate #lstview").append('<option value="' + cObj[i].id + '">' + cObj[i].name + '</option>');
+                    }
                 }
             });
         }
 
-        $(document).on('click', '#submit1', function(e) {
-            e.preventDefault();
-            var email = $("#email1").val();
-            var role = $("#role1").val();
-            var active = $("#active1").val();
-            var signoff = $("#signoff1").val();
-            $("#editModal").modal('hide');
-
+        function toSelect(id) {
+            $("#allocate #lstview_to").empty();
             $.ajax({
-                url: "editAMember.php",
-                type: "POST",
-                data: {
-                    email: email,
-                    role: role,
-                    active: active,
-                    signoff: signoff
-                },
-                success: function(data) {
-                    console.log(data);
-                    if (data) {
-                        swal({
-                            icon: "success",
-                            text: "Updated",
-                        }).then(function(isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        swal({
-                            icon: "error",
-                            text: "Failed!",
-                        }).then(function(isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
-                    }
-                }
-            });
-
-
-        });
-
-        $(document).on('click', '.allocate', function() {
-            var id = $(this).attr("id");
-            $.ajax({
-                url: "clientMemberFetchAjax.php",
+                url: "toClientAjax.php",
                 type: "POST",
                 data: {
                     id: id
                 },
                 success: function(data) {
-                    obj = JSON.parse(data);
-                    id = obj.id;
-                    $("#allocate #name2").val(obj.name);
-                    fromSelect(id);
-                    toSelect(id);
-                    $("#allocate").modal('show');
-                }
-            });
-        });
-
-        $('#registerSubmit').on('click', function(e) {
-            e.preventDefault();
-            var name = $("#name").val();
-            var email = $("#email").val();
-            var password = $("#password").val();
-            var role = $("#role").val();
-            var signoff = $("#signoff").val();
-            $.ajax({
-                url: "addMember.php",
-                type: "POST",
-                data: {
-                    name: name,
-                    email: email,
-                    password: password,
-                    role: role,
-                    signoff: signoff
-                },
-                success: function(response) {
-                    if (response) {
-                        swal({
-                            icon: "success",
-                            text: name + " Added",
-                        }).then(function(isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        swal({
-                            icon: "error",
-                            text: "Failed!",
-                        }).then(function(isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
+                    cObj = JSON.parse(data);
+                    for (var i = 0; i < cObj.length; i++) {
+                        $("#allocate #lstview_to").append('<option value="' + cObj[i].id + '">' + cObj[i].name + '</option>');
                     }
                 }
             });
+        }
+
+    });
+
+    $('#registerSubmit').on('click', function(e) {
+        e.preventDefault();
+        var name = $("#name").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var role = $("#role").val();
+        var signoff = $("#signoff").val();
+        $.ajax({
+            url: "addMember.php",
+            type: "POST",
+            data: {
+                name: name,
+                email: email,
+                password: password,
+                role: role,
+                signoff: signoff
+            },
+            success: function(response) {
+                if (response) {
+                    swal({
+                        icon: "success",
+                        text: name + " Added",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            location.reload();
+                        }
+                    });
+                }
+            }
         });
+    });
     </script>
 </body>
 

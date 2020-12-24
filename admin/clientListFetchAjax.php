@@ -1,24 +1,30 @@
 <?php 
 include '../dbconnection.php';
 session_start();
-$column = array('name','const_id','added_by_date','active','action');
-$query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id ";
-if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
-{
- $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
-}
-if(isset($_POST['order']))
-{
- $query .= 'ORDER BY '.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
-}
+
+$role =$_SESSION['role'];
+$userId = $_SESSION['id'];
+
+if($role == 2 || $role == 3)
+    $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id where a.id in (select client_id from user_client_log where user_id=$userId)";
 else
-{
- $query .= 'ORDER BY aname DESC ';
+    $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id";
+
+$column = array('name','const_id','added_by_date','active','action');
+
+if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"])){
+    $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
 }
- $query1 = '';
-if($_POST["length"] != -1)
-{
- $query1 = 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
+if(isset($_POST['order'])){
+    $query .= ' ORDER BY '.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
+}
+else{
+    $query .= ' ORDER BY aname DESC ';
+}
+
+$query1 = '';
+if($_POST["length"] != -1){
+    $query1 = 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
 //$statement = $con->prepare($query);
 $statement = $con->query($query);

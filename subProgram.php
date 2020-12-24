@@ -102,32 +102,43 @@
             <div class="content">
                 <!-- Navbar -->
                 <nav class="navbar navbar-expand-lg navbar-mainbg">
-                    <!-- <a class="navbar-brand navbar-logo" href="admin/dashboard">Audit-EDG</a> -->
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-bars text-white"></i>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ml-auto">
-                            <?php
-                                if($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229')
-                                {
-                            ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="modal" data-target="#addProgModal"><i
-                                        class="fas fa-plus-circle"></i>Add Programme</a>
-                            </li>
-                            <?php }
-                                ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="admin/clientList"><i class="fas fa-list"></i>List Clients</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <?php
+                            if($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12')
+                            {
+                        ?>
+                        <li class="nav-item d-flex">
+                            <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#addProgModal">
+                                <span>Add Programme</span>&nbsp;&nbsp;
+                                <i class="fas fa-user-plus fa-1x"></i>
+                            </a>
+                        </li>
+                        <?php } 
+                        ?>
+                        <li class="nav-item dropdown no-arrow ">
+                            <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#"
+                                id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <div class="d-flex align-items-center">
+                                    <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
+                                    <span class="rounded-circle d-flex justify-contents-center">
+                                        <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Change Password
+                        </a>
+                        <div class="dropdown-divider"></div> -->
+                                <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
                 </nav>
                 <!-- HEADER -->
                 <div id="header">
@@ -442,136 +453,136 @@
                                 {
                                     $query = "select * from materiality where workspace_id='$wid' and prog_id='$prog_id'";
                                     $result = $con->query($query); ?>
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary" data-target="#addMethod" data-toggle="modal"
-                                            id="add_new">ADD NEW</button>
-                                    </div>
-                                </div><br>
-                                <form action="materialitySubmit.php?&wid=<?php echo $wid;?>" method="post"
-                                    enctype="multipart/form-data">
-                                    <table class="table table-hover" id="tab_logic">
-                                        <thead class="text-center">
-                                            <tr>
-                                                <th scope="col" hidden>Id</th>
-                                                <th scope="col">Methods</th>
-                                                <th scope="col" colspan="2">Standard %</th>
-                                                <th scope="col" colspan="2">Custom %</th>
-                                                <th scope="col">Amount</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                            <tr>
-                                                <th hidden></th>
-                                                <th></th>
-                                                <th>High</th>
-                                                <th>Low</th>
-                                                <th>High</th>
-                                                <th>Low</th>
-                                                <th></th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="abody">
-                                            <?php 
-                                        while($row = $result->fetch_assoc()){
-                                        ?>
-                                            <tr>
-                                                <td scope="row" hidden>
-                                                    <input type="hidden" name="materialityData[id][]"
-                                                        value="<?php echo $row['id'];?>">
-                                                </td>
-                                                <td> <label><?php echo $row['name']; ?></label> </td>
-                                                <td> <input type="text" size="10" name="materialityData[sLow][]"
-                                                        value="<?php echo $row['standard_low'];?>"> </td>
-                                                <td> <input type="text" size="10" name="materialityData[sHigh][]"
-                                                        value="<?php echo $row['standard_high'];?>"> </td>
-                                                <td> <input type="text" size="10" name="materialityData[cLow][]"
-                                                        value="<?php echo $row['custom_low'];?>"> </td>
-                                                <td> <input type="text" size="10" name="materialityData[cHigh][]"
-                                                        value="<?php echo $row['custom_high'];?>"> </td>
-                                                <td> <input type="text" size="10" name="materialityData[amount][]"
-                                                        value="<?php echo $row['amount'];?>">
-                                                </td>
-                                                <td> <a href="#" id="<?php echo $row['id']; ?>" class="deleteMat">
-                                                        <i class="fas fa-times-circle"
-                                                            style="color:red !important;"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <?php 
-                                        } 
-                                        ?>
-                                        </tbody>
-                                    </table><br>
-                                    <?php
-                                    $query = "select * from sub_materiality where workspace_id='$wid'";
-                                    $result = $con->query($query);
-                                    $row = $result->fetch_assoc() ?>
-                                    <input type="hidden" class="form-control" name="submat_id"
-                                        value="<?php echo $row['id']; ?>">
-                                    <div class="form-group">
-                                        <div class="container-fluid shadow border border-bottom" stickylevel="0">
-                                            <div class="row pt-1">
-                                                <div class="row text-center">
-                                                    <h5>Reason behind selecting the basis</h5>
-                                                </div>
-                                            </div>
-                                        </div><br>
-                                        <textarea class="form-control" id="textarea" rows="5"
-                                            name="comment"><?php echo $row['comments']; ?></textarea>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="input1">Balance Assets Scope</label>
-                                            <input type="text" class="form-control" name="aScope"
-                                                value="<?php echo $row['balance_asset']; ?>">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <button class="btn btn-primary" data-target="#addMethod" data-toggle="modal"
+                                                id="add_new">ADD NEW</button>
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="input2">Balance Liability Scope</label>
-                                            <input type="text" class="form-control" name="lScope"
-                                                value="<?php echo $row['balance_liability']; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="input3">PL- Income Scope</label>
-                                            <input type="text" class="form-control" name="pliScope"
-                                                value="<?php echo $row['pl_income']; ?>">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="input4">PL- Expenses Scope</label>
-                                            <input type="text" class="form-control" name="pleScope"
-                                                value="<?php echo $row['pl_expense']; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="row d-flex justify-content-center">
-                                        <input class="btn btn-primary" type="file" name="file"
-                                            accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
-                                        &nbsp;
-                                        <input type="submit" class="btn btn-primary align-middle" value="Submit"> &nbsp;
-                                    </div>
-                                </form><br>
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-md-5 col-sm-12">
-                                        <?php 
-                                            $query = "select * from materiality_files where workspace_id='$wid'";
-                                            $result = $con->query($query); 
-                                            while($row = $result->fetch_assoc())
-                                            {
+                                    </div><br>
+                                    <form action="materialitySubmit.php?&wid=<?php echo $wid;?>" method="post"
+                                        enctype="multipart/form-data">
+                                        <table class="table table-hover" id="tab_logic">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th scope="col" hidden>Id</th>
+                                                    <th scope="col">Methods</th>
+                                                    <th scope="col" colspan="2">Standard %</th>
+                                                    <th scope="col" colspan="2">Custom %</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                                <tr>
+                                                    <th hidden></th>
+                                                    <th></th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="abody">
+                                                <?php 
+                                            while($row = $result->fetch_assoc()){
                                             ?>
-                                        <ul class="list-group">
-                                            <li class="list-group-item list-group-item-action"><a target="_blank"
-                                                    href="<?php echo "uploads/materiality/".$row['fname'];?>"><?php echo $row['fname']; ?></a>
-                                            </li>
-                                        </ul>
+                                                <tr>
+                                                    <td scope="row" hidden>
+                                                        <input type="hidden" name="materialityData[id][]"
+                                                            value="<?php echo $row['id'];?>">
+                                                    </td>
+                                                    <td> <label><?php echo $row['name']; ?></label> </td>
+                                                    <td> <input type="text" size="10" name="materialityData[sLow][]"
+                                                            value="<?php echo $row['standard_low'];?>"> </td>
+                                                    <td> <input type="text" size="10" name="materialityData[sHigh][]"
+                                                            value="<?php echo $row['standard_high'];?>"> </td>
+                                                    <td> <input type="text" size="10" name="materialityData[cLow][]"
+                                                            value="<?php echo $row['custom_low'];?>"> </td>
+                                                    <td> <input type="text" size="10" name="materialityData[cHigh][]"
+                                                            value="<?php echo $row['custom_high'];?>"> </td>
+                                                    <td> <input type="text" size="10" name="materialityData[amount][]"
+                                                            value="<?php echo $row['amount'];?>">
+                                                    </td>
+                                                    <td> <a href="#" id="<?php echo $row['id']; ?>" class="deleteMat">
+                                                            <i class="fas fa-times-circle"
+                                                                style="color:red !important;"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <?php 
+                                            } 
+                                            ?>
+                                            </tbody>
+                                        </table><br>
                                         <?php
-                                            } ?>
+                                        $query = "select * from sub_materiality where workspace_id='$wid'";
+                                        $result = $con->query($query);
+                                        $row = $result->fetch_assoc() ?>
+                                        <input type="hidden" class="form-control" name="submat_id"
+                                            value="<?php echo $row['id']; ?>">
+                                        <div class="form-group">
+                                            <div class="container-fluid shadow border border-bottom" stickylevel="0">
+                                                <div class="row pt-1">
+                                                    <div class="row text-center">
+                                                        <h5>Reason behind selecting the basis</h5>
+                                                    </div>
+                                                </div>
+                                            </div><br>
+                                            <textarea class="form-control" id="textarea" rows="5"
+                                                name="comment"><?php echo $row['comments']; ?></textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="input1">Balance Assets Scope</label>
+                                                <input type="text" class="form-control" name="aScope"
+                                                    value="<?php echo $row['balance_asset']; ?>">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="input2">Balance Liability Scope</label>
+                                                <input type="text" class="form-control" name="lScope"
+                                                    value="<?php echo $row['balance_liability']; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="input3">PL- Income Scope</label>
+                                                <input type="text" class="form-control" name="pliScope"
+                                                    value="<?php echo $row['pl_income']; ?>">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="input4">PL- Expenses Scope</label>
+                                                <input type="text" class="form-control" name="pleScope"
+                                                    value="<?php echo $row['pl_expense']; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-center">
+                                            <input class="btn btn-primary" type="file" name="file"
+                                                accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
+                                            &nbsp;
+                                            <input type="submit" class="btn btn-primary align-middle" value="Submit"> &nbsp;
+                                        </div>
+                                    </form><br>
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-5 col-sm-12">
+                                            <?php 
+                                                $query = "select * from materiality_files where workspace_id='$wid'";
+                                                $result = $con->query($query); 
+                                                while($row = $result->fetch_assoc())
+                                                {
+                                                ?>
+                                            <ul class="list-group">
+                                                <li class="list-group-item list-group-item-action"><a target="_blank"
+                                                        href="<?php echo "uploads/materiality/".$row['fname'];?>"><?php echo $row['fname']; ?></a>
+                                                </li>
+                                            </ul>
+                                            <?php
+                                                } ?>
+                                        </div>
                                     </div>
-                                </div>
                                 <?php } 
                                 else
                                 {
-                                    $query = "select program.*,workspace_log.status status, workspace_log.active active  from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_id' and workspace_log.workspace_id='$wid' and workspace_log.import= 1";
+                                    $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1";
                                     $exquery = $con->query($query);
                                     if ($exquery->num_rows != 0) 
                                     {
@@ -592,27 +603,29 @@
                                         <?php 
                                                         if($queryrow['active'])
                                                         { ?>
-                                        <a href="#" data-target="#spOpenModal" data-toggle="modal"
-                                            style="a:hover {text-decoration: none;}">
-                                            <i class="fas fa-external-link-alt" style="color:blue !important;"></i>
-                                        </a> <?php
+                                                            <a href="#">
+                                                                <i class="fas fa-external-link-alt signoffmodal" style="color:blue !important;" id="<?php echo $queryrow['id']; ?>"></i>
+                                                            </a> <?php
                                                             if($queryrow['status'])
                                                             { ?>
-                                        <i class="fas fa-check-circle" style="color:green !important;"></i> <?php 
+                                                                <i class="fas fa-check-circle" style="color:green !important;"></i>
+                                                                <span>Prepared By: <?php echo $queryrow['Prepare_SignOff']."(".$queryrow['prepare_date']; ?>) </span> &nbsp;| &nbsp; 
+                                                                <span>Reviewed By: <?php echo $queryrow['Review_SignOff']."(".$queryrow['review_date']; ?>)</span>
+                                                            <?php 
                                                             }  
                                                             else
                                                             { ?>
-                                        <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
+                                                                    <i class="fas fa-times-circle" style="color:red !important;"></i> <?php 
                                                             } ?>
-                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i
-                                                class="fa fa-thumbs-up float-right" aria-hidden="true"
-                                                style="color:blue !important;"></i></a> <?php
+                                                            <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive"><i
+                                                                    class="fa fa-thumbs-up float-right" aria-hidden="true"
+                                                                    style="color:blue !important;"></i></a> <?php
                                                         }
                                                         else
                                                         { ?>
-                                        <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
-                                            <i class="fa fa-ban float-right" aria-hidden="true"
-                                                style="color:orange !important;"></i></a> <?php
+                                                            <a href="#" id="<?php echo $queryrow['id']; ?>" class="buttonActive">
+                                                                <i class="fa fa-ban float-right" aria-hidden="true"
+                                                                    style="color:orange !important;"></i></a> <?php
                                                         }                                                   
                                                         ?>
                                     </div>
@@ -703,60 +716,49 @@
         </div>
     </div>
 
-    <!-- Subprogram Open Modal-->
-    <div class="modal fade" id="spOpenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- Signoff Modal-->
+    <div class="modal fade" id="signoffModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Obtain Client Acceptance Engagement Letter
-                        <h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+                <div class="modal-header" id="programname">
+                
+                            
                 </div>
-                <div class="modal-body">
-                    <div class="container card bg-light font-2 py-2">
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-md-6"></div>
-                            <div class="col-md-6 text-right">
-                                <a class="btn btn-outline-dark btn-sm py-0 menu-02">
-                                    Sign-Off
-                                </a>
-                                <a class="btn btn-outline-dark btn-sm py-0 menu-02">
-                                    Review
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label for="country">Upload Documents</label>
+                <form name="signoff" action="signoff.php?wid=<?php echo $wid; ?>" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="container card bg-light font-2 py-2">
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-md-6">
+                                    <div class="row">
                                         <div class="form-group">
-                                            <span class="btn btn-primary btn-file"> Browse Files... <input type="file"
+                                            <label for="country">Upload Documents</label>
+                                            <div class="form-group">
+                                                <input class="btn btn-primary" type="file" name="file[]" multiple
                                                     accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
-                                            </span>
+                                            </div>
                                         </div>
                                     </div>
+                                    <ul class="list-group" id="filenames">
+                                    </ul>
                                 </div>
-                                <ul class="list-group h5">
-                                    <li class="list-group-item"></li>
-                                    <li class="list-group-item"></li>
-                                    <li class="list-group-item"></li>
-                                </ul>
+                                <div class="col-md-6">
+                                    <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="prog_id" id="prog_id">
+                                    <label>Add Your Comment</label>
+                                    <textarea name="newComment" class="form-control" style="height:50px;"></textarea>
+                                    <label>Comments</label>
+                                    <textarea readonly name="comments" id="comments" class="form-control" style="height:200px;"></textarea><br>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label>Comments</label>
-                                <textarea id="comments" class="form-control" style="height:200px;"></textarea>
+                            <div class="modal-footer">
+                                <input name="reviewSubmit" class="btn btn-info" type="submit" id="reviewSubmit" value="Review Sign-Off">
+                                <input name="prepareSubmit" class="btn btn-success" type="submit" id="prepareSubmit" value="Prepare Sign-Off">
+                                <input name="done" class="btn btn-primary" type="submit" id="done" value="Done">
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                            <input class="btn btn-primary" type="submit" id="subProgSubmit" value="Done">
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -935,6 +937,38 @@
                 }
             });
         });
+
+        $(document).on('click', '.signoffmodal', function() {
+            var id = $(this).attr("id");
+            $("#signoffModal #active1 > option:selected").removeAttr('selected');
+            $("#signoffModal #filenames").empty();
+            $("#signoffModal #programname").empty();
+            $("#signoffModal #comments").val("");
+            $("#signoffModal #id").val("");
+            $("#signoffModal #prog_id").val("");
+            $.ajax({
+                url: "admin/signoffFetchAjax.php",
+                type: "POST",
+                data: {
+                    id: id,
+                    wid: <?php echo $wid; ?>
+                },
+                success: function(data) {
+                    obj = JSON.parse(data);
+                    obj.file.forEach(function(value){
+                        $('#signoffModal #filenames').append('<li class="list-group-item list-group-item-action" id="'+value[0]+'"><a target="_blank" href="#">'+value[1]+'</a></li>');
+                    });
+                    if(obj.comment != null){
+                        $("#signoffModal #comments").val(obj.comment['comment']);
+                        $("#signoffModal #id").val(obj.comment['id']);
+                    }
+                    $("#signoffModal #programname").append('<h5 class="modal-title">'+obj.pname['program_name']+'</h5><button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>');
+                }
+            });
+            $("#signoffModal #prog_id").val(id);
+            $("#signoffModal").modal('show');
+        });
+
     });
     </script>
 </body>

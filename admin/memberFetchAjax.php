@@ -2,7 +2,7 @@
 include '../dbconnection.php';
 session_start();
 $column = array('','name','email','accessLevel','active','reg_date','signoff_init','edit','allocate');
-$query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and a.accessLevel <> -1";
+$query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel <> -1 and a.accessLevel <> 1)";
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
 {
  $query .= ' and name LIKE "%'.$_POST["search"]["value"].'%"';

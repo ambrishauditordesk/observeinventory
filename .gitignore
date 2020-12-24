@@ -5,4 +5,6 @@ dbconnection.php
 .DS_Store
 
 //Ignoring Uploads 
-uploads/materiality/*
+uploads/*
+
+

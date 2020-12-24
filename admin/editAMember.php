@@ -10,14 +10,13 @@
         $signoff = trim($_POST['signoff']);
 
         $res= $con->query("update user set accessLevel='$role', active='$active', signoff_init='$signoff' where email='$email'");
-        var_dump("update user set accessLevel='$role', active='$active', signoff_init='$signoff' where email='$email'");
-        // if($res)
-        // {
-        //     echo 1;
-        // }
-        // else
-        // {
-        //     echo 0;
-        // }
+        if($res)
+        {
+            echo 1;
+        }
+        else
+        {
+            echo 0;
+        }
     }
 ?>

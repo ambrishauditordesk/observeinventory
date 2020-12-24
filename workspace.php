@@ -44,35 +44,49 @@
 
 <body style="overflow-y: scroll">
 
-<!-- Navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="admin/clientList">Audit-EDG</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars text-white"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-clipboard"></i>Doodle/Notes</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#"><i class="far fa-address-book"></i>Support/Tickets</a>
-                </li> -->
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-toggle="modal" data-target="#addClientModal"><i class="fas fa-user-plus"></i>Add Clients</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="admin/clientList"><i class="fas fa-list"></i>List Clients</a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="far fa-chart-bar"></i>Profile</a>
-                </li> -->
-                <li class="nav-item">
-                    <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
-                </li>
-            </ul>
-        </div>
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="admin/clientList">
+                    <span>List Clients</span>&nbsp;&nbsp;
+                    <i class="fas fa-list fa-1x"></i>
+                </a>
+            </li>
+            <?php 
+                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
+                    ?>
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#addClientModal">
+                    <span>Add Clients</span>&nbsp;&nbsp;
+                    <i class="fas fa-user-plus fa-1x"></i>
+                </a>
+            </li>
+            <?php } 
+            ?>
+            <li class="nav-item dropdown no-arrow ">
+                <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="d-flex align-items-center">
+                        <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
+                        <span class="rounded-circle d-flex justify-contents-center">
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Change Password
+                        </a>
+                        <div class="dropdown-divider"></div> -->
+                    <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                </div>
+            </li>
+        </ul>
     </nav>
 	
 <!-- HEADER -->
@@ -88,6 +102,9 @@
 </div><br>
 
 <!-- ADD WORKSPACE BUTTON -->
+            <?php 
+                if($_SESSION['role'] != 3){
+            ?>
             <div class = "row justify-content-md-center">   
                 <div class="col-xl-3 col-md-6 mb-4 ">                       
                     <div class="card border-left-warning shadow h-100 py-2">
@@ -108,7 +125,8 @@
                     </div>
                 </div>
             </div>  
-
+            <?php } 
+            ?>
 <!-- DATATABLE -->
         <div class="container pt-4">
             <div class="row">

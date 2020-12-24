@@ -48,7 +48,7 @@
             header("Location: admin/clientList");    
         }
         else{
-            header("Location: audit_admin/dashboard");
+            header("Location: admin/clientList");
         }
     }
     if(!isset($_POST['email']) && empty($_POST['email']) && !isset($_POST['password']) && empty($_POST['password'])){
@@ -74,7 +74,7 @@
                 header('Location: admin/clientList');
             }
             else{
-                header('Location: audit_admin/dashboard.php');
+                header('Location: admin/clientList');
             }
         }
         else{

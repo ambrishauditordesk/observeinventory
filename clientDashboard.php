@@ -40,14 +40,12 @@ $_SESSION['breadcrumb'] = array();
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
                 <div class="sidebar-brand-icon">
                     <a class="navbar-brand navbar-logo" href="admin/clientList">Audit-EDG</a>
                 </div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
             <!-- Nav Item - Pages Collapse Menu -->
@@ -57,58 +55,78 @@ $_SESSION['breadcrumb'] = array();
                     <span>Audit Program</span>
                 </a>
             </li>
-            <!-- <li id="viewupload" class="nav-item">
-                <a class="nav-link" href="xyz">
-                    <i class="fas fa-fw fa-user-tie"></i>
-                    <span>Audit Member</span>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Quick Links</span>
                 </a>
-            </li> -->
-
+                <div id="collapseAdmin" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Quick Links</h6>
+                        <a class="collapse-item" href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance CY</a>
+                        <a class="collapse-item" href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance PY</a>
+                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements CY</a>
+                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements PY</a>
+                        <a class="collapse-item" href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Client Assistance Schedule</a>
+                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion CY</a>
+                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion PY</a>
+                    </div>
+                </div>
+            </li>
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
         </ul>
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div class="content">
                 <!-- Navbar -->
-                <nav class="navbar navbar-expand-lg navbar-mainbg">
-                    <!-- <a class="navbar-brand navbar-logo" href="admin/dashboard">Audit-EDG</a> -->
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-bars text-white"></i>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ml-auto">
-                            <div class="hori-selector">
-                                <div class="left"></div>
-                                <div class="right"></div>
-                            </div>
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fas fa-clipboard"></i>Doodle/Notes</a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#"><i class="far fa-address-book"></i>Support/Tickets</a>
-                            </li> -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="modal" data-target="#addClientModal"><i
-                                        class="fas fa-user-plus"></i>Add Clients</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="admin/clientList"><i class="fas fa-list"></i>List Clients</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
-                            </li>
-                        </ul>
+    <nav class="navbar navbar-expand-lg navbar-mainbg">
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="admin/clientList">
+                    <span>List Clients</span>&nbsp;&nbsp;
+                    <i class="fas fa-list fa-1x"></i>
+                </a>
+            </li>
+            <?php 
+                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
+                    ?>
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#addClientModal">
+                    <span>Add Clients</span>&nbsp;&nbsp;
+                    <i class="fas fa-user-plus fa-1x"></i>
+                </a>
+            </li>
+            <?php } 
+            ?>
+            <li class="nav-item dropdown no-arrow ">
+                <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="d-flex align-items-center">
+                        <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
+                        <span class="rounded-circle d-flex justify-contents-center">
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                        </span>
                     </div>
-                </nav>
+
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Change Password
+                        </a>
+                        <div class="dropdown-divider"></div> -->
+                    <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
                 <!-- HEADER -->
                 <div id="header">
                     <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
@@ -120,18 +138,36 @@ $_SESSION['breadcrumb'] = array();
                     </div><br>
                     <!-- Body Starts -->
                     <div class="container-fluid">
-                        <div class="col-md-8">
-                            <h1>Audit Programme</h1>
+                        <div class="col-md-12 d-flex" style="align-items:center;">
+                            <h1 class="col-md-4">Audit Programme</h1>
+                            <?php
+                                $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=1 and workspace_log.status=1")->fetch_assoc()['cnt'];
+                                $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=1")->fetch_assoc()['cnt'];
+                                $per = ($querys1/$querys)*100;
+                            ?>
+                            <div class="progress col-md-8 p-0" style="height:30px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ceil($per); ?>%;"><?php echo ceil($per)."%"; ?></div>
+                            </div>
                         </div><br>
-                        <div class="col-md-12">
+                        <div class="col-md-12 d-flex" style="flex-direction:column;">
                             <?php
                             $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
                             $exquery = $con->query($query);
                             if ($exquery->num_rows != 0) {
                                 while ($queryrow = $exquery->fetch_assoc()) {?>
-                            <div class="list-group">
+                            <div class="list-group col-md-12" style="flex-direction:row; align-items:center;">
+                                <div class="col-md-6">
                                 <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
                                     class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                </div>
+                                <?php
+                                    $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid' and workspace_log.status=1")->fetch_assoc()['cnt'];
+                                    $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid'")->fetch_assoc()['cnt'];
+                                    $per = ($querys1/$querys)*100;
+                                ?>
+                                <div class="progress col-md-6 p-0" style="height:30px;">
+                                    <div class="progress-bar" role="progressbar" style="width: <?php echo ceil($per); ?>%;" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo ceil($per)."%"; ?></div>
+                                </div>
                             </div>
                             <?php }}
                     ?>
