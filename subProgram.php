@@ -105,7 +105,7 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <?php
-                            if($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12')
+                            if($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id !=239 && $prog_id !=240 )
                             {
                         ?>
                         <li class="nav-item d-flex">
@@ -580,6 +580,27 @@
                                         </div>
                                     </div>
                                 <?php } 
+                                elseif($prog_id == 12){
+                                    $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                                    $exquery = $con->query($query);
+                                    if ($exquery->num_rows != 0) 
+                                    {
+                                        while($queryrow = $exquery->fetch_assoc())
+                                        { 
+                                            if($queryrow['hasChild']==1)
+                                            { ?>
+                                    <div class="list-group">
+                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                            class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                    </div> <?php 
+                                                            }
+                                                            else
+                                                            { ?>
+                                    <div class="list-group">
+                                        <div class="list-group-item list-group-item-action">
+                                            <?php echo trim($queryrow['program_name']); ?> 
+                                    <?php } } }
+                                }
                                 else
                                 {
                                     $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1";
@@ -593,14 +614,14 @@
                                 <div class="list-group">
                                     <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
                                         class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                </div> <?php 
+                                </div> <?php
                                                         }
                                                         else
                                                         { ?>
                                 <div class="list-group">
                                     <div class="list-group-item list-group-item-action">
                                         <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
-                                        <?php 
+                                        <?php
                                                         if($queryrow['active'])
                                                         { ?>
                                                             <a href="#">
@@ -754,7 +775,7 @@
                             <div class="modal-footer">
                                 <input name="reviewSubmit" class="btn btn-info" type="submit" id="reviewSubmit" value="Review Sign-Off">
                                 <input name="prepareSubmit" class="btn btn-success" type="submit" id="prepareSubmit" value="Prepare Sign-Off">
-                                <input name="done" class="btn btn-primary" type="submit" id="done" value="Done">
+                                <input name="done" class="btn btn-primary" type="submit" id="done" value="Submit">
                             </div>
                         </div>
                     </div>

@@ -54,17 +54,6 @@
                     <i class="fas fa-list fa-1x"></i>
                 </a>
             </li>
-            <?php 
-                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
-                    ?>
-            <li class="nav-item d-flex">
-                <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#addClientModal">
-                    <span>Add Clients</span>&nbsp;&nbsp;
-                    <i class="fas fa-user-plus fa-1x"></i>
-                </a>
-            </li>
-            <?php } 
-            ?>
             <li class="nav-item dropdown no-arrow ">
                 <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
