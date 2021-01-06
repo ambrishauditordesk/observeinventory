@@ -216,15 +216,15 @@
                             <label for="country">Constitution</label>
                             <select class="form-control" name="constitution" required>
                                 <option>Select Constitution !</option>
-                                <?php
-                                                $consQuery = $con->query("select * from constitution");
-                                                while ($consResult = $consQuery->fetch_assoc()) {
-                                            ?>
+                                    <?php
+                                        $consQuery = $con->query("select * from constitution");
+                                        while ($consResult = $consQuery->fetch_assoc()) {
+                                    ?>
                                 <option value="<?php echo $consResult['id']; ?>">
                                     <?php echo $consResult['const']; ?></option>
-                                <?php
-                                            }
-                                            ?>
+                                    <?php
+                                        }
+                                    ?>
                             </select>
                         </div>
                         <div class="form-group ">

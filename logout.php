@@ -7,9 +7,9 @@ include 'dbconnection.php';
         $con->query("update session_log set logout_datetime	= '$dateTime' where user_id = '$userId' and logout_datetime = ''");
         session_unset();
         session_destroy();
-        header("location:index");
+        header("location:./");
     }
     else
     {
-        header("location:index");
+        header("location:./");
     }
