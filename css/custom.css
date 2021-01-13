@@ -349,6 +349,21 @@ i {
 .nav-link:hover{
     color: #B8B8B8 !important;
 }
+
+.tableFixHead {
+    max-height: 500px; 
+}
+th { 
+    padding: 8px 16px; 
+    position: sticky;
+    top: 0;
+    background:#fff;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); 
+}
+
+.form-control {
+    width: 100% !important;
+}
 /* footer{
     position: fixed;
     width: 100%;

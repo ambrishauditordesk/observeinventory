@@ -7,6 +7,8 @@
     if (isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] == '3') {
         header('Location: ../login');
     }
+    $clientId= $_GET['cid'];
+    $clientName = $con->query("select name from client where id = $clientId ")->fetch_assoc()["name"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,8 +92,8 @@
                     <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
                     <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
                 </div>
-                <div class="col-md-4 text-center font-2 getContent" href="clientList">
-                    <h3>MEMBERS</h3>
+                <div class="col-md-4 text-center font-2 getContent" href="#">
+                    <h3><?php echo strtoupper($clientName . " - MEMBERS"); ?></h3>
                 </div>
             </div>
         </div>
@@ -110,7 +112,7 @@
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <?php
-                            $query = "SELECT COUNT(id) AS total FROM user where accessLevel > '".$_SESSION['role']."' and client_id is null";
+                            $query = "SELECT COUNT(id) AS total FROM user where client_id='$clientId'";
                             $totalMembers = $con->query($query);
                             if ($totalMembers->num_rows != 0) {
                                 $count = $totalMembers->fetch_assoc();
@@ -123,7 +125,7 @@
                             } else {
                                 echo " 0 Member";
                             }
-                        ?>
+                            ?>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -163,18 +165,16 @@
                     <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                         <div class="row">
                             <div class="col-sm-12">
-                                <table id="membersTable" class="table display table-bordered table-striped">
+                                <table id="clientMemberTable" class="table display table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th scope="col">Sl</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Role</th>
                                             <th scope="col">Status</th>
-                                            <th scope="col">Registration Date</th>
-                                            <th scope="col">SignOff Initials</th>
+                                            <th scope="col">Designation</th>
                                             <th scope="col">Edit</th>
-                                            <th scope="col">Client</th>
+                                            <!-- <th scope="col">Client</th> -->
                                         </tr>
                                     </thead>
                                 </table>
@@ -215,20 +215,8 @@
                                 required>
                         </div>
                         <div class="form-group ">
-                            <label for="name">Role</label>
-                            <select name="role" id="role" class="form-control" required>
-                                <option value="">Select role</option>
-                                <?php
-                                if($_SESSION['role'] == -1)
-                                {
-                                ?>
-                                <option value="1">Software Admin</option>
-                                <?php
-                                }
-                                ?>
-                                <option value="2">Audit Admin</option>
-                                <option value="3">Audit Member</option>
-                            </select>
+                            <label for="name">Designation</label>
+                            <input type="text" class="form-control" name="design1" id="design1" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -255,20 +243,12 @@
                     <div class="modal-body">
                         <div class="form-group ">
                             <label for="name">Full Name</label>
-                            <input type="text" class="form-control" name="name" id="name1" readonly>
+                            <input type="text" class="form-control" name="name" id="name1">
                         </div>
                         <div class="form-group ">
                             <label for="name">Email Address</label>
                             <input type="email" class="form-control" name="email" id="email1" autocomplete="off"
                                 readonly>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Role</label>
-                            <select name="role" id="role1" class="form-control">
-                                <option value="">Select role</option>
-                                <option value="2">Admin</option>
-                                <option value="3">Member</option>
-                            </select>
                         </div>
                         <div class="form-group ">
                             <label for="name">Status</label>
@@ -279,8 +259,8 @@
                             </select>
                         </div>
                         <div class="form-group ">
-                            <label for="name">Sign-Off Initial</label>
-                            <input type="text" class="form-control" name="signoff" id="signoff1" readonly>
+                            <label for="name">Designation</label>
+                            <input type="text" class="form-control" name="design" id="design">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -291,65 +271,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Allocate Client Modal -->
-    <div class="modal fade" id="allocate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Clients<h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="form-group ">
-                            <input type="hidden" id="memberId" name="memberId" value="">
-                            <label for="name">Name</label>
-                            <input type="text" id="name2" class="form-control" name="name2" readonly>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <select name="from[]" id="lstview" class="form-control" size="20" multiple>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" id="lstview_undo" class="btn btn-danger btn-block">
-                                    undo
-                                </button>
-                                <button type="button" id="lstview_rightAll" class="btn btn-default btn-block">
-                                    <i class="fas fa-angle-double-right"></i>
-                                </button>
-                                <button type="button" id="lstview_rightSelected" class="btn btn-default btn-block">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                                <button type="button" id="lstview_leftSelected" class="btn btn-default btn-block">
-                                    <i class="fas fa-arrow-left"></i>
-                                </button>
-                                <button type="button" id="lstview_leftAll" class="btn btn-default btn-block">
-                                    <i class="fas fa-angle-double-left"></i>
-                                </button>
-                                <button type="button" id="lstview_redo" class="btn btn-warning btn-block">
-                                    redo
-                                </button>
-                            </div>
-                            <div class="col-md-5">
-                                <select name="to[]" id="lstview_to" class="form-control" size="20" multiple></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel
-                        </button>
-                        <input class="btn btn-primary" id="submit2" type="submit" value="Done">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
@@ -363,79 +284,33 @@
     <script>
     $(document).ready(function() {
         get_data();
-
-        $('#lstview').multiselect();
-        $('#lstview_to').multiselect();
-
-        $(document).on('click','#submit2',function(e){
-            e.preventDefault();
-            var selectedValues = []; 
-            $("#lstview_to option").each(function(){
-                selectedValues.push($(this).val()); 
-            });
-            var id = $("#memberId").val();
-            var name = $("#name2").val(); 
-            
-            $("#allocate").modal('hide');
-            $.ajax({
-                url: "clientAllocate.php",
-                type: "POST",
-                data: {
-                    memberId:id,
-                    name:name,
-                    selectedValues:selectedValues
-                },
-                success: function(data){    
-                    if (data) {
-                    swal({
-                        icon: "success",
-                        text: "Updated",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                }
-                }
-            });    
-        });
     });
 
     $(document).on('click', '.editMember', function() {
         var id = $(this).attr("id");
-        $("#editModal #active1 > option:selected").removeAttr('selected');
         $.ajax({
-            url: "editMemberFetchAjax.php",
+            url: "editClientMemberFetchAjax.php",
             type: "POST",
             data: {
-                id: id
+                id: id,
+                cid: <?php echo $clientId ?>
             },
             success: function(data) {
                 obj = JSON.parse(data);
                 id = obj.id;
-                console.log(obj);
                 $("#editModal #name1").val(obj.name);
                 $("#editModal #email1").val(obj.email);
-                $("#editModal #role1").val(obj.accessLevel);
                 $("#editModal #active1 option[value=" + obj.active + "]").attr(
                     'selected', 'selected');
-                $("#editModal #signoff1").val(obj.signoff_init);
+                $("#editModal #design").val(obj.designation);
                 $("#editModal").modal('show');
             }
         });
     });
 
+
     function get_data() {
-        var dataTable = $('#membersTable').DataTable({
+        var dataTable = $('#clientMemberTable').DataTable({
             "destroy": true,
             "processing": true,
             "serverSide": true,
@@ -446,8 +321,11 @@
                 return nRow;
             },
             "ajax": {
-                url: "memberFetchAjax.php",
-                type: "POST"
+                url: "clientMemberProfileFetchAjax.php",
+                type: "POST",
+                data: {
+                    cid: <?php echo $clientId ?>
+                }
             }
         });
     }
@@ -456,20 +334,18 @@
         e.preventDefault();
         var name = $("#name1").val();
         var email = $("#email1").val();
-        var role = $("#role1").val();
+        var design = $("#design").val();
         var active = $("#active1").val();
-        // var signoff = $("#signoff1").val();
         $("#editModal").modal('hide');
 
         $.ajax({
-            url: "editAMember.php",
+            url: "editClientMember.php",
             type: "POST",
             data: {
                 name: name,
                 email: email,
-                role: role,
+                design: design,
                 active: active
-                // signoff: signoff
             },
             success: function(data) {
                 if (data) {
@@ -497,78 +373,21 @@
 
     });
 
-    $(document).on('click', '.allocate', function() {
-        var id = $(this).attr("id");
-        $.ajax({
-            url: "clientMemberFetchAjax.php",
-            type: "POST",
-            data: {
-                id: id
-            },
-            success: function(data) {
-                obj = JSON.parse(data);
-                id = obj.id;
-                $("#allocate #name2").val(obj.name);
-                $("#allocate #memberId").val(obj.id);
-                fromSelect(id);
-                toSelect(id);
-                $("#allocate").modal('show');
-            }
-        });
-
-        function fromSelect(id) {
-            $("#allocate #lstview").empty();
-            $.ajax({
-                url: "fromClientAjax.php",
-                type: "POST",
-                data: {
-                    id: id
-                },
-                success: function(data) {
-                    //console.log(data);
-                    cObj = JSON.parse(data);
-                    for (var i = 0; i < cObj.length; i++) {
-                        $("#allocate #lstview").append('<option value="' + cObj[i].id + '">' + cObj[i].name + '</option>');
-                    }
-                }
-            });
-        }
-
-        function toSelect(id) {
-            $("#allocate #lstview_to").empty();
-            $.ajax({
-                url: "toClientAjax.php",
-                type: "POST",
-                data: {
-                    id: id
-                },
-                success: function(data) {
-                    cObj = JSON.parse(data);
-                    for (var i = 0; i < cObj.length; i++) {
-                        $("#allocate #lstview_to").append('<option value="' + cObj[i].id + '">' + cObj[i].name + '</option>');
-                    }
-                }
-            });
-        }
-
-    });
-
     $('#registerSubmit').on('click', function(e) {
         e.preventDefault();
         var name = $("#name").val();
         var email = $("#email").val();
         var password = $("#password").val();
-        var role = $("#role").val();
-        // var signoff = $("#signoff").val();
+        var design = $("#design1").val();
         $.ajax({
-            url: "addMember.php",
+            url: "addClientMember.php",
             type: "POST",
             data: {
                 name: name,
                 email: email,
                 password: password,
-                role: role
-                // signoff: signoff
+                design: design,
+                cid: <?php echo $clientId; ?>
             },
             success: function(response) {
                 if (response) {

@@ -10,7 +10,7 @@ if($role == 2 || $role == 3)
 else
     $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id";
 
-$column = array('name','const_id','added_by_date','active','action');
+$column = array('','name','profile','const_id','added_by_date','active','action');
 
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"])){
     $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
@@ -42,20 +42,21 @@ foreach($result as $row)
  $sub_array = array();
  $sub_array[] = '';
  $sub_array[] = $row['aname'];
+ $sub_array[] = "<a href='clientProfile.php?cid=".trim($row['aid'])."'><i class='far fa-address-card'></i></a>";
  $sub_array[] = $row['con'];
  $sub_array[] = $row['adate'];
  {
     if($row['aact'] == 1){
         $sub_array[] = "<span class='badge badge-success small id= '".$row['aact']."''>ACTIVE</span>";
         $sub_array[] = "<a href='#'><i class='fas fa-edit editClient' id='".$row['aid']."'></i></a>&nbsp;
-     <a href='../workspace.php?cid=".trim($row['aid'])."'><i class='far fa-plus-square'></i></a>";
+     <a href='../workspace.php?cid=".trim($row['aid'])."'><i class='far fa-plus-square'></i></a>&nbsp;";
     }
     else{
         $sub_array[] = "<span class='badge badge-danger small id= '".$row['aact']."''>INACTIVE</span>";
         $sub_array[] = "<a href='#'><i class='fas fa-edit editClient' id='".$row['aid']."'></i></a>";
     }
 }
-    
+  
  
  $data[] = $sub_array;
 }

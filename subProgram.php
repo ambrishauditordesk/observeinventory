@@ -5,6 +5,7 @@
         header("Location: ../login");
     }
     $clientName = $_SESSION['cname'];
+    $clientId = $_SESSION['client_id'];
     $prog_id = $_GET['pid'];
     $prog_parentId = $_GET['parent_id'];
     $wid = $_GET['wid'];
@@ -40,10 +41,10 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
-    <!-- sweetalert cdn -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
-            integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-            crossorigin="anonymous"></script>
+        <!-- sweetalert cdn -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+                integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+                crossorigin="anonymous"></script>
 
 </head>
 
@@ -389,72 +390,89 @@
                                 <?php
                             } 
                             elseif ($prog_id == 247){
-                                $query = "select * from materiality where workspace_id='$wid' and prog_id='$prog_id'";
-                                $result = $con->query($query); ?>
+                                $query = "select a.*, b.account,b.id bid from accounts_log a INNER join accounts b on a.accounts_id=b.id where a.workspace_id='$wid'";
+                                $result = $con->query($query);
+                                $result1 = $con->query("select c.id cid, name from user c inner join workspace w on c.client_id=w.client_id where w.id = '$wid'")->fetch_all();
+                            ?>
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                         <button class="btn btn-primary" data-target="#addAccount" data-toggle="modal"
-                                                id="add_acc">ADD ACCOUNT
+                                                id="add_acc">ADD REQUEST
                                         </button>
                                     </div>
                                 </div><br>
-                                <form action="materialitySubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
-                                    <table class="table table-hover" id="tab_logic">
-                                        <thead class="text-center">
-                                        <tr>
-                                            <th scope="col" hidden>Id</th>
-                                            <th scope="col">Account Name</th>
-                                            <th scope="col">Description</th>
-                                            <th scope="col">Specific Documents requested</th>
-                                            <th scope="col">Client Assign</th>
-                                            <th scope="col">Requested By</th>
-                                            <th scope="col">Date Requested</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                        <tr>
-                                            <th hidden></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="abody">
-                                        <?php
-                                            while ($row = $result->fetch_assoc()) {
-                                                ?>
+                                <form action="clientAssistSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
+                                    <div class="row">    
+                                        <div class="table-responsive tableFixHead">
+                                            <table class="table">
+                                                <thead class="text-center">
                                                 <tr>
-                                                    <td scope="row" hidden>
-                                                        <input type="hidden" name="materialityData[id][]"
-                                                               value="<?php echo $row['id']; ?>">
-                                                    </td>
-                                                    <td><label><?php echo $row['name']; ?></label></td>
-                                                    <td><input type="text" size="10" name="materialityData[sLow][]"
-                                                               value="<?php echo $row['standard_low']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[sHigh][]"
-                                                               value="<?php echo $row['standard_high']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[cLow][]"
-                                                               value="<?php echo $row['custom_low']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[cHigh][]"
-                                                               value="<?php echo $row['custom_high']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[amount][]"
-                                                               value="<?php echo $row['amount']; ?>">
-                                                    </td>
-                                                    <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteMat">
-                                                            <i class="fas fa-times-circle"
-                                                               style="color:red !important;"></i>
-                                                        </a>
-                                                    </td>
+                                                    <th scope="col" hidden>Id</th>
+                                                    <th scope="col">Account Name</th>
+                                                    <th scope="col">Description</th>
+                                                    <th scope="col">Client Assign</th>
+                                                    <th scope="col">Requested By</th>
+                                                    <th scope="col">Date Requested</th>
+                                                    <th scope="col">Documents Uploads</th>
+                                                    <th scope="col">Documents</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
-                                                <?php
-                                            }
-                                        ?>
-                                        </tbody>
-                                    </table>
+                                                </thead>
+                                                <tbody id="abody">
+                                                    <?php
+                                                        while ($row = $result->fetch_assoc()) {
+                                                            $query1 = $con->query("select client_contact_id from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
+                                                            ?>
+                                                            <tr>
+                                                                <td scope="row" hidden>
+                                                                    <input type="hidden" name="account[id][]"
+                                                                        value="<?php echo $row['bid']; ?>">
+                                                                </td>
+                                                                <td><label><?php echo $row['account']; ?></label></td>
+                                                                <td><textarea class="form-control mb-3" name="account[des][]"><?php echo $row['description']; ?></textarea></td>
+                                                                <td>
+                                                                        <select class="form-control" name="account[client][]" required>
+                                                                            
+                                                                            <option>Select Person</option>
+                                                                            <?php 
+                                                                                foreach($result1 as $key => $value){
+                                                                            ?>
+                                                                            <option value="<?php echo $value[0]; ?>" <?php if($query1['client_contact_id'] == $value[0]) {echo "Selected";} ?>> 
+                                                                            <?php echo $value[1]; ?>
+                                                                            </option>
+                                                                            <?php } ?>
+                                                                        </select>
+                                                                </td>
+                                                                <td><input class="form-control" type="text" size="10" name="account[request][]"
+                                                                        value="<?php echo $row['request']; ?>"></td>
+                                                                <td><input class="form-control" type="date" size="10" name="account[date][]"
+                                                                        value="<?php echo $row['date']; ?>">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="file" name="file" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
+                                                                </td>
+                                                                <td>
+                                                                    <ul class="list-group">
+                                                                        <li class="list-group-item"><a href="#"><?php echo $row['documents']; ?></a> </li>
+                                                                    </ul>
+                                                                </td>
+                                                                <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteAcc">
+                                                                        <i class="fas fa-times-circle"
+                                                                        style="color:red !important;"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                     <br>
+                                    <div class="row d-flex justify-content-center">
+                                        <input type="submit" class="btn btn-primary align-middle" value="Submit"> &nbsp;
+                                    </div>
                                 </form>
                             <?php 
                             }
@@ -899,7 +917,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add New Account
+                        <h5 class="modal-title" id="exampleModalLabel">Add New Request
                             <h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
@@ -909,14 +927,15 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="name">Account Name</label>
-                                <select class="form-control" name="account" required>
+                                <select class="form-control" name="account" id="account" required>
                                     <option>Select Account !</option>
                                         <?php
-                                            $accQuery = $con->query("select * from accounts");
+                                            $accQuery = $con->query("select * from accounts order by account ASC");
                                             while ($accResult = $accQuery->fetch_assoc()) {
                                         ?>
-                                    <option value="<?php echo $accResult['id']; ?>">
-                                        <?php echo $accResult['account']; ?></option>
+                                            <option value="<?php echo $accResult['id']; ?>">
+                                                <?php echo $accResult['account']; ?>
+                                            </option>
                                         <?php
                                             }
                                         ?>
@@ -1162,6 +1181,43 @@
                 });
             });
 
+            $('#addAccountSubmit').on('click', function (e) {
+                e.preventDefault();
+                var account_id = $("#account").val();
+                $.ajax({
+                    url: "addAccount.php",
+                    type: "POST",
+                    data: {
+                        wid: <?php echo $wid; ?>,
+                        account_id: account_id
+                    },
+                    success: function (response) {
+                        if (response) {
+                            swal({
+                                icon: "success",
+                                text: "New Request" + " Added",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = window.location
+                                            .pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                }
+                            });
+                        } else {
+                            swal({
+                                icon: "error",
+                                text: "Failed!",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = window.location
+                                            .pathname +
+                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
             $(document).on('click', '.deleteMat', function () {
                 var id = $(this).attr('id');
                 $.ajax({
@@ -1169,6 +1225,44 @@
                     type: "POST",
                     data: {
                         mat_id: id,
+                        wid: <?php echo $wid; ?>
+                    },
+                    success: function (response) {
+                        var obj = JSON.parse(response);
+                        if (obj.status) {
+                            swal({
+                                icon: "success",
+                                text: obj.text,
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = window.location
+                                            .pathname +
+                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                }
+                            });
+                        } else {
+                            swal({
+                                icon: "error",
+                                text: obj.text,
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = window.location
+                                            .pathname +
+                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '.deleteAcc', function () {
+                var id = $(this).attr('id');
+                $.ajax({
+                    url: "deleteAcc.php",
+                    type: "POST",
+                    data: {
+                        acc_id: id,
                         wid: <?php echo $wid; ?>
                     },
                     success: function (response) {

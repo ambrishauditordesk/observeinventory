@@ -30,28 +30,15 @@
 include '../dbconnection.php';
 session_start();
 
-$cname = array();
-$email = array();
-$pass = array();
-$desig = array();
-
-
-$addedById = $_SESSION['id'];
+$addedById = trim($_POST['id']);
 
 // Getting the CST Time
-$addedByDate = date_format(date_create("now", new DateTimeZone('America/Chicago')), "Y-m-d H:i:s");
+$addedByDate = trim($_POST['date']);
 
 $uploadOk = 1;
 
 // Name
-$name = '';
-if (!empty($_POST['clientname']) && isset($_POST['clientname'])) {
-    $name = trim($_POST['clientname']);
-    if($con->query("select * from client where name = '$name'")->num_rows != 0){
-        $error.= "<p><strong>".$name."</strong> is already present.</p><br>";
-        $uploadOk = 0;
-    }
-}
+$name = trim($_POST['clientname']);
 
 //Nickname
 $nickName = trim($_POST['nickname']);
@@ -92,58 +79,29 @@ $tan = trim($_POST['tan']);
 //CIN
 $cin = trim($_POST['cin']);
 
-//Person Name
-$i =0;
+$clientID = trim($_POST['cid']);
 
-foreach (($_POST['cname']) as $personname) {
-    $cname[$i++] = trim($personname);
-}
+$active = trim($_POST['active']);
 
-//Email
-$i =0;
-
-foreach (($_POST['email']) as $emailID) {
-    $email[$i++] = trim($emailID);
-}
-
-//Phone
-$i =0;
-
-foreach (($_POST['pass']) as $password) {
-    $pass[$i++] = md5(trim($password));
-}
-
-//Designation
-$i =0;
-
-foreach (($_POST['designation']) as $designation) {
-    $desig[$i++] = trim($designation);
-}
-$count = $i;
-
-if($uploadOk) {
-    $con->query("insert into client(active,added_by_id,added_by_date,name,nickname,incorp_date,const_id,industry_id,address,city,state,pincode,country,pan,gst,tan,cin)
-    values('1','$addedById','$addedByDate','$name','$nickName','$date','$const','$industry','$add','$city','$state','$pin','$country','$pan','$gst','$tan','$cin')");
-    $cid = $con->insert_id;
-    for($i=0;$i<$count;$i++){
-        $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','3','1','$desig[$i]')");
-        $uid = $con->insert_id;
-        $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
-    }
+if($uploadOk){
+    
+    $con->query("update client set active='$active',added_by_id='$addedById',added_by_date='$addedByDate',name='$name',nickname='$nickName',incorp_date='$date',const_id='$const',industry_id='$industry',address='$add',city='$city',state='$state',pincode='$pin',country='$country',pan='$pan',gst='$gst',tan='$tan',cin='$cin' where id='$clientID'");
+    // var_dump("update client set active='1',added_by_id='$addedById',added_by_date='$addedByDate',name='$name',nickname='$nickName',incorp_date='$date',const_id='$const',industry_id='$industry',address='$add',city='$city',state='$state',pincode='$pin',country='$country',pan='$pan',gst='$gst',tan='$tan',cin='$cin' where id='$clientID'");
+    // return;
     echo "<script>
             $(document).ready(function() {
             $('#successModal').modal();
             });
         </script>";
     }
-    else{
+    else{    
         echo "<script>
                 $(document).ready(function() {
                 $('#unsuccessModal').modal();
                 });
             </script>";
     }
-    ?>
+    ?>  
 
 <!--Success Modal-->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -155,9 +113,9 @@ if($uploadOk) {
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Successfully added <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a></div>
+            <div class="modal-body">Successfully Updated <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a></div>
             <div class="modal-footer">
-                <a class="btn btn-primary" href="clientList">OK</a>
+                <a class="btn btn-primary" href="clientProfile?cid=<?php echo $clientID ?>">OK</a>
             </div>
         </div>
     </div>
@@ -172,9 +130,9 @@ if($uploadOk) {
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Client Addition Failed.</div>
+            <div class="modal-body">Client Updation Failed.</div>
             <div class="modal-footer">
-                <a class="btn btn-primary" href="clientList">OK</a>
+                <a class="btn btn-primary" href="clientProfile?cid=<?php echo $clientID ?>">OK</a>
             </div>
         </div>
     </div>

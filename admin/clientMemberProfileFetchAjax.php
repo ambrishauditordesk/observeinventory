@@ -1,8 +1,9 @@
 <?php 
 include '../dbconnection.php';
 session_start();
-$column = array('','name','email','accessLevel','active','reg_date','signoff_init','edit','allocate');
-$query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel <> -1) and client_id is null";
+$cid = $_POST['cid'];
+$column = array('','name','email','active','design','edit');
+$query = "SELECT * FROM `user` where client_id='$cid'";
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
 {
  $query .= ' and name LIKE "%'.$_POST["search"]["value"].'%"';
@@ -37,7 +38,6 @@ foreach($result as $row)
  $sub_array[] = '';
  $sub_array[] = $row['name'];
  $sub_array[] = $row['email'];
- $sub_array[] = $row['role'];
     {
         if($row['active'] == 1){
             $sub_array[] = "<span class='badge badge-success small id= '".$row['active']."''>Allowed</span>";;
@@ -46,15 +46,13 @@ foreach($result as $row)
             $sub_array[] = "<span class='badge badge-danger small id= '".$row['active']."''>Access Denied</span>";;
         }
     }
- $sub_array[] = $row['reg_date'];
- $sub_array[] = $row['signoff_init'];
+ $sub_array[] = $row['designation'];
  $sub_array[] = "<a href='#'><i class='fas fa-user-edit editMember' id='".$row['id']."'></i></a>";
- $sub_array[] = "<a href='#' class='badge badge-primary allocate' id='".$row['id']."'></i>ALLOCATE</a>"; 
  $data[] = $sub_array;
 }
 function get_all_data($con)
-{   
- $query = "SELECT count(id) total FROM user where accessLevel > '".$_SESSION['role']."' and client_id is null";
+{
+ $query = "SELECT count(id) total FROM user";
  $statement = $con->query($query)->fetch_assoc()["total"];
  return $statement;
 }

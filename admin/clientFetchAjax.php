@@ -1,11 +1,12 @@
 <?php 
 include '../dbconnection.php';
 session_start();
-$column = array('','name','email','accessLevel','active','reg_date','signoff_init','edit','allocate');
-$query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel <> -1) and client_id is null";
+$cid = $_POST['cid'];
+$column = array('','name','nickname','doi','const','indus','add','country','state','city','pin','pan','gst','tan','cin');
+$query = "select a.*,b.const const,c.industry industry from client a inner join constitution b on a.const_id=b.id inner join industry c on a.industry_id=c.id where a.id='$cid'";
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
 {
- $query .= ' and name LIKE "%'.$_POST["search"]["value"].'%"';
+ $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
 }
 if(isset($_POST['order']))
 {
@@ -13,7 +14,7 @@ if(isset($_POST['order']))
 }
 else
 {
- $query .= ' ORDER BY name DESC ';
+ $query .= ' ORDER BY a.name DESC ';
 }
  $query1 = '';
 if($_POST["length"] != -1)
@@ -36,25 +37,24 @@ foreach($result as $row)
  $sub_array = array();
  $sub_array[] = '';
  $sub_array[] = $row['name'];
- $sub_array[] = $row['email'];
- $sub_array[] = $row['role'];
-    {
-        if($row['active'] == 1){
-            $sub_array[] = "<span class='badge badge-success small id= '".$row['active']."''>Allowed</span>";;
-        }
-        else{
-            $sub_array[] = "<span class='badge badge-danger small id= '".$row['active']."''>Access Denied</span>";;
-        }
-    }
- $sub_array[] = $row['reg_date'];
- $sub_array[] = $row['signoff_init'];
- $sub_array[] = "<a href='#'><i class='fas fa-user-edit editMember' id='".$row['id']."'></i></a>";
- $sub_array[] = "<a href='#' class='badge badge-primary allocate' id='".$row['id']."'></i>ALLOCATE</a>"; 
+ $sub_array[] = $row['nickname'];
+ $sub_array[] = $row['incorp_date'];
+ $sub_array[] = $row['const']; 
+ $sub_array[] = $row['industry'];
+ $sub_array[] = $row['address'];
+ $sub_array[] = $row['country'];
+ $sub_array[] = $row['state'];
+ $sub_array[] = $row['city'];
+ $sub_array[] = $row['pincode'];
+ $sub_array[] = $row['pan'];
+ $sub_array[] = $row['gst'];
+ $sub_array[] = $row['tan'];
+ $sub_array[] = $row['cin'];
  $data[] = $sub_array;
 }
 function get_all_data($con)
-{   
- $query = "SELECT count(id) total FROM user where accessLevel > '".$_SESSION['role']."' and client_id is null";
+{
+ $query = "SELECT count(id) total FROM client";
  $statement = $con->query($query)->fetch_assoc()["total"];
  return $statement;
 }

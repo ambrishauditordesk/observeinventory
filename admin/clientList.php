@@ -51,7 +51,7 @@
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <?php 
-                if($_SESSION['role'] != 3){
+                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
                     ?>
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="members.php">
@@ -167,6 +167,7 @@
                                         <tr>
                                             <th scope="col">Sl</th>
                                             <th scope="col">Client Name</th>
+                                            <th scope="col">Client Profile</th>
                                             <th scope="col">Type</th>
                                             <th scope="col">Created On</th>
                                             <th scope="col">Status</th>
@@ -291,16 +292,16 @@
                                         <tr>
                                             <th class="text-center"> Name</th>
                                             <th class="text-center"> Email</th>
-                                            <th class="text-center"> Phone</th>
+                                            <th class="text-center"> Password</th>
                                             <th class="text-center"> Designation</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr id='addr0'>
-                                            <td><input type="text" class="form-control" name="pname[]" required>
+                                            <td><input type="text" class="form-control" name="cname[]" required>
                                             </td>
                                             <td><input type="email" class="form-control" name="email[]" required></td>
-                                            <td><input type="text" class="form-control" name="phone[]" required>
+                                            <td><input type="password" class="form-control" name="pass[]" required>
                                             </td>
                                             <td><input type="text" name='designation[]' class="form-control" required />
                                             </td>
@@ -324,7 +325,7 @@
                     <div class="modal-footer">
                         <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                         <input class="btn btn-warning" type="reset" value="Reset">
-                        <input class="btn btn-primary" type="submit" id="dataEntrySubmit" value="Done">
+                        <input class="btn btn-primary" type="submit" value="Done">
                     </div>
                 </form>
             </div>
