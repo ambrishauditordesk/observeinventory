@@ -1725,7 +1725,7 @@
                         obj.file.forEach(function (value) {
                             $('#signoffModal #filenames').append(
                                 '<li class="list-group-item list-group-item-action" id="' +
-                                value[0] + '"><a target="_blank" href="https://docs.google.com/gview?url=http://<?php echo $_SERVER['SERVER_NAME']; ?>/AuditSoft/uploads/program_files/'+value[1]+'">' +
+                                value[0] + '"><a target="_blank" href="https://docs.google.com/gview?url=http://<?php echo $_SERVER['SERVER_NAME']; ?>/audit/uploads/program_files/'+value[1]+'">' +
                                 value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
                         });
                         if (obj.comment.length != 0) {
