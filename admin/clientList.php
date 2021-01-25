@@ -144,7 +144,7 @@
                         <h5 class="card-title">Completed</h5>
                         <h6 class="card-subtitle mb-2 text-success">Audits</h6>
                         <p class="text-success"><?php $userId = $_SESSION['id'];
-                    echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id where b.status = '1' group by a.client_id")->num_rows;
+                    echo $con->query("select count(id) completed from workspace where workspace.freeze = '1'")->fetch_assoc()['completed'];
                     ?>
                         </p>
                     </div>
@@ -268,19 +268,19 @@
                         </div>
                         <div class="form-group ">
                             <label for="name">Pan No.</label>
-                            <input type="text" class="form-control" name="pan" required>
+                            <input id="panCheck" type="text" class="form-control" name="pan" maxlength="10" style="text-transform:uppercase" required>
                         </div>
                         <div class="form-group ">
                             <label for="name">GST No.</label>
-                            <input type="text" class="form-control" name="gst" required>
+                            <input id="gstCheck" type="text" class="form-control" name="gst" maxlength="15" style="text-transform:uppercase" required>
                         </div>
                         <div class="form-group ">
                             <label for="name">TAN No.</label>
-                            <input type="text" class="form-control" name="tan" required>
+                            <input id="tanCheck" type="text" class="form-control" name="tan" maxlength="10" style="text-transform:uppercase" required>
                         </div>
                         <div class="form-group ">
                             <label for="name">CIN No.</label>
-                            <input type="text" class="form-control" name="cin" required>
+                            <input id="cinCheck" type="text" class="form-control" name="cin" maxlength="21" style="text-transform:uppercase" required>
                         </div>
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Contact Person<h5>
@@ -420,6 +420,62 @@
                 i--;
             }
         });
+    });
+
+    let panRegex = /[A-Z]{5}\d{4}[A-Z]{1}/;
+    $('#panCheck').val('').on('keyup', function () {
+        if ($('#panCheck').val().length == 10){
+            if (!panRegex.test($('#panCheck').val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "PAN Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#panCheck').val('');
+                    });
+            }
+        }
+    });
+
+    let gstRegex = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
+    $('#gstCheck').val('').on('keyup', function () {
+        if ($('#gstCheck').val().length === 15){
+            if (!gstRegex.test($('#gstCheck').val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "GST Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#gstCheck').val('');
+                    });
+            }
+        }
+    });
+
+    let tanRegex = /[A-Z]{4}\d{5}[A-Z]{1}/;
+    $('#tanCheck').val('').on('keyup', function () {
+        if ($('#tanCheck').val().length == 10){
+            if (!tanRegex.test($('#tanCheck').val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "TAN Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#tanCheck').val('');
+                    });
+            }
+        }
+    });
+
+    let cinRegex = /[L|U]{1}\d{5}[A-Z]{2}\d{4}[A-Z]{3}\d{6}/;
+    $('#cinCheck').val('').on('keyup', function () {
+        if ($('#cinCheck').val().length == 21){
+            if (!cinRegex.test($('#cinCheck').val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "CIN Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#cinCheck').val('');
+                    });
+            }
+        }
     });
 
     $(document).on('click', '#done', function(e) {

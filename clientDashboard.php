@@ -2,7 +2,7 @@
 include 'dbconnection.php';
 session_start();
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
-    header("Location: ../login");
+    header("Location: index");
 }
 $clientName = $_SESSION['cname'];
 $wid = $_GET['wid'];
@@ -91,6 +91,12 @@ $_SESSION['breadcrumb'] = array();
                 if($_SESSION['role'] != 3){
                     ?>
                     <li class="nav-item d-flex">
+                        <a class="nav-link d-flex align-items-center" target="_blank" href="diagnosticReport?wid=<?php echo $wid; ?>">
+                            <span>Diagnostic Report</span>&nbsp;&nbsp;
+                            <i class="fas fa-download fa-1x"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-flex">
                         <a class="nav-link d-flex align-items-center" href="admin/members.php">
                             <span>Members</span>&nbsp;&nbsp;
                             <i class="fas fa-users fa-1x"></i>
@@ -149,7 +155,7 @@ $_SESSION['breadcrumb'] = array();
                                 }
                             ?>
                             <div class="progress col-md-8 p-0" style="height:30px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ceil($per); ?>%;"><?php echo ceil($per)."%"; ?></div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ceil($per); ?>%; color:<?php if(ceil($per) == 0) echo "#000"; else echo "#fff"; ?>;"><?php echo ceil($per)."%"; ?></div>
                             </div>
                         </div><br>
                         <div class="col-md-12 d-flex" style="flex-direction:column;">
@@ -172,13 +178,23 @@ $_SESSION['breadcrumb'] = array();
                                     }
                                 ?>
                                 <div class="progress col-md-6 p-0" style="height:30px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?php echo ceil($per); ?>%;" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo ceil($per)."%"; ?></div>
+                                    <div class="progress-bar" role="progressbar" style="width: <?php echo ceil($per); ?>%; color: <?php if(ceil($per) == 0) echo "#000"; else echo "#fff"; ?>;" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo ceil($per)."%"; ?></div>
                                 </div>
                             </div>
                             <?php }}
-                    ?>
-
+                                ?>
+                                <br>
                         </div>
+                        <?php
+                        $status = $con->query("select status from workspace_log where workspace_id=$wid and program_id=248")->fetch_assoc()['status'];
+                        if($status && $_SESSION['role'] != '3'){
+                            ?>
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <button id="freeze" type="button" class="btn btn-lg btn-warning">Freeze Workspace</button>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -258,7 +274,8 @@ $_SESSION['breadcrumb'] = array();
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
+            <!-- sweetalert cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
 
     <script src="js/custom.js"></script>
     <script>
@@ -277,6 +294,26 @@ $_SESSION['breadcrumb'] = array();
                 i--;
             }
         });
+
+        $(document).on('click','#freeze',function(){
+            $.ajax({
+                url: 'freeze.php',
+                type: 'POST',
+                data: {id: <?php echo $wid; ?>,freeze: 1},
+                success: function(data){
+                    if (data) {
+                            swal({
+                                icon: "success",
+                                text: "Thank You for Freezing",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
+                                }
+                            });
+                        }
+                }
+            })
+        })
     });
     </script>
 </body>

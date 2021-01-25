@@ -1,3 +1,12 @@
+<?php
+session_start();
+if(isset($_SESSION['external_client_id']) && !empty($_SESSION['external_client_id']) && $_SESSION['external_client_id']  != ''){
+    header('Location: workspace?cid='.$_SESSION['external_client_id']);
+}
+elseif(isset($_SESSION['id']) && !empty($_SESSION['id']) && $_SESSION['id']!= ''){
+    header('Location: admin/clientList');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,7 +24,8 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
     </head>
-    <body id="page-top">
+    <body id="page-top" oncontextmenu="return false">
+
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
             <div class="container">
@@ -87,5 +97,28 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <script>
+            document.onkeydown = function(e) {
+                console.log(event.keyCode)
+                if(event.keyCode == 123 || event.keyCode == 73 || event.keyCode == 74 || event.keyCode == 188) {
+                    return false;
+                }
+                if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                    return false;
+                }
+                if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                    return false;
+                }
+                if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                    return false;
+                }
+                if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                    return false;
+                }
+                if(e.commandKey && e.optionKey && e.keyCode == 'I'.charCodeAt(0)) {
+                    return false;
+                }
+            }
+        </script>
     </body>
 </html>

@@ -7,6 +7,7 @@
     if (isset($_SESSION['accessLevel']) && !empty($_SESSION['accessLevel']) && $_SESSION['accessLevel'] != '1') {
         header('Location: ../login');
     }
+
     $_SESSION['client_id'] = $clientID = $_GET['cid'];
     $_SESSION['cname'] = $clientName = $con->query("select name from client where id = $clientID ")->fetch_assoc()["name"];
 ?>
@@ -48,12 +49,15 @@
     <nav class="navbar navbar-expand-lg navbar-mainbg">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
+            <?php if(!isset($_SESSION['external_client_id']) && empty($_SESSION['external_client_id'])){
+            ?>
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="admin/clientList">
                     <span>List Clients</span>&nbsp;&nbsp;
                     <i class="fas fa-list fa-1x"></i>
                 </a>
             </li>
+            <?php } ?>
             <li class="nav-item dropdown no-arrow ">
                 <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -92,7 +96,7 @@
 
 <!-- ADD WORKSPACE BUTTON -->
             <?php 
-                if($_SESSION['role'] != 3){
+                if($_SESSION['role'] != 3 && $_SESSION['external'] != 1){
             ?>
             <div class = "row justify-content-md-center">   
                 <div class="col-xl-3 col-md-6 mb-4 ">                       
@@ -144,7 +148,32 @@
                                                 <td><?php echo $row['datefrom']; ?></td>
                                                 <td><?php echo $row['dateto']; ?></td>
                                                 <td>
+                                                <?php
+                                                if(!$row['freeze']){
+                                                    if($_SESSION['external'] != 1){
+                                                ?>
                                                     <a href="clientDashboard?wid=<?php echo $row['id'];?>"><i class="fas fa-external-link-alt"></i></a>
+                                                <?php
+                                                    }
+                                                    else{
+                                                        ?>
+                                                    <a href="subProgram?wid=<?php echo $row['id'];?>&pid=247"><i class="fas fa-external-link-alt"></i></a>
+                                                        <?php
+                                                    }
+                                                }
+                                                else{
+                                                    if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1'){
+                                                    ?>
+                                                        <a id="<?php echo $row['id']; ?>" class="freeze" href="#"><i class="fas fa-unlock"></i></a>
+                                                    <?php
+                                                    }
+                                                    else{
+                                                        ?>
+                                                        <span class="badge badge-danger">Locked!</span>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
                                                 </td>
                                             </tr>
                                             <?php
@@ -196,6 +225,7 @@
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
     <!-- Page level custom scripts -->
@@ -216,5 +246,26 @@
                 i--;
             }
         });
+
+        $(document).on('click','.freeze',function(){
+            let id = $(this).attr('id');
+            $.ajax({
+                url: 'freeze.php',
+                type: 'POST',
+                data: {id: id,freeze: 0},
+                success: function(data){
+                    if (data) {
+                            swal({
+                                icon: "success",
+                                text: "Thank You for Unlocking.",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
+                                }
+                            });
+                        }
+                }
+            })
+        })
 });
     </script>

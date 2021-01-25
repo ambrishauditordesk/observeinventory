@@ -70,8 +70,23 @@
             $_SESSION['role'] = $usersrow['accessLevel'];
             $_SESSION['reg_date'] = $usersrow['reg_date'];
             $_SESSION['signoff'] = $usersrow['signoff_init'];
-            if($usersrow['accessLevel'] == '-1'){
-                header('Location: admin/clientList');
+            $_SESSION['external'] = 0;
+            if($usersrow['client_id'] != ''){
+                $_SESSION['external'] = 1;
+                $_SESSION['external_client_id'] = $usersrow['client_id'];
+                $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
+                if($checkAccess){
+                    header('Location: workspace?cid='.$usersrow['client_id']);
+                }
+                else{
+                    session_unset();
+                    session_destroy();
+                    echo "<script>
+                            $(document).ready(function() {
+                                $('#accessDeniedModal').modal();
+                            });
+                        </script>";
+                }
             }
             else{
                 header('Location: admin/clientList');
@@ -101,7 +116,7 @@
             </div>
             <div class="modal-body">Access Denied !</div>
             <div class="modal-footer">
-                <a class="btn btn-danger" href="login">OK</a>
+                <a class="btn btn-danger" href="index">OK</a>
             </div>
         </div>
     </div>
