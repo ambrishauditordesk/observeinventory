@@ -97,7 +97,7 @@ $_SESSION['breadcrumb'] = array();
                         </a>
                     </li>
                     <li class="nav-item d-flex">
-                        <a class="nav-link d-flex align-items-center" href="admin/members.php">
+                        <a class="nav-link d-flex align-items-center" href="admin/clientMember?cid=<?php echo $_SESSION['client_id']; ?>">
                             <span>Members</span>&nbsp;&nbsp;
                             <i class="fas fa-users fa-1x"></i>
                         </a>
