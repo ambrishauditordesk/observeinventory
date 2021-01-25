@@ -14,7 +14,7 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 
 </head>
-<body>
+<body oncontextmenu="return false">
 <div class="login-reg-panel">
 		<div class="login-info-box">
 			<h2>Remember Password??</h2><br>
@@ -46,6 +46,7 @@
 			</div>
 		</div>
     </div>
+	<script src="js/custom.js"></script>
 <script>
 		    $(document).ready(function(){
 		    $('.login-info-box').fadeOut();

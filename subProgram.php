@@ -71,7 +71,7 @@
     </style>
 </head>
 
-<body style="overflow-y: scroll">
+<body style="overflow-y: scroll" oncontextmenu="return false">
 
 <div id="wrapper">
 

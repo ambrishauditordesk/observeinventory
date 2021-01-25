@@ -44,7 +44,7 @@
         crossorigin="anonymous"></script>
 </head>
 
-<body style="overflow-y: scroll">
+<body style="overflow-y: scroll" oncontextmenu="return false">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-mainbg">
