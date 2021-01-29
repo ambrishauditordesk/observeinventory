@@ -734,7 +734,7 @@
                                         </thead>
                                         <tbody id="abody">
                                         <?php
-                                        $materiality =0;
+                                        $materiality = $subMateriality = 0;
                                             while ($row = $result->fetch_assoc()) {
                                                 if($row['standard_low'] != '' || $row['standard_high'] != '' || $row['custom_low'] != '' || $row['custom_high'] != '' || $row['amount'] != ''){
                                                     $materiality = 1;
@@ -907,7 +907,7 @@
                                             }
                                             }
                             } else {
-                                    $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1";
+                                    $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                     $exquery = $con->query($query);
                                     if ($exquery->num_rows != 0) {
                                         while ($queryrow = $exquery->fetch_assoc()) {
