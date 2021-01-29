@@ -61,6 +61,7 @@
                 }
             }
         }
+
         for ($i = 0; $i < sizeof($id); $i++) 
         {
             if(!empty($_FILES['file']['name'][$id[$i]])){
@@ -70,7 +71,18 @@
                         $error .= "<p>File Size is greater than 2MB.</p><br>";
                         $uploadOk = 0;
                     }
-                    $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
+                    $str = explode('.',$_FILES['file']['name'][$id[$i]][$x]);
+                    $new= '';
+                    for($j = 0; $j<sizeof($str)-1; $j++){
+                        if($new == ''){
+                            $new .= $str[$j];
+                        }
+                        else{
+                            $new .= ".".$str[$j];
+                        }
+                    }
+                    $name = trim($new." ".$date." .".end($str));
+                    // $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
                     $tmp_name = $_FILES['file']['tmp_name'][$id[$i]][$x];
                     $path = 'uploads/clientrequest/';
                     if($uploadOk){

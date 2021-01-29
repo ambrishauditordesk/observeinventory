@@ -295,6 +295,9 @@
                                             $result = $con->query($query);
                                             $i = 0;
                                             while ($row = $result->fetch_assoc()) {
+                                                // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
+                                                //     $balanceSheet0 = 1;
+                                                // }
                                                 ?>
                                                 
                                                 <?php
@@ -354,7 +357,11 @@
                                                         <?php
                                                         $result = $con->query($query);
                                                     while ($row = $result->fetch_assoc()) {
-                                                        if ($row['header_type'] == 1) {?>
+                                                        // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
+                                                        //     $balanceSheet1 = 1;
+                                                        // }
+                                                        if ($row['header_type'] == 1) {
+                                                            ?>
                                                         <tr id="<?php echo ++$i; ?>">
                                                             <td scope="row" hidden>
                                                                 <input type="hidden" name="submitData[id][]"
@@ -417,9 +424,37 @@
                                         </tbody>
                                     </table>
                                     <div class="row d-flex justify-content-center">
-                                        <input type="submit" id="validateSubmit" class="btn btn-primary align-middle" value="Submit">
+                                    <?php 
+                                        // if($balanceSheet0 || $balanceSheet1){
+                                        //     if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '239'")->fetch_assoc()['count'] != 0){
+                                        //         ?>
+                                                 <!-- <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp; -->
+                                                 <?php
+                                        //     }
+                                        //     ?>
+                                             <!-- <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp; -->
+                                            <?php
+                                        // }
+                                    ?>
+                                        <input type="submit" id="validateSubmit" class="btn btn-primary align-middle" value="Save Details">
                                     </div>
                                 </form>
+                                <div class="row d-flex justify-content-center">
+                                <?php
+                                    // $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
+                                    // if($reviewSignoff['total']){
+                                    ?>
+                                    <!-- <button class="btn btn-outline-success fetchReview" id="239">Review Sign Off Log</button>&nbsp; -->
+                                    <?php
+                                    // }
+                                    // $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
+                                    // if($prepareSignoff['total']){
+                                    ?>
+                                    <!-- <button class="btn btn-outline-success fetchPrepare" id="239">Prepare Sign Off Log</button> -->
+                                    <?php
+                                    // }
+                                    ?>
+                                </div>
                                 <?php
                             } 
                             elseif ($prog_id == 247){
@@ -699,7 +734,11 @@
                                         </thead>
                                         <tbody id="abody">
                                         <?php
+                                        $materiality =0;
                                             while ($row = $result->fetch_assoc()) {
+                                                if($row['standard_low'] != '' || $row['standard_high'] != '' || $row['custom_low'] != '' || $row['custom_high'] != '' || $row['amount'] != ''){
+                                                    $materiality = 1;
+                                                }
                                                 ?>
                                                 <tr>
                                                     <td scope="row" hidden>
@@ -745,6 +784,12 @@
                                             </div>
                                         </div>
                                         <br>
+                                        <?php 
+                                        if($row['comments'] != '' || $row['balance_asset'] != '' || $row['balance_liability'] != '' || $row['pl_income'] != '' || $row['pl_expense'] != ''){
+                                            $subMateriality = 1;
+                                        }
+                                        
+                                        ?>
                                         <textarea class="form-control" id="textarea" rows="5"
                                                   name="comment"><?php echo $row['comments']; ?></textarea>
                                     </div>
@@ -772,19 +817,22 @@
                                                    value="<?php echo $row['pl_expense']; ?>">
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row d-flex justify-content-center">
                                         <input class="btn btn-primary" type="file" name="file"
                                         accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb">
-                                        &nbsp;
-                                        <input type="submit" class="btn btn-primary align-middle" value="Submit"> &nbsp;
                                     </div>
-                                </form><br>
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-md-5 col-sm-12">
+                                    
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-5 col-sm-12">
                                         <?php
                                             $query = "select * from materiality_files where workspace_id='$wid'";
                                             $result = $con->query($query);
                                             while ($row = $result->fetch_assoc()) {
+                                                if($row['fname'] != ''){
+                                                    $subMateriality = 1;
+                                                }
+                                                
                                                 ?>
                                                 <ul class="list-group">
                                                     <li class="list-group-item list-group-item-action"><a
@@ -795,7 +843,46 @@
                                                 <?php
                                             } ?>
                                     </div>
-                                </div> <?php 
+                                </div>
+                                <div class="col-md-12">
+                                    <hr>
+                                    <i class="fas fa-info-circle" style="color:orange !important;"></i>
+                                    <strong>Click the save button to save respective files/data before signing off</strong>
+                                </div>
+                                <hr>
+                                <div class="row d-flex justify-content-center">
+                                    <?php
+                                    if($materiality || $subMateriality ){
+                                        if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '230'")->fetch_assoc()['count'] != 0){
+                                            ?>
+                                            <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp;
+                                            <?php
+                                        }
+                                        ?>
+                                        <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp;
+                                        <?php
+                                    }
+                                    ?>
+                                        <input type="submit" class="btn btn-primary align-middle" value="Save Details">
+                                    </div>
+                                </form><br>
+                                <div class="row d-flex justify-content-center">
+                                <?php
+                                    $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
+                                    if($reviewSignoff['total']){
+                                    ?>
+                                    <button class="btn btn-outline-success fetchReview" id="230">Review Sign Off Log</button>&nbsp;
+                                    <?php
+                                    }
+                                    $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
+                                    if($prepareSignoff['total']){
+                                    ?>
+                                    <button class="btn btn-outline-success fetchPrepare" id="230">Prepare Sign Off Log</button>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                             <?php 
                             } elseif ($prog_id == 12)  {
                                     // $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                     $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";

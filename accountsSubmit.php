@@ -30,36 +30,48 @@
     $wid=$_GET['wid'];
     $ser = $_SERVER['HTTP_REFERER'];
 
-    foreach ($_POST['submitData']['type'] as $data) {
-        $type[] = $data;
+    if(isset($_POST['prepareSubmit']))
+    {
+        $con->query("insert into signoff_prepare_log(workspace_id,prog_id,user_id,prepare_signoff_date) values('$wid','239','$uid','$date')");
+        $prepareFlag = 1;
     }
-    foreach ($_POST['submitData']['amount'] as $data) {
-        $amount[] = $data;
+    elseif(isset($_POST['reviewSubmit']))
+    {
+        $con->query("insert into signoff_review_log(workspace_id,prog_id,user_id,review_signoff_date) values('$wid','239','$uid','$date')");
+        $reviewFlag = 1;
     }
-    foreach ($_POST['submitData']['risk'] as $data) {
-        $risk[] = $data;
-    }
-    foreach ($_POST['submitData']['import'] as $data) {
-        $import[] = $data;
-    }
-    foreach ($_POST['submitData']['id'] as $data) {
-        $id[] = $data;
-    }
-    $j = sizeof($type);
-    $flag = 0;
-
-    for ($i = 0; $i < $j; $i++) {
-        if($con->query("update workspace_log set amount = '$amount[$i]', type='$type[$i]', risk='$risk[$i]', import='$import[$i]' where program_id='$id[$i]' and workspace_id='$wid'") === TRUE)
-        {
-            $flag=1;
+    else{
+        foreach ($_POST['submitData']['type'] as $data) {
+            $type[] = $data;
         }
-        else
-        {
-            $flag=0;
+        foreach ($_POST['submitData']['amount'] as $data) {
+            $amount[] = $data;
+        }
+        foreach ($_POST['submitData']['risk'] as $data) {
+            $risk[] = $data;
+        }
+        foreach ($_POST['submitData']['import'] as $data) {
+            $import[] = $data;
+        }
+        foreach ($_POST['submitData']['id'] as $data) {
+            $id[] = $data;
+        }
+        $j = sizeof($type);
+        $flag = 0;
+
+        for ($i = 0; $i < $j; $i++) {
+            if($con->query("update workspace_log set amount = '$amount[$i]', type='$type[$i]', risk='$risk[$i]', import='$import[$i]' where program_id='$id[$i]' and workspace_id='$wid'") === TRUE)
+            {
+                $flag=1;
+            }
+            else
+            {
+                $flag=0;
+            }
         }
     }
 
-    if ($flag) {
+    if ($flag || $prepareFlag || $reviewFlag) {
         echo "<script>
                 swal({
                     icon: 'success',
@@ -80,7 +92,7 @@
                         window.location.href = '$ser';
                     }
                 });
-             </script>";
+            </script>";
     }
 ?>
 </body>
