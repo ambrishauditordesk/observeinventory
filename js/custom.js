@@ -15,7 +15,7 @@ function consoleHide() {
     }, 500);
 }
 document.onkeydown = function(e) {
-    if (event.keyCode == 123 || event.keyCode == 74 || event.keycode == 85 || event.keyCode == 188) {
+    if (event.keyCode == 123 || event.keycode == 85 || event.keyCode == 188) {
         // consoleHide(1);
         return false;
     }
