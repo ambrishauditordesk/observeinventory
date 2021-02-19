@@ -136,7 +136,7 @@
         <?php 
             if($_SESSION['role'] != 3 && $_SESSION['external'] != 1){
         ?>
-        <div class = "row justify-content-md-center" stylw="width: 100% !important;">   
+        <div class = "row justify-content-md-center" style="width: 100% !important;">   
             <div class="col-xl-3 col-md-6 mb-4 ">                       
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
