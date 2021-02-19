@@ -147,15 +147,15 @@ $_SESSION['breadcrumb'] = array();
                         <div class="col-md-12 d-flex" style="align-items:center;">
                             <h1 class="col-md-4">Audit Programme</h1>
                             <?php
-                                $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=1 and workspace_log.status=1")->fetch_assoc()['cnt'];
-                                $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=1")->fetch_assoc()['cnt'];
-                                $per = 0;
-                                if($querys != 0){
-                                    $per = ($querys1/$querys)*100;
+                                $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid and workspace_log.status=1")->fetch_assoc()['cnt'];
+                                $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid")->fetch_assoc()['cnt'];
+                                $per = number_format((float)0, 2, '.', '');
+                                if($querys1 != 0){
+                                    $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
                                 }
                             ?>
                             <div class="progress col-md-8 p-0" style="height:30px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ceil($per); ?>%; color:<?php if(ceil($per) == 0) echo "#000"; else echo "#fff"; ?>;"><?php echo ceil($per)."%"; ?></div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $per; ?>%; color:<?php if($per == 0) echo "#000"; else echo "#fff"; ?>;"><?php echo $per."%"; ?></div>
                             </div>
                         </div><br>
                         <div class="col-md-12 d-flex" style="flex-direction:column;">
@@ -172,13 +172,13 @@ $_SESSION['breadcrumb'] = array();
                                 <?php
                                     $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid' and workspace_log.status=1")->fetch_assoc()['cnt'];
                                     $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid'")->fetch_assoc()['cnt'];
-                                    $per = 0;
+                                    $per = number_format((float)0, 2, '.', '');
                                     if($querys != 0){
-                                        $per = ($querys1/$querys)*100;
+                                        $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
                                     }
                                 ?>
                                 <div class="progress col-md-6 p-0" style="height:30px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?php echo ceil($per); ?>%; color: <?php if(ceil($per) == 0) echo "#000"; else echo "#fff"; ?>;" aria-valuenow="<?php echo ceil($per); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo ceil($per)."%"; ?></div>
+                                    <div class="progress-bar" role="progressbar" style="width: <?php echo $per; ?>%; color: <?php if($per == 0) echo "#000"; else echo "#fff"; ?>;" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100"><?php echo $per."%"; ?></div>
                                 </div>
                             </div>
                             <?php }}
@@ -254,9 +254,6 @@ $_SESSION['breadcrumb'] = array();
                                 <textarea id="comments" class="form-control" style="height:200px;"></textarea>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -279,41 +276,41 @@ $_SESSION['breadcrumb'] = array();
 
     <script src="js/custom.js"></script>
     <script>
-    $(document).ready(function() {
-        var i = 1;
-        b = i - 1;
-        $("#add_row").click(function() {
-            $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
-            $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
-            i++;
-        });
-        //Delete Row Function for sales add form
-        $("#delete_row").click(function() {
-            if (i > 1) {
-                $("#addr" + (i - 1)).html('');
-                i--;
-            }
-        });
-
-        $(document).on('click','#freeze',function(){
-            $.ajax({
-                url: 'freeze.php',
-                type: 'POST',
-                data: {id: <?php echo $wid; ?>,freeze: 1},
-                success: function(data){
-                    if (data) {
-                            swal({
-                                icon: "success",
-                                text: "Thank You for Freezing",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
-                                }
-                            });
-                        }
+        $(document).ready(function() {
+            var i = 1;
+            b = i - 1;
+            $("#add_row").click(function() {
+                $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
+                $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
+                i++;
+            });
+            //Delete Row Function for sales add form
+            $("#delete_row").click(function() {
+                if (i > 1) {
+                    $("#addr" + (i - 1)).html('');
+                    i--;
                 }
-            })
-        })
-    });
+            });
+
+            $(document).on('click','#freeze',function(){
+                $.ajax({
+                    url: 'freeze.php',
+                    type: 'POST',
+                    data: {id: <?php echo $wid; ?>,freeze: 1},
+                    success: function(data){
+                        if (data) {
+                                swal({
+                                    icon: "success",
+                                    text: "Thank You for Freezing",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
+                                    }
+                                });
+                            }
+                    }
+                })
+            });
+        });
     </script>
 </body>

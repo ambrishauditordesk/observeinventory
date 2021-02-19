@@ -1,7 +1,7 @@
    
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 body{
-  font-family: 'Mukta', sans-serif;
+  font-family: Poppins !important;
 	height:100vh;
 	min-height:550px;
 	background-repeat: no-repeat;
@@ -95,6 +95,7 @@ a{
     padding: 15px;
     border: 1px solid #b5b5b5;
     outline: none;
+    background-color: #eaf1fe;
 }
 .login-show input[type="submit"] {
     max-width: 150px;
@@ -120,11 +121,12 @@ a{
     padding: 15px;
     border: 1px solid #b5b5b5;
     outline: none;
+    background-color: #eaf1fe !important;
 }
 .register-show input[type="button"] {
     max-width: 150px;
     width: 100%;
-    background: #444444;
+    background: #444444 !important;
     color: #f9f9f9;
     border: none;
     padding: 10px;
@@ -268,6 +270,14 @@ i {
     width: 70vw !important;
 }
 
+.modal-size{
+    width: 40vw !important;
+}
+
+.modal-content{
+    border-radius: 12px !important;
+}
+
 .btn-link{
     border: 1px solid transparent;
     font-size: 1.5rem;
@@ -384,5 +394,72 @@ th {
    nav h1{
         font-size: 14px !important;
     }
+}
+
+/* UI/UX Part */ 
+.client-list{
+    font-family: Poppins !important;
+	font-style: normal !important;
+	font-weight: bold !important;
+	font-size: 25px !important;
+	color: rgba(18,18,18,1);
+}
+
+.card-margin{
+    margin: 12px 0;
+}
+
+.card-title{
+    text-align: right !important;
+    font-family: Poppins;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 1rem;
+	color: rgba(18,18,18,1);
+	letter-spacing: 0.2px;
+    float: right;
+    padding-top: 7%;
+}
+
+.card{
+    border: none !important;
+    border-radius: 12px !important;
+}
+
+.text-count{
+    font-size: 25px !important;
+    padding-left: 6%;
+}
+
+.card-subtitle{
+    font-size: 15px !important;
+}
+
+.bg-circle{
+    font-size: 16px;
+    padding: 10px;
+    background-color: blue;
+    border-radius: 50%;
+    color: white;
+}
+
+.circle-green{
+    background-color: rgba(78,185,43,1) !important;
+}
+
+.success{
+    color: rgba(78,185,43,1) !important;
+}
+
+.badge-success{
+    background-color: rgba(37,78,218,1) !important;
+}
+
+#clientListTable{
+    color: black !important;
+}
+
+td:nth-child(2){
+    font-weight: bold !important;
 }
 

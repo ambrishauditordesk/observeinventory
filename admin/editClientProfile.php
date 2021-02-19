@@ -23,12 +23,19 @@
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- sweetalert cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous"></script>
+
 </head>
 
 <body>
 <?php
 include '../dbconnection.php';
 session_start();
+
+$ser = $_SERVER['HTTP_REFERER'];
 
 $addedById = trim($_POST['id']);
 
@@ -89,53 +96,28 @@ if($uploadOk){
     // var_dump("update client set active='1',added_by_id='$addedById',added_by_date='$addedByDate',name='$name',nickname='$nickName',incorp_date='$date',const_id='$const',industry_id='$industry',address='$add',city='$city',state='$state',pincode='$pin',country='$country',pan='$pan',gst='$gst',tan='$tan',cin='$cin' where id='$clientID'");
     // return;
     echo "<script>
-            $(document).ready(function() {
-            $('#successModal').modal();
+            swal({
+                icon: 'success',
+                text: 'Updated!',
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    window.location.href = '$ser';
+                }
             });
         </script>";
     }
-    else{    
+    else{
         echo "<script>
-                $(document).ready(function() {
-                $('#unsuccessModal').modal();
-                });
-            </script>";
+            swal({
+                icon: 'error',
+                text: 'Error!',
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    window.location.href = '$ser';
+                }
+            });
+        </script>";
     }
-    ?>  
-
-<!--Success Modal-->
-<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5>Hey <?php echo $_SESSION['name']; ?>!</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Successfully Updated <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a></div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" href="clientProfile?cid=<?php echo $clientID ?>">OK</a>
-            </div>
-        </div>
-    </div>
-</div>  
-
- <!--Unsuccess Modal-->
- <div class="modal fade" id="unsuccessModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Client Updation Failed.</div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" href="clientProfile?cid=<?php echo $clientID ?>">OK</a>
-            </div>
-        </div>
-    </div>
-</div> 
+    ?>
 
 

@@ -3,3 +3,16 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.*)$ $1.php [NC,L]
+ErrorDocument 404 http://localhost/finance/AuditSoft/error
+ErrorDocument 403 http://localhost/finance/AuditSoft/error
+ErrorDocument 500 http://localhost/finance/AuditSoft/error
+AddCharset UTF-8 .php
+<Files "dbconnection.php">  
+  Require all denied
+</Files>
+
+# Protect the htaccess file
+<Files .htaccess>
+Order Allow,Deny
+Deny from all
+</Files>

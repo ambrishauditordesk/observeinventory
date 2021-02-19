@@ -44,10 +44,13 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
-        <!-- sweetalert cdn -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
-                integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-                crossorigin="anonymous"></script>
+    <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <!-- sweetalert cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+            integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+            crossorigin="anonymous"></script>
     <style>
         .tableFixHead {
             overflow-y: auto;
@@ -263,7 +266,7 @@
                             <?php
                             if ($prog_id == 239){
                                 // $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid' order by _seq,id asc";
-                                $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=33 and workspace_log.workspace_id='$wid' order by _seq,id asc";
+                                $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id='$wid' order by _seq,id asc";
                                 $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                                 ?>
                                 <div class="form-row">
@@ -607,8 +610,48 @@
                                 </div>
                             <?php 
                             }
+                            elseif ($prog_id == 245){
+                                ?>
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn-primary" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <table id="trialBalanceTable" class="table display table-bordered table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">Sl</th>
+                                                                        <th scope="col">Account Number</th>
+                                                                        <th scope="col">Account Name</th>
+                                                                        <th scope="col">CY Begining Balance (PY)</th>
+                                                                        <th scope="col">CY Interim Balance</th>
+                                                                        <th scope="col">CY Activity (Movement)</th>
+                                                                        <th scope="col">CY End Balance</th>
+                                                                        <th scope="col">Client Adujstment</th>
+                                                                        <th scope="col">Audit Adjustment</th>
+                                                                        <th scope="col">CY Final Balance</th>
+                                                                        <th scope="col">Account Type</th>
+                                                                        <th scope="col">Account Class</th>
+                                                                        <th scope="col">Financial Statement</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php 
+                            }
                             elseif ($prog_id == 240) {
-                                $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=34 and workspace_log.workspace_id='$wid' order by _seq,id asc";
+                                $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq > 1 order by _seq,id asc";
                                 $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                                 ?>
                                 <div class="form-row">
@@ -871,13 +914,13 @@
                                     $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
                                     if($reviewSignoff['total']){
                                     ?>
-                                    <button class="btn btn-outline-success fetchReview" id="230">Review Sign Off Log</button>&nbsp;
+                                    <button class="btn btn-outline-success fetchReview" id="230">Reviewer Sign Off</button>&nbsp;
                                     <?php
                                     }
                                     $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
                                     if($prepareSignoff['total']){
                                     ?>
-                                    <button class="btn btn-outline-success fetchPrepare" id="230">Prepare Sign Off Log</button>
+                                    <button class="btn btn-outline-success fetchPrepare" id="230">Preparer Sign Off</button>
                                     <?php
                                     }
                                     ?>
@@ -906,6 +949,101 @@
                                         <?php }
                                             }
                                             }
+                            } elseif($prog_id == 2){
+                                $seq0 = $seq1 = 0;
+                                $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                                $exquery = $con->query($query);
+                                if ($exquery->num_rows != 0) {
+                                    while ($queryrow = $exquery->fetch_assoc()) {
+                                        if ($queryrow['hasChild'] == 1) { 
+                                            if($queryrow['_seq'] < 2 && $seq0 != 1){
+                                                $seq0++;
+                                                ?>
+                                                <h2><span class="badge badge-primary" >Balance Sheet</span></h2><br/>
+                                                <?php
+                                            }
+                                            if($queryrow['_seq'] >= 2 && $seq1 != 1){
+                                                $seq1++;
+                                                ?><br/>
+                                                <h2><span class="badge badge-primary" >Profit & Loss.</span></h2>
+                                                <br/>
+                                                <?php
+                                            }
+                                            ?>
+                                            <div class="list-group">
+                                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                            </div> <?php
+                                        }
+                                        else {
+                                            ?>
+                                            <div class="list-group">
+                                                <div class="list-group-item list-group-item-action">
+                                                    <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                                    <?php
+                                                        if ($queryrow['active']) { ?>
+                                                            <a href="#">
+                                                                <?php
+                                                                    if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
+                                                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
+                                                                            <i class="fas fa-external-link-alt"
+                                                                                style="color:blue !important;"
+                                                                                id="<?php echo $queryrow['id']; ?>">
+                                                                            </i>
+                                                                        </a>
+                                                                    <?php } 
+                                                                    else { ?>    
+                                                                        <i class="fas fa-external-link-alt signoffmodal"
+                                                                            style="color:blue !important;"
+                                                                            id="<?php echo $queryrow['id']; ?>">
+                                                                        </i>    
+                                                                    <?php }
+                                                                ?>
+                                                            </a> <?php
+                                                            // $prearedResult = $con->query("select id,user_id,prepare_signoff_date where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_all();
+                                                            // foreach($prearedResult as $key => $value)
+                                                            if ($queryrow['status']) { ?>
+                                                                <i class="fas fa-check-circle"
+                                                                    style="color:green !important;">
+                                                                </i>
+                                                                <?php
+                                                                $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
+                                                                if($prepareSignoff['total']){
+                                                                ?>
+                                                                <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
+                                                                <?php
+                                                                }
+                                                                $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
+                                                                if($reviewSignoff['total']){
+                                                                ?>
+                                                                <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
+                                                                <?php
+                                                                }
+                                                            } else { ?>
+                                                                <i class="fas fa-times-circle"
+                                                                    style="color:red !important;">
+                                                                </i> <?php
+                                                            } ?>
+                                                            <a href="#" id="<?php echo $queryrow['id']; ?>"
+                                                                class="buttonActive">
+                                                                <i class="fa fa-thumbs-up float-right"
+                                                                    aria-hidden="true"
+                                                                    style="color:blue !important;">
+                                                                </i>
+                                                            </a> <?php
+                                                        } else { ?>
+                                                            <a href="#" id="<?php echo $queryrow['id']; ?>"
+                                                                class="buttonActive">
+                                                                <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i>
+                                                            </a> 
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                </div>
+                                            </div> <?php
+                                        }
+                                    }
+                                }
                             } else {
                                     $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                     $exquery = $con->query($query);
@@ -924,7 +1062,7 @@
                                                             if ($queryrow['active']) { ?>
                                                                 <a href="#">
                                                                     <?php
-                                                                        if($queryrow['id'] == 247){ ?>
+                                                                        if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
                                                                             <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
                                                                                 <i class="fas fa-external-link-alt"
                                                                                     style="color:blue !important;"
@@ -950,13 +1088,13 @@
                                                                     $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
                                                                     if($prepareSignoff['total']){
                                                                     ?>
-                                                                    <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Prepare Sign Off Log</button>
+                                                                    <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
                                                                     <?php
                                                                     }
                                                                     $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
                                                                     if($reviewSignoff['total']){
                                                                     ?>
-                                                                    <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Review Sign Off Log</button>
+                                                                    <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
                                                                     <?php
                                                                     }
                                                                 } else { ?>
@@ -1082,6 +1220,35 @@
                         <div class="modal-footer">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="addbsplSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Excel Upload Modal -->
+        <div class="modal fade" id="addExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Upload Excel Form<h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="excelUpload" enctype="multipart/form-data" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Choose excel file for upload</label>
+                                <input type="file" class="form-control-file" name="file" accept=".xls, .xlsx" required>
+                                <input type="text" class="form-control" name="parent_id" value="<?php echo $prog_parentId; ?>" hidden>
+                                <input type="text" class="form-control" name="pid" value="<?php echo $prog_id; ?>" hidden>
+                                <input type="text" class="form-control" name="wid" value="<?php echo $wid; ?>" hidden>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" value="Upload">
                         </div>
                     </form>
                 </div>
@@ -1235,7 +1402,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Prepare Sign Off Logs
+                        <h5 class="modal-title" id="exampleModalLabel">Preparer Sign Off
                             <h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
@@ -1272,7 +1439,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Review Sign Off Logs
+                        <h5 class="modal-title" id="exampleModalLabel">Reviewer Sign Off
                             <h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
@@ -1286,7 +1453,7 @@
                                         Initials
                                     </th>
                                     <th>
-                                        Review Signoff Date
+                                        Reviewer Signoff Date
                                     </th>
                                     <th>
                                         Action
@@ -1641,7 +1808,6 @@
                     }
                 });
             });
-
             $(document).on('click', '.fetchPrepare', function () {
                 let id = $(this).attr("id");
                 $.ajax({
@@ -1688,7 +1854,7 @@
             });
 
             $(document).on('click', '.fetchReview', function () {
-                let id = $(this).attr("id");
+                let id = $(this).attr("id"); 
                 $.ajax({
                     url: "fetchReviewAjax.php",
                     type: "POST",
@@ -1808,6 +1974,7 @@
                                 }
                             }
                         }
+                        
 
                         obj.file.forEach(function (value) {
                             $('#signoffModal #filenames').append(
@@ -1876,6 +2043,140 @@
                             });
                 }
             })
+
+            $(document).ready(function() {
+                var dataTable = $('#trialBalanceTable').DataTable({
+                    "destroy": true,
+                    "processing": true,
+                    "serverSide": true,
+                    "searching": true,
+                    "order": [],
+                    "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+                        $("td:first", nRow).html(iDisplayIndex + 1);
+                        return nRow;
+                    },
+                    "ajax":
+                    $.fn.dataTable.pipeline({
+                        url: "trialBalanceFetchAjax.php",
+                        type: "POST",
+                        data: {wid: <?php echo $wid; ?>},
+                        pages: 2 // number of pages to cache
+                    })
+                });
+            });
+
+            $.fn.dataTable.pipeline = function ( opts ) {
+                // Configuration options
+                var conf = $.extend( {
+                    pages: 2,     // number of pages to cache
+                    url: '',      // script url
+                    data: null,   // function or object with parameters to send to the server
+                                // matching how `ajax.data` works in DataTables
+                    method: 'POST' // Ajax HTTP method
+                }, opts );
+            
+                // Private variables for storing the cache
+                var cacheLower = -1;
+                var cacheUpper = null;
+                var cacheLastRequest = null;
+                var cacheLastJson = null;
+            
+                return function ( request, drawCallback, settings ) {
+                    var ajax          = false;
+                    var requestStart  = request.start;
+                    var drawStart     = request.start;
+                    var requestLength = request.length;
+                    var requestEnd    = requestStart + requestLength;
+                    
+                    if ( settings.clearCache ) {
+                        // API requested that the cache be cleared
+                        ajax = true;
+                        settings.clearCache = false;
+                    }
+                    else if ( cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper ) {
+                        // outside cached data - need to make a request
+                        ajax = true;
+                    }
+                    else if ( JSON.stringify( request.order )   !== JSON.stringify( cacheLastRequest.order ) ||
+                            JSON.stringify( request.columns ) !== JSON.stringify( cacheLastRequest.columns ) ||
+                            JSON.stringify( request.search )  !== JSON.stringify( cacheLastRequest.search )
+                    ) {
+                        // properties changed (ordering, columns, searching)
+                        ajax = true;
+                    }
+                    
+                    // Store the request for checking next time around
+                    cacheLastRequest = $.extend( true, {}, request );
+            
+                    if ( ajax ) {
+                        // Need data from the server
+                        if ( requestStart < cacheLower ) {
+                            requestStart = requestStart - (requestLength*(conf.pages-1));
+            
+                            if ( requestStart < 0 ) {
+                                requestStart = 0;
+                            }
+                        }
+                        
+                        cacheLower = requestStart;
+                        cacheUpper = requestStart + (requestLength * conf.pages);
+            
+                        request.start = requestStart;
+                        request.length = requestLength*conf.pages;
+            
+                        // Provide the same `data` options as DataTables.
+                        if ( typeof conf.data === 'function' ) {
+                            // As a function it is executed with the data object as an arg
+                            // for manipulation. If an object is returned, it is used as the
+                            // data object to submit
+                            var d = conf.data( request );
+                            if ( d ) {
+                                $.extend( request, d );
+                            }
+                        }
+                        else if ( $.isPlainObject( conf.data ) ) {
+                            // As an object, the data given extends the default
+                            $.extend( request, conf.data );
+                        }
+            
+                        return $.ajax( {
+                            "type":     conf.method,
+                            "url":      conf.url,
+                            "data":     request,
+                            "dataType": "json",
+                            "cache":    false,
+                            "success":  function ( json ) {
+                                cacheLastJson = $.extend(true, {}, json);
+            
+                                if ( cacheLower != drawStart ) {
+                                    json.data.splice( 0, drawStart-cacheLower );
+                                }
+                                if ( requestLength >= -1 ) {
+                                    json.data.splice( requestLength, json.data.length );
+                                }
+                                
+                                drawCallback( json );
+                            }
+                        } );
+                    }
+                    else {
+                        json = $.extend( true, {}, cacheLastJson );
+                        json.draw = request.draw; // Update the echo for each response
+                        json.data.splice( 0, requestStart-cacheLower );
+                        json.data.splice( requestLength, json.data.length );
+            
+                        drawCallback(json);
+                    }
+                }
+            };
+            
+            // Register an API method that will empty the pipelined data, forcing an Ajax
+            // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
+            $.fn.dataTable.Api.register( 'clearPipeline()', function () {
+                return this.iterator( 'table', function ( settings ) {
+                    settings.clearCache = true;
+                } );
+} );
         });
     </script>
 </body>

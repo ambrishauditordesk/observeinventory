@@ -31,6 +31,7 @@
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="../css/custom.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/uiux.css" rel="stylesheet" type="text/css">
 
     <!-- JQuery CDN -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -49,25 +50,31 @@
 <body style="overflow-y: scroll">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg">
+    <nav class="navbar navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-flex">
+            <!-- <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="clientList">
                     <span>List Clients</span>&nbsp;&nbsp;
                     <i class="fas fa-list fa-1x"></i>
                 </a>
+            </li> -->
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="clientList">
+                    <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
+                    <span>List Clients</span>
+                </a>
             </li>
-            <li class="nav-item dropdown no-arrow ">
-                <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
+            <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
+                <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
+                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                </span>
+                <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                        <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
-                        <span class="rounded-circle d-flex justify-contents-center">
-                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
+                    <span>
+                        <?php echo $_SESSION['name']; ?>
+                        <img class="nav-icon" src="../Icons/Group 6.svg" style="width:15px !important;"/>
+                    </span>
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -82,219 +89,252 @@
         </ul>
     </nav>
 
-    <!-- HEADER -->
-    <div id="header">
-        <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
+    <!-- SideBar -->
+    <div class="sidenav">
+        <div class="side-header">
+            <img class="sidenav-icon" src="../Icons/Group -1.svg"/> &nbsp;
+            Audit Edg
+        </div>
 
-
-            <div class="row pt-1">
-                <div class="col-md-4">
-                    <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
-                    <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
-                </div>
-                <div class="col-md-4 text-center font-2 getContent" href="clientList">
-                    <h3><?php echo strtoupper($clientName . " - PROFILE"); ?></h3>
-                </div>
+        <div class="side-body">
+            <div class="dash">
+                <img class="sidenav-icon" src="../Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                Profile
+			</svg>
+            </div>
+            <div class="settings">
+                <span class="settings-items">
+                    <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Settings
+                </span>
+                <br>
+                <span class="settings-items">
+                    <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Help
+                </span>
             </div>
         </div>
-    </div><br>
 
-    <div class="row justify-content-md-center">
+        <div class="side-footer">
+            <button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
 
-    <!-- MEMBERS -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <a class="nav-link" href="clientMember.php?cid=<?php echo $clientID;?>">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <span>MEMBERS</span>
+    <div class="mar">
+        <!-- HEADER -->
+        <div id="header">
+            <div class="container-fluid shadow border-bottom" stickylevel="0" style="z-index:1200;">
+
+
+                <div class="row pt-1">
+                    <div class="col-md-4">
+                        <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
+                        <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
+                    </div>
+                    <div class="col-md-4 text-center font-2 getContent" href="clientList">
+                        <h3><?php echo strtoupper($clientName . " - PROFILE"); ?></h3>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+
+        <div class="row justify-content-md-center" style="margin: 0 !important;">
+
+            <!-- Cards -->
+            <!-- MEMBERS -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <a class="nav-link" href="clientMember.php?cid=<?php echo $clientID;?>">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span>MEMBERS</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-tie fa-2x text-gray-300"></i>
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-user-tie fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    <!-- EDIT CLIENT PROFILE -->
-    <div class="col-xl-3 col-md-6 mb-4">    
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#editClientModal">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <span>EDIT PROFILE</span>
+            <!-- EDIT CLIENT PROFILE -->
+            <div class="col-xl-3 col-md-6 mb-4">    
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#editClientModal">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span>EDIT PROFILE</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-user-tie fa-2x text-gray-300"></i>
-                        </div>
+                        </a>
                     </div>
-                </a>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- DATATABLE -->
-    <div class="container pt-4">
-        <div class="row">
-            <div class="card-body" style="width:10px;">
-                <div class="table-responsive">
-                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="clientsTable" class="table display table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Sl</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Nickname</th>
-                                            <th scope="col">Date of Incorporation</th>
-                                            <th scope="col">Constitution</th>
-                                            <th scope="col">Industry</th>
-                                            <th scope="col">Address</th>
-                                            <th scope="col">Country</th>
-                                            <th scope="col">State</th>
-                                            <th scope="col">City</th>
-                                            <th scope="col">Pincode</th>
-                                            <th scope="col">PAN Number</th>
-                                            <th scope="col">GST Number</th>
-                                            <th scope="col">TAN Number</th>
-                                            <th scope="col">CIN Number</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+            <!-- DATATABLE -->
+            <div class="container pt-4 justify-content-md-center" style="margin: 0 !important;">
+                <div class="row">
+                    <div class="card-body" style="width:10px;">
+                        <div class="table-responsive" style="background-color: white !important; border-radius: 15px !important;">
+                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="clientsTable" class="table display table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Sl</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Nickname</th>
+                                                    <th scope="col">Date of Incorporation</th>
+                                                    <th scope="col">Constitution</th>
+                                                    <th scope="col">Industry</th>
+                                                    <th scope="col">Address</th>
+                                                    <th scope="col">Country</th>
+                                                    <th scope="col">State</th>
+                                                    <th scope="col">City</th>
+                                                    <th scope="col">Pincode</th>
+                                                    <th scope="col">PAN Number</th>
+                                                    <th scope="col">GST Number</th>
+                                                    <th scope="col">TAN Number</th>
+                                                    <th scope="col">CIN Number</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!--Edit Client Form -->
-    <div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <?php 
-                $query = "select * from client where id = '$clientID'";
-            ?>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Fill in the Client details<h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                </div>
-                <form action="editClientProfile.php" method="post">
-                <?php
-                    $result = $con->query($query);
-                    while($row = $result->fetch_assoc()){
+        </div>
+
+        <!--Edit Client Modal -->
+        <div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <?php 
+                    $query = "select * from client where id = '$clientID'";
                 ?>
-                    <div class="modal-body">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Basic Details<h5>
-                        </div>
-                        <input type="hidden" class="form-control" name="date" value= "<?php echo $row['added_by_date'] ?>" required>
-                        <input type="hidden" class="form-control" name="id" value= "<?php echo $row['added_by_id'] ?>" required>
-                        <input type="hidden" class="form-control" name="cid" value= "<?php echo $clientID ?>" required>
-                        <input type="hidden" class="form-control" name="active" value= "<?php echo $row['active'] ?>" required>
-                        <div class="form-group ">
-                            <label for="name">Client Name</label>
-                            <input type="text" class="form-control" name="clientname" value= "<?php echo $row['name'] ?>" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Nick Name</label>
-                            <input type="text" class="form-control" name="nickname" value= "<?php echo $row['nickname'] ?>">
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Date of Incorporation/ Birth</label>
-                            <input type="date" class="form-control" name="dob" value= "<?php echo $row['incorp_date'] ?>" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="country">Constitution</label>
-                            <select class="form-control" name="constitution" required>
-                                <option>Select Constitution !</option>
-                                    <?php
-                                        $consQuery = $con->query("select * from constitution");
-                                        while ($consResult = $consQuery->fetch_assoc()) {
-                                    ?>
-                                <option value="<?php echo $consResult['id']; ?>" <?php if($row['const_id'] == $consResult['id']) echo "selected"; ?>><?php echo $consResult['const']; ?></option>
-                                    <?php
-                                        }
-                                    ?>
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label for="country">Industry</label>
-                            <select class="form-control" name="industry" required>
-                                <option>Select Industry !</option>
-                                <?php
-                                                $indusQuery = $con->query("select * from industry");
-                                                while ($indusResult = $indusQuery->fetch_assoc()) {
-                                            ?>
-                                <option value="<?php echo $indusResult['id']; ?>" <?php if($row['industry_id'] == $indusResult['id']) echo "selected"; ?>><?php echo $indusResult['industry']; ?></option>
-                                <?php
+                    <form action="editClientProfile.php" method="post">
+                    <?php
+                        $result = $con->query($query);
+                        while($row = $result->fetch_assoc()){
+                    ?>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Basic Details<h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <input type="hidden" class="form-control" name="date" value= "<?php echo $row['added_by_date'] ?>" required>
+                            <input type="hidden" class="form-control" name="id" value= "<?php echo $row['added_by_id'] ?>" required>
+                            <input type="hidden" class="form-control" name="cid" value= "<?php echo $clientID ?>" required>
+                            <input type="hidden" class="form-control" name="active" value= "<?php echo $row['active'] ?>" required>
+                            <div class="form-group ">
+                                <label for="name">Client Name</label>
+                                <input type="text" class="form-control" name="clientname" value= "<?php echo $row['name'] ?>" required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Nick Name</label>
+                                <input type="text" class="form-control" name="nickname" value= "<?php echo $row['nickname'] ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Date of Incorporation/ Birth</label>
+                                <input type="date" class="form-control" name="dob" value= "<?php echo $row['incorp_date'] ?>" required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="country">Constitution</label>
+                                <select class="form-control" name="constitution" required>
+                                    <option>Select Constitution !</option>
+                                        <?php
+                                            $consQuery = $con->query("select * from constitution");
+                                            while ($consResult = $consQuery->fetch_assoc()) {
+                                        ?>
+                                    <option value="<?php echo $consResult['id']; ?>" <?php if($row['const_id'] == $consResult['id']) echo "selected"; ?>><?php echo $consResult['const']; ?></option>
+                                        <?php
                                             }
-                                            ?>
-                            </select>
+                                        ?>
+                                </select>
+                            </div>
+                            <div class="form-group ">
+                                <label for="country">Industry</label>
+                                <select class="form-control" name="industry" required>
+                                    <option>Select Industry !</option>
+                                    <?php
+                                                    $indusQuery = $con->query("select * from industry");
+                                                    while ($indusResult = $indusQuery->fetch_assoc()) {
+                                                ?>
+                                    <option value="<?php echo $indusResult['id']; ?>" <?php if($row['industry_id'] == $indusResult['id']) echo "selected"; ?>><?php echo $indusResult['industry']; ?></option>
+                                    <?php
+                                                }
+                                                ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Address</label>
+                                <input type="text" class="form-control" name="add" value= "<?php echo $row['address'] ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" class="form-control" name="country" value= "<?php echo $row['country'] ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" class="form-control" name="state" value= "<?php echo $row['state'] ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" name="cistatestatety" value= "<?php echo $row['city'] ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Pincode</label>
+                                <input type="text" class="form-control" name="pincode" value= "<?php echo $row['pincode'] ?>" required>
+                            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Pan No.</label>
+                                <input type="text" class="form-control" name="pan" value= "<?php echo $row['pan'] ?>" required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">GST No.</label>
+                                <input type="text" class="form-control" name="gst" value= "<?php echo $row['gst'] ?>" required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">TAN No.</label>
+                                <input type="text" class="form-control" name="tan" value= "<?php echo $row['tan'] ?>" required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">CIN No.</label>
+                                <input type="text" class="form-control" name="cin" value= "<?php echo $row['cin'] ?>" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="name">Address</label>
-                            <input type="text" class="form-control" name="add" value= "<?php echo $row['address'] ?>">
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-warning" type="reset" value="Reset">
+                            <input class="btn btn-primary" type="submit" value="Done">
                         </div>
-                        <div class="form-group">
-                            <label for="country">Country</label>
-                            <input type="text" class="form-control" name="country" value= "<?php echo $row['country'] ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State</label>
-                            <input type="text" class="form-control" name="state" value= "<?php echo $row['state'] ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City</label>
-                            <input type="text" class="form-control" name="city" value= "<?php echo $row['city'] ?>">
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Pincode</label>
-                            <input type="text" class="form-control" name="pincode" value= "<?php echo $row['pincode'] ?>" required>
-                        </div>
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Pan No.</label>
-                            <input type="text" class="form-control" name="pan" value= "<?php echo $row['pan'] ?>" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">GST No.</label>
-                            <input type="text" class="form-control" name="gst" value= "<?php echo $row['gst'] ?>" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">TAN No.</label>
-                            <input type="text" class="form-control" name="tan" value= "<?php echo $row['tan'] ?>" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">CIN No.</label>
-                            <input type="text" class="form-control" name="cin" value= "<?php echo $row['cin'] ?>" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                        <input class="btn btn-warning" type="reset" value="Reset">
-                        <input class="btn btn-primary" type="submit" value="Done">
-                    </div>
-                <?php } ?>
-                </form>
+                    <?php } ?>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div> 
+        </div> 
+    </div>
 
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

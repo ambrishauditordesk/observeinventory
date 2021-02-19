@@ -48,7 +48,7 @@ foreach($result as $row)
     }
  $sub_array[] = $row['reg_date'];
  $sub_array[] = $row['signoff_init'];
- $sub_array[] = "<a href='#'><i class='fas fa-user-edit editMember' id='".$row['id']."'></i></a>";
+ $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editMember' src='../Icons/edit-1.svg' id='".$row['id']."' style='width: 35% !important;'><img class='datatable-icon editMember' src='../Icons/edit-2.svg' id='".$row['id']."' style='width: 35% !important;'></a>";
  $sub_array[] = "<a href='#' class='badge badge-primary allocate' id='".$row['id']."'></i>ALLOCATE</a>"; 
  $data[] = $sub_array;
 }

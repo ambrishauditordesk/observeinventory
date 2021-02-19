@@ -7,8 +7,6 @@
     $name = trim($_POST['name']);
     $active = trim($_POST['active']);
 
-    //echo json_encode($id);
-
     if($con->query("update client set name = '$name',active = '$active' where id = '$id'") === TRUE)
     {
         echo 1;

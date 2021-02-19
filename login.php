@@ -34,15 +34,22 @@
 			<div class="login-show">
 				<h2>LOGIN</h2>
 						<form method = "post" action = "validate.php">
-							<input type="text" name = "email" placeholder="Email">
-							<input type="password" name = "password" placeholder="Password">
+							<input type="text" name = "email" placeholder="Email" required>
+							<input type="password" name = "password" placeholder="Password" required>
+							<div class="form-group">
+								<input type="text" name="vercode" class="form-control" placeholder="Verfication Code" autocomplete="off" required>
+							</div>
+							<div class="form-group" style="display:flex; align-items:center">
+								<label class="checkbox-inline">Verification Code:</label>&nbsp;
+								<img src="captcha.php" >
+							</div>
 							<input type="submit"  value= "Login">
 						</form>
 			</div>
 			<div class="register-show">
 				<h2>Reset Password</h2>		
 				<input type="text" placeholder="Email">
-				<input type="submit" value="Reset">
+				<input type="button" value="Reset">
 			</div>
 		</div>
     </div>

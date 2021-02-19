@@ -45,3 +45,18 @@ window.onresize = function() {
     if ((window.outerHeight - window.innerHeight) > 100)
         consoleHide();
 }
+
+// Auto Logout after 10 mins, calling after 1 min for checking
+$(window).on('load', function(e) {
+    let timeStamp = new Date().getTime();
+    $(window).on('mousemove scroll keyup keypress mousedown mouseup mouseover', function(e) {
+        timeStamp = new Date().getTime();
+    });
+    setInterval(() => {
+        let latestTime = new Date().getTime();
+        console.log(latestTime - timeStamp)
+        if ((latestTime - timeStamp) >= 600000) {
+            window.location = 'http://localhost/finance/AuditSoft/logout.php'
+        }
+    }, 1000);
+});

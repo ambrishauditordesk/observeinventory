@@ -29,6 +29,7 @@
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="../css/custom.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/uiux.css" rel="stylesheet" type="text/css">
 
     <!-- JQuery CDN -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -47,25 +48,31 @@
 <body style="overflow-y: scroll" oncontextmenu="return false">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg">
+    <nav class="navbar navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-flex">
+            <!-- <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="clientList">
                     <span>List Clients</span>&nbsp;&nbsp;
                     <i class="fas fa-list fa-1x"></i>
                 </a>
+            </li> -->
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="clientList">
+                    <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
+                    <span>List Clients</span>
+                </a>
             </li>
-            <li class="nav-item dropdown no-arrow ">
-                <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
+            <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
+                <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
+                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                </span>
+                <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                        <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
-                        <span class="rounded-circle d-flex justify-contents-center">
-                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
+                    <span>
+                        <?php echo $_SESSION['name']; ?>
+                        <img class="nav-icon" src="../Icons/Group 6.svg" style="width:15px !important;"/>
+                    </span>
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -80,274 +87,294 @@
         </ul>
     </nav>
 
-    <!-- HEADER -->
-    <div id="header">
-        <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
-
-
-            <div class="row pt-1">
-                <div class="col-md-4">
-                    <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
-                    <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
-                </div>
-                <div class="col-md-4 text-center font-2 getContent" href="clientList">
-                    <h3>MEMBERS</h3>
-                </div>
+    <!-- SideBar -->
+    <div class="sidenav">
+        <div class="side-header">
+            <!-- <div style="border-bottom:1px solid;"> -->
+            <div>
+                <img class="sidenav-icon" src="../Icons/Group -1.svg"/> &nbsp;
+                Audit Edg
             </div>
         </div>
-    </div><br>
-
-    <div class="row justify-content-md-center">
-
-        <!-- Total Members -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total
-                                Members
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <?php
-                            $query = "SELECT COUNT(id) AS total FROM user where accessLevel > '".$_SESSION['role']."' and client_id is null";
-                            $totalMembers = $con->query($query);
-                            if ($totalMembers->num_rows != 0) {
-                                $count = $totalMembers->fetch_assoc();
-                                echo " " . $count['total'];
-                                if ($count['total'] > 1) {
-                                    echo " Members";
-                                } else {
-                                    echo " Members";
-                                }
-                            } else {
-                                echo " 0 Member";
-                            }
-                        ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-user-tie fa-2x text-gray-300"></i>
-                        </div>
+        <div class="side-footer">
+            <div class="side-body">
+                <div class="dash">
+                    <img class="sidenav-icon" src="../Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Dashboard
+                    </svg>
+                </div>
+            </div>
+            <div class="settings">
+                <div class="settings-items-top-div">
+                    <div class="settings-items">
+                        <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Settings
+                    </div>
+                    <div class="settings-items">
+                        <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Help
                     </div>
                 </div>
+                <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
             </div>
         </div>
+    </div>
 
-        <!-- Register a Member -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <a class="nav-link" href="#" data-toggle="modal" data-target="#registerMemberModal">
+    <div class="mar">
+        <br>
+
+        <div class="row justify-content-md-center" style="width: 100% !important;">
+
+            <!-- Total Members -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Team Members
+                                </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <span>Register</span>
+                                    <?php
+                                $query = "SELECT COUNT(id) AS total FROM user where accessLevel > '".$_SESSION['role']."' and client_id is null";
+                                $totalMembers = $con->query($query);
+                                if ($totalMembers->num_rows != 0) {
+                                    $count = $totalMembers->fetch_assoc();
+                                    echo " " . $count['total'];
+                                    if ($count['total'] > 1) {
+                                        echo " Members";
+                                    } else {
+                                        echo " Members";
+                                    }
+                                } else {
+                                    echo " 0 Member";
+                                }
+                            ?>
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-fw fa-user-plus fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DATATABLE -->
-    <div class="container pt-4">
-        <div class="row">
-            <div class="card-body" style="width:10px;">
-                <div class="table-responsive">
-                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="membersTable" class="table display table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Sl</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Role</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Registration Date</th>
-                                            <th scope="col">SignOff Initials</th>
-                                            <th scope="col">Edit</th>
-                                            <th scope="col">Client</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                                <i class="fas fa-user-tie fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Register a Member Form -->
-    <div class="modal fade" id="registerMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Register A Member
-                        <h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+            <!-- Register a Member -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#registerMemberModal">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span>Register</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-fw fa-user-plus fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-                <form autocomplete="off">
-                    <div class="modal-body">
-                        <div class="form-group ">
-                            <label for="name">Full Name</label>
-                            <input type="text" class="form-control" name="name" id="name" required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email" autocomplete="off"
-                                required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Password</label>
-                            <input type="password" class="form-control" name="password" id="password" autocomplete="off"
-                                required>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Role</label>
-                            <select name="role" id="role" class="form-control" required>
-                                <option value="">Select role</option>
-                                <?php
-                                if($_SESSION['role'] == -1)
-                                {
-                                ?>
-                                <option value="1">Software Admin</option>
-                                <?php
-                                }
-                                ?>
-                                <option value="2">Audit Admin</option>
-                                <option value="3">Audit Member</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                        <input class="btn btn-primary" type="submit" id="registerSubmit" value="Done">
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Edit a Member Form -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Member<h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+        <!-- DATATABLE -->
+        <div class="container pt-4">
+            <div class="row">
+                <div class="card-body" style="width:10px;">
+                    <div class="table-responsive" style="border-radius: 15px !important;">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="membersTable" class="table display table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Sl</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Role</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Registration Date</th>
+                                                <th scope="col">SignOff Initials</th>
+                                                <th scope="col">Edit</th>
+                                                <th scope="col">Client</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="form-group ">
-                            <label for="name">Full Name</label>
-                            <input type="text" class="form-control" name="name" id="name1" readonly>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email1" autocomplete="off"
-                                readonly>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Role</label>
-                            <select name="role" id="role1" class="form-control">
-                                <option value="">Select role</option>
-                                <option value="2">Admin</option>
-                                <option value="3">Member</option>
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Status</label>
-                            <select name="active" id="active1" class="form-control">
-                                <option value="">Select Status</option>
-                                <option value="0">Access Denied</option>
-                                <option value="1">Allowed</option>
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label for="name">Sign-Off Initial</label>
-                            <input type="text" class="form-control" name="signoff" id="signoff1" readonly>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                        <input class="btn btn-primary" type="submit" id="submit1" value="Done">
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Allocate Client Modal -->
-    <div class="modal fade" id="allocate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Clients<h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="form-group ">
-                            <input type="hidden" id="memberId" name="memberId" value="">
-                            <label for="name">Name</label>
-                            <input type="text" id="name2" class="form-control" name="name2" readonly>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <select name="from[]" id="lstview" class="form-control" size="20" multiple>
+        <!-- Register a Member Form -->
+        <div class="modal fade" id="registerMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Register A Member
+                            <h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                    </div>
+                    <form autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group ">
+                                <label for="name">Full Name</label>
+                                <input type="text" class="form-control" name="name" id="name" required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Email Address</label>
+                                <input type="email" class="form-control" name="email" id="email" autocomplete="off"
+                                    required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" autocomplete="off"
+                                    required>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Role</label>
+                                <select name="role" id="role" class="form-control" required>
+                                    <option value="">Select role</option>
+                                    <?php
+                                    if($_SESSION['role'] == -1)
+                                    {
+                                    ?>
+                                    <option value="1">Software Admin</option>
+                                    <?php
+                                    }
+                                    ?>
+                                    <option value="2">Audit Admin</option>
+                                    <option value="3">Audit Member</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <button type="button" id="lstview_undo" class="btn btn-danger btn-block">
-                                    undo
-                                </button>
-                                <button type="button" id="lstview_rightAll" class="btn btn-default btn-block">
-                                    <i class="fas fa-angle-double-right"></i>
-                                </button>
-                                <button type="button" id="lstview_rightSelected" class="btn btn-default btn-block">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                                <button type="button" id="lstview_leftSelected" class="btn btn-default btn-block">
-                                    <i class="fas fa-arrow-left"></i>
-                                </button>
-                                <button type="button" id="lstview_leftAll" class="btn btn-default btn-block">
-                                    <i class="fas fa-angle-double-left"></i>
-                                </button>
-                                <button type="button" id="lstview_redo" class="btn btn-warning btn-block">
-                                    redo
-                                </button>
-                            </div>
-                            <div class="col-md-5">
-                                <select name="to[]" id="lstview_to" class="form-control" size="20" multiple></select>
-                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel
-                        </button>
-                        <input class="btn btn-primary" id="submit2" type="submit" value="Done">
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+
+        <!-- Edit a Member Form -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Member<h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="form-group ">
+                                <label for="name">Full Name</label>
+                                <input type="text" class="form-control" name="name" id="name1" readonly>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Email Address</label>
+                                <input type="email" class="form-control" name="email" id="email1" autocomplete="off"
+                                    readonly>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Role</label>
+                                <select name="role" id="role1" class="form-control">
+                                    <option value="">Select role</option>
+                                    <option value="2">Admin</option>
+                                    <option value="3">Member</option>
+                                </select>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Status</label>
+                                <select name="active" id="active1" class="form-control">
+                                    <option value="">Select Status</option>
+                                    <option value="0">Access Denied</option>
+                                    <option value="1">Allowed</option>
+                                </select>
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Sign-Off Initial</label>
+                                <input type="text" class="form-control" name="signoff" id="signoff1" readonly>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="submit1" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Allocate Client Modal -->
+        <div class="modal fade" id="allocate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Clients<h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="form-group ">
+                                <input type="hidden" id="memberId" name="memberId" value="">
+                                <label for="name">Name</label>
+                                <input type="text" id="name2" class="form-control" name="name2" readonly>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <select name="from[]" id="lstview" class="form-control" size="20" multiple>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" id="lstview_undo" class="btn btn-danger btn-block">
+                                        undo
+                                    </button>
+                                    <button type="button" id="lstview_rightAll" class="btn btn-default btn-block">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </button>
+                                    <button type="button" id="lstview_rightSelected" class="btn btn-default btn-block">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    <button type="button" id="lstview_leftSelected" class="btn btn-default btn-block">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                    <button type="button" id="lstview_leftAll" class="btn btn-default btn-block">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </button>
+                                    <button type="button" id="lstview_redo" class="btn btn-warning btn-block">
+                                        redo
+                                    </button>
+                                </div>
+                                <div class="col-md-5">
+                                    <select name="to[]" id="lstview_to" class="form-control" size="20" multiple></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel
+                            </button>
+                            <input class="btn btn-primary" id="submit2" type="submit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -422,7 +449,6 @@
             success: function(data) {
                 obj = JSON.parse(data);
                 id = obj.id;
-                console.log(obj);
                 $("#editModal #name1").val(obj.name);
                 $("#editModal #email1").val(obj.email);
                 $("#editModal #role1").val(obj.accessLevel);
@@ -525,7 +551,6 @@
                     id: id
                 },
                 success: function(data) {
-                    //console.log(data);
                     cObj = JSON.parse(data);
                     for (var i = 0; i < cObj.length; i++) {
                         $("#allocate #lstview").append('<option value="' + cObj[i].id + '">' + cObj[i].name + '</option>');

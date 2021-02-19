@@ -47,7 +47,7 @@ foreach($result as $row)
         }
     }
  $sub_array[] = $row['designation'];
- $sub_array[] = "<a href='#'><i class='fas fa-user-edit editMember' id='".$row['id']."'></i></a>";
+ $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClient' src='../Icons/edit-1.svg' id='".$row['id']."'><img class='datatable-icon editClient' src='../Icons/edit-2.svg' id='".$row['id']."'></a>";
  $data[] = $sub_array;
 }
 function get_all_data($con)

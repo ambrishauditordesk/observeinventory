@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="refresh" content="5;url=login" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
@@ -24,7 +25,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
 </head>
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary" oncontextmenu="return false">
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
@@ -42,72 +43,106 @@
 <?php 
     include 'dbconnection.php';
     session_start();
-    
-    if (isset($_SESSION['email']) && !empty($_SESSION['email'])){
-        if($_SESSION['accessLevel'] == '-1'){
-            header("Location: admin/clientList");    
-        }
-        else{
-            header("Location: admin/clientList");
-        }
+    if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
+        echo "<script>
+            $(document).ready(function() {
+                $('#wrongCodeModal').modal();
+            });
+          </script>";
     }
-    if(!isset($_POST['email']) && empty($_POST['email']) && !isset($_POST['password']) && empty($_POST['password'])){
-        header('Location: index');
-    }
+    else{
+        if (isset($_SESSION['email']) && !empty($_SESSION['email'])){
+            if($_SESSION['accessLevel'] == '-1'){
+                header("Location: admin/clientList");    
+            }
+            else{
+                header("Location: admin/clientList");
+            }
+        }
+        if(!isset($_POST['email']) && empty($_POST['email']) && !isset($_POST['password']) && empty($_POST['password'])){
+            header('Location: index');
+        }
 
-    $email = trim($_POST["email"]);
-    $pass = trim($_POST["password"]);
-    $pass = md5($pass);
-    $users = $con->query("SELECT * FROM user WHERE email= '$email' and password= '$pass'");
+        $location = json_decode(file_get_contents("https://geolocation-db.com/json/"),true);
+        $ip = $location['IPv4'];
+        $json = json_decode(file_get_contents("http://ipinfo.io/$ip/geo"), true);
+        $browser = $_SERVER['HTTP_USER_AGENT'];
+        $dateTime = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s");
+        $location = $json['city'].', '.$json['region'].', '.$json['country'].' ( '.$json['loc'].' )';
     
-    
-    if ($users->num_rows != 0) {
-        $usersrow = $users->fetch_assoc();
-        if($usersrow['active'] == 1){
-            $_SESSION['id'] = $usersrow['id'];
-            $_SESSION['name'] = $usersrow['name'];
-            $_SESSION['email'] = $usersrow['email'];
-            $_SESSION['role'] = $usersrow['accessLevel'];
-            $_SESSION['reg_date'] = $usersrow['reg_date'];
-            $_SESSION['signoff'] = $usersrow['signoff_init'];
-            $_SESSION['external'] = 0;
-            if($usersrow['client_id'] != ''){
-                $_SESSION['external'] = 1;
-                $_SESSION['external_client_id'] = $usersrow['client_id'];
-                $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
-                if($checkAccess){
-                    header('Location: workspace?cid='.$usersrow['client_id']);
+        $email = trim($_POST["email"]);
+        $con->query("insert into loginlog(email,ip,dateTime,location,browser,status) values('$email','$ip','$dateTime','$location','$browser','')");
+        $loginLogId = $con->insert_id;
+        echo $loginLogId;
+        $pass = trim($_POST["password"]);
+        $pass = md5($pass);
+        $users = $con->query("SELECT * FROM user WHERE email= '$email' and password= '$pass'");
+        
+        
+        if ($users->num_rows != 0) {
+            $usersrow = $users->fetch_assoc();
+            if($usersrow['active'] == 1){
+                $con->query("update loginlog set status = 'Success' where id = $loginLogId");
+                $_SESSION['id'] = $usersrow['id'];
+                $_SESSION['name'] = $usersrow['name'];
+                $_SESSION['email'] = $usersrow['email'];
+                $_SESSION['role'] = $usersrow['accessLevel'];
+                $_SESSION['reg_date'] = $usersrow['reg_date'];
+                $_SESSION['signoff'] = $usersrow['signoff_init'];
+                $_SESSION['external'] = 0;
+                if($usersrow['client_id'] != ''){
+                    $_SESSION['external'] = 1;
+                    $_SESSION['external_client_id'] = $usersrow['client_id'];
+                    $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
+                    if($checkAccess){
+                        header('Location: workspace?cid='.$usersrow['client_id']);
+                    }
+                    else{
+                        session_unset();
+                        session_destroy();
+                        echo "<script>
+                                $(document).ready(function() {
+                                    $('#accessDeniedModal').modal();
+                                });
+                            </script>";
+                    }
                 }
                 else{
-                    session_unset();
-                    session_destroy();
-                    echo "<script>
-                            $(document).ready(function() {
-                                $('#accessDeniedModal').modal();
-                            });
-                        </script>";
+                    header('Location: admin/clientList');
                 }
             }
             else{
-                header('Location: admin/clientList');
+                $con->query("update loginlog set status = 'Access Denied' where id = $loginLogId");
+                echo "<script>
+                $(document).ready(function() {
+                    $('#accessDeniedModal').modal();
+                });
+              </script>";
             }
         }
         else{
+            $con->query("update loginlog set status = 'Failed' where id = $loginLogId");
             echo "<script>
-            $(document).ready(function() {
-                $('#accessDeniedModal').modal();
-            });
-          </script>";
+                    $(document).ready(function() {
+                        $('#wrongPassUserModal').modal();
+                    });
+                  </script>";
         }
-    }
-    else{
-        echo "<script>
-                $(document).ready(function() {
-                    $('#wrongPassUserModal').modal();
-                });
-              </script>";
-    }
+    } 
 ?>
+<div class="modal fade" id="wrongCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sorry </h5>
+            </div>
+            <div class="modal-body">Please Enter a Valid Verification Code !</div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" href="login">OK</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="accessDeniedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
