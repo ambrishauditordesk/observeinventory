@@ -103,7 +103,7 @@
             <div class="side-body">
                 <div class="dash">
                     <img class="sidenav-icon" src="../Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                    Dashboard
+                    Contacts
                     </svg>
                 </div>
             </div>
