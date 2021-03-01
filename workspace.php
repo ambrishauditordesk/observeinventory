@@ -47,7 +47,7 @@
 <body style="overflow-y: scroll" oncontextmenu="return false">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg border-bottom">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <!-- <li class="nav-item d-flex">
@@ -79,8 +79,15 @@
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
                         </a>
-                        <div class="dropdown-divider"></div> -->
-                    <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                    <div class="dropdown-divider"></div> -->
+                    <?php 
+                        if($_SESSION['role'] == '-1'){
+                    ?>
+                        <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                    <?php
+                    } 
+                    ?>
+                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
@@ -100,12 +107,11 @@
                 <div class="dash">
                     <img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Workspace
-                    </svg>
                 </div>
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
-                    <div class="settings-items">
+                    <div class="settings-items settingsmodal">
                         <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Settings
                     </div>
@@ -134,7 +140,7 @@
 
         <!-- ADD WORKSPACE BUTTON -->
         <?php 
-            if($_SESSION['role'] != 3 && $_SESSION['external'] != 1){
+            if($_SESSION['role'] != 3 && $_SESSION['role'] != 2 && $_SESSION['external'] != 1){
         ?>
         <div class = "row justify-content-md-center" style="width: 100% !important;">   
             <div class="col-xl-3 col-md-6 mb-4 ">                       
@@ -264,6 +270,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <!-- <form method="post" action="editAClient"> -->
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group ">
+                                <label for="name">Dark Mode</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Inactive
+                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
+                                <label class="form-check-label" for="exampleRadios2" name="active">
+                                    Active
+                                </label>
+                            </div>
+                            <div class="modal-footer d-flex align-items-center justify-content-center">
+                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -276,10 +319,10 @@
     <!-- Page level custom scripts -->
     <script src="js/custom.js"></script>
     <script>
-        $(document).ready(function(){
-    var i=1;
-    b = i-1;
-    $("#add_row").click(function () {
+    $(document).ready(function(){
+        var i=1;
+        b = i-1;
+        $("#add_row").click(function () {
                 $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
                 $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
             i++;
@@ -291,6 +334,20 @@
                 i--;
             }
         });
+
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+            $("#settingsModal #dark-active").attr('checked','checked');
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+            $("#settingsModal #dark-inactive").attr('checked','checked');
+        }
 
         $(document).on('click','.freeze',function(){
             let id = $(this).attr('id');
@@ -312,5 +369,59 @@
                 }
             })
         })
-});
+    });
+
+    $(document).on('click','.settingsmodal', function() {
+        $("#settingsModal").modal('show');
+    });
+
+    $('input[type=radio][name=darkmode]').change(function() {
+        if(this.value == '1')
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+        }
+        else if(this.value == '0'){
+            document.documentElement.classList.remove('dark-mode');
+            document.documentElement.classList.remove('invert-dark-mode');
+        }
+    });
+
+    $(document).on('click', '#save', function(e) {
+        e.preventDefault();
+        var id = <?php echo $_SESSION['id']; ?>;
+        var active = $('input[name="darkmode"]:checked').val();
+        $.ajax({
+            url: "darkmode.php",
+            type: "POST",
+            data: {
+                id: id,
+                active: active
+            },
+            success: function(response) {
+                console.log(response);
+                if (response) {
+                    swal({
+                        icon: "success",
+                        text: "Updated!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                }
+            }
+        });
+    });
     </script>

@@ -4,9 +4,6 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
-    if (isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] == '3') {
-        header('Location: ../login');
-    }
     $clientId= $_GET['cid'];
     $clientName = $con->query("select name from client where id = $clientId ")->fetch_assoc()["name"];
 ?>
@@ -51,7 +48,7 @@
 <body style="overflow-y: scroll">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg border-bottom">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <!-- <li class="nav-item d-flex">
@@ -83,8 +80,15 @@
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
                         </a>
-                        <div class="dropdown-divider"></div> -->
-                    <a class="dropdown-item" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                    <div class="dropdown-divider"></div> -->
+                    <?php 
+                        if($_SESSION['role'] == '-1'){
+                    ?>
+                        <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
+                    <?php
+                    } 
+                    ?>
+                    <a class="dropdown-item" href="../logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
@@ -109,7 +113,7 @@
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
-                    <div class="settings-items">
+                    <div class="settings-items settingsmodal">
                         <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Settings
                     </div>
@@ -128,8 +132,6 @@
         <!-- HEADER -->
         <div id="header">
             <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
-
-
                 <div class="row pt-1">
                     <div class="col-md-4">
                         <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
@@ -232,7 +234,7 @@
         <!-- Register a Member Form -->
         <div class="modal fade" id="registerMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Register A Contact
@@ -315,6 +317,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <!-- <form method="post" action="editAClient"> -->
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group ">
+                                <label for="name">Dark Mode</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Inactive
+                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
+                                <label class="form-check-label" for="exampleRadios2" name="active">
+                                    Active
+                                </label>
+                            </div>
+                            <div class="modal-footer d-flex align-items-center justify-content-center">
+                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -329,6 +368,20 @@
     <script>
     $(document).ready(function() {
         get_data();
+
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+            $("#settingsModal #dark-active").attr('checked','checked');
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+            $("#settingsModal #dark-inactive").attr('checked','checked');
+        }
     });
 
     $(document).on('click', '.editClient', function() {
@@ -452,6 +505,60 @@
                     }).then(function(isConfirm) {
                         if (isConfirm) {
                             location.reload();
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    $(document).on('click','.settingsmodal', function() {
+        $("#settingsModal").modal('show');
+    });
+
+    $('input[type=radio][name=darkmode]').change(function() {
+        if(this.value == '1')
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+        }
+        else if(this.value == '0'){
+            document.documentElement.classList.remove('dark-mode');
+            document.documentElement.classList.remove('invert-dark-mode');
+        }
+    });
+
+    $(document).on('click', '#save', function(e) {
+        e.preventDefault();
+        var id = <?php echo $_SESSION['id']; ?>;
+        var active = $('input[name="darkmode"]:checked').val();
+        $.ajax({
+            url: "../darkmode.php",
+            type: "POST",
+            data: {
+                id: id,
+                active: active
+            },
+            success: function(response) {
+                console.log(response);
+                if (response) {
+                    swal({
+                        icon: "success",
+                        text: "Updated!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
                         }
                     });
                 }

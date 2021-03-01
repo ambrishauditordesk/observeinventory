@@ -48,8 +48,7 @@ foreach($result as $row)
  $sub_array = array();
  $sub_array[] = '';
  $sub_array[] = $row['aname'];
- $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon viewClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon viewClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
- <a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/edit-1.svg' style='width: 12% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/edit-2.svg' style='width: 12% !important;' id='".trim($row['aid'])."'></a> &nbsp;
+ $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
  <a href='clientMember.php?cid=".trim($row['aid'])."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
  $sub_array[] = $row['con'];
  $sub_array[] = $row['adate'];

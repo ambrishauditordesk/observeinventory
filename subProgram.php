@@ -29,12 +29,12 @@
 
     <!-- Custom stylesheet-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link href="css/uiux.css" rel="stylesheet" type="text/css">
 
     <!-- bootstrap cdn -->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -74,911 +74,998 @@
     </style>
 </head>
 
-<body style="overflow-y: scroll" oncontextmenu="return false">
+<body style="overflow-y: scroll; height:100% !important;" oncontextmenu="return false">
 
-<div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
-            <div class="sidebar-brand-icon">
-                <a class="navbar-brand navbar-logo" href="<?php if(isset($_SESSION['external_client_id']) && $_SESSION['external_client_id'] == '') echo "admin/clientList"; else echo "workspace?cid=".$_SESSION['client_id']; ?>">Audit-EDG</a>
+    <!-- SideBar -->
+    <div class="sidenav">
+        <div class="side-header">
+            <!-- <div style="border-bottom:1px solid;"> -->
+            <div>
+                <a href="<?php if(isset($_SESSION['external_client_id']) && $_SESSION['external_client_id'] == '') echo "admin/clientList"; else echo "workspace?cid=".$_SESSION['client_id']; ?>">
+                    <img class="sidenav-icon" src="Icons/Group -1.svg"/> &nbsp;
+                    Audit Edg
+                </a>
             </div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-        <!-- Nav Item - Pages Collapse Menu -->
-
-        <?php
-        if($_SESSION['external'] == 0){
-            $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='$prog_parentId' and workspace_log.workspace_id='$wid' order by _seq";
-            $exquery = $con->query($query);
-            if ($exquery->num_rows != 0) {
-                while ($queryrow = $exquery->fetch_assoc()) {
-                    if ($queryrow['hasChild'] == 1) {
-                        ?>
-                        <li id="employees" class="nav-item  <?php if ($queryrow['id'] == $prog_id) echo 'active'; ?>">
-                            <a class="nav-link d-flex align-items-center"
-                               href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
-                                <i class="fas fa-fw fa-dolly-flatbed"></i>
-                                <span><?php echo trim($queryrow['program_name']); ?></span>
-                            </a>
-                        </li>
-                        <?php
-                    }
-                }
-            }
-        }
-        ?>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
-
-    </ul>
-
-    <div id="content-wrapper" class="d-flex flex-column">
-        <div class="content">
-        
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-mainbg">
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-                    <?php
-                        if ($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id != '239' && $prog_id != '240' && $prog_id != '247') {
-                            ?>
-                            <li class="nav-item d-flex">
-                                <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
-                                   data-target="#addProgModal">
-                                    <span>Add Programme</span>&nbsp;&nbsp;
-                                    <i class="fas fa-user-plus fa-1x"></i>
-                                </a>
-                            </li>
-                        <?php }
-                    ?>
-                    <?php
-                        if($prog_id == '239' || $prog_id == '240'){
-                    ?>
-                        <li class="nav-item d-flex">
-                                <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
-                                   data-target="#addbsplModal">
-                                    <span>Add Account</span>&nbsp;&nbsp;
-                                    <i class="fas fa-user-plus fa-1x"></i>
-                                </a>
-                            </li>
-                    <?php } 
-                    ?>
-                    <li class="nav-item dropdown no-arrow ">
-                        <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#"
-                           id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false">
-                            <div class="d-flex align-items-center">
-                                <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
-                                <span class="rounded-circle d-flex justify-contents-center">
-                                        <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
-                                    </span>
-                            </div>
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Change Password
+        <div class="side-footer">
+            <div class="side-body">
+                <div class="dash">
+                    <a href="clientDashboard?wid=<?php echo $wid;?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Workspace
                     </a>
-                    <div class="dropdown-divider"></div> -->
-                            <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-            <!-- HEADER -->
-            <div id="header">
-                <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
-                    <div class="row pt-1">
-                        <div class="row text-center cdrow" href="#">
-                            <h2><?php echo strtoupper($clientName . " - Dashboard"); ?></h2>
-                        </div>
+                </div>
+                <?php
+                    if($_SESSION['external'] == 0){
+                        $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
+                        $exquery = $con->query($query);
+                        if ($exquery->num_rows != 0) {
+                            while ($queryrow = $exquery->fetch_assoc()) {
+                                if ($queryrow['hasChild'] == 1) {
+                                    ?>
+                                        <div class="sub-dash" id="employees" style="margin-top: 1rem !important;">
+                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
+                                                <img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important;"/> &nbsp;
+                                                <?php echo trim($queryrow['program_name']); ?>
+                                            </a>
+                                        </div>
+                                    <?php
+                                }
+                            }
+                        }
+                    }
+                ?>
+            </div>
+            <div class="settings">
+                <div class="settings-items-top-div">
+                    <div class="settings-items settingsmodal">
+                        <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Settings
+                    </div>
+                    <div class="settings-items">
+                        <img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Help
                     </div>
                 </div>
-                <br>
-                <!-- Body Starts -->
-                <div class="container-fluid">
-                    <!-- Breadcrumbs -->
+                <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+            </div>
+        </div>
+    </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb" style="background-color:transparent;">
+    <!-- Navbar -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+            <?php
+                if ($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id != '239' && $prog_id != '240' && $prog_id != '247') {
+                    ?>
+                    <li class="nav-item d-flex">
+                        <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
+                            data-target="#addProgModal">
+                            <img class="nav-icon" src="Icons/plus-circle-1.svg" style="height:35px; width:35px;"/>&nbsp;&nbsp;
+                            <span>Add Programme</span>
+                        </a>
+                    </li>
+                <?php }
+            ?>
+            <?php
+                if($prog_id == '239' || $prog_id == '240'){
+            ?>
+                <li class="nav-item d-flex">
+                        <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
+                            data-target="#addbsplModal">
+                            <img class="nav-icon" src="Icons/Group 5.svg"/>&nbsp;&nbsp;
+                            <span>Add Account</span>
+                        </a>
+                    </li>
+            <?php } 
+            ?>
+            <!-- Dropdown -->
+            <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px; padding: 8px !important;">
+                <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
+                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                </span>
+                <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span>
+                        <?php echo $_SESSION['name']; ?>
+                        <img class="nav-icon" src="Icons/Group 6.svg" style="width:15px !important;"/>
+                    </span>
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <?php 
+                        if($_SESSION['role'] == '-1'){
+                    ?>
+                        <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                    <?php
+                    } 
+                    ?>
+                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="mar">
+        <!-- HEADER -->
+        <div id="header">
+            <div class="container-fluid" stickylevel="0" style="z-index:1200;">
+                <div class="row pt-1">
+                    <div class="row text-center cdrow" href="#">
+                        <h2><?php echo strtoupper($clientName . " - Workspace"); ?></h2>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+            <!-- Body Starts -->
+            <div class="container-fluid prog">
+                <!-- Breadcrumbs -->
+                <div class="row">
+                    <div class="col-md-12" style="padding-bottom: 0.1rem; border-bottom: 2px solid #e1e2e9;">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb" style="background-color:transparent;">
+                            <?php
+                            if($_SESSION['external'] == 0){
+                                ?>
+                                <li class="breadcrumb-item"><a
+                                            href="clientDashboard.php?wid=<?php echo $wid; ?>">Dashboard</a>
+                                </li>
                                 <?php
-                                if($_SESSION['external'] == 0){
-                                    ?>
-                                    <li class="breadcrumb-item"><a
-                                                href="clientDashboard.php?wid=<?php echo $wid; ?>">Dashboard</a>
-                                    </li>
-                                    <?php
-                                    
-                                        if (sizeof($bread) != 0) {
-                                            $y = 0;
-                                            for ($x = 0; $x < sizeof($bread); $x++) {
-                                                if ($bread[$x]['pid'] != $prog_id) {
-                                                    $tmp[$y]['pid'] = $bread[$x]['pid'];
-                                                    $tmp[$y]['name'] = $bread[$x]['name'];
-                                                    $tmp[$y++]['parent_id'] = $bread[$x]['parent_id'];
-                                                } else {
-                                                    $tmp[$y]['pid'] = $bread[$x]['pid'];
-                                                    $tmp[$y]['name'] = $bread[$x]['name'];
-                                                    $tmp[$y++]['parent_id'] = $bread[$x]['parent_id'];
-                                                    $flag = 1;
-                                                    break;
-                                                }
-                                            }
-                                            if (!$flag) {
-                                                $i = sizeof($bread);
-                                                $bread[$i]['pid'] = $prog_id;
-                                                $bread[$i]['name'] = $con->query("select program_name from program where id = " . $prog_id)->fetch_assoc()['program_name'];
-                                                $bread[$i++]['parent_id'] = $prog_parentId;
+                                
+                                    if (sizeof($bread) != 0) {
+                                        $y = 0;
+                                        for ($x = 0; $x < sizeof($bread); $x++) {
+                                            if ($bread[$x]['pid'] != $prog_id) {
+                                                $tmp[$y]['pid'] = $bread[$x]['pid'];
+                                                $tmp[$y]['name'] = $bread[$x]['name'];
+                                                $tmp[$y++]['parent_id'] = $bread[$x]['parent_id'];
                                             } else {
-                                                $bread = $tmp;
+                                                $tmp[$y]['pid'] = $bread[$x]['pid'];
+                                                $tmp[$y]['name'] = $bread[$x]['name'];
+                                                $tmp[$y++]['parent_id'] = $bread[$x]['parent_id'];
+                                                $flag = 1;
+                                                break;
                                             }
-
-                                        } elseif (sizeof($bread) == 0) {
-                                            $bread[0]['pid'] = $prog_id;
-                                            $bread[0]['name'] = $con->query("select program_name from program where id = " . $prog_id)->fetch_assoc()['program_name'];
-                                            $bread[0]['parent_id'] = $prog_parentId;
-
                                         }
-                                        $_SESSION['breadcrumb'] = $bread;
-                                        // var_dump($bread);
-                                        for ($i = 0; $i < sizeof($bread); $i++) {
-                                            if ($i == sizeof($bread) - 1) {
-                                                ?>
-                                                <li class="breadcrumb-item font-weight-bold h5">
-                                                    <span><?php echo $bread[$i]['name']; ?></span>
-                                                </li>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                <li class="breadcrumb-item"><a
-                                                            href="subProgram.php?pid=<?php echo $bread[$i]['pid']; ?>&parent_id=<?php echo $bread[$i]['parent_id']; ?>&wid=<?php echo $wid; ?>"><?php echo $bread[$i]['name']; ?></a>
-                                                </li>
-                                                <?php
-                                            }
+                                        if (!$flag) {
+                                            $i = sizeof($bread);
+                                            $bread[$i]['pid'] = $prog_id;
+                                            $bread[$i]['name'] = $con->query("select program_name from program where id = " . $prog_id)->fetch_assoc()['program_name'];
+                                            $bread[$i++]['parent_id'] = $prog_parentId;
+                                        } else {
+                                            $bread = $tmp;
+                                        }
+
+                                    } elseif (sizeof($bread) == 0) {
+                                        $bread[0]['pid'] = $prog_id;
+                                        $bread[0]['name'] = $con->query("select program_name from program where id = " . $prog_id)->fetch_assoc()['program_name'];
+                                        $bread[0]['parent_id'] = $prog_parentId;
+
+                                    }
+                                    $_SESSION['breadcrumb'] = $bread;
+                                    // var_dump($bread);
+                                    for ($i = 0; $i < sizeof($bread); $i++) {
+                                        if ($i == sizeof($bread) - 1) {
+                                            ?>
+                                            <li class="breadcrumb-item font-weight-bold h5">
+                                                <span><?php echo $bread[$i]['name']; ?></span>
+                                            </li>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <li class="breadcrumb-item"><a
+                                                        href="subProgram.php?pid=<?php echo $bread[$i]['pid']; ?>&parent_id=<?php echo $bread[$i]['parent_id']; ?>&wid=<?php echo $wid; ?>"><?php echo $bread[$i]['name']; ?></a>
+                                            </li>
+                                            <?php
                                         }
                                     }
-                                    ?>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-
-                    <!-- Subprogram Body -->
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <?php
-                            if ($prog_id == 239){
-                                // $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid' order by _seq,id asc";
-                                $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id='$wid' order by _seq,id asc";
-                                $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
-                                ?>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="input1">Balance Assets Scope</label>
-                                        <input type="text" class="form-control" name="aScope"
-                                               value="<?php echo $row1['balance_asset']; ?>" readonly>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="input2">Balance Liability Scope</label>
-                                        <input type="text" class="form-control" name="lScope"
-                                               value="<?php echo $row1['balance_liability']; ?>" readonly>
-                                    </div>
-                                </div>
-                                <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr class="table-secondary">
-                                            <th scope="col" hidden>Id</th>
-                                            <th scope="col">Asset Accounts</th>
-                                            <th scope="col">Amount</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Risk</th>
-                                            <th scope="col">Import</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                            $result = $con->query($query);
-                                            $i = 0;
-                                            while ($row = $result->fetch_assoc()) {
-                                                // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
-                                                //     $balanceSheet0 = 1;
-                                                // }
-                                                ?>
-                                                
-                                                <?php
-                                                    if ($row['header_type'] == 0) { ?>
-                                                        <tr id="<?php echo ++$i; ?>">
-                                                            <td scope="row" hidden>
-                                                                <input type="hidden" name="submitData[id][]"
-                                                                       value="<?php echo $row['id']; ?>">
-                                                            </td>
-                                                            <td scope="row" hidden>
-                                                                <input type="hidden" name="submitData[header_type][]"
-                                                                       value="<?php echo $row['header_type']; ?>">
-                                                            </td>
-                                                            <td scope="row"><?php echo $row['program_name']; ?></td>
-                                                            <td scope="row">
-                                                                <input type="number" name="submitData[amount][]"
-                                                                       value="<?php echo $row['amount']; ?>" size="10" step="0.01">
-                                                            </td>
-                                                            <td scope="row">
-                                                                <select name="submitData[type][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['type'] == 0) echo "selected"; ?>
-                                                                            value="0">Significant
-                                                                    </option>
-                                                                    <option <?php if ($row['type'] == 1) echo "selected"; ?>
-                                                                            value="1">Non-Significant
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <select name="submitData[risk][]" class="form-control"required>
-                                                                    <option <?php if ($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
-                                                                    <option <?php if ($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
-                                                                    <option <?php if ($row['risk'] == 2) echo "selected"; ?> value="2">High
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <select name="submitData[import][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['import'] == 0) echo "selected"; ?> value="0">No</option>
-                                                                    <option <?php if ($row['import'] == 1) echo "selected"; ?> value="1">Yes</option>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                    <?php } 
-                                                    }
-                                                    ?>
-                                                        <tr class="table-secondary">
-                                                            <th scope="col" hidden>Id</th>
-                                                            <th scope="col">Liability Accounts</th>
-                                                            <th scope="col">Amount</th>
-                                                            <th scope="col">Type</th>
-                                                            <th scope="col">Risk</th>
-                                                            <th scope="col">Import</th>
-                                                        </tr>
-                                                        <?php
-                                                        $result = $con->query($query);
-                                                    while ($row = $result->fetch_assoc()) {
-                                                        // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
-                                                        //     $balanceSheet1 = 1;
-                                                        // }
-                                                        if ($row['header_type'] == 1) {
-                                                            ?>
-                                                        <tr id="<?php echo ++$i; ?>">
-                                                            <td scope="row" hidden>
-                                                                <input type="hidden" name="submitData[id][]"
-                                                                       value="<?php echo $row['id']; ?>">
-                                                            </td>
-                                                            <td scope="row" hidden>
-                                                                <input type="hidden" name="submitData[header_type][]"
-                                                                       value="<?php echo $row['header_type']; ?>">
-                                                            </td>
-                                                            <td scope="row"><?php echo $row['program_name']; ?></td>
-                                                            <td scope="row">
-                                                                <input type="number" name="submitData[amount][]"
-                                                                       value="<?php echo $row['amount']; ?>" size="10" step="0.01">
-                                                            </td>
-                                                            <td scope="row">
-                                                                <select name="submitData[type][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['type'] == 0) echo "selected"; ?>
-                                                                            value="0">Significant
-                                                                    </option>
-                                                                    <option <?php if ($row['type'] == 1) echo "selected"; ?>
-                                                                            value="1">Non-Significant
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <select name="submitData[risk][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['risk'] == 0) echo "selected"; ?>
-                                                                            value="0">
-                                                                        Low
-                                                                    </option>
-                                                                    <option <?php if ($row['risk'] == 1) echo "selected"; ?>
-                                                                            value="1">
-                                                                        Moderate
-                                                                    </option>
-                                                                    <option <?php if ($row['risk'] == 2) echo "selected"; ?>
-                                                                            value="2">
-                                                                        High
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <select name="submitData[import][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['import'] == 0) echo "selected"; ?>
-                                                                            value="0">No
-                                                                    </option>
-                                                                    <option <?php if ($row['import'] == 1) echo "selected"; ?>
-                                                                            value="1">Yes
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                
-                                                <?php
-                                            }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                    <div class="row d-flex justify-content-center">
-                                    <?php 
-                                        // if($balanceSheet0 || $balanceSheet1){
-                                        //     if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '239'")->fetch_assoc()['count'] != 0){
-                                        //         ?>
-                                                 <!-- <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp; -->
-                                                 <?php
-                                        //     }
-                                        //     ?>
-                                             <!-- <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp; -->
-                                            <?php
-                                        // }
-                                    ?>
-                                        <input type="submit" id="validateSubmit" class="btn btn-primary align-middle" value="Save Details">
-                                    </div>
-                                </form>
-                                <div class="row d-flex justify-content-center">
-                                <?php
-                                    // $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
-                                    // if($reviewSignoff['total']){
-                                    ?>
-                                    <!-- <button class="btn btn-outline-success fetchReview" id="239">Review Sign Off Log</button>&nbsp; -->
-                                    <?php
-                                    // }
-                                    // $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
-                                    // if($prepareSignoff['total']){
-                                    ?>
-                                    <!-- <button class="btn btn-outline-success fetchPrepare" id="239">Prepare Sign Off Log</button> -->
-                                    <?php
-                                    // }
-                                    ?>
-                                </div>
-                                <?php
-                            } 
-                            elseif ($prog_id == 247){
-                                $query = "select a.*, b.account,b.id bid from accounts_log a INNER join accounts b on a.accounts_id=b.id where a.workspace_id='$wid'";
-                                if($_SESSION['external'] == 1){
-                                    $query .= " and a.client_contact_id=".$_SESSION['id'];
                                 }
-                                $result = $con->query($query);
-                                $result1 = $con->query("select c.id cid, name from user c inner join workspace w on c.client_id=w.client_id where w.id = '$wid'")->fetch_all();
                                 ?>
-                                <div class="row">
-                                <?php 
-                                if($_SESSION['external'] != 1){
-                                ?>
-                                    <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary" data-target="#addAccount" data-toggle="modal"
-                                                id="add_acc">ADD REQUEST
-                                        </button>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <a target="_blank" href="exportRequestClient?wid=<?php echo $wid; ?>"><button class="btn btn-primary">Export</button></a>
-                                    </div>
-                                    <?php } ?>
-                                </div><br>
-                                <div class="row">    
-                                    <div class="tableFixHead">
-                                        <form style="overflow-x:auto;" action="clientAssistSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
-                                            <div class="row">    
-                                                <div>
-                                                    <table>
-                                                        <thead class="text-center">
-                                                        <tr>
-                                                            <th scope="col" hidden>Id</th>
-                                                            <th scope="col">Account Name</th>
-                                                            <th scope="col" class="col-md-1">Description</th>
-                                                            <?php 
-                                                            if($_SESSION['external'] != 1){
-                                                            ?>
-                                                            <th scope="col">Client Assign</th>
-                                                            <?php } ?>
-                                                            <?php 
-                                                            if($_SESSION['external'] == 1){
-                                                                ?>
-                                                                <th scope="col">File to Upload</th>
-                                                                <?php
-                                                            }
-                                                            ?>
-                                                            <th scope="col">Documents Uploaded</th>
-                                                            <th scope="col">Requested By</th>
-                                                            <th scope="col">Date Requested</th>
-                                                            <?php 
-                                                            if($_SESSION['external'] != 1){
-                                                            ?>
-                                                            <th scope="col">Action</th>
-                                                            <?php
-                                                            }
-                                                            ?>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody id="abody">
-                                                            <?php
-                                                                while ($row = $result->fetch_assoc()) {
-                                                                    $query1 = $con->query("select id,client_contact_id from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
-                                                                    ?>
-                                                                    <tr>
-                                                                        <td scope="row" hidden>
-                                                                            <input type="hidden" name="account[id][]"
-                                                                                value="<?php echo $query1['id']; ?>">
-                                                                        </td>
-                                                                        <td><label><?php echo $row['account']; ?></label></td>
-                                                                        <td><textarea rows="3" class="form-control mb-3" style="width: 500px !important;" <?php if($_SESSION['external'] == 1) echo "readonly"; ?> name="account[des][]"><?php echo $row['description']; ?></textarea></td>
-                                                                        <?php 
-                                                                            if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
-                                                                            ?>
-                                                                        <td>
-                                                                                <select class="form-control" name="account[client][]" required>
-                                                                                    
-                                                                                    <option>Select Person</option>
-                                                                                    <?php 
-                                                                                        foreach($result1 as $key => $value){
-                                                                                    ?>
-                                                                                    <option value="<?php echo $value[0]; ?>" <?php if($query1['client_contact_id'] == $value[0]) {echo "Selected";} ?>> 
-                                                                                    <?php echo $value[1]; ?>
-                                                                                    </option>
-                                                                                    <?php } ?>
-                                                                                </select>
-                                                                        </td>
-                                                                            <?php } ?>
-                                                                        <?php
-                                                                        if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
-                                                                            ?>
-                                                                        <td>
-                                                                            <input type="file" name="file[<?php echo $query1['id']; ?>][]" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" multiple>
-                                                                        </td>
-                                                                        <?php
-                                                                        }
-                                                                        ?>
-                                                                        <td>
-                                                                                <?php 
-                                                                                $count = 1;
-                                                                                $documentResult = $con->query("select documents from accounts_log_docs where accounts_log_id =".$query1['id']);
-                                                                                while($documentResultRow = $documentResult->fetch_assoc())
-                                                                                    echo "<label style='white-space:nowrap;'>".$count++.":- <a target='_blank' href='uploads/clientrequest/".$documentResultRow['documents']."'>".$documentResultRow['documents']."</a></label><br>";
-                                                                                ?> 
-                                                                        </td>
-                                                                        <td><input class="form-control" <?php if(isset($_SESSION['external']) && $_SESSION['external'] == 1) echo "readonly"; ?> type="text" size="10" name="account[request][]"
-                                                                                value="<?php echo $row['request']; ?>"></td>
-                                                                        <td><input class="form-control" <?php if(isset($_SESSION['external']) && $_SESSION['external'] == 1) echo "readonly"; ?> type="date" size="10" name="account[date][]"
-                                                                                value="<?php echo $row['date']; ?>">
-                                                                        </td>
-                                                                        <?php 
-                                                                        if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
-                                                                            ?>
-                                                                        <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteAcc">
-                                                                                <i class="fas fa-times-circle"
-                                                                                style="color:red !important;"></i>
-                                                                            </a>
-                                                                        </td>
-                                                                        <?php
-                                                                        }
-                                                                        ?>
-                                                                    </tr>
-                                                                    <?php
-                                                                }
-                                                            ?>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <?php 
-                                                if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
-                                                    ?>
-                                                    <div class="col-md-12">
-                                                        <i class="fas fa-info-circle" style="color:orange !important;"></i>
-                                                        <strong>Click the Save button to save respective changes before clicking on Sending Invitation.</strong>
-                                                    </div>
-                                                    <hr>
-                                                    <?php } ?>
-                                            <div class="row d-flex justify-content-center">
-                                                <input type="submit" class="btn btn-primary align-middle" value="Save"> &nbsp;
-                                                <?php 
-                                                if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
-                                                    ?>
-                                                <input id="sendInvitation" type="button" class="btn btn-primary align-middle" value="Send Invitation">
-                                                <?php } ?>
-                                            </div>
-                                        </form>
-                                    </div>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Subprogram Body -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php
+                        if ($prog_id == 239){
+                            // $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid' order by _seq,id asc";
+                            $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id='$wid' order by _seq,id asc";
+                            $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                            ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="input1">Balance Assets Scope</label>
+                                    <input type="text" class="form-control" name="aScope"
+                                            value="<?php echo $row1['balance_asset']; ?>" readonly>
                                 </div>
-                            <?php 
-                            }
-                            elseif ($prog_id == 245){
-                                ?>
-                                <div class="col-md-12 text-center">
-                                    <button class="btn btn-primary" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
+                                <div class="form-group col-md-6">
+                                    <label for="input2">Balance Liability Scope</label>
+                                    <input type="text" class="form-control" name="lScope"
+                                            value="<?php echo $row1['balance_liability']; ?>" readonly>
                                 </div>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <table id="trialBalanceTable" class="table display table-bordered table-striped">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Sl</th>
-                                                                        <th scope="col">Account Number</th>
-                                                                        <th scope="col">Account Name</th>
-                                                                        <th scope="col">CY Begining Balance (PY)</th>
-                                                                        <th scope="col">CY Interim Balance</th>
-                                                                        <th scope="col">CY Activity (Movement)</th>
-                                                                        <th scope="col">CY End Balance</th>
-                                                                        <th scope="col">Client Adujstment</th>
-                                                                        <th scope="col">Audit Adjustment</th>
-                                                                        <th scope="col">CY Final Balance</th>
-                                                                        <th scope="col">Account Type</th>
-                                                                        <th scope="col">Account Class</th>
-                                                                        <th scope="col">Financial Statement</th>
-                                                                    </tr>
-                                                                </thead>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php 
-                            }
-                            elseif ($prog_id == 240) {
-                                $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq > 1 order by _seq,id asc";
-                                $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
-                                ?>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="input1">PL- Income Scope</label>
-                                        <input type="text" class="form-control" name="aScope"
-                                               value="<?php echo $row1['pl_income']; ?>" readonly>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="input2">PL- Expense Scope</label>
-                                        <input type="text" class="form-control" name="lScope"
-                                               value="<?php echo $row1['pl_expense']; ?>" readonly>
-                                    </div>
-                                </div>
-                                <form action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr class="table-secondary">
-                                            <th scope="col" hidden>Id</th>
-                                            <th scope="col">Asset Accounts</th>
-                                            <th scope="col">Amount</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Risk</th>
-                                            <th scope="col">Import</th>
-                                        </tr>
-                                        </thead>
-                                        <?php
-                                            $result = $con->query($query);
-                                            $i = 0;
-                                            while ($row = $result->fetch_assoc()) {
-                                                ?>
-                                                <tbody>
-                                                <tr>
-                                                    <td scope="row" hidden>
-                                                        <input type="hidden" name="submitData[id][]"
-                                                               value="<?php echo $row['id']; ?>">
-                                                    </td>
-                                                    <td scope="row"><?php echo $row['program_name']; ?></td>
-                                                    <td scope="row">
-                                                        <input type="text" name="submitData[amount][]"
-                                                               value="<?php echo $row['amount']; ?>" size="10">
-                                                    </td>
-                                                    <td scope="row">
-                                                        <select name="submitData[type][]" class="form-control" required>
-                                                            <option <?php if ($row['type'] == 0) echo "selected"; ?>
-                                                                    value="0">Significant
-                                                            </option>
-                                                            <option <?php if ($row['type'] == 1) echo "selected"; ?>
-                                                                    value="1">Non-Significant
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                    <td scope="row">
-                                                        <select name="submitData[risk][]" class="form-control" required>
-                                                            <option <?php if ($row['risk'] == 0) echo "selected"; ?>
-                                                                    value="0">
-                                                                Low
-                                                            </option>
-                                                            <option <?php if ($row['risk'] == 1) echo "selected"; ?>
-                                                                    value="1">
-                                                                Moderate
-                                                            </option>
-                                                            <option <?php if ($row['risk'] == 2) echo "selected"; ?>
-                                                                    value="2">
-                                                                High
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                    <td scope="row">
-                                                        <select name="submitData[import][]" class="form-control"
-                                                                required>
-                                                            <option <?php if ($row['import'] == 0) echo "selected"; ?>
-                                                                    value="0">No
-                                                            </option>
-                                                            <option <?php if ($row['import'] == 1) echo "selected"; ?>
-                                                                    value="1">Yes
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                                <?php
-                                            }
-                                        ?>
-                                    </table>
-                                    <div class="row d-flex justify-content-center">
-                                        <input type="submit" class="btn btn-primary align-middle" value="Submit">
-                                    </div>
-                                </form>
-                                <?php
-                            } elseif ($prog_id == 230) {
-                                $query = "select * from materiality where workspace_id='$wid' and prog_id='$prog_id'";
-                                $result = $con->query($query); ?>
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary" data-target="#addMethod" data-toggle="modal"
-                                                id="add_new">ADD NEW
-                                        </button>
-                                    </div>
-                                </div><br>
-                                <form action="materialitySubmit.php?&wid=<?php echo $wid; ?>" method="post"
-                                      enctype="multipart/form-data">
-                                    <table class="table table-hover" id="tab_logic">
-                                        <thead class="text-center">
-                                        <tr>
-                                            <th scope="col" hidden>Id</th>
-                                            <th scope="col">Methods</th>
-                                            <th scope="col" colspan="2">Standard %</th>
-                                            <th scope="col" colspan="2">Custom %</th>
-                                            <th scope="col">Amount</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                        <tr>
-                                            <th hidden></th>
-                                            <th></th>
-                                            <th>High</th>
-                                            <th>Low</th>
-                                            <th>High</th>
-                                            <th>Low</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="abody">
-                                        <?php
-                                        $materiality = $subMateriality = 0;
-                                            while ($row = $result->fetch_assoc()) {
-                                                if($row['standard_low'] != '' || $row['standard_high'] != '' || $row['custom_low'] != '' || $row['custom_high'] != '' || $row['amount'] != ''){
-                                                    $materiality = 1;
+                            </div>
+                            <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr class="table-secondary">
+                                        <th scope="col" hidden>Id</th>
+                                        <th scope="col">Asset Accounts</th>
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Risk</th>
+                                        <th scope="col">Import</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                        $result = $con->query($query);
+                                        $i = 0;
+                                        while ($row = $result->fetch_assoc()) {
+                                            // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
+                                            //     $balanceSheet0 = 1;
+                                            // }
+                                            ?>
+                                            
+                                            <?php
+                                                if ($row['header_type'] == 0) { ?>
+                                                    <tr id="<?php echo ++$i; ?>">
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[id][]"
+                                                                    value="<?php echo $row['id']; ?>">
+                                                        </td>
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[header_type][]"
+                                                                    value="<?php echo $row['header_type']; ?>">
+                                                        </td>
+                                                        <td scope="row"><?php echo $row['program_name']; ?></td>
+                                                        <td scope="row">
+                                                            <input type="number" name="submitData[amount][]"
+                                                                    value="<?php echo $row['amount']; ?>" size="10" step="0.01">
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[type][]" class="form-control"
+                                                                    required>
+                                                                <option <?php if ($row['type'] == 0) echo "selected"; ?>
+                                                                        value="0">Significant
+                                                                </option>
+                                                                <option <?php if ($row['type'] == 1) echo "selected"; ?>
+                                                                        value="1">Non-Significant
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[risk][]" class="form-control"required>
+                                                                <option <?php if ($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
+                                                                <option <?php if ($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
+                                                                <option <?php if ($row['risk'] == 2) echo "selected"; ?> value="2">High
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[import][]" class="form-control"
+                                                                    required>
+                                                                <option <?php if ($row['import'] == 0) echo "selected"; ?> value="0">No</option>
+                                                                <option <?php if ($row['import'] == 1) echo "selected"; ?> value="1">Yes</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                <?php } 
                                                 }
                                                 ?>
-                                                <tr>
-                                                    <td scope="row" hidden>
-                                                        <input type="hidden" name="materialityData[id][]"
-                                                               value="<?php echo $row['id']; ?>">
-                                                    </td>
-                                                    <td><label><?php echo $row['name']; ?></label></td>
-                                                    <td><input type="text" size="10" name="materialityData[sLow][]"
-                                                               value="<?php echo $row['standard_low']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[sHigh][]"
-                                                               value="<?php echo $row['standard_high']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[cLow][]"
-                                                               value="<?php echo $row['custom_low']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[cHigh][]"
-                                                               value="<?php echo $row['custom_high']; ?>"></td>
-                                                    <td><input type="text" size="10" name="materialityData[amount][]"
-                                                               value="<?php echo $row['amount']; ?>">
-                                                    </td>
-                                                    <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteMat">
-                                                            <i class="fas fa-times-circle"
-                                                               style="color:red !important;"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                    <tr class="table-secondary">
+                                                        <th scope="col" hidden>Id</th>
+                                                        <th scope="col">Liability Accounts</th>
+                                                        <th scope="col">Amount</th>
+                                                        <th scope="col">Type</th>
+                                                        <th scope="col">Risk</th>
+                                                        <th scope="col">Import</th>
+                                                    </tr>
+                                                    <?php
+                                                    $result = $con->query($query);
+                                                while ($row = $result->fetch_assoc()) {
+                                                    // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
+                                                    //     $balanceSheet1 = 1;
+                                                    // }
+                                                    if ($row['header_type'] == 1) {
+                                                        ?>
+                                                    <tr id="<?php echo ++$i; ?>">
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[id][]"
+                                                                    value="<?php echo $row['id']; ?>">
+                                                        </td>
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[header_type][]"
+                                                                    value="<?php echo $row['header_type']; ?>">
+                                                        </td>
+                                                        <td scope="row"><?php echo $row['program_name']; ?></td>
+                                                        <td scope="row">
+                                                            <input type="number" name="submitData[amount][]"
+                                                                    value="<?php echo $row['amount']; ?>" size="10" step="0.01">
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[type][]" class="form-control"
+                                                                    required>
+                                                                <option <?php if ($row['type'] == 0) echo "selected"; ?>
+                                                                        value="0">Significant
+                                                                </option>
+                                                                <option <?php if ($row['type'] == 1) echo "selected"; ?>
+                                                                        value="1">Non-Significant
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[risk][]" class="form-control"
+                                                                    required>
+                                                                <option <?php if ($row['risk'] == 0) echo "selected"; ?>
+                                                                        value="0">
+                                                                    Low
+                                                                </option>
+                                                                <option <?php if ($row['risk'] == 1) echo "selected"; ?>
+                                                                        value="1">
+                                                                    Moderate
+                                                                </option>
+                                                                <option <?php if ($row['risk'] == 2) echo "selected"; ?>
+                                                                        value="2">
+                                                                    High
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <select name="submitData[import][]" class="form-control"
+                                                                    required>
+                                                                <option <?php if ($row['import'] == 0) echo "selected"; ?>
+                                                                        value="0">No
+                                                                </option>
+                                                                <option <?php if ($row['import'] == 1) echo "selected"; ?>
+                                                                        value="1">Yes
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>
+                                            
+                                            <?php
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                                <div class="row d-flex justify-content-center">
+                                <?php 
+                                    // if($balanceSheet0 || $balanceSheet1){
+                                    //     if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '239'")->fetch_assoc()['count'] != 0){
+                                    //         ?>
+                                                <!-- <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp; -->
                                                 <?php
-                                            }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                    <br>
-                                    <?php
-                                        $query = "select * from sub_materiality where workspace_id='$wid'";
-                                        $result = $con->query($query);
-                                        $row = $result->fetch_assoc() ?>
-                                    <input type="hidden" class="form-control" name="submat_id"
-                                           value="<?php echo $row['id']; ?>">
-                                    <div class="form-group">
-                                        <div class="container-fluid shadow border border-bottom" stickylevel="0">
-                                            <div class="row pt-1">
-                                                <div class="row text-center">
-                                                    <h5>Reason behind selecting the basis</h5>
-                                                </div>
+                                    //     }
+                                    //     ?>
+                                            <!-- <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp; -->
+                                        <?php
+                                    // }
+                                ?>
+                                    <input type="submit" id="validateSubmit" class="btn btn-primary align-middle" value="Save Details">
+                                </div>
+                            </form>
+                            <div class="row d-flex justify-content-center">
+                            <?php
+                                // $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
+                                // if($reviewSignoff['total']){
+                                ?>
+                                <!-- <button class="btn btn-outline-success fetchReview" id="239">Review Sign Off Log</button>&nbsp; -->
+                                <?php
+                                // }
+                                // $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
+                                // if($prepareSignoff['total']){
+                                ?>
+                                <!-- <button class="btn btn-outline-success fetchPrepare" id="239">Prepare Sign Off Log</button> -->
+                                <?php
+                                // }
+                                ?>
+                            </div>
+                            <?php
+                        } 
+                        elseif ($prog_id == 247){
+                            $query = "select a.*, b.account,b.id bid from accounts_log a INNER join accounts b on a.accounts_id=b.id where a.workspace_id='$wid'";
+                            if($_SESSION['external'] == 1){
+                                $query .= " and a.client_contact_id=".$_SESSION['id'];
+                            }
+                            $result = $con->query($query);
+                            $result1 = $con->query("select c.id cid, name from user c inner join workspace w on c.client_id=w.client_id where w.id = '$wid'")->fetch_all();
+                            ?>
+                            <div class="row">
+                            <?php 
+                            if($_SESSION['external'] != 1){
+                            ?>
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn-primary" data-target="#addAccount" data-toggle="modal"
+                                            id="add_acc">ADD REQUEST
+                                    </button>
+                                </div>
+                                <div class="col-md-12">
+                                    <a target="_blank" href="exportRequestClient?wid=<?php echo $wid; ?>"><button class="btn btn-primary">Export</button></a>
+                                </div>
+                                <?php } ?>
+                            </div><br>
+                            <div class="row">    
+                                <div class="tableFixHead">
+                                    <form style="overflow-x:auto;" action="clientAssistSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
+                                        <div class="row">    
+                                            <div>
+                                                <table>
+                                                    <thead class="text-center">
+                                                    <tr>
+                                                        <th scope="col" hidden>Id</th>
+                                                        <th scope="col">Account Name</th>
+                                                        <th scope="col" class="col-md-1">Description</th>
+                                                        <?php 
+                                                        if($_SESSION['external'] != 1){
+                                                        ?>
+                                                        <th scope="col">Client Assign</th>
+                                                        <?php } ?>
+                                                        <?php 
+                                                        if($_SESSION['external'] == 1){
+                                                            ?>
+                                                            <th scope="col">File to Upload</th>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                        <th scope="col">Documents Uploaded</th>
+                                                        <th scope="col">Requested By</th>
+                                                        <th scope="col">Date Requested</th>
+                                                        <?php 
+                                                        if($_SESSION['external'] != 1){
+                                                        ?>
+                                                        <th scope="col">Action</th>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="abody">
+                                                        <?php
+                                                            while ($row = $result->fetch_assoc()) {
+                                                                $query1 = $con->query("select id,client_contact_id from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
+                                                                ?>
+                                                                <tr>
+                                                                    <td scope="row" hidden>
+                                                                        <input type="hidden" name="account[id][]"
+                                                                            value="<?php echo $query1['id']; ?>">
+                                                                    </td>
+                                                                    <td><label><?php echo $row['account']; ?></label></td>
+                                                                    <td><textarea rows="3" class="form-control mb-3" style="width: 500px !important;" <?php if($_SESSION['external'] == 1) echo "readonly"; ?> name="account[des][]"><?php echo $row['description']; ?></textarea></td>
+                                                                    <?php 
+                                                                        if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
+                                                                        ?>
+                                                                    <td>
+                                                                            <select class="form-control" name="account[client][]" required>
+                                                                                
+                                                                                <option>Select Person</option>
+                                                                                <?php 
+                                                                                    foreach($result1 as $key => $value){
+                                                                                ?>
+                                                                                <option value="<?php echo $value[0]; ?>" <?php if($query1['client_contact_id'] == $value[0]) {echo "Selected";} ?>> 
+                                                                                <?php echo $value[1]; ?>
+                                                                                </option>
+                                                                                <?php } ?>
+                                                                            </select>
+                                                                    </td>
+                                                                        <?php } ?>
+                                                                    <?php
+                                                                    if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
+                                                                        ?>
+                                                                    <td>
+                                                                        <input type="file" name="file[<?php echo $query1['id']; ?>][]" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" multiple>
+                                                                    </td>
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                    <td>
+                                                                            <?php 
+                                                                            $count = 1;
+                                                                            $documentResult = $con->query("select documents from accounts_log_docs where accounts_log_id =".$query1['id']);
+                                                                            while($documentResultRow = $documentResult->fetch_assoc())
+                                                                                echo "<label style='white-space:nowrap;'>".$count++.":- <a target='_blank' href='uploads/clientrequest/".$documentResultRow['documents']."'>".$documentResultRow['documents']."</a></label><br>";
+                                                                            ?> 
+                                                                    </td>
+                                                                    <td><input class="form-control" <?php if(isset($_SESSION['external']) && $_SESSION['external'] == 1) echo "readonly"; ?> type="text" size="10" name="account[request][]"
+                                                                            value="<?php echo $row['request']; ?>"></td>
+                                                                    <td><input class="form-control" <?php if(isset($_SESSION['external']) && $_SESSION['external'] == 1) echo "readonly"; ?> type="date" size="10" name="account[date][]"
+                                                                            value="<?php echo $row['date']; ?>">
+                                                                    </td>
+                                                                    <?php 
+                                                                    if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
+                                                                        ?>
+                                                                    <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteAcc">
+                                                                            <i class="fas fa-times-circle"
+                                                                            style="color:red !important;"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                         <br>
                                         <?php 
-                                        if($row['comments'] != '' || $row['balance_asset'] != '' || $row['balance_liability'] != '' || $row['pl_income'] != '' || $row['pl_expense'] != ''){
-                                            $subMateriality = 1;
-                                        }
-                                        
-                                        ?>
-                                        <textarea class="form-control" id="textarea" rows="5"
-                                                  name="comment"><?php echo $row['comments']; ?></textarea>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="input1">Balance Assets Scope</label>
-                                            <input type="text" class="form-control" name="aScope"
-                                                   value="<?php echo $row['balance_asset']; ?>">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="input2">Balance Liability Scope</label>
-                                            <input type="text" class="form-control" name="lScope"
-                                                   value="<?php echo $row['balance_liability']; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="input3">PL- Income Scope</label>
-                                            <input type="text" class="form-control" name="pliScope"
-                                                   value="<?php echo $row['pl_income']; ?>">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="input4">PL- Expenses Scope</label>
-                                            <input type="text" class="form-control" name="pleScope"
-                                                   value="<?php echo $row['pl_expense']; ?>">
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row d-flex justify-content-center">
-                                        <input class="btn btn-primary" type="file" name="file"
-                                        accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb">
-                                    </div>
-                                    
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-md-5 col-sm-12">
-                                        <?php
-                                            $query = "select * from materiality_files where workspace_id='$wid'";
-                                            $result = $con->query($query);
-                                            while ($row = $result->fetch_assoc()) {
-                                                if($row['fname'] != ''){
-                                                    $subMateriality = 1;
-                                                }
-                                                
+                                            if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                 ?>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item list-group-item-action"><a
-                                                                target="_blank"
-                                                                href="<?php echo "uploads/materiality/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
-                                                    </li>
-                                                </ul>
-                                                <?php
-                                            } ?>
+                                                <div class="col-md-12">
+                                                    <i class="fas fa-info-circle" style="color:orange !important;"></i>
+                                                    <strong>Click the Save button to save respective changes before clicking on Sending Invitation.</strong>
+                                                </div>
+                                                <hr>
+                                                <?php } ?>
+                                        <div class="row d-flex justify-content-center">
+                                            <input type="submit" class="btn btn-primary align-middle" value="Save"> &nbsp;
+                                            <?php 
+                                            if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
+                                                ?>
+                                            <input id="sendInvitation" type="button" class="btn btn-primary align-middle" value="Send Invitation">
+                                            <?php } ?>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php 
+                        }
+                        elseif ($prog_id == 245){
+                            ?>
+                            <div class="col-md-12 text-center p-top">
+                                <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
+                                <a href="financialStatement?wid=<?php echo $wid; ?>"><button class="btn bg-violet" style="color: white !important;">Lead Sheet Generator</button></a>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <table id="trialBalanceTable" class="table display table-bordered table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Sl</th>
+                                                                    <th scope="col">Account Number</th>
+                                                                    <th scope="col">Account Name</th>
+                                                                    <th scope="col">CY Begining Balance (PY)</th>
+                                                                    <th scope="col">CY Interim Balance</th>
+                                                                    <th scope="col">CY Activity (Movement)</th>
+                                                                    <th scope="col">CY End Balance</th>
+                                                                    <th scope="col">Client Adujstment</th>
+                                                                    <th scope="col">Audit Adjustment</th>
+                                                                    <th scope="col">CY Final Balance</th>
+                                                                    <th scope="col">Account Type</th>
+                                                                    <th scope="col">Account Class</th>
+                                                                    <th scope="col">Financial Statement</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <hr>
-                                    <i class="fas fa-info-circle" style="color:orange !important;"></i>
-                                    <strong>Click the save button to save respective files/data before signing off</strong>
+                            </div>
+                        <?php 
+                        }
+                        elseif ($prog_id == 240) {
+                            $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq > 1 order by _seq,id asc";
+                            $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                            ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="input1">PL- Income Scope</label>
+                                    <input type="text" class="form-control" name="aScope"
+                                            value="<?php echo $row1['pl_income']; ?>" readonly>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="input2">PL- Expense Scope</label>
+                                    <input type="text" class="form-control" name="lScope"
+                                            value="<?php echo $row1['pl_expense']; ?>" readonly>
+                                </div>
+                            </div>
+                            <form action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr class="table-secondary">
+                                        <th scope="col" hidden>Id</th>
+                                        <th scope="col">Asset Accounts</th>
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Risk</th>
+                                        <th scope="col">Import</th>
+                                    </tr>
+                                    </thead>
+                                    <?php
+                                        $result = $con->query($query);
+                                        $i = 0;
+                                        while ($row = $result->fetch_assoc()) {
+                                            ?>
+                                            <tbody>
+                                            <tr>
+                                                <td scope="row" hidden>
+                                                    <input type="hidden" name="submitData[id][]"
+                                                            value="<?php echo $row['id']; ?>">
+                                                </td>
+                                                <td scope="row"><?php echo $row['program_name']; ?></td>
+                                                <td scope="row">
+                                                    <input type="text" name="submitData[amount][]"
+                                                            value="<?php echo $row['amount']; ?>" size="10">
+                                                </td>
+                                                <td scope="row">
+                                                    <select name="submitData[type][]" class="form-control" required>
+                                                        <option <?php if ($row['type'] == 0) echo "selected"; ?>
+                                                                value="0">Significant
+                                                        </option>
+                                                        <option <?php if ($row['type'] == 1) echo "selected"; ?>
+                                                                value="1">Non-Significant
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td scope="row">
+                                                    <select name="submitData[risk][]" class="form-control" required>
+                                                        <option <?php if ($row['risk'] == 0) echo "selected"; ?>
+                                                                value="0">
+                                                            Low
+                                                        </option>
+                                                        <option <?php if ($row['risk'] == 1) echo "selected"; ?>
+                                                                value="1">
+                                                            Moderate
+                                                        </option>
+                                                        <option <?php if ($row['risk'] == 2) echo "selected"; ?>
+                                                                value="2">
+                                                            High
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td scope="row">
+                                                    <select name="submitData[import][]" class="form-control"
+                                                            required>
+                                                        <option <?php if ($row['import'] == 0) echo "selected"; ?>
+                                                                value="0">No
+                                                        </option>
+                                                        <option <?php if ($row['import'] == 1) echo "selected"; ?>
+                                                                value="1">Yes
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <?php
+                                        }
+                                    ?>
+                                </table>
+                                <div class="row d-flex justify-content-center">
+                                    <input type="submit" class="btn btn-primary align-middle" value="Submit">
+                                </div>
+                            </form>
+                            <?php
+                        } elseif ($prog_id == 230) {
+                            $query = "select * from materiality where workspace_id='$wid' and prog_id='$prog_id'";
+                            $result = $con->query($query); ?>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn-primary" data-target="#addMethod" data-toggle="modal"
+                                            id="add_new">ADD NEW
+                                    </button>
+                                </div>
+                            </div><br>
+                            <form action="materialitySubmit.php?&wid=<?php echo $wid; ?>" method="post"
+                                    enctype="multipart/form-data">
+                                <table class="table table-hover" id="tab_logic">
+                                    <thead class="text-center">
+                                    <tr>
+                                        <th scope="col" hidden>Id</th>
+                                        <th scope="col">Methods</th>
+                                        <th scope="col" colspan="2">Standard %</th>
+                                        <th scope="col" colspan="2">Custom %</th>
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <th hidden></th>
+                                        <th></th>
+                                        <th>High</th>
+                                        <th>Low</th>
+                                        <th>High</th>
+                                        <th>Low</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="abody">
+                                    <?php
+                                    $materiality = $subMateriality = 0;
+                                        while ($row = $result->fetch_assoc()) {
+                                            if($row['standard_low'] != '' || $row['standard_high'] != '' || $row['custom_low'] != '' || $row['custom_high'] != '' || $row['amount'] != ''){
+                                                $materiality = 1;
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td scope="row" hidden>
+                                                    <input type="hidden" name="materialityData[id][]"
+                                                            value="<?php echo $row['id']; ?>">
+                                                </td>
+                                                <td><label><?php echo $row['name']; ?></label></td>
+                                                <td><input type="text" size="10" name="materialityData[sLow][]"
+                                                            value="<?php echo $row['standard_low']; ?>"></td>
+                                                <td><input type="text" size="10" name="materialityData[sHigh][]"
+                                                            value="<?php echo $row['standard_high']; ?>"></td>
+                                                <td><input type="text" size="10" name="materialityData[cLow][]"
+                                                            value="<?php echo $row['custom_low']; ?>"></td>
+                                                <td><input type="text" size="10" name="materialityData[cHigh][]"
+                                                            value="<?php echo $row['custom_high']; ?>"></td>
+                                                <td><input type="text" size="10" name="materialityData[amount][]"
+                                                            value="<?php echo $row['amount']; ?>">
+                                                </td>
+                                                <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteMat">
+                                                        <i class="fas fa-times-circle"
+                                                            style="color:red !important;"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <?php
+                                    $query = "select * from sub_materiality where workspace_id='$wid'";
+                                    $result = $con->query($query);
+                                    $row = $result->fetch_assoc() ?>
+                                <input type="hidden" class="form-control" name="submat_id"
+                                        value="<?php echo $row['id']; ?>">
+                                <div class="form-group">
+                                    <div class="container-fluid shadow border border-bottom" stickylevel="0">
+                                        <div class="row pt-1">
+                                            <div class="row text-center">
+                                                <h5>Reason behind selecting the basis</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <?php 
+                                    if($row['comments'] != '' || $row['balance_asset'] != '' || $row['balance_liability'] != '' || $row['pl_income'] != '' || $row['pl_expense'] != ''){
+                                        $subMateriality = 1;
+                                    }
+                                    
+                                    ?>
+                                    <textarea class="form-control" id="textarea" rows="5"
+                                                name="comment"><?php echo $row['comments']; ?></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="input1">Balance Assets Scope</label>
+                                        <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $row['balance_asset']; ?>">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="input2">Balance Liability Scope</label>
+                                        <input type="text" class="form-control" name="lScope"
+                                                value="<?php echo $row['balance_liability']; ?>">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="input3">PL- Income Scope</label>
+                                        <input type="text" class="form-control" name="pliScope"
+                                                value="<?php echo $row['pl_income']; ?>">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="input4">PL- Expenses Scope</label>
+                                        <input type="text" class="form-control" name="pleScope"
+                                                value="<?php echo $row['pl_expense']; ?>">
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="row d-flex justify-content-center">
+                                    <input class="btn btn-primary" type="file" name="file"
+                                    accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb">
+                                </div>
+                                
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col-md-5 col-sm-12">
                                     <?php
-                                    if($materiality || $subMateriality ){
-                                        if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '230'")->fetch_assoc()['count'] != 0){
+                                        $query = "select * from materiality_files where workspace_id='$wid'";
+                                        $result = $con->query($query);
+                                        while ($row = $result->fetch_assoc()) {
+                                            if($row['fname'] != ''){
+                                                $subMateriality = 1;
+                                            }
+                                            
                                             ?>
-                                            <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp;
+                                            <ul class="custom-list">
+                                                <li class="custom-list-items custom-list-items-action"><a
+                                                            target="_blank"
+                                                            href="<?php echo "uploads/materiality/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                                </li>
+                                            </ul>
                                             <?php
-                                        }
+                                        } ?>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr>
+                                <i class="fas fa-info-circle" style="color:orange !important;"></i>
+                                <strong>Click the save button to save respective files/data before signing off</strong>
+                            </div>
+                            <hr>
+                            <div class="row d-flex justify-content-center">
+                                <?php
+                                if($materiality || $subMateriality ){
+                                    if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '230'")->fetch_assoc()['count'] != 0){
                                         ?>
-                                        <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp;
+                                        <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp;
                                         <?php
                                     }
                                     ?>
-                                        <input type="submit" class="btn btn-primary align-middle" value="Save Details">
-                                    </div>
-                                </form><br>
-                                <div class="row d-flex justify-content-center">
-                                <?php
-                                    $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
-                                    if($reviewSignoff['total']){
-                                    ?>
-                                    <button class="btn btn-outline-success fetchReview" id="230">Reviewer Sign Off</button>&nbsp;
+                                    <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp;
                                     <?php
-                                    }
-                                    $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
-                                    if($prepareSignoff['total']){
-                                    ?>
-                                    <button class="btn btn-outline-success fetchPrepare" id="230">Preparer Sign Off</button>
-                                    <?php
-                                    }
-                                    ?>
+                                }
+                                ?>
+                                    <input type="submit" class="btn btn-primary align-middle" value="Save Details">
                                 </div>
-                             <?php 
-                            } elseif ($prog_id == 12)  {
-                                    // $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
-                                    $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
-                                    $exquery = $con->query($query);
-                                    if ($exquery->num_rows != 0)
-                                    {
-                                    while ($queryrow = $exquery->fetch_assoc())
-                                    {
-                                    if ($queryrow['hasChild'] == 1)
-                                    { ?>
-                                        <div class="list-group">
+                            </form><br>
+                            <div class="row d-flex justify-content-center">
+                            <?php
+                                $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
+                                if($reviewSignoff['total']){
+                                ?>
+                                <button class="btn btn-outline-success fetchReview" id="230">Reviewer Sign Off</button>&nbsp;
+                                <?php
+                                }
+                                $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
+                                if($prepareSignoff['total']){
+                                ?>
+                                <button class="btn btn-outline-success fetchPrepare" id="230">Preparer Sign Off</button>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <?php 
+                        } elseif ($prog_id == 12)  {
+                                // $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                                $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                                $exquery = $con->query($query);
+                                if ($exquery->num_rows != 0)
+                                {
+                                while ($queryrow = $exquery->fetch_assoc())
+                                {
+                                if ($queryrow['hasChild'] == 1)
+                                { ?>
+                                    <div class="custom-list">
+                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                        class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                    </div> <?php
+                                }
+                                else
+                                { ?>
+                                <div class="custom-list">
+                                <div class="custom-list-items custom-list-items-action">
+                                    <?php echo trim($queryrow['program_name']); ?>
+                                    <?php }
+                                        }
+                                        }
+                        } elseif($prog_id == 2){
+                            $seq0 = $seq1 = 0;
+                            $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                            $exquery = $con->query($query);
+                            if ($exquery->num_rows != 0) {
+                                while ($queryrow = $exquery->fetch_assoc()) {
+                                    if ($queryrow['hasChild'] == 1) { 
+                                        if($queryrow['_seq'] < 2 && $seq0 != 1){
+                                            $seq0++;
+                                            ?>
+                                            <h2><span class="badge badge-primary" >Balance Sheet</span></h2><br/>
+                                            <?php
+                                        }
+                                        if($queryrow['_seq'] >= 2 && $seq1 != 1){
+                                            $seq1++;
+                                            ?><br/>
+                                            <h2><span class="badge badge-primary" >Profit & Loss.</span></h2>
+                                            <br/>
+                                            <?php
+                                        }
+                                        ?>
+                                        <div class="custom-list">
                                             <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                            class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                                class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                         </div> <?php
                                     }
-                                    else
-                                    { ?>
-                                    <div class="list-group">
-                                    <div class="list-group-item list-group-item-action">
-                                        <?php echo trim($queryrow['program_name']); ?>
-                                        <?php }
-                                            }
-                                            }
-                            } elseif($prog_id == 2){
-                                $seq0 = $seq1 = 0;
+                                    else {
+                                        ?>
+                                        <div class="custom-list">
+                                            <div class="custom-list-items custom-list-items-action">
+                                                <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                                <?php
+                                                    if ($queryrow['active']) { ?>
+                                                        <a href="#">
+                                                            <?php
+                                                                if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
+                                                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
+                                                                        <i class="fas fa-external-link-alt"
+                                                                            style="color:blue !important;"
+                                                                            id="<?php echo $queryrow['id']; ?>">
+                                                                        </i>
+                                                                    </a>
+                                                                <?php } 
+                                                                else { ?>    
+                                                                    <i class="fas fa-external-link-alt signoffmodal"
+                                                                        style="color:blue !important;"
+                                                                        id="<?php echo $queryrow['id']; ?>">
+                                                                    </i>    
+                                                                <?php }
+                                                            ?>
+                                                        </a> <?php
+                                                        // $prearedResult = $con->query("select id,user_id,prepare_signoff_date where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_all();
+                                                        // foreach($prearedResult as $key => $value)
+                                                        if ($queryrow['status']) { ?>
+                                                            <i class="fas fa-check-circle"
+                                                                style="color:green !important;">
+                                                            </i>
+                                                            <?php
+                                                            $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
+                                                            if($prepareSignoff['total']){
+                                                            ?>
+                                                            <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
+                                                            <?php
+                                                            }
+                                                            $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
+                                                            if($reviewSignoff['total']){
+                                                            ?>
+                                                            <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
+                                                            <?php
+                                                            }
+                                                        } else { ?>
+                                                            <i class="fas fa-times-circle"
+                                                                style="color:red !important;">
+                                                            </i> <?php
+                                                        } ?>
+                                                        <a href="#" id="<?php echo $queryrow['id']; ?>"
+                                                            class="buttonActive">
+                                                            <!-- <i class="fa fa-thumbs-up float-right"
+                                                                aria-hidden="true"
+                                                                style="color:blue !important;">
+                                                            </i> -->
+                                                            <img class="float-right" src="Icons/thumbs-up.svg" />
+                                                        </a> <?php
+                                                    } else { ?>
+                                                        <a href="#" id="<?php echo $queryrow['id']; ?>"
+                                                            class="buttonActive">
+                                                            <img class="float-right" src="Icons/Icon feather-plus.svg" />
+                                                            <!-- <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i> -->
+                                                        </a> 
+                                                        <?php
+                                                    }
+                                                ?>
+                                            </div>
+                                        </div> <?php
+                                    }
+                                }
+                            }
+                        } else {
                                 $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                 $exquery = $con->query($query);
                                 if ($exquery->num_rows != 0) {
                                     while ($queryrow = $exquery->fetch_assoc()) {
-                                        if ($queryrow['hasChild'] == 1) { 
-                                            if($queryrow['_seq'] < 2 && $seq0 != 1){
-                                                $seq0++;
-                                                ?>
-                                                <h2><span class="badge badge-primary" >Balance Sheet</span></h2><br/>
-                                                <?php
-                                            }
-                                            if($queryrow['_seq'] >= 2 && $seq1 != 1){
-                                                $seq1++;
-                                                ?><br/>
-                                                <h2><span class="badge badge-primary" >Profit & Loss.</span></h2>
-                                                <br/>
-                                                <?php
-                                            }
-                                            ?>
-                                            <div class="list-group">
+                                        if ($queryrow['hasChild'] == 1) { ?>
+                                            <div class="custom-list">
                                                 <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                                    class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                             </div> <?php
-                                        }
-                                        else {
-                                            ?>
-                                            <div class="list-group">
-                                                <div class="list-group-item list-group-item-action">
+                                        } else { ?>
+                                            <div class="custom-list">
+                                                <div class="custom-list-items custom-list-items-action">
                                                     <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
                                                     <?php
                                                         if ($queryrow['active']) { ?>
@@ -1026,15 +1113,17 @@
                                                             } ?>
                                                             <a href="#" id="<?php echo $queryrow['id']; ?>"
                                                                 class="buttonActive">
-                                                                <i class="fa fa-thumbs-up float-right"
+                                                                <!-- <i class="fa fa-thumbs-up float-right"
                                                                     aria-hidden="true"
                                                                     style="color:blue !important;">
-                                                                </i>
+                                                                </i> -->
+                                                                <img class="float-right" src="Icons/thumbs-up.svg" />
                                                             </a> <?php
                                                         } else { ?>
                                                             <a href="#" id="<?php echo $queryrow['id']; ?>"
                                                                 class="buttonActive">
-                                                                <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i>
+                                                                <img class="float-right" src="Icons/Icon feather-plus.svg" />
+                                                                <!-- <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i> -->
                                                             </a> 
                                                             <?php
                                                         }
@@ -1042,118 +1131,37 @@
                                                 </div>
                                             </div> <?php
                                         }
-                                    }
-                                }
-                            } else {
-                                    $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
-                                    $exquery = $con->query($query);
-                                    if ($exquery->num_rows != 0) {
-                                        while ($queryrow = $exquery->fetch_assoc()) {
-                                            if ($queryrow['hasChild'] == 1) { ?>
-                                                <div class="list-group">
-                                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                                        class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                                </div> <?php
-                                            } else { ?>
-                                                <div class="list-group">
-                                                    <div class="list-group-item list-group-item-action">
-                                                        <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
-                                                        <?php
-                                                            if ($queryrow['active']) { ?>
-                                                                <a href="#">
-                                                                    <?php
-                                                                        if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
-                                                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
-                                                                                <i class="fas fa-external-link-alt"
-                                                                                    style="color:blue !important;"
-                                                                                    id="<?php echo $queryrow['id']; ?>">
-                                                                                </i>
-                                                                            </a>
-                                                                        <?php } 
-                                                                        else { ?>    
-                                                                            <i class="fas fa-external-link-alt signoffmodal"
-                                                                                style="color:blue !important;"
-                                                                                id="<?php echo $queryrow['id']; ?>">
-                                                                            </i>    
-                                                                        <?php }
-                                                                    ?>
-                                                                </a> <?php
-                                                                // $prearedResult = $con->query("select id,user_id,prepare_signoff_date where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_all();
-                                                                // foreach($prearedResult as $key => $value)
-                                                                if ($queryrow['status']) { ?>
-                                                                    <i class="fas fa-check-circle"
-                                                                        style="color:green !important;">
-                                                                    </i>
-                                                                    <?php
-                                                                    $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
-                                                                    if($prepareSignoff['total']){
-                                                                    ?>
-                                                                    <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
-                                                                    <?php
-                                                                    }
-                                                                    $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
-                                                                    if($reviewSignoff['total']){
-                                                                    ?>
-                                                                    <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
-                                                                    <?php
-                                                                    }
-                                                                } else { ?>
-                                                                    <i class="fas fa-times-circle"
-                                                                        style="color:red !important;">
-                                                                    </i> <?php
-                                                                } ?>
-                                                                <a href="#" id="<?php echo $queryrow['id']; ?>"
-                                                                    class="buttonActive">
-                                                                    <i class="fa fa-thumbs-up float-right"
-                                                                        aria-hidden="true"
-                                                                        style="color:blue !important;">
-                                                                    </i>
-                                                                </a> <?php
-                                                            } else { ?>
-                                                                <a href="#" id="<?php echo $queryrow['id']; ?>"
-                                                                    class="buttonActive">
-                                                                    <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i>
-                                                                </a> 
-                                                                <?php
-                                                            }
-                                                        ?>
-                                                    </div>
-                                                </div> <?php
-                                            }
-                                            }
                                         }
                                     }
-                            ?>
-                        </div>
+                                }
+                        ?>
                     </div>
                 </div>
-
-                <!-- Footer -->
-                <footer class="sticky-footer bg-light">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
-                            <?php echo date("Y"); ?></strong></span>
-                        </div>
-                    </div>
-                </footer>
             </div>
 
-        </div>
+            <!-- Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                        <?php echo date("Y"); ?></strong></span>
+                    </div>
+                </div>
+            </footer>
+
         <!--Add Programme Modal -->
         <div class="modal fade" id="addProgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Programme/Step
-                            <h5>
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Add Programme Step </h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                    </div>
-                    <form>
-                        <div class="modal-body">
+                            </div><br>
                             <div class="form-group">
                                 <label for="name">Programme Name</label>
                                 <input type="text" class="form-control" name="name" id="prog_name" required>
@@ -1167,8 +1175,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
                             <input class="btn btn-primary" type="submit" id="addProgSubmit" value="Done">
                         </div>
                     </form>
@@ -1178,18 +1186,17 @@
 
         <!--Add BS and PL Accounts Modal -->
         <div class="modal fade" id="addbsplModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Account
-                            <h5>
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                    </div>
-                    <form>
-                        <div class="modal-body">
+                            </div><br>
                             <div class="form-group">
                                 <label for="name">Account Name</label>
                                 <input type="text" class="form-control" name="bspl_name" id="bspl_name" required>
@@ -1217,8 +1224,8 @@
                             }
                             ?>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                        <div class="modal-footer  d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
                             <input class="btn btn-primary" type="submit" id="addbsplSubmit" value="Done">
                         </div>
                     </form>
@@ -1228,26 +1235,26 @@
 
         <!-- Excel Upload Modal -->
         <div class="modal fade" id="addExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Upload Excel Form<h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                    </div>
                     <form action="excelUpload" enctype="multipart/form-data" method="post">
                         <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Excel Form<h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
                             <div class="form-group">
                                 <label for="name">Choose excel file for upload</label>
-                                <input type="file" class="form-control-file" name="file" accept=".xls, .xlsx" required>
+                                <input type="file" class="btn btn-upload" name="file" accept=".xls, .xlsx" required>
                                 <input type="text" class="form-control" name="parent_id" value="<?php echo $prog_parentId; ?>" hidden>
                                 <input type="text" class="form-control" name="pid" value="<?php echo $prog_id; ?>" hidden>
                                 <input type="text" class="form-control" name="wid" value="<?php echo $wid; ?>" hidden>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
                             <input class="btn btn-primary" type="submit" value="Upload">
                         </div>
                     </form>
@@ -1284,17 +1291,16 @@
 
         <!--Add Account Modal -->
         <div class="modal fade" id="addAccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add New Request
-                            <h5>
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add New Request </h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                    </div>
-                    <form>
-                        <div class="modal-body">
+                            </div>
                             <div class="form-group">
                                 <label for="name">Account Name</label>
                                 <select class="form-control" name="account" id="account" required>
@@ -1312,8 +1318,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
                             <input class="btn btn-primary" type="submit" id="addAccountSubmit" value="Done">
                         </div>
                     </form>
@@ -1323,49 +1329,48 @@
 
         <!-- Signoff Modal-->
         <div class="modal fade" id="signoffModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog  modal-dialog-centered modal-size">
                 <div class="modal-content">
-                    <div class="modal-header" id="programname">
-                    </div>
                     <form name="signoff" action="signoff.php?wid=<?php echo $wid; ?>" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
-                            <div class="container card bg-light font-2 py-2">
+                            <div class="modal-header" id="programname">
+                            </div>
+                            <br>
+                            <div class="container card">
                                 <div class="row d-flex justify-content-between">
-                                    <div class="col-md-6">
-                                        <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="files">Upload Documents</label>
                                             <div class="form-group">
-                                                <label for="country">Upload Documents</label>
-                                                <div class="form-group">
-                                                    <input class="btn btn-primary" type="file" name="file[]" id="uploadedFile" multiple accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
-                                                </div>
+                                                <input class="btn btn-upload" type="file" name="file[]" id="uploadedFile" multiple accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
                                             </div>
                                         </div>
-                                        <ul class="list-group" id="filenames">
+                                        <div class="form-group"><label for="exfiles">Uploaded Files</label>
+                                        <ul class="upload-list" id="filenames">
                                         </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="hidden" name="id" id="id">
-                                        <input type="hidden" name="prog_id" id="prog_id">
-                                        <label>Add Your Comment</label>
-                                        <textarea name="newComment" id="newComment" class="form-control"
-                                                  style="height:50px;"></textarea>
-                                        <label>Comments</label>
-                                        <table class="table" name="comments" id="comments"></table>
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <hr>
-
+                                        <input type="hidden" name="id" id="id">
+                                        <input type="hidden" name="prog_id" id="prog_id">
+                                        <label class="formg">Add Your Comment</label>
+                                        <textarea name="newComment" id="newComment" class="form-control"
+                                                    style="height:50px;"></textarea>
+                                        <label class="formg">Comments</label>
+                                        <table class="table comments-table" name="comments" id="comments"></table>
+                                    </div>
+                                    <div class="col-md-12 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-info-circle" style="color:orange !important;"></i>
                                         <strong>Click the save button to save respective files/comments before signing off</strong>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
                                     <input name="reviewSubmit" class="btn btn-info" type="submit" id="reviewSubmit"
-                                           value="Review Sign-Off">
+                                            value="Review Sign-Off">
                                     <input name="prepareSubmit" class="btn btn-success" type="submit"
-                                           id="prepareSubmit" value="Prepare Sign-Off">
+                                            id="prepareSubmit" value="Prepare Sign-Off">
                                     <input name="done" class="btn btn-primary" type="submit" id="done"
-                                           value="Save">
+                                            value="Save">
                                 </div>
                             </div>
                         </div>
@@ -1374,7 +1379,7 @@
             </div>
         </div>
 
-                <!-- Error Modal -->
+        <!-- Error Modal -->
         <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -1399,16 +1404,15 @@
 
         <!-- Prepare Signoff Log Modal -->
         <div class="modal fade" id="prepareLogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Preparer Sign Off
-                            <h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                    </div>
                     <div class="modal-body">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Preparer Sign Off</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div><br>
                         <table class="table" id="prepareLogTable">
                             <thead>
                                 <tr>
@@ -1427,8 +1431,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Ok</button>
+                    <div class="modal-footer  d-flex align-items-center justify-content-center">
+                        <button class="btn btn-success" type="button" data-dismiss="modal">Ok</button>
                     </div>
                 </div>
             </div>
@@ -1436,16 +1440,15 @@
 
         <!-- Review Signoff Log Modal -->
         <div class="modal fade" id="reviewLogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Reviewer Sign Off
-                            <h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                    </div>
                     <div class="modal-body">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"> Reviewer Sign Off </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div><br>
                         <table class="table" id="reviewLogTable">
                             <thead>
                                 <tr>
@@ -1464,9 +1467,46 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Ok</button>
+                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                        <button class="btn btn-success" type="button" data-dismiss="modal">Ok</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <!-- <form method="post" action="editAClient"> -->
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group ">
+                                <label for="name">Dark Mode</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Inactive
+                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
+                                <label class="form-check-label" for="exampleRadios2" name="active">
+                                    Active
+                                </label>
+                            </div>
+                            <div class="modal-footer d-flex align-items-center justify-content-center">
+                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1474,7 +1514,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-    <script src="js/custom.js"></script>
+    <!-- <script src="js/custom.js"></script> -->
 
     <script>
         $(document).ready(function () {
@@ -1767,7 +1807,10 @@
                 if(newComment == '' && fileCount == ''){
                     e.preventDefault();
                     $("#signoffModal").modal("hide") 
-                    $("#errorModal").modal("show") 
+                    swal({
+                        icon: 'error',
+                        text: "Files or Comment Both Can't be empty",
+                    });
                 }
             });
 
@@ -1808,6 +1851,7 @@
                     }
                 });
             });
+
             $(document).on('click', '.fetchPrepare', function () {
                 let id = $(this).attr("id");
                 $.ajax({
@@ -1978,7 +2022,7 @@
 
                         obj.file.forEach(function (value) {
                             $('#signoffModal #filenames').append(
-                                '<li class="list-group-item list-group-item-action" id="' +
+                                '<li class="custom-list-items custom-list-items-action" id="' +
                                 value[0] + '"><a target="_blank" href="https://docs.google.com/gview?url=http://<?php echo $_SERVER['SERVER_NAME']; ?>/audit/uploads/program_files/'+value[1]+'">' +
                                 value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
                         });
@@ -2176,7 +2220,75 @@
                 return this.iterator( 'table', function ( settings ) {
                     settings.clearCache = true;
                 } );
-} );
+            });
+
+            let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+            if(darkmode)
+            {
+                document.documentElement.classList.toggle('dark-mode');
+                // document.querySelectorAll('.dark-invert').forEach((result) => {
+                //     result.classList.toggle('invert-dark-mode');
+                // });
+                $("#settingsModal #dark-active").attr('checked','checked');
+            }
+            else if(!darkmode){
+                document.documentElement.classList.remove('dark-mode');
+                $("#settingsModal #dark-inactive").attr('checked','checked');
+            }
+        });
+
+        $(document).on('click','.settingsmodal', function() {
+            $("#settingsModal").modal('show');
+        });
+
+        $('input[type=radio][name=darkmode]').change(function() {
+            if(this.value == '1')
+            {
+                document.documentElement.classList.toggle('dark-mode');
+                // document.querySelectorAll('.dark-invert').forEach((result) => {
+                //     result.classList.toggle('invert-dark-mode');
+                // });
+            }
+            else if(this.value == '0'){
+                document.documentElement.classList.remove('dark-mode');
+                document.documentElement.classList.remove('invert-dark-mode');
+            }
+        });
+
+        $(document).on('click', '#save', function(e) {
+            e.preventDefault();
+            var id = <?php echo $_SESSION['id']; ?>;
+            var active = $('input[name="darkmode"]:checked').val();
+            $.ajax({
+                url: "darkmode.php",
+                type: "POST",
+                data: {
+                    id: id,
+                    active: active
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response) {
+                        swal({
+                            icon: "success",
+                            text: "Updated!",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: "Failed!",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                }
+            });
         });
     </script>
 </body>

@@ -29,6 +29,7 @@
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
     <link href="../css/custom.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/uiux.css" rel="stylesheet" type="text/css">
 
     <!-- JQuery CDN -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -47,30 +48,31 @@
 <body style="overflow-y: scroll" oncontextmenu="return false">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
-            <?php 
-                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
-                    ?>
-            <li class="nav-item d-flex">
+            <!-- <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="clientList">
                     <span>List Clients</span>&nbsp;&nbsp;
                     <i class="fas fa-list fa-1x"></i>
                 </a>
+            </li> -->
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="clientList">
+                    <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
+                    <span>List Clients</span>
+                </a>
             </li>
-            <?php } 
-            ?>
-            <li class="nav-item dropdown no-arrow ">
-                <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
+            <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
+                <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
+                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                </span>
+                <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                        <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
-                        <span class="rounded-circle d-flex justify-contents-center">
-                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
+                    <span>
+                        <?php echo $_SESSION['name']; ?>
+                        <img class="nav-icon" src="../Icons/Group 6.svg" style="width:15px !important;"/>
+                    </span>
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -79,52 +81,109 @@
                             Change Password
                         </a>
                         <div class="dropdown-divider"></div> -->
-                    <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <a class="dropdown-item" href="../logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                    <a class="dropdown-item" href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
     </nav>
 
-    <!-- HEADER -->
-    <div id="header">
-        <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
-            <div class="row pt-1">
-                <div class="col-md-4">
-                    <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
-                    <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
+    <!-- SideBar -->
+    <div class="sidenav">
+        <div class="side-header">
+            <!-- <div style="border-bottom:1px solid;"> -->
+            <div>
+                <img class="sidenav-icon" src="../Icons/Group -1.svg"/> &nbsp;
+                Audit Edg
+            </div>
+        </div>
+        <div class="side-footer">
+            <div class="side-body">
+                <div class="dash">
+                    <img class="sidenav-icon" src="../Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Session Log
+                    </svg>
                 </div>
-                <div class="col-md-4 text-center font-2 getContent" href="clientList">
-                    <h3>Login Logs</h3>
+            </div>
+            <div class="settings">
+                <div class="settings-items-top-div">
+                    <div class="settings-items settingsmodal">
+                        <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Settings
+                    </div>
+                    <div class="settings-items">
+                        <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Help
+                    </div>
                 </div>
+                <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
             </div>
         </div>
     </div>
-    <!-- DATATABLE -->
-    <div class="container pt-4">
-        <div class="row">
-            <div class="card-body" style="width:10px;">
-                <div class="table-responsive">
-                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="clientListTable" class="table display table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Sl</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">IP Address</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Location</th>
-                                            <th scope="col">Browser</th>
-                                            <th scope="col">Status</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+
+    <div class="mar">
+        <!-- DATATABLE -->
+        <div class="container pt-4">
+            <div class="row">
+                <div class="card-body" style="width:10px; height:100% !important; border-radius: 12px; background-color: white;">
+                    <div class="table-responsive">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="clientListTable" class="table display table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Sl</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">IP Address</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Location</th>
+                                                <th scope="col">Browser</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+            <div class="modal-content">
+                <!-- <form method="post" action="editAClient"> -->
+                <form>
+                    <div class="modal-body">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div><br>
+                        <div class="form-group ">
+                            <label for="name">Dark Mode</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
+                            <label class="form-check-label" for="exampleRadios1">
+                                Inactive
+                            </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                            <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
+                            <label class="form-check-label" for="exampleRadios2" name="active">
+                                Active
+                            </label>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" id="save" type="submit" value="Save">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -151,6 +210,74 @@
             "ajax": {
                 url: "loginLogFetchAjax.php",
                 type: "POST"
+            }
+        });
+
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+            $("#settingsModal #dark-active").attr('checked','checked');
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+            $("#settingsModal #dark-inactive").attr('checked','checked');
+        }
+    });
+
+    $(document).on('click','.settingsmodal', function() {
+        $("#settingsModal").modal('show');
+    });
+
+    $('input[type=radio][name=darkmode]').change(function() {
+        if(this.value == '1')
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+        }
+        else if(this.value == '0'){
+            document.documentElement.classList.remove('dark-mode');
+            document.documentElement.classList.remove('invert-dark-mode');
+        }
+    });
+
+    $(document).on('click', '#save', function(e) {
+        e.preventDefault();
+        var id = <?php echo $_SESSION['id']; ?>;
+        var active = $('input[name="darkmode"]:checked').val();
+        $.ajax({
+            url: "../darkmode.php",
+            type: "POST",
+            data: {
+                id: id,
+                active: active
+            },
+            success: function(response) {
+                console.log(response);
+                if (response) {
+                    swal({
+                        icon: "success",
+                        text: "Updated!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                }
             }
         });
     });

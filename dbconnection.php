@@ -1,7 +1,7 @@
 <?php
     $servername = "localhost";
     $dbuser = "root";
-    $dbpass = "#atlMAIL";
+    $dbpass = "anik98";
     $dbname= "audit";
 // Create connection
     $con = new mysqli($servername, $dbuser, $dbpass , $dbname);

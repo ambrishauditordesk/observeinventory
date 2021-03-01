@@ -50,7 +50,7 @@
 <body style="overflow-y: scroll">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg border-bottom">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <!-- <li class="nav-item d-flex">

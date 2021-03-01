@@ -48,11 +48,11 @@
 <body style="overflow-y: scroll" oncontextmenu="return true">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg border-bottom">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <?php 
-                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
+                if($_SESSION['role'] != 3){
                     ?>
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="members.php">
@@ -64,7 +64,7 @@
             <?php } 
             ?>
             <?php 
-                if($_SESSION['role'] != 3 && $_SESSION['role'] != 2){
+                if($_SESSION['role'] != 3){
                     ?>
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#addClientModal">
@@ -124,7 +124,7 @@
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
-                    <div class="settings-items">
+                    <div class="settings-items settingsmodal">
                         <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Settings
                     </div>
@@ -169,7 +169,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <table id="clientListTable">
-                                                <thead>
+                                                <thead class="dark-invert">
                                                     <tr class="ro">
                                                         <th scope="col">Sl</th>
                                                         <th scope="col">Client Name</th>
@@ -397,7 +397,8 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form method="post" action="editAClient">
+                    <!-- <form method="post" action="editAClient"> -->
+                    <form>
                         <div class="modal-body">
                             <input type="hidden" id="cid" class="form-control" name="cid" readonly value="">
                             <div class="form-group ">
@@ -553,112 +554,44 @@
                     </form>
                 </div>
             </div>
-        </div> 
-
-        <!--View ClientProfile Modal -->
-        <div class="modal fade" id="viewClientProfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        </div>
+        
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: 800 !important;">Client Profile<h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
+                    <!-- <form method="post" action="editAClient"> -->
                     <form>
                         <div class="modal-body">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Basic Details<h5>
-                            </div>
-                            <input type="hidden" id="date" class="form-control" name="date" value= "" readonly>
-                            <input type="hidden" id="id" class="form-control" name="id" value= "" readonly>
-                            <input type="hidden" id="cid" class="form-control" name="cid" value= "" readonly>
-                            <input type="hidden" id="active" class="form-control" name="active" value= "" readonly>
+                                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
                             <div class="form-group ">
-                                <label for="name">Client Name</label>
-                                <input type="text" id="clientname" class="form-control" name="clientname" value= "" readonly>
+                                <label for="name">Dark Mode</label>
                             </div>
-                            <div class="form-group ">
-                                <label for="name">Nick Name</label>
-                                <input type="text" id="nickname" class="form-control" name="nickname" value= "" readonly>
+                            <div class="form-check">
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Inactive
+                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
+                                <label class="form-check-label" for="exampleRadios2" name="active">
+                                    Active
+                                </label>
                             </div>
-                            <div class="form-group ">
-                                <label for="name">Date of Incorporation/ Birth</label>
-                                <input type="date" id="dob" class="form-control" name="dob" value= "" readonly>
-                            </div>
-                            <div class="form-group ">
-                                <label for="country">Constitution</label>
-                                <select class="form-control" id="constitution" name="constitution" disabled>
-                                    <option>Select Constitution !</option>
-                                        <?php
-                                            $consQuery = $con->query("select * from constitution");
-                                            while ($consResult = $consQuery->fetch_assoc()) {
-                                        ?>
-                                    <option value="<?php echo $consResult['id']; ?>"><?php echo $consResult['const']; ?></option>
-                                        <?php
-                                            }
-                                        ?>
-                                </select>
-                            </div>
-                            <div class="form-group ">
-                                <label for="country">Industry</label>
-                                <select class="form-control" id="industry" name="industry" disabled>
-                                    <option>Select Industry !</option>
-                                    <?php
-                                                    $indusQuery = $con->query("select * from industry");
-                                                    while ($indusResult = $indusQuery->fetch_assoc()) {
-                                                ?>
-                                    <option value="<?php echo $indusResult['id']; ?>"><?php echo $indusResult['industry']; ?></option>
-                                    <?php
-                                                }
-                                                ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="name">Address</label>
-                                <input type="text" id="add" class="form-control" name="add" value= "" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="country">Country</label>
-                                <input type="text" id="country" class="form-control" name="country" value= "" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State</label>
-                                <input type="text" id="state" class="form-control" name="state" value= "" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="city">City</label>
-                                <input type="text" id="city" class="form-control" name="city" value= "" readonly>
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">Pincode</label>
-                                <input type="text" id="pincode" class="form-control" name="pincode" value= "" readonly>
-                            </div>
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">Pan No.</label>
-                                <input type="text" id="pan" class="form-control" name="pan" value= ""  readonly>
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">GST No.</label>
-                                <input type="text" id="gst" class="form-control" name="gst" value= ""  readonly>
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">TAN No.</label>
-                                <input type="text" id="tan" class="form-control" name="tan" value= ""  readonly>
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">CIN No.</label>
-                                <input type="text" id="cin" class="form-control" name="cin" value= ""  readonly>
+                            <div class="modal-footer d-flex align-items-center justify-content-center">
+                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                                <input class="btn btn-primary" id="save" type="submit" value="Save">
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -668,6 +601,7 @@
     <script src="../js/sb-admin-2.min.js"></script>
     <!-- Page level custom scripts -->
     <!-- <script src="../js/custom.js"></script> -->
+    <script src="../js/darkmode.js"></script>
     <script>
     function get_data() {
         var dataTable = $('#clientListTable').DataTable({
@@ -705,6 +639,20 @@
                 i--;
             }
         });
+
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+            $("#settingsModal #dark-active").attr('checked','checked');
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+            $("#settingsModal #dark-inactive").attr('checked','checked');
+        }
     });
 
     let panRegex = /[A-Z]{5}\d{4}[A-Z]{1}/;
@@ -865,37 +813,57 @@
         });
     });
 
-    $(document).on('click', '.viewClientProfile', function() {
-        var id = $(this).attr("id");
+    $(document).on('click','.settingsmodal', function() {
+        $("#settingsModal").modal('show');
+    });
+
+    $('input[type=radio][name=darkmode]').change(function() {
+        if(this.value == '1')
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+        }
+        else if(this.value == '0'){
+            document.documentElement.classList.remove('dark-mode');
+            document.documentElement.classList.remove('invert-dark-mode');
+        }
+    });
+
+    $(document).on('click', '#save', function(e) {
+        e.preventDefault();
+        var id = <?php echo $_SESSION['id']; ?>;
+        var active = $('input[name="darkmode"]:checked').val();
         $.ajax({
-            url: "clientProfileFetchAjax.php",
+            url: "../darkmode.php",
             type: "POST",
             data: {
-                id: id
+                id: id,
+                active: active
             },
-            success: function(data) {
-                obj = JSON.parse(data);
-                console.log(obj);
-                $("#viewClientProfile #date").val(obj.added_by_date);
-                $("#viewClientProfile #id").val(obj.added_by_id);
-                $("#viewClientProfile #cid").val(obj.id);
-                $("#viewClientProfile #active").val(obj.active);
-                $("#viewClientProfile #clientname").val(obj.name);
-                $("#viewClientProfile #nickname").val(obj.nickname);
-                $("#viewClientProfile #dob").val(obj.incorp_date);
-                $("#viewClientProfile #add").val(obj.address);
-                $("#viewClientProfile #country").val(obj.country);
-                $("#viewClientProfile #state").val(obj.state);
-                $("#viewClientProfile #city").val(obj.city);
-                $("#viewClientProfile #pincode").val(obj.pincode);
-                $("#viewClientProfile #pan").val(obj.pan);
-                $("#viewClientProfile #gst").val(obj.gst);
-                $("#viewClientProfile #tan").val(obj.tan);
-                $("#viewClientProfile #cin").val(obj.cin);
-                $("#viewClientProfile #constitution option[value=" + obj.const_id + "]").attr('selected','selected');
-                $("#viewClientProfile #industry option[value=" + obj.industry_id + "]").attr('selected','selected');
-
-                $("#viewClientProfile").modal('show');
+            success: function(response) {
+                console.log(response);
+                if (response) {
+                    swal({
+                        icon: "success",
+                        text: "Updated!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                }
+                // $("#editModal").modal('hide');
             }
         });
     });

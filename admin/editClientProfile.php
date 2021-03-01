@@ -22,6 +22,7 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <link href="../css/uiux.css" rel="stylesheet" type="text/css">
 
     <!-- sweetalert cdn -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
@@ -120,4 +121,21 @@ if($uploadOk){
     }
     ?>
 
+    <script>
+        $(document).ready(function() {
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+            $("#settingsModal #dark-active").attr('checked','checked');
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+            $("#settingsModal #dark-inactive").attr('checked','checked');
+        }
+    });
+    </script>
 

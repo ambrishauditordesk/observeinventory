@@ -1,8 +1,21 @@
 <?php 
 include '../dbconnection.php';
 session_start();
+if (!isset($_SESSION['email']) && empty($_SESSION['email'])){
+    header("Location: ../index");    
+}
+if(!$_POST){
+    header("Location: ../index");
+}
+$role =$_SESSION['role'];
+if($role == 1)
+    $query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel > 1) and client_id is null";
+elseif ($role == 2)
+    $query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel > 2) and client_id is null";
+else
+    $query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel > -1) and client_id is null";
+    
 $column = array('','name','email','accessLevel','active','reg_date','signoff_init','edit','allocate');
-$query = "select a.*, b.role_name role from user a inner join role b on a.accessLevel=b.id and (a.accessLevel <> -1) and client_id is null";
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
 {
  $query .= ' and name LIKE "%'.$_POST["search"]["value"].'%"';
@@ -28,8 +41,6 @@ $number_filter_row = $statement->num_rows;
 $statement = $con->query($query . $query1);
 //$statement->execute();
 $result = $statement->fetch_all(MYSQLI_ASSOC);
-
-
 $data = array();
 foreach($result as $row)
 {

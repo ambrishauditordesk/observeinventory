@@ -89,6 +89,7 @@
                 $_SESSION['role'] = $usersrow['accessLevel'];
                 $_SESSION['reg_date'] = $usersrow['reg_date'];
                 $_SESSION['signoff'] = $usersrow['signoff_init'];
+                $_SESSION['darkmode'] = $usersrow['darkmode'];
                 $_SESSION['external'] = 0;
                 if($usersrow['client_id'] != ''){
                     $_SESSION['external'] = 1;

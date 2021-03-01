@@ -54,6 +54,10 @@ $flag = 0;
 
 ini_set('memory_limit', '8192M');
 set_time_limit(3600);
+$count = $con->query("select count(id) total from trial_balance where workspace_id = $wid");
+if($count->fetch_assoc()['total'] > 0){
+    $con->query("delete from trial_balance where workspace_id = $wid");
+}
 
 $objExcel = PHPExcel_IOFactory::load($uploadFiles);
 $totalCount = $successCount = $errorCount = 0;
@@ -76,68 +80,138 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         $cyBegBalAmount = $cyInterimBalAmount = $cyActivityAmount = $cyEndBalAmount = $cyFinalBalAmount = 0;
 
         // For CY_Beg_Bal
-        $total = '';
-        $cyBegBalStr = preg_split('/,|(|)/', $cyBegBal,-1, PREG_SPLIT_NO_EMPTY);
-        if($cyBegBalStr[0] != '-'){
-            if($cyBegBalStr[0] == '(' || end($cyBegBalStr) == ')')
-            foreach($cyBegBalStr as $key => $value){
-            if(is_numeric($value))
-                $total .=$value;
+        // $total = '';
+        // $cyBegBalStr = preg_split('/,|(|)/', $cyBegBal,-1, PREG_SPLIT_NO_EMPTY);
+        // if($cyBegBalStr[0] != '-'){
+        //     if($cyBegBalStr[0] == '(' || end($cyBegBalStr) == ')')
+        //     foreach($cyBegBalStr as $key => $value){
+        //     if(is_numeric($value))
+        //         $total .=$value;
+        //     }
+        //     $cyBegBalAmount +=$total;
+        // }
+        {
+            $total = '';
+            if($cyBegBal[0] == '('){
+                $value = '-'.(filter_var($cyBegBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
-            $cyBegBalAmount +=$total;
+            else{
+                $value = filter_var($cyBegBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if ($cyBegBal[0] == '-' && strlen($cyBegBal) == 1) {
+                    $value = 0;
+                }
+            }
+            $cyBegBalAmount +=$value;
+            $cyBegBal = $value;
         }
 
         // For CY_Interim_Bal
-        $total = '';
-        $cyInterimBalStr = preg_split('/,|(|)/', $cyInterimBal,-1, PREG_SPLIT_NO_EMPTY);
-        if($cyInterimBalStr[0] != '-'){
-            if($cyInterimBalStr[0] == '(' || end($cyInterimBalStr) == ')')
-                $total = '-';
-            foreach($cyInterimBalStr as $key => $value){
-            if(is_numeric($value))
-                $total .=$value;
+        // $total = '';
+        // $cyInterimBalStr = preg_split('/,|(|)/', $cyInterimBal,-1, PREG_SPLIT_NO_EMPTY);
+        // if($cyInterimBalStr[0] != '-'){
+        //     if($cyInterimBalStr[0] == '(' || end($cyInterimBalStr) == ')')
+        //         $total = '-';
+        //     foreach($cyInterimBalStr as $key => $value){
+        //     if(is_numeric($value))
+        //         $total .=$value;
+        //     }
+        //     $cyInterimBalAmount +=$total;
+        // }
+        {
+            $total = '';
+            if($cyInterimBal[0] == '('){
+                $value = '-'.(filter_var($cyInterimBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
-            $cyInterimBalAmount +=$total;
+            else{
+                $value = filter_var($cyInterimBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if ($cyInterimBal[0] == '-' && strlen($cyInterimBal) == 1) {
+                    $value = 0;
+                }
+            }
+            $cyInterimBalAmount +=$value;
+            $cyInterimBal = $value;
         }
 
         // For CY_Activity
-        $total = '';
-        $cyActivityStr = preg_split('/,|(|)/', $cyActivity,-1, PREG_SPLIT_NO_EMPTY);
-        if($cyActivityStr[0] != '-'){
-            if($cyActivityStr[0] == '(' || end($cyActivityStr) == ')')
-                $total = '-';
-            foreach($cyActivityStr as $key => $value){
-            if(is_numeric($value))
-                $total .=$value;
+        // $total = '';
+        // $cyActivityStr = preg_split('/,|(|)/', $cyActivity,-1, PREG_SPLIT_NO_EMPTY);
+        // if($cyActivityStr[0] != '-'){
+        //     if($cyActivityStr[0] == '(' || end($cyActivityStr) == ')')
+        //         $total = '-';
+        //     foreach($cyActivityStr as $key => $value){
+        //     if(is_numeric($value))
+        //         $total .=$value;
+        //     }
+        //     $cyActivityAmount +=$total;
+        // }
+        {
+            $total = '';
+            if($cyActivity[0] == '('){
+                $value = '-'.(filter_var($cyActivity, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
-            $cyActivityAmount +=$total;
+            else{
+                $value = filter_var($cyActivity,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if ($cyActivity[0] == '-' && strlen($cyActivity) == 1) {
+                    $value = 0;
+                }
+            }
+            $cyActivityAmount +=$value;
+            $cyActivity = $value;
         }
 
         // For CY_End_Bal
-        $total = '';
-        $cyEndBalStr = preg_split('/,|(|)/', $cyEndBal,-1, PREG_SPLIT_NO_EMPTY);
-        if($cyEndBalStr[0] != '-'){
-            if($cyEndBalStr[0] == '(' || end($cyEndBalStr) == ')')
-                $total = '-';
-            foreach($cyEndBalStr as $key => $value){
-            if(is_numeric($value))
-                $total .=$value;
+        // $total = '';
+        // $cyEndBalStr = preg_split('/,|(|)/', $cyEndBal,-1, PREG_SPLIT_NO_EMPTY);
+        // if($cyEndBalStr[0] != '-'){
+        //     if($cyEndBalStr[0] == '(' || end($cyEndBalStr) == ')')
+        //         $total = '-';
+        //     foreach($cyEndBalStr as $key => $value){
+        //     if(is_numeric($value))
+        //         $total .=$value;
+        //     }
+        //     $cyEndBalAmount +=$total;
+        // }
+        {
+            $total = '';
+            if($cyEndBal[0] == '('){
+                $value = '-'.(filter_var($cyEndBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
-            $cyEndBalAmount +=$total;
+            else{
+                $value = filter_var($cyEndBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if ($cyEndBal[0] == '-' && strlen($cyEndBal) == 1) {
+                    $value = 0;
+                }
+            }
+            $cyEndBalAmount +=$value;
+            $cyEndBal = $value;
         }
 
         // For CY_End_Bal
-        $total = '';
-        $cyFinalBalStr = preg_split('/,|(|)/', $cyFinalBal,-1, PREG_SPLIT_NO_EMPTY);
-        if($cyFinalBalStr[0] != '-'){
-            if($cyFinalBalStr[0] == '(' || end($cyFinalBalStr) == ')')
-                $total = '-';
-            foreach($cyFinalBalStr as $key => $value){
-            if(is_numeric($value))
-                $total .=$value;
+        // $total = '';
+        // $cyFinalBalStr = preg_split('/,|(|)/', $cyFinalBal,-1, PREG_SPLIT_NO_EMPTY);
+        // if($cyFinalBalStr[0] != '-'){
+        //     if($cyFinalBalStr[0] == '(' || end($cyFinalBalStr) == ')')
+        //         $total = '-';
+        //     foreach($cyFinalBalStr as $key => $value){
+        //     if(is_numeric($value))
+        //         $total .=$value;
+        //     }
+        //     $cyFinalBalAmount +=$total;
+        //     $cyFinalBal = $total;
+        // }
+        {
+            $total = '';
+            if($cyFinalBal[0] == '('){
+                $value = '-'.(filter_var($cyFinalBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
-            $cyFinalBalAmount +=$total;
-            $cyFinalBal = $total;
+            else{
+                $value = filter_var($cyFinalBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if ($cyFinalBal[0] == '-' && strlen($cyFinalBal) == 1) {
+                    $value = 0;
+                }
+            }
+            $cyFinalBalAmount +=$value;
+            $cyFinalBal = $value;
         }
 
         // Inserting the data into database

@@ -31,60 +31,66 @@ $_SESSION['breadcrumb'] = array();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link href="css/uiux.css" rel="stylesheet" type="text/css">
 
 </head>
 
-<body style="overflow-y: scroll" oncontextmenu="return false">
+<body style="overflow-y: scroll; height: 100% !important;" oncontextmenu="return false">
 
-    <div id="wrapper" class="">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
-                <div class="sidebar-brand-icon">
-                    <a class="navbar-brand navbar-logo" href="admin/clientList">Audit-EDG</a>
+    <!-- SideBar -->
+    <div class="sidenav">
+        <div class="side-header">
+            <!-- <div style="border-bottom:1px solid;"> -->
+            <div>
+                <img class="sidenav-icon" src="Icons/Group -1.svg"/> &nbsp;
+                Audit Edg
+            </div>
+        </div>
+        <div class="side-footer">
+            <div class="side-body">
+                <div class="dash">
+                    <a href="clientDashboard?wid=<?php echo $wid;?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Workspace
+                    </a>
                 </div>
-            </a>
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li id="employees" class="nav-item active">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-dolly-flatbed"></i>
-                    <span>Audit Program</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Quick Links</span>
-                </a>
-                <div id="collapseAdmin" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Quick Links</h6>
-                        <a class="collapse-item" href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance CY</a>
-                        <a class="collapse-item" href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance PY</a>
-                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements CY</a>
-                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements PY</a>
-                        <a class="collapse-item" href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Client Assistance Schedule</a>
-                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion CY</a>
-                        <a class="collapse-item" href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion PY</a>
+                <div class="dash" style="margin-top: 1rem !important;">
+                    <a data-toggle="collapse" href="#qlinks" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important;"/> &nbsp;
+                    Quick Links
+                    </a>
+                </div>
+                <div class="collapse multi-collapse" id="qlinks" style="margin-top: 1rem !important;">
+                    <div class="qlinks-card card card-body">
+                        <ul class="qlinks">
+                            <li><a href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance CY</a></li>
+                            <li><a href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance PY</a></li>
+                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements CY</a></li>
+                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements PY</a></li>
+                            <li><a href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Client Assistance Schedule</a></li>
+                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion CY</a></li>
+                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion PY</a></li>
+                        </ul>
                     </div>
                 </div>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-        </ul>
+            <div class="settings">
+                <div class="settings-items-top-div">
+                    <div class="settings-items settingsmodal">
+                        <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Settings
+                    </div>
+                    <div class="settings-items">
+                        <img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Help
+                    </div>
+                </div>
+                <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+            </div>
+        </div>
+    </div>
 
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div class="content">
-                <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-mainbg">
+    <!-- Navbar -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <?php 
@@ -92,175 +98,180 @@ $_SESSION['breadcrumb'] = array();
                     ?>
                     <li class="nav-item d-flex">
                         <a class="nav-link d-flex align-items-center" target="_blank" href="diagnosticReport?wid=<?php echo $wid; ?>">
-                            <span>Diagnostic Report</span>&nbsp;&nbsp;
-                            <i class="fas fa-download fa-1x"></i>
+                            <img class="nav-icon" src="Icons/download.png" style="height: 40px; width: 40px;" />&nbsp;&nbsp;
+                            <span>Diagonistic Report</span>
                         </a>
                     </li>
                     <li class="nav-item d-flex">
                         <a class="nav-link d-flex align-items-center" href="admin/clientMember?cid=<?php echo $_SESSION['client_id']; ?>">
-                            <span>Members</span>&nbsp;&nbsp;
-                            <i class="fas fa-users fa-1x"></i>
+                        <img class="nav-icon" src="Icons/Group 4.svg"/>&nbsp;&nbsp;
+                        <span>Members</span>
                         </a>
                     </li>
             <?php } 
             ?>
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="admin/clientList">
-                    <span>List Clients</span>&nbsp;&nbsp;
-                    <i class="fas fa-list fa-1x"></i>
+                    <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
+                    <span>List Clients</span>
                 </a>
             </li>
-            <li class="nav-item dropdown no-arrow ">
-                <a class="nav-link dropdown-toggle d-flex justify-contents-center" href="#" id="userDropdown"
+            <!-- Dropdown -->
+            <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
+                <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
+                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                </span>
+                <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                        <span><?php echo $_SESSION['name']; ?>&nbsp;</span>
-                        <span class="rounded-circle d-flex justify-contents-center">
-                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
+                    <span>
+                        <?php echo $_SESSION['name']; ?>
+                        <img class="nav-icon" src="Icons/Group 6.svg" style="width:15px !important;"/>
+                    </span>
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
-                        </a>
-                        <div class="dropdown-divider"></div> -->
-                    <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                    <?php 
+                        if($_SESSION['role'] == '-1'){
+                    ?>
+                        <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                    <?php
+                    } 
+                    ?>
+                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
     </nav>
-                <!-- HEADER -->
-                <div id="header">
-                    <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
-                        <div class="row pt-1">
-                            <div class="row text-center cdrow" href="#">
-                                <h2><?php echo strtoupper($clientName . " - Dashboard"); ?></h2>
-                            </div>
-                        </div>
-                    </div><br>
-                    <!-- Body Starts -->
-                    <div class="container-fluid">
-                        <div class="col-md-12 d-flex" style="align-items:center;">
-                            <h1 class="col-md-4">Audit Programme</h1>
-                            <?php
-                                $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid and workspace_log.status=1")->fetch_assoc()['cnt'];
-                                $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid")->fetch_assoc()['cnt'];
-                                $per = number_format((float)0, 2, '.', '');
-                                if($querys1 != 0){
-                                    $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
-                                }
-                            ?>
-                            <div class="progress col-md-8 p-0" style="height:30px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $per; ?>%; color:<?php if($per == 0) echo "#000"; else echo "#fff"; ?>;"><?php echo $per."%"; ?></div>
-                            </div>
-                        </div><br>
-                        <div class="col-md-12 d-flex" style="flex-direction:column;">
-                            <?php
-                            $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
-                            $exquery = $con->query($query);
-                            if ($exquery->num_rows != 0) {
-                                while ($queryrow = $exquery->fetch_assoc()) {?>
-                            <div class="list-group col-md-12" style="flex-direction:row; align-items:center;">
-                                <div class="col-md-6">
-                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
-                                    class="list-group-item list-group-item-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                </div>
-                                <?php
-                                    $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid' and workspace_log.status=1")->fetch_assoc()['cnt'];
-                                    $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid'")->fetch_assoc()['cnt'];
-                                    $per = number_format((float)0, 2, '.', '');
-                                    if($querys != 0){
-                                        $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
-                                    }
-                                ?>
-                                <div class="progress col-md-6 p-0" style="height:30px;">
-                                    <div class="progress-bar" role="progressbar" style="width: <?php echo $per; ?>%; color: <?php if($per == 0) echo "#000"; else echo "#fff"; ?>;" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100"><?php echo $per."%"; ?></div>
-                                </div>
-                            </div>
-                            <?php }}
-                                ?>
-                                <br>
-                        </div>
-                        <?php
-                        $status = $con->query("select status from workspace_log where workspace_id=$wid and program_id=248")->fetch_assoc()['status'];
-                        if($status && $_SESSION['role'] != '3'){
-                            ?>
-                            <div class="col-md-12 d-flex justify-content-center">
-                                <button id="freeze" type="button" class="btn btn-lg btn-warning">Freeze Workspace</button>
-                            </div>
-                        <?php
+
+    <div class="mar">
+        <!-- HEADER -->
+        <br><div id="header">
+            <div class="container-fluid" stickylevel="0" style="z-index:1200;">
+                <div class="row pt-1">
+                    <div class="row text-center cdrow" href="#">
+                        <h2><?php echo strtoupper($clientName . " - Workspace"); ?></h2>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+        <!-- Body Starts -->
+        <div class="container-fluid prog">
+            <div class="col-md-12 d-flex align-items-center justify-content-center" style="padding-bottom: 2%; border-bottom: 2px solid #e1e2e9;">
+                <div class="col-md-4 d-flex align-items-center">
+                    <span class="span-heading">Audit Program</span>
+                    <?php
+                        $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid and workspace_log.status=1")->fetch_assoc()['cnt'];
+                        $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid")->fetch_assoc()['cnt'];
+                        $per = number_format((float)0, 2, '.', '');
+                        if($querys1 != 0){
+                            $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
                         }
-                        ?>
+                    ?>
+                    <span class="color-block"><?php echo $per."%"; ?></span>
+                </div>
+                <div class="progress col-md-8 p-0" style="height:25px; margin:0 !important;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $per; ?>%; color:<?php if($per == 0) echo "#000"; else echo "#fff"; ?>;"></div>
+                </div>
+            </div><br>
+            <div class="col-md-12 d-flex" style="flex-direction:column;">
+                <?php
+                $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
+                $exquery = $con->query($query);
+                if ($exquery->num_rows != 0) {
+                    while ($queryrow = $exquery->fetch_assoc()) {?>
+                <div class="col-md-12 custom-list" style="flex-direction:row; align-items:center;">
+                    <div class="col-md-12">
+                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                        class="custom-list-items"><b><?php echo trim($queryrow['program_name']); ?></b>
+                    </a>
+                        <?php
+                        if($queryrow['id']==1)
+                            $color='bg-primary';
+                        elseif($queryrow['id']==12)
+                            $color='bg-info';
+                        elseif($queryrow['id']==262)
+                            $color='bg-darkg';
+                        elseif($queryrow['id']==2)
+                            $color='bg-primary';
+                        elseif($queryrow['id']==19)
+                            $color='bg-violet';
+                        $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid' and workspace_log.status=1")->fetch_assoc()['cnt'];
+                        $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid'")->fetch_assoc()['cnt'];
+                        $per = number_format((float)0, 2, '.', '');
+                        if($querys != 0){
+                            $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
+                        }
+                    ?>
+                    <span class="completion <?php echo $color; ?>"><?php echo $per."%"; ?></span>
+                    <div class="progress p-0">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated <?php echo $color; ?>" role="progressbar" style="width: <?php echo $per; ?>%; color: <?php if($per == 0) echo "#000"; else echo "#fff"; ?>;" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
+                    </div>
+
+                </div>
+                <?php }}
+                    ?>
+                    <br>
+            </div>
+            <?php
+            $status = $con->query("select status from workspace_log where workspace_id=$wid and program_id=248")->fetch_assoc()['status'];
+            if($status){
+                ?>
+                <div class="col-md-12 d-flex justify-content-center">
+                    <button id="freeze" type="button" class="btn btn-lg btn-custom d-flex align-items-center"><img class="nav-icon" src="Icons/pause-circle.svg"/> &nbsp; Freeze Workspace</button>
+                </div>
+            <?php
+            }
+            ?>
+        </div>
+                    
+        <!-- Footer -->
+        <footer class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                            <?php echo date("Y"); ?></strong></span>
                 </div>
             </div>
-            <!-- Footer -->
-            <footer class="sticky-footer bg-light">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
-                                <?php echo date("Y"); ?></strong></span>
-                    </div>
-                </div>
-            </footer>
-        </div>
+        </footer>
+    </div>
 
-    </div> 
-
-    <!-- Subprogram Open Modal-->
-    <div class="modal fade" id="spOpenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered modal-size" role="document">
             <div class="modal-content">
-                <div class="modal-body">
-                    <div class="container card bg-light font-2 py-2">
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-md-6">
-                                <h5>Obtain Client Acceptance Engagement Letter</h5>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                <a class="btn btn-outline-dark btn-sm py-0 menu-02">
-                                    Sign-Off
-                                </a>
-                                <a class="btn btn-outline-dark btn-sm py-0 menu-02">
-                                    Review
-                                </a>
-                            </div>
+                <!-- <form method="post" action="editAClient"> -->
+                <form>
+                    <div class="modal-body">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div><br>
+                        <div class="form-group ">
+                            <label for="name">Dark Mode</label>
                         </div>
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <label>Documents</label>
-                                    </div>
-                                    <div class="col-md-12 text-right">
-                                        <a class="btn btn-outline-dark btn-sm py-0 menu-02">
-                                            <i class="fas fa-upload upload"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <ul class="list-group h5">
-                                    <li class="list-group-item"></li>
-                                    <li class="list-group-item"></li>
-                                    <li class="list-group-item"></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Comments</label>
-                                <textarea id="comments" class="form-control" style="height:200px;"></textarea>
-                            </div>
+                        <div class="form-check">
+                            <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
+                            <label class="form-check-label" for="exampleRadios1">
+                                Inactive
+                            </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                            <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
+                            <label class="form-check-label" for="exampleRadios2" name="active">
+                                Active
+                            </label>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" id="save" type="submit" value="Save">
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-    </div>
-
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -274,43 +285,111 @@ $_SESSION['breadcrumb'] = array();
             <!-- sweetalert cdn -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
 
-    <script src="js/custom.js"></script>
+    <!-- <script src="js/custom.js"></script> -->
     <script>
-        $(document).ready(function() {
-            var i = 1;
-            b = i - 1;
-            $("#add_row").click(function() {
-                $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
-                $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
-                i++;
-            });
-            //Delete Row Function for sales add form
-            $("#delete_row").click(function() {
-                if (i > 1) {
-                    $("#addr" + (i - 1)).html('');
-                    i--;
-                }
-            });
-
-            $(document).on('click','#freeze',function(){
-                $.ajax({
-                    url: 'freeze.php',
-                    type: 'POST',
-                    data: {id: <?php echo $wid; ?>,freeze: 1},
-                    success: function(data){
-                        if (data) {
-                                swal({
-                                    icon: "success",
-                                    text: "Thank You for Freezing",
-                                }).then(function (isConfirm) {
-                                    if (isConfirm) {
-                                        window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
-                                    }
-                                });
-                            }
-                    }
-                })
-            });
+    $(document).ready(function() {
+        var i = 1;
+        b = i - 1;
+        $("#add_row").click(function() {
+            $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
+            $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
+            i++;
         });
+        //Delete Row Function for sales add form
+        $("#delete_row").click(function() {
+            if (i > 1) {
+                $("#addr" + (i - 1)).html('');
+                i--;
+            }
+        });
+
+        $(document).on('click','#freeze',function(){
+            $.ajax({
+                url: 'freeze.php',
+                type: 'POST',
+                data: {id: <?php echo $wid; ?>,freeze: 1},
+                success: function(data){
+                    if (data) {
+                            swal({
+                                icon: "success",
+                                text: "Thank You for Freezing",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
+                                }
+                            });
+                        }
+                }
+            })
+        });
+
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+            $("#settingsModal #dark-active").attr('checked','checked');
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+            $("#settingsModal #dark-inactive").attr('checked','checked');
+        }
+    });
+
+    $(document).on('click','.settingsmodal', function() {
+        $("#settingsModal").modal('show');
+    });
+
+    $('input[type=radio][name=darkmode]').change(function() {
+        if(this.value == '1')
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            // document.querySelectorAll('.dark-invert').forEach((result) => {
+            //     result.classList.toggle('invert-dark-mode');
+            // });
+        }
+        else if(this.value == '0'){
+            document.documentElement.classList.remove('dark-mode');
+            document.documentElement.classList.remove('invert-dark-mode');
+        }
+    });
+
+    $(document).on('click', '#save', function(e) {
+        e.preventDefault();
+        var id = <?php echo $_SESSION['id']; ?>;
+        var active = $('input[name="darkmode"]:checked').val();
+        $.ajax({
+            url: "darkmode.php",
+            type: "POST",
+            data: {
+                id: id,
+                active: active
+            },
+            success: function(response) {
+                console.log(response);
+                if (response) {
+                    swal({
+                        icon: "success",
+                        text: "Updated!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    swal({
+                        icon: "error",
+                        text: "Failed!",
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.reload();
+                        }
+                    });
+                }
+            }
+        });
+    });
     </script>
 </body>
