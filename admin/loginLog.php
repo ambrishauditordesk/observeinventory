@@ -45,7 +45,7 @@
         crossorigin="anonymous"></script>
 </head>
 
-<body style="overflow-y: scroll" oncontextmenu="return false">
+<body style="overflow-y: scroll; height: 100% !important;" oncontextmenu="return false">
 
     <!-- Navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">

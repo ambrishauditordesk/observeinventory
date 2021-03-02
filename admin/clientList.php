@@ -254,11 +254,11 @@
                             </div>
                             <div class="form-group ">
                                 <label for="name">Client Name</label>
-                                <input type="text" class="form-control" maxlength="99" pattern="/^[a-zA-Z0-9\_&'\-\.\/\,\}\]\[""()?@!#%$~*;+= ]{1,99}$/" name="clientname" required>
+                                <input type="text" class="form-control" maxlength="99" name="clientname" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Nick Name</label>
-                                <input type="text" class="form-control" name="nickname">
+                                <input type="text" class="form-control" maxlength="99" name="nickname">
                             </div>
                             <div class="form-group ">
                                 <label for="name">Date of Incorporation/ Birth</label>
@@ -296,23 +296,23 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Address</label>
-                                <input type="text" class="form-control" name="add">
+                                <input type="text" class="form-control" name="add" maxlength="200" required>
                             </div>
                             <div class="form-group">
                                 <label for="country">Country</label>
-                                <input type="text" class="form-control" name="country">
+                                <input type="text" class="form-control" name="country" maxlength="15" required>
                             </div>
                             <div class="form-group" id="stateEntryIdDiv">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" name="state">
+                                <input type="text" class="form-control" name="state" maxlength="15" required>
                             </div>
                             <div class="form-group" id="citiesEntryIdDiv">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" name="city">
+                                <input type="text" class="form-control" name="city" maxlength="15" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pincode</label>
-                                <input type="text" class="form-control" name="pincode" required>
+                                <input type="text" class="form-control" name="pincode" maxlength="7" required>
                             </div>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
@@ -352,12 +352,12 @@
                                         </thead>
                                         <tbody>
                                             <tr id='addr0'>
-                                                <td><input type="text" class="form-control" name="cname[]" required>
+                                                <td><input type="text" class="form-control" name="cname[]" maxlength="50" required>
                                                 </td>
-                                                <td><input type="email" class="form-control" name="email[]" required></td>
-                                                <td><input type="password" class="form-control" name="pass[]" required>
+                                                <td><input type="email" class="form-control" name="email[]" maxlength="50" required></td>
+                                                <td><input type="password" class="form-control" name="pass[]" maxlength="50" required>
                                                 </td>
-                                                <td><input type="text" name='designation[]' class="form-control" required />
+                                                <td><input type="text" name='designation[]' class="form-control" maxlength="50" required />
                                                 </td>
                                             </tr>
                                             <tr id='addr1'></tr>
@@ -403,7 +403,7 @@
                             <input type="hidden" id="cid" class="form-control" name="cid" readonly value="">
                             <div class="form-group ">
                                 <label for="name">Client Name</label>
-                                <input type="text" id="cname" class="form-control" name="cname" required value="">
+                                <input type="text" id="cname" class="form-control" name="cname" maxlength="99" pattern="/^[a-zA-Z0-9\_&'\-\.\/\,\}\]\[""()?@!#%$~*;+= ]{1,99}$/" required value="">
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -468,11 +468,11 @@
                             <input type="hidden" id="active" class="form-control" name="active" value= "" required>
                             <div class="form-group ">
                                 <label for="name">Client Name</label>
-                                <input type="text" id="clientname" class="form-control" name="clientname" value= "" required>
+                                <input type="text" id="clientname" class="form-control" maxlength="99" name="clientname" value= "" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Nick Name</label>
-                                <input type="text" id="nickname" class="form-control" name="nickname" value= "">
+                                <input type="text" id="nickname" class="form-control" maxlength="99" name="nickname" value= "">
                             </div>
                             <div class="form-group ">
                                 <label for="name">Date of Incorporation/ Birth</label>
@@ -508,46 +508,46 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Address</label>
-                                <input type="text" id="add" class="form-control" name="add" value= "">
+                                <input type="text" id="add" class="form-control" name="add" maxlength="200" value= "">
                             </div>
                             <div class="form-group">
                                 <label for="country">Country</label>
-                                <input type="text" id="country" class="form-control" name="country" value= "">
+                                <input type="text" id="country" class="form-control" name="country" maxlength="15" value= "">
                             </div>
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <input type="text" id="state" class="form-control" name="state" value= "">
+                                <input type="text" id="state" class="form-control" name="state" maxlength="15" value= "">
                             </div>
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="text" id="city" class="form-control" name="city" value= "">
+                                <input type="text" id="city" class="form-control" name="city" maxlength="15" value= "">
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pincode</label>
-                                <input type="text" id="pincode" class="form-control" name="pincode" value= "" required>
+                                <input type="text" id="pincode" class="form-control" name="pincode" maxlength="8" value= "" required>
                             </div>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pan No.</label>
-                                <input type="text" id="pan" class="form-control" name="pan" value= "" required>
+                                <input type="text" id="panCheckEdit" class="form-control" name="pan" maxlength="10" value= "" style="text-transform:uppercase" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">GST No.</label>
-                                <input type="text" id="gst" class="form-control" name="gst" value= "" required>
+                                <input type="text" id="gstCheckEdit" class="form-control" name="gst" maxlength="15" value= "" style="text-transform:uppercase" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">TAN No.</label>
-                                <input type="text" id="tan" class="form-control" name="tan" value= "" required>
+                                <input type="text" id="tanCheckEdit" class="form-control" name="tan" maxlength="10" value= "" style="text-transform:uppercase" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">CIN No.</label>
-                                <input type="text" id="cin" class="form-control" name="cin" value= "" required>
+                                <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase" required>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                        <div class="modal-footer  d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
                             <input class="btn btn-warning" type="reset" value="Reset">
                             <input class="btn btn-primary" type="submit" value="Done">
                         </div>
@@ -656,6 +656,18 @@
     });
 
     let panRegex = /[A-Z]{5}\d{4}[A-Z]{1}/;
+    $(document).on('keyup','#panCheckEdit', function(){
+        if ($(this).val().length == 10){
+            if (!panRegex.test($(this).val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "PAN Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#panCheckEdit').val('');
+                    });
+            }
+        }
+    });
     $('#panCheck').val('').on('keyup', function () {
         if ($('#panCheck').val().length == 10){
             if (!panRegex.test($('#panCheck').val().toUpperCase())){
@@ -670,6 +682,18 @@
     });
 
     let gstRegex = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
+    $(document).on('keyup','#gstCheckEdit', function(){
+        if ($(this).val().length === 15){
+            if ($(this).val().toUpperCase()){
+                swal({
+                        icon: "error",
+                        text: "GST Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#gstCheckEdit').val('');
+                    });
+            }
+        }
+    })
     $('#gstCheck').val('').on('keyup', function () {
         if ($('#gstCheck').val().length === 15){
             if (!gstRegex.test($('#gstCheck').val().toUpperCase())){
@@ -684,6 +708,18 @@
     });
 
     let tanRegex = /[A-Z]{4}\d{5}[A-Z]{1}/;
+    $(document).on('keyup','#tanCheckEdit', function(){
+        if ($(this).val().length == 10){
+            if (!tanRegex.test($(this).val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "TAN Number invalid!",
+                    }).then(function(isConfirm) {
+                        $("#tanCheckEdit").val('');
+                    });
+            }
+        }
+    })
     $('#tanCheck').val('').on('keyup', function () {
         if ($('#tanCheck').val().length == 10){
             if (!tanRegex.test($('#tanCheck').val().toUpperCase())){
@@ -696,8 +732,20 @@
             }
         }
     });
-
+    
     let cinRegex = /[L|U]{1}\d{5}[A-Z]{2}\d{4}[A-Z]{3}\d{6}/;
+    $(document).on('keyup','#cinCheckEdit', function(){
+        if ($(this).val().length == 21){
+            if (!cinRegex.test($(this).val().toUpperCase())){
+                swal({
+                        icon: "error",
+                        text: "CIN Number invalid!",
+                    }).then(function(isConfirm) {
+                        $('#cinCheckEdit').val('');
+                    });
+            }
+        }
+    })
     $('#cinCheck').val('').on('keyup', function () {
         if ($('#cinCheck').val().length == 21){
             if (!cinRegex.test($('#cinCheck').val().toUpperCase())){
@@ -801,10 +849,10 @@
                 $("#editClientProfile #state").val(obj.state);
                 $("#editClientProfile #city").val(obj.city);
                 $("#editClientProfile #pincode").val(obj.pincode);
-                $("#editClientProfile #pan").val(obj.pan);
-                $("#editClientProfile #gst").val(obj.gst);
-                $("#editClientProfile #tan").val(obj.tan);
-                $("#editClientProfile #cin").val(obj.cin);
+                $("#editClientProfile #panCheckEdit").val(obj.pan);
+                $("#editClientProfile #gstCheckEdit").val(obj.gst);
+                $("#editClientProfile #tanCheckEdit").val(obj.tan);
+                $("#editClientProfile #cinCheckEdit").val(obj.cin);
                 $("#editClientProfile #constitution option[value=" + obj.const_id + "]").attr('selected','selected');
                 $("#editClientProfile #industry option[value=" + obj.industry_id + "]").attr('selected','selected');
 

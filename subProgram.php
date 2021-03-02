@@ -71,10 +71,23 @@
             background:#fff;
             box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); 
         }
+
+        .even td, .odd td{
+            text-align: left;
+        }
+
+        input[type="text"], input[type="number"]{
+            height: 2.4rem !important;
+            background-color: rgba(232, 240, 255, 1) !important;
+            border: 0 !important;
+            background-clip: padding-box;
+            border-radius: 0.35rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
     </style>
 </head>
 
-<body style="overflow-y: scroll; height:100% !important;" oncontextmenu="return false">
+<body style="overflow-y: scroll;" oncontextmenu="return false">
 
     <!-- SideBar -->
     <div class="sidenav">
@@ -186,7 +199,7 @@
         </ul>
     </nav>
     
-    <div class="mar">
+    <div class="mar" <?php if($prog_id == 255 || $prog_id==230 || $prog_id==239 || $prog_id==240|| $prog_id==2|| $prog_id==19){ echo "style='height: auto !important;'"; } ?> >
         <!-- HEADER -->
         <div id="header">
             <div class="container-fluid" stickylevel="0" style="z-index:1200;">
@@ -275,7 +288,7 @@
                             $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id='$wid' order by _seq,id asc";
                             $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                             ?>
-                            <div class="form-row">
+                            <div class="form-row p-top">
                                 <div class="form-group col-md-6">
                                     <label for="input1">Balance Assets Scope</label>
                                     <input type="text" class="form-control" name="aScope"
@@ -291,8 +304,9 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr class="table-secondary">
-                                        <th scope="col" hidden>Id</th>
                                         <th scope="col">Asset Accounts</th>
+                                        <th scope="col" hidden>Id</th>
+                                        <th scope="col" hidden></th>
                                         <th scope="col">Amount</th>
                                         <th scope="col">Type</th>
                                         <th scope="col">Risk</th>
@@ -312,15 +326,15 @@
                                             <?php
                                                 if ($row['header_type'] == 0) { ?>
                                                     <tr id="<?php echo ++$i; ?>">
-                                                        <td scope="row" hidden>
-                                                            <input type="hidden" name="submitData[id][]"
-                                                                    value="<?php echo $row['id']; ?>">
-                                                        </td>
+                                                        <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
                                                         <td scope="row" hidden>
                                                             <input type="hidden" name="submitData[header_type][]"
                                                                     value="<?php echo $row['header_type']; ?>">
                                                         </td>
-                                                        <td scope="row"><?php echo $row['program_name']; ?></td>
+                                                        <td scope="row" hidden>
+                                                            <input type="hidden" name="submitData[id][]"
+                                                                    value="<?php echo $row['id']; ?>">
+                                                        </td>
                                                         <td scope="row">
                                                             <input type="number" name="submitData[amount][]"
                                                                     value="<?php echo $row['amount']; ?>" size="10" step="0.01">
@@ -356,8 +370,9 @@
                                                 }
                                                 ?>
                                                     <tr class="table-secondary">
-                                                        <th scope="col" hidden>Id</th>
                                                         <th scope="col">Liability Accounts</th>
+                                                        <th scope="col" hidden>Id</th>
+                                                        <th scope="col" hidden></th>
                                                         <th scope="col">Amount</th>
                                                         <th scope="col">Type</th>
                                                         <th scope="col">Risk</th>
@@ -372,6 +387,7 @@
                                                     if ($row['header_type'] == 1) {
                                                         ?>
                                                     <tr id="<?php echo ++$i; ?>">
+                                                        <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
                                                         <td scope="row" hidden>
                                                             <input type="hidden" name="submitData[id][]"
                                                                     value="<?php echo $row['id']; ?>">
@@ -380,7 +396,6 @@
                                                             <input type="hidden" name="submitData[header_type][]"
                                                                     value="<?php echo $row['header_type']; ?>">
                                                         </td>
-                                                        <td scope="row"><?php echo $row['program_name']; ?></td>
                                                         <td scope="row">
                                                             <input type="number" name="submitData[amount][]"
                                                                     value="<?php echo $row['amount']; ?>" size="10" step="0.01">
@@ -445,7 +460,7 @@
                                         <?php
                                     // }
                                 ?>
-                                    <input type="submit" id="validateSubmit" class="btn btn-primary align-middle" value="Save Details">
+                                    <input type="submit" id="validateSubmit" class="btn btn-success align-middle" value="Save Details">
                                 </div>
                             </form>
                             <div class="row d-flex justify-content-center">
@@ -478,26 +493,24 @@
                             <?php 
                             if($_SESSION['external'] != 1){
                             ?>
-                                <div class="col-md-12 text-center">
-                                    <button class="btn btn-primary" data-target="#addAccount" data-toggle="modal"
-                                            id="add_acc">ADD REQUEST
+                                <div class="col-md-12 text-center p-top">
+                                    <button class="btn btn-info" data-target="#addAccount" data-toggle="modal"
+                                            id="add_acc">Add Request
                                     </button>
-                                </div>
-                                <div class="col-md-12">
-                                    <a target="_blank" href="exportRequestClient?wid=<?php echo $wid; ?>"><button class="btn btn-primary">Export</button></a>
+                                    <a target="_blank" href="exportRequestClient?wid=<?php echo $wid; ?>"><button class="btn btn-success">Export</button></a>
                                 </div>
                                 <?php } ?>
                             </div><br>
                             <div class="row">    
                                 <div class="tableFixHead">
                                     <form style="overflow-x:auto;" action="clientAssistSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
-                                        <div class="row">    
+                                        <div class="row" style="margin: 0 !important;">    
                                             <div>
                                                 <table>
                                                     <thead class="text-center">
                                                     <tr>
-                                                        <th scope="col" hidden>Id</th>
                                                         <th scope="col">Account Name</th>
+                                                        <th scope="col" hidden>Id</th>
                                                         <th scope="col" class="col-md-1">Description</th>
                                                         <?php 
                                                         if($_SESSION['external'] != 1){
@@ -529,11 +542,11 @@
                                                                 $query1 = $con->query("select id,client_contact_id from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
                                                                 ?>
                                                                 <tr>
+                                                                    <td><label><?php echo $row['account']; ?></label></td>
                                                                     <td scope="row" hidden>
                                                                         <input type="hidden" name="account[id][]"
                                                                             value="<?php echo $query1['id']; ?>">
                                                                     </td>
-                                                                    <td><label><?php echo $row['account']; ?></label></td>
                                                                     <td><textarea rows="3" class="form-control mb-3" style="width: 500px !important;" <?php if($_SESSION['external'] == 1) echo "readonly"; ?> name="account[des][]"><?php echo $row['description']; ?></textarea></td>
                                                                     <?php 
                                                                         if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
@@ -603,12 +616,12 @@
                                                 </div>
                                                 <hr>
                                                 <?php } ?>
-                                        <div class="row d-flex justify-content-center">
+                                        <div class="row d-flex justify-content-center p-bottom">
                                             <input type="submit" class="btn btn-primary align-middle" value="Save"> &nbsp;
                                             <?php 
                                             if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                 ?>
-                                            <input id="sendInvitation" type="button" class="btn btn-primary align-middle" value="Send Invitation">
+                                            <input id="sendInvitation" type="button" class="btn bg-violet align-middle" value="Send Invitation">
                                             <?php } ?>
                                         </div>
                                     </form>
@@ -661,7 +674,7 @@
                             $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq > 1 order by _seq,id asc";
                             $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                             ?>
-                            <div class="form-row">
+                            <div class="form-row p-top">
                                 <div class="form-group col-md-6">
                                     <label for="input1">PL- Income Scope</label>
                                     <input type="text" class="form-control" name="aScope"
@@ -677,8 +690,8 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr class="table-secondary">
-                                        <th scope="col" hidden>Id</th>
                                         <th scope="col">Asset Accounts</th>
+                                        <th scope="col" hidden>Id</th>
                                         <th scope="col">Amount</th>
                                         <th scope="col">Type</th>
                                         <th scope="col">Risk</th>
@@ -692,11 +705,11 @@
                                             ?>
                                             <tbody>
                                             <tr>
+                                                <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
                                                 <td scope="row" hidden>
                                                     <input type="hidden" name="submitData[id][]"
                                                             value="<?php echo $row['id']; ?>">
                                                 </td>
-                                                <td scope="row"><?php echo $row['program_name']; ?></td>
                                                 <td scope="row">
                                                     <input type="text" name="submitData[amount][]"
                                                             value="<?php echo $row['amount']; ?>" size="10">
@@ -745,16 +758,17 @@
                                     ?>
                                 </table>
                                 <div class="row d-flex justify-content-center">
-                                    <input type="submit" class="btn btn-primary align-middle" value="Submit">
+                                    <input type="submit" class="btn btn-success align-middle" value="Submit">
                                 </div>
                             </form>
                             <?php
-                        } elseif ($prog_id == 230) {
+                        } 
+                        elseif ($prog_id == 230) {
                             $query = "select * from materiality where workspace_id='$wid' and prog_id='$prog_id'";
                             $result = $con->query($query); ?>
                             <div class="row">
-                                <div class="col-md-12 text-center">
-                                    <button class="btn btn-primary" data-target="#addMethod" data-toggle="modal"
+                                <div class="col-md-12 text-center p-top">
+                                    <button class="btn bg-violet" data-target="#addMethod" data-toggle="modal"
                                             id="add_new">ADD NEW
                                     </button>
                                 </div>
@@ -764,22 +778,22 @@
                                 <table class="table table-hover" id="tab_logic">
                                     <thead class="text-center">
                                     <tr>
+                                        <th scope="col" style="border-bottom-left-radius: 0 !important;">Methods</th>
                                         <th scope="col" hidden>Id</th>
-                                        <th scope="col">Methods</th>
                                         <th scope="col" colspan="2">Standard %</th>
                                         <th scope="col" colspan="2">Custom %</th>
                                         <th scope="col">Amount</th>
-                                        <th scope="col">Action</th>
+                                        <th scope="col" style="border-bottom-right-radius: 0 !important;">Action</th>
                                     </tr>
                                     <tr>
+                                        <th style="border-top-left-radius: 0 !important;"></th>
                                         <th hidden></th>
-                                        <th></th>
                                         <th>High</th>
                                         <th>Low</th>
                                         <th>High</th>
                                         <th>Low</th>
                                         <th></th>
-                                        <th></th>
+                                        <th style="border-top-right-radius: 0 !important;"></th>
                                     </tr>
                                     </thead>
                                     <tbody id="abody">
@@ -791,11 +805,11 @@
                                             }
                                             ?>
                                             <tr>
+                                                <td style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><label><?php echo $row['name']; ?></label></td>
                                                 <td scope="row" hidden>
                                                     <input type="hidden" name="materialityData[id][]"
                                                             value="<?php echo $row['id']; ?>">
                                                 </td>
-                                                <td><label><?php echo $row['name']; ?></label></td>
                                                 <td><input type="text" size="10" name="materialityData[sLow][]"
                                                             value="<?php echo $row['standard_low']; ?>"></td>
                                                 <td><input type="text" size="10" name="materialityData[sHigh][]"
@@ -867,10 +881,9 @@
                                                 value="<?php echo $row['pl_expense']; ?>">
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="row d-flex justify-content-center">
-                                    <input class="btn btn-primary" type="file" name="file"
-                                    accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb">
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <input class="btn btn-upload" type="file" name="file"
+                                    accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
                                 </div>
                                 
                                 <div class="row d-flex justify-content-center">
@@ -894,12 +907,12 @@
                                         } ?>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <hr>
+                            <div class="col-md-12 d-flex justify-content-center align-items-center">
                                 <hr>
                                 <i class="fas fa-info-circle" style="color:orange !important;"></i>
                                 <strong>Click the save button to save respective files/data before signing off</strong>
                             </div>
-                            <hr>
                             <div class="row d-flex justify-content-center">
                                 <?php
                                 if($materiality || $subMateriality ){
@@ -913,7 +926,7 @@
                                     <?php
                                 }
                                 ?>
-                                    <input type="submit" class="btn btn-primary align-middle" value="Save Details">
+                                    <input type="submit" class="btn btn-success align-middle" value="Save Details">
                                 </div>
                             </form><br>
                             <div class="row d-flex justify-content-center">
@@ -933,7 +946,8 @@
                                 ?>
                             </div>
                             <?php 
-                        } elseif ($prog_id == 12)  {
+                        } 
+                        elseif ($prog_id == 12)  {
                                 // $query = "select program.*, signoff_log.Prepare_SignOff, signoff_log.prepare_date, signoff_log.Review_SignOff, signoff_log.review_date, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id left join signoff_log on program.id = signoff_log.prog_id and signoff_log.workspace_id = workspace_log.workspace_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                 $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                 $exquery = $con->query($query);
@@ -956,7 +970,8 @@
                                     <?php }
                                         }
                                         }
-                        } elseif($prog_id == 2){
+                        } 
+                        elseif($prog_id == 2){
                             $seq0 = $seq1 = 0;
                             $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                             $exquery = $con->query($query);
@@ -966,7 +981,7 @@
                                         if($queryrow['_seq'] < 2 && $seq0 != 1){
                                             $seq0++;
                                             ?>
-                                            <h2><span class="badge badge-primary" >Balance Sheet</span></h2><br/>
+                                            <h2 class="p-top"><span class="badge badge-primary" >Balance Sheet</span></h2><br/>
                                             <?php
                                         }
                                         if($queryrow['_seq'] >= 2 && $seq1 != 1){
@@ -1053,7 +1068,8 @@
                                     }
                                 }
                             }
-                        } else {
+                        } 
+                        else {
                                 $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                 $exquery = $con->query($query);
                                 if ($exquery->num_rows != 0) {

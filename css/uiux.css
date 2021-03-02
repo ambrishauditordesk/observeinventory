@@ -1,8 +1,8 @@
-.dark-mode{
+.dark-mode {
   filter: invert(1) hue-rotate(180deg);
 }
 
-.invert-dark-mode{
+.invert-dark-mode {
   filter: invert(1) hue-rotate(180deg);
 }
 
@@ -394,6 +394,12 @@ th {
 
 .bg-violet {
   background-color: #952fc0;
+  color: white;
+}
+
+.bg-violet:hover {
+  background-color: #772799;
+  color: white;
 }
 
 .prog {
@@ -486,7 +492,7 @@ th {
   font-weight: 600;
 }
 
-.upload-list{
+.upload-list {
   width: 100%;
   height: auto;
   background-color: rgba(232, 240, 255, 1) !important;
@@ -494,34 +500,39 @@ th {
   padding: 2%;
 }
 
-.upload-list li{
+.upload-list li {
   margin-left: 2%;
   color: #121212 !important;
 }
 
-.upload-list li a:hover{
+.upload-list li a:hover {
   text-decoration: none !important;
   color: rgba(37, 78, 218, 1) !important;
 }
 
-.upload-list li::marker{
+.upload-list li::marker {
   color: rgba(37, 78, 218, 1) !important;
 }
-.formg{
+.formg {
   color: rgba(37, 78, 218, 1) !important;
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
 }
 
-.comments-table tbody tr{
+.comments-table tbody tr {
   border-bottom: 1px solid #eaecf4 !important;
 }
 
-.comments-table tbody td a:hover{
+.comments-table tbody td a:hover {
   text-decoration: none !important;
 }
 
-.p-top{
+.p-top {
   padding-top: 2%;
 }
+
+.p-bottom {
+  padding-bottom: 2%;
+}
+
