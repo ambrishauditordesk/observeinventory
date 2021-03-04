@@ -15,7 +15,7 @@
         crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body style="background-image: url('Icons/bgwall.jpg');">
     <?php
     include 'dbconnection.php';
     session_start();
@@ -90,7 +90,8 @@
             text: '".$text."',
         }).then(function(isConfirm) {
             if (isConfirm) {
-                window.location.href = '$ser';
+                localStorage.setItem('uploaded','true');
+                window.close();
             }
         });
     </script>";

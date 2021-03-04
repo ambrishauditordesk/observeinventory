@@ -25,7 +25,9 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
 </head>
-<body class="bg-gradient-primary" oncontextmenu="return false">
+<body style="background-image: url('Icons/bgwall.jpg');" oncontextmenu="return false">
+
+<!-- bootstrap js -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
@@ -40,15 +42,28 @@
 <script src="js/demo/datatables-demo.js"></script>
 <script src="js/pace.min.js"></script>
 <script src="js/custom.js"></script>
+
+<!-- sweetalert cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+    integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+    crossorigin="anonymous"></script>
+
 <?php 
     include 'dbconnection.php';
     session_start();
+    $ser = $_SERVER['HTTP_REFERER'];
+
     if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
         echo "<script>
-            $(document).ready(function() {
-                $('#wrongCodeModal').modal();
-            });
-          </script>";
+                swal({
+                    icon: 'error',
+                    text: 'Please Enter a Valid Verification Code!',
+                }).then(function(isConfirm) {
+                    if (isConfirm) {
+                        window.location.href = '$ser';
+                    }
+                });
+            </script>";
     }
     else{
         if (isset($_SESSION['email']) && !empty($_SESSION['email'])){
@@ -102,8 +117,13 @@
                         session_unset();
                         session_destroy();
                         echo "<script>
-                                $(document).ready(function() {
-                                    $('#accessDeniedModal').modal();
+                                swal({
+                                    icon: 'error',
+                                    text: 'Access Denied!',
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.href = '$ser';
+                                    }
                                 });
                             </script>";
                     }
@@ -115,58 +135,29 @@
             else{
                 $con->query("update loginlog set status = 'Access Denied' where id = $loginLogId");
                 echo "<script>
-                $(document).ready(function() {
-                    $('#accessDeniedModal').modal();
-                });
-              </script>";
+                        swal({
+                            icon: 'error',
+                            text: 'Access Denied!',
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = '$ser';
+                            }
+                        });
+                    </script>";
             }
         }
         else{
             $con->query("update loginlog set status = 'Failed' where id = $loginLogId");
             echo "<script>
-                    $(document).ready(function() {
-                        $('#wrongPassUserModal').modal();
+                    swal({
+                        icon: 'error',
+                        text: 'Wrong UserName or Password!',
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = '$ser';
+                        }
                     });
-                  </script>";
+                </script>";
         }
     } 
 ?>
-<div class="modal fade" id="wrongCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sorry </h5>
-            </div>
-            <div class="modal-body">Please Enter a Valid Verification Code !</div>
-            <div class="modal-footer">
-                <a class="btn btn-danger" href="login">OK</a>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="accessDeniedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sorry </h5>
-            </div>
-            <div class="modal-body">Access Denied !</div>
-            <div class="modal-footer">
-                <a class="btn btn-danger" href="index">OK</a>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="wrongPassUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sorry </h5>
-            </div>
-            <div class="modal-body">Wrong UserName or Password</div>
-            <div class="modal-footer">
-                <a class="btn btn-warning" href="login">Back</a>
-            </div>
-        </div>
-    </div>
-</div>

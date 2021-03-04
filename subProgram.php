@@ -1347,7 +1347,7 @@
         <div class="modal fade" id="signoffModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-dialog-centered modal-size">
                 <div class="modal-content">
-                    <form name="signoff" action="signoff.php?wid=<?php echo $wid; ?>" method="POST" enctype="multipart/form-data">
+                    <form name="signoff" id="trialform" action="signoff.php?wid=<?php echo $wid; ?>" method="POST" target="_blank" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="modal-header" id="programname">
                             </div>
@@ -1538,6 +1538,14 @@
             var i = 1;
             var b = i - 1;
             var mid = this.value;
+
+            setInterval(() => {
+                let uploaded = localStorage.getItem('uploaded');
+                if(uploaded){
+                    document.getElementsByClassName('refreshmodal')[0].click();
+                    localStorage.removeItem('uploaded');
+                }
+            }, 1000);
 
             $("#add_row").on('change', function () {
                 alert(mid);
@@ -1822,7 +1830,6 @@
                 let fileCount = $("#signoffModal #uploadedFile").val();
                 if(newComment == '' && fileCount == ''){
                     e.preventDefault();
-                    $("#signoffModal").modal("hide") 
                     swal({
                         icon: 'error',
                         text: "Files or Comment Both Can't be empty",
@@ -1970,15 +1977,11 @@
                         let responseText = data == 1?'Comment is deleted':'Comment not deleted'
                         data = data == 1?'success':'error'
                         swal({
-                                icon: data,
-                                text: responseText,
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
-                                }
-                            });
+                            icon: data,
+                            text: responseText,
+                        }).then((value) => {
+                            document.getElementsByClassName('refreshmodal')[0].click();
+                        });
                     }
                 });
             });
@@ -1999,9 +2002,7 @@
                                 text: responseText,
                             }).then(function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                    document.getElementsByClassName('refreshmodal')[0].click();
                                 }
                             });
                     }
@@ -2013,7 +2014,9 @@
                 $("#signoffModal #active1 > option:selected").removeAttr('selected');
                 $("#signoffModal #filenames").empty();
                 $("#signoffModal #programname").empty();
+                $("#signoffModal #newComment").val("");
                 $("#signoffModal #comments").val("");
+                $("#signoffModal #uploadedFile").val("");
                 $("#signoffModal #id").val("");
                 $("#signoffModal #prog_id").val("");
                 $.ajax({
@@ -2054,7 +2057,63 @@
                         }
                         $("#signoffModal #programname").append('<h5 class="modal-title">' +
                             obj.pname['program_name'] +
-                            '</h5><button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'
+                            '</h5><button class="close refreshmodal" type="button" id="'+id+'" hidden><span aria-hidden="true"><i class="fas fa-redo" style="font-size: 1.3rem !important;"></i></span></button><button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-left: 0 !important;"><span aria-hidden="true">×</span></button>'
+                        );
+                    }
+                });
+                $("#signoffModal #prog_id").val(id);
+                $("#signoffModal").modal('show');
+            });
+
+            $(document).on('click', '.refreshmodal', function () {
+                var id = $(this).attr("id");
+                $("#signoffModal #active1 > option:selected").removeAttr('selected');
+                $("#signoffModal #filenames").empty();
+                $("#signoffModal #programname").empty();
+                $("#signoffModal #newComment").val("");
+                $("#signoffModal #comments").val("");
+                $("#signoffModal #uploadedFile").val("");
+                $("#signoffModal #id").val("");
+                $("#signoffModal #prog_id").val("");
+                $.ajax({
+                    url: "admin/signoffFetchAjax.php",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        wid: <?php echo $wid; ?>
+                    },
+                    success: function (data) {
+                        obj = JSON.parse(data);
+                        {
+                            $("#reviewSubmit, #prepareSubmit").hide()
+                            if(obj.comment.length != 0 || obj.file.length != 0){
+                                $("#prepareSubmit").show()
+                                if(obj.prepareSignOff.length != 0){
+                                    $("#reviewSubmit").show()
+                                }
+                            }
+                        }
+                        
+
+                        obj.file.forEach(function (value) {
+                            $('#signoffModal #filenames').append(
+                                '<li class="custom-list-items custom-list-items-action" id="' +
+                                value[0] + '"><a target="_blank" href="https://docs.google.com/gview?url=http://<?php echo $_SERVER['SERVER_NAME']; ?>/audit/uploads/program_files/'+value[1]+'">' +
+                                value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
+                        });
+                        if (obj.comment.length != 0) {
+                            $('#signoffModal #comments').empty().append('<thead><tr><th>Comments</th><th>Action</th></tr></thead><tbody>');
+                            obj.comment.forEach(function (value) {
+                                $('#signoffModal #comments').append('<tr><td>'+value[1]+'</td><td><a href="#" id="'+value[0]+'" class="deleteComment">Delete</a></td></tr>');
+                            });
+                            $('#signoffModal #comments').append('<tbody>');
+                        }
+                        if(obj.comment.length == 0){
+                            $('#signoffModal #comments').empty().append('<thead><tr><th>Comments</th><th>Action</th></tr></thead><tbody><tr><td>No</td><td>Comment</td></tr></tbody>');
+                        }
+                        $("#signoffModal #programname").append('<h5 class="modal-title">' +
+                            obj.pname['program_name'] +
+                            '</h5><button class="close refreshmodal" type="button" id="'+id+'" hidden><span aria-hidden="true"><i class="fas fa-redo" style="style="font-size: 1.3rem !important;""></i></span></button><button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-left: 0 !important;"><span aria-hidden="true">×</span></button>'
                         );
                     }
                 });
