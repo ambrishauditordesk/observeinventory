@@ -1068,7 +1068,19 @@
                                     }
                                 }
                             }
-                        } 
+                        }
+                        elseif($prog_id == 395){
+                            $result = $con->query("SELECT max(account_type) account_type, max(account_class) account_class, max(financial_statement) financial_statement, sum(cy_final_bal) cy_final_bal, sum(cy_beg_bal) cy_beg_bal FROM `trial_balance` where workspace_id = $wid group by account_type, account_class, financial_statement");
+                            while($row = $result->fetch_assoc()){
+                                $diff = ($row['cy_final_bal']-$row['cy_beg_bal']);
+                                $diffPercentage = 0;
+                                if($row['cy_beg_bal'] != 0)
+                                    $diffPercentage = number_format((float)($diff/$row['cy_beg_bal'])*100, 2, '.', '');
+                                ?>
+                                <div> <?php echo $row['account_type'].", ".$row['account_class'].", ".$row['financial_statement'].", ".$row['cy_final_bal'].", ".$row['cy_beg_bal'].", Variable $ = ".$diff.", Variable % = ".$diffPercentage."%"; ?></div>
+                            <?php
+                            }
+                        }  
                         else {
                                 $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                                 $exquery = $con->query($query);
@@ -1087,7 +1099,7 @@
                                                         if ($queryrow['active']) { ?>
                                                             <a href="#">
                                                                 <?php
-                                                                    if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
+                                                                    if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395){ ?>
                                                                         <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
                                                                             <i class="fas fa-external-link-alt"
                                                                                 style="color:blue !important;"
@@ -1530,7 +1542,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-    <!-- <script src="js/custom.js"></script> -->
+    <script src="js/custom.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -2173,6 +2185,10 @@
                     "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                         $("td:first", nRow).html(iDisplayIndex + 1);
                         return nRow;
+                    },
+                    "drawCallback": function(settings) {
+                        var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+                        pagination.toggle(this.api().page.info().pages > 1);
                     },
                     "ajax":
                     $.fn.dataTable.pipeline({

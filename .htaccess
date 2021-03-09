@@ -1,18 +1,27 @@
 Options -Indexes
+# Header append X-FRAME-OPTIONS "SAMEORIGIN"
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.*)$ $1.php [NC,L]
-ErrorDocument 404 http://localhost/finance/AuditSoft/error
-ErrorDocument 403 http://localhost/finance/AuditSoft/error
-ErrorDocument 500 http://localhost/finance/AuditSoft/error
+ErrorDocument 404 http://localhost/AuditSoft/error
+ErrorDocument 403 http://localhost/AuditSoft/error
+ErrorDocument 500 http://localhost/AuditSoft/error
 AddCharset UTF-8 .php
 <Files "dbconnection.php">  
   Require all denied
 </Files>
-
 # Protect the htaccess file
 <Files .htaccess>
 Order Allow,Deny
 Deny from all
 </Files>
+# X-XSS-Protection
+# Extra Security Headers
+# X-Frame-Options
+# X-Content-Type nosniff
+<IfModule mod_headers.c>
+	Header set X-XSS-Protection "1; mode=block"
+	Header always append X-Frame-Options SAMEORIGIN
+	Header set X-Content-Type-Options nosniff
+</IfModule>

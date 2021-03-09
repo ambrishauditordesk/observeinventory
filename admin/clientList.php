@@ -600,8 +600,7 @@
     <!-- Custom scripts for all pages-->
     <script src="../js/sb-admin-2.min.js"></script>
     <!-- Page level custom scripts -->
-    <!-- <script src="../js/custom.js"></script> -->
-    <script src="../js/darkmode.js"></script>
+    <script src="../js/custom.js"></script>
     <script>
     function get_data() {
         var dataTable = $('#clientListTable').DataTable({
@@ -614,6 +613,10 @@
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;
             },
+            "drawCallback": function(settings) {
+                        var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+                        pagination.toggle(this.api().page.info().pages > 1);
+                    },
             "ajax": {
                 url: "clientListFetchAjax.php",
                 type: "POST"

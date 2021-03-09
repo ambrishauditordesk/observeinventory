@@ -57,6 +57,7 @@ set_time_limit(3600);
 $count = $con->query("select count(id) total from trial_balance where workspace_id = $wid");
 if($count->fetch_assoc()['total'] > 0){
     $con->query("delete from trial_balance where workspace_id = $wid");
+    $con->query("delete from workspace_log where workspace_id = $wid and program_id = 395");
 }
 
 $objExcel = PHPExcel_IOFactory::load($uploadFiles);

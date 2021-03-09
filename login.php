@@ -53,7 +53,7 @@
 			</div>
 		</div>
     </div>
-	<!-- <script src="js/custom.js"></script> -->
+	<script src="js/custom.js"></script>
 <script>
 		$(document).ready(function(){
 		    $('.login-info-box').fadeOut();
