@@ -886,7 +886,7 @@
                                             }
                                             ?>
                                             <tr>
-                                                <td style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><label><?php echo $row['name']; ?></label></td>
+                                                <td style="height: 4rem !important; display: flex; align-items: left; justify-content: left"><label><?php echo $row['name']; ?></label></td>
                                                 <td scope="row" hidden>
                                                     <input type="hidden" name="materialityData[id][]"
                                                             value="<?php echo $row['id']; ?>">
