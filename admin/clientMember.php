@@ -4,8 +4,9 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
+    if(isset($_GET['wid']) && !empty($_GET['wid']))
+        $wid = $_GET['wid'];
     $clientId= $_GET['cid'];
-    $wid = $_GET['wid'];
     $clientName = $con->query("select name from client where id = $clientId ")->fetch_assoc()["name"];
 ?>
 <!DOCTYPE html>
@@ -58,12 +59,25 @@
                     <i class="fas fa-list fa-1x"></i>
                 </a>
             </li> -->
+            <?php 
+            if(!empty($wid))
+            {
+            ?>
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="../clientDashboard?wid=<?php echo $wid ?>">
                     <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
                     <span>Dashboard</span>
                 </a>
             </li>
+            <?php }
+            else{ ?>
+            <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" href="clientList">
+                    <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
+                    <span>List Clients</span>
+                </a>
+            </li>
+            <?php } ?>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
