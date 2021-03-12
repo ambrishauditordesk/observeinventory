@@ -860,7 +860,7 @@
                                 <table class="table table-hover" id="tab_logic">
                                     <thead class="text-center">
                                     <tr>
-                                        <th scope="col" style="border-bottom-left-radius: 0 !important;">Methods</th>
+                                        <th scope="col" style="border-bottom-left-radius: 0 !important;">Basis</th>
                                         <th scope="col" hidden>Id</th>
                                         <th scope="col" colspan="2">Standard %</th>
                                         <th scope="col">Custom %</th>
