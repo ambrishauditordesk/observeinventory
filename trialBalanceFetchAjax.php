@@ -1,5 +1,6 @@
 <?php 
 include 'dbconnection.php';
+include 'moneyFormatter.php';
 session_start();
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])){
     header("Location: ../index");    
@@ -7,7 +8,8 @@ if (!isset($_SESSION['email']) && empty($_SESSION['email'])){
 $wid = $_POST['wid'];
 $query = "SELECT * FROM trial_balance where 1 and workspace_id = '$wid' ";
 
-$column = array('','account_number','account_name','cy_beg_bal','cy_interim_bal','cy_activity','cy_end_bal','client_adjustment','audit_adjustment','cy_final_bal','account_type','account_class','financial_statement');
+// $column = array('','account_number','account_name','cy_beg_bal','cy_interim_bal','cy_activity','cy_end_bal','client_adjustment','audit_adjustment','cy_final_bal','account_type','account_class','financial_statement');
+$column = array('account_number','account_name','cy_beg_bal','cy_final_bal','account_type','account_class','financial_statement');
 
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"])){
     $query .= ' and account_number LIKE "%'.$_POST["search"]["value"].'%"';
@@ -38,16 +40,16 @@ $data = array();
 foreach($result as $row)
 {
 $sub_array = array();
-$sub_array[] = '';
+// $sub_array[] = '';
 $sub_array[] = $row['account_number'];
 $sub_array[] = $row['account_name'];
-$sub_array[] = $row['cy_beg_bal'];
-$sub_array[] = $row['cy_interim_bal'];
-$sub_array[] = $row['cy_activity'];
-$sub_array[] = $row['cy_end_bal'];
-$sub_array[] = $row['client_adjustment'];
-$sub_array[] = $row['audit_adjustment'];
-$sub_array[] = $row['cy_final_bal'];
+$sub_array[] = numberToCurrency($row['cy_beg_bal']);
+// $sub_array[] = $row['cy_interim_bal'];
+// $sub_array[] = $row['cy_activity'];
+// $sub_array[] = numberToCurrency($row['cy_end_bal']);
+// $sub_array[] = $row['client_adjustment'];
+// $sub_array[] = $row['audit_adjustment'];
+$sub_array[] = numberToCurrency($row['cy_final_bal']);
 $sub_array[] = $row['account_type'];
 $sub_array[] = $row['account_class'];
 $sub_array[] = $row['financial_statement'];

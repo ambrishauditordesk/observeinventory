@@ -99,7 +99,6 @@
                     <?php
                     } 
                     ?>
-                    <a class="dropdown-item" href="../logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
@@ -177,9 +176,6 @@
                                                         <th scope="col">Type</th>
                                                         <th scope="col">Created On</th>
                                                         <th scope="col">Status</th>
-                                                        <!-- <th scope="col">% of Completion</th> -->
-                                                        <th scope="col">Actions</th>
-                                                        <!-- <th scope="col">Workspace</th> -->
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -334,7 +330,7 @@
                                 <input id="cinCheck" type="text" class="form-control" name="cin" maxlength="21" style="text-transform:uppercase" required>
                             </div>
                             <div class="form-group ">
-                                <label for="name">Contact Person</label>
+                                <label for="name">Client Contact</label>
                             </div>
                             <!-- <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Contact Person<h5>
@@ -380,66 +376,6 @@
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-warning" type="reset" value="Reset">
                             <input class="btn btn-primary" type="submit" value="Done">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Client Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Client Details</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <!-- <form method="post" action="editAClient"> -->
-                    <form>
-                        <div class="modal-body">
-                            <input type="hidden" id="cid" class="form-control" name="cid" readonly value="">
-                            <div class="form-group ">
-                                <label for="name">Client Name</label>
-                                <input type="text" id="cname" class="form-control" name="cname" maxlength="99" pattern="/^[a-zA-Z0-9\_&'\-\.\/\,\}\]\[""()?@!#%$~*;+= ]{1,99}$/" required value="">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group ">
-                                        <label for="name">Type</label>
-                                        <input type="text" id="const_id" class="form-control" name="const_id" readonly value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group ">
-                                        <label for="name">Created On</label>
-                                        <input type="text" class="form-control" name="added_by_date" id="added_by_date" readonly value="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">Status</label>
-                                <!-- <select name="cactive" id="cactive" class="form-control" required>
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select> -->
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="active" id="cactive0" value="0">
-                                <label class="form-check-label" for="exampleRadios1">
-                                    Inactive
-                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
-                                <input class="form-check-input" type="radio" name="active" id="cactive1" value="1">
-                                <label class="form-check-label" for="exampleRadios2" name="active">
-                                    Active
-                                </label>
-                            </div>
-                            <div class="modal-footer d-flex align-items-center justify-content-center">
-                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-primary" id="done" type="submit" value="Done">
-                            </div>
                         </div>
                     </form>
                 </div>
@@ -545,6 +481,19 @@
                                 <label for="name">CIN No.</label>
                                 <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase" required>
                             </div>
+                            <div class="form-group ">
+                                <label for="name">Status</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="active" id="cactive0" value="0">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Inactive
+                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
+                                <input class="form-check-input" type="radio" name="active" id="cactive1" value="1">
+                                <label class="form-check-label" for="exampleRadios2" name="active">
+                                    Active
+                                </label>
+                            </div>
                         </div>
                         <div class="modal-footer  d-flex align-items-center justify-content-center">
                             <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
@@ -585,7 +534,7 @@
                             </div>
                             <div class="modal-footer d-flex align-items-center justify-content-center">
                                 <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                                <input class="btn btn-success" id="save" type="submit" value="Save">
                             </div>
                         </div>
                     </form>
@@ -802,32 +751,6 @@
         });
     });
 
-    $(document).on('click', '.editClient', function() {
-        var id = $(this).attr("id");
-        $("#editModal #active > option:selected").removeAttr('selected');
-        $.ajax({
-            url: "clientEditFetchAjax.php",
-            type: "POST",
-            data: {
-                id: id
-            },
-            success: function(data) {
-                obj = JSON.parse(data);
-                id = obj.id;
-                $("#editModal #cid").val(obj.id);
-                $("#editModal #cname").val(obj.name);
-                $("#editModal #const_id").val(obj.const);
-                $("#editModal #added_by_date").val(obj.added_by_date);
-                if(obj.active == 1)
-                $("#editModal #cactive1").attr('checked','checked');
-                else
-                $("#editModal #cactive0").attr('checked','checked');
-
-                $("#editModal").modal('show');
-            }
-        });
-    });
-
     $(document).on('click', '.editClientProfile', function() {
         var id = $(this).attr("id");
         // $("#editModal #active > option:selected").removeAttr('selected');
@@ -858,7 +781,10 @@
                 $("#editClientProfile #cinCheckEdit").val(obj.cin);
                 $("#editClientProfile #constitution option[value=" + obj.const_id + "]").attr('selected','selected');
                 $("#editClientProfile #industry option[value=" + obj.industry_id + "]").attr('selected','selected');
-
+                if(obj.active == 1)
+                $("#editClientProfile #cactive1").attr('checked','checked');
+                else
+                $("#editClientProfile #cactive0").attr('checked','checked');
                 $("#editClientProfile").modal('show');
             }
         });

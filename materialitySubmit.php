@@ -26,7 +26,6 @@
     $sLow = array();
     $sHigh = array();
     $cLow = array();
-    $cHigh = array();
     $amount = array();
     $id = array();
     $comment = trim($_POST['comment']);
@@ -94,9 +93,6 @@
             foreach ($_POST['materialityData']['cLow'] as $data) {
                 $cLow[] = $data;
             }
-            foreach ($_POST['materialityData']['cHigh'] as $data) {
-                $cHigh[] = $data;
-            }
             foreach ($_POST['materialityData']['amount'] as $data) {
                 $amount[] = $data;
             }
@@ -108,7 +104,7 @@
 
             for ($i = 0; $i < $j; $i++) 
             {
-                if($con->query("update materiality set amount = '$amount[$i]', standard_low='$sLow[$i]', standard_high='$sHigh[$i]', custom_low='$cLow[$i]', custom_high='$cHigh[$i]' where workspace_id='$wid' and id = '$id[$i]'") === TRUE)
+                if($con->query("update materiality set amount = '$amount[$i]', standard_low='$sLow[$i]', standard_high='$sHigh[$i]', custom='$cLow[$i]' where workspace_id='$wid' and id = '$id[$i]'") === TRUE)
                 {
                     $flag=1;
                 }
@@ -126,6 +122,7 @@
                     $error.= "<p>File was not uploaded but record created. Contact Admin ASAP.</p>";
                 }
             }
+            $con->query("UPDATE sub_materiality SET comments = '$comment',balance_asset='$aScope',balance_liability='$lScope',pl_income='$pliScope',pl_expense= '$pleScope' WHERE workspace_id=$wid");
         }
     }
 

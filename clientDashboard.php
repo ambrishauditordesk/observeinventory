@@ -54,24 +54,6 @@ $_SESSION['breadcrumb'] = array();
                     Workspace
                     </a>
                 </div>
-                <div class="dash" style="margin-top: 1rem !important;">
-                    <a data-toggle="collapse" href="#qlinks" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important;"/> &nbsp;
-                    Quick Links
-                    </a>
-                </div>
-                <div class="collapse multi-collapse" id="qlinks" style="margin-top: 1rem !important;">
-                    <div class="qlinks-card card card-body">
-                        <ul class="qlinks">
-                            <li><a href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance CY</a></li>
-                            <li><a href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Trial Balance PY</a></li>
-                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements CY</a></li>
-                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Financial Statements PY</a></li>
-                            <li><a href="subProgram.php?pid=1&parent_id=0&wid=<?php echo $wid; ?>">Client Assistance Schedule</a></li>
-                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion CY</a></li>
-                            <li><a href="subProgram.php?pid=3&parent_id=0&wid=<?php echo $wid; ?>">Opinion PY</a></li>
-                        </ul>
-                    </div>
-                </div>
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
@@ -98,12 +80,12 @@ $_SESSION['breadcrumb'] = array();
                     ?>
                     <li class="nav-item d-flex">
                         <a class="nav-link d-flex align-items-center" target="_blank" href="diagnosticReport?wid=<?php echo $wid; ?>">
-                            <img class="nav-icon" src="Icons/download.png" style="height: 40px; width: 40px;" />&nbsp;&nbsp;
+                            <img class="nav-icon" src="Icons/download.jpg" style="height: 40px; width: 40px;" />&nbsp;&nbsp;
                             <span>Diagonistic Report</span>
                         </a>
                     </li>
                     <li class="nav-item d-flex">
-                        <a class="nav-link d-flex align-items-center" href="admin/clientMember?cid=<?php echo $_SESSION['client_id']; ?>">
+                        <a class="nav-link d-flex align-items-center" href="admin/clientMember?cid=<?php echo $_SESSION['client_id'];?>&wid=<?php echo $wid;?>">
                         <img class="nav-icon" src="Icons/Group 4.svg"/>&nbsp;&nbsp;
                         <span>Members</span>
                         </a>
@@ -137,7 +119,7 @@ $_SESSION['breadcrumb'] = array();
                     <?php
                     } 
                     ?>
-                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+
                 </div>
             </li>
         </ul>
@@ -265,7 +247,7 @@ $_SESSION['breadcrumb'] = array();
                         </div>
                         <div class="modal-footer d-flex align-items-center justify-content-center">
                             <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                            <input class="btn btn-primary" id="save" type="submit" value="Save">
+                            <input class="btn btn-success" id="save" type="submit" value="Save">
                         </div>
                     </div>
                 </form>

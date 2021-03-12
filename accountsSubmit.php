@@ -28,6 +28,8 @@
     $import = array();
     $id = array();
     $wid=$_GET['wid'];
+    $pid=$_GET['pid'];
+    $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
     $ser = $_SERVER['HTTP_REFERER'];
 
     if(isset($_POST['prepareSubmit']))
@@ -40,33 +42,77 @@
         $con->query("insert into signoff_review_log(workspace_id,prog_id,user_id,review_signoff_date) values('$wid','239','$uid','$date')");
         $reviewFlag = 1;
     }
-    else{
-        foreach ($_POST['submitData']['type'] as $data) {
-            $type[] = $data;
-        }
-        foreach ($_POST['submitData']['amount'] as $data) {
-            $amount[] = $data;
-        }
-        foreach ($_POST['submitData']['risk'] as $data) {
-            $risk[] = $data;
-        }
-        foreach ($_POST['submitData']['import'] as $data) {
-            $import[] = $data;
-        }
-        foreach ($_POST['submitData']['id'] as $data) {
-            $id[] = $data;
-        }
-        $j = sizeof($type);
-        $flag = 0;
-
-        for ($i = 0; $i < $j; $i++) {
-            if($con->query("update workspace_log set amount = '$amount[$i]', type='$type[$i]', risk='$risk[$i]', import='$import[$i]' where program_id='$id[$i]' and workspace_id='$wid'") === TRUE)
-            {
-                $flag=1;
+    else 
+    {
+        //File Upload
+        $filePresent = 0;
+        $uploadOk = 1;
+        //var_dump($_FILES);
+        if(!empty($_FILES['file']['name'])){
+            $filePresent = 1;
+            // File size should be less the 2MB
+            if ($_FILES["file"]["size"] > 2000000) {
+                $error.= "<p>File Size is greater than 2MB.</p><br>";
+                $uploadOk = 0;
             }
-            else
-            {
-                $flag=0;
+            if(!empty($_FILES['file']['name'][0])){
+                $fileName = array();
+                $str = explode(".", $_FILES['file']['name']);
+                $new= '';
+                for($j = 0; $j<sizeof($str)-1; $j++){
+                    if($new == ''){
+                        $new .= $str[$j];
+                    }
+                    else{
+                        $new .= ".".$str[$j];
+                    }
+                }
+                $name = trim($new." ".$date." .".end($str));;
+                // $tmp_name = $fileName['file']['tmp_name'];
+                // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
+                $tmp_name = $_FILES['file']['tmp_name'];
+                $path = 'uploads/insignificant_files/';
+            }
+        }
+        
+        if($uploadOk)
+        {
+            foreach ($_POST['submitData']['type'] as $data) {
+                $type[] = $data;
+            }
+            foreach ($_POST['submitData']['amount'] as $data) {
+                $amount[] = $data;
+            }
+            foreach ($_POST['submitData']['risk'] as $data) {
+                $risk[] = $data;
+            }
+            foreach ($_POST['submitData']['import'] as $data) {
+                $import[] = $data;
+            }
+            foreach ($_POST['submitData']['id'] as $data) {
+                $id[] = $data;
+            }
+            $j = sizeof($type);
+            $flag = 0;
+
+            for ($i = 0; $i < $j; $i++) {
+                if($con->query("update workspace_log set amount = '$amount[$i]', type='$type[$i]', risk='$risk[$i]', import='$import[$i]' where program_id='$id[$i]' and workspace_id='$wid'") === TRUE)
+                {
+                    $flag=1;
+                }
+                else
+                {
+                    $flag=0;
+                }
+            }
+
+            if($filePresent){
+                $con->query("insert into insignificant_files(fname,workspace_id,pid) values ('$name','$wid','$pid')");
+                if(!move_uploaded_file($tmp_name, $path . $name)){
+                    $flag = 0;
+                    // File write permission is not given in the server.
+                    $error.= "<p>File was not uploaded but record created. Contact Admin ASAP.</p>";
+                }
             }
         }
     }

@@ -195,7 +195,6 @@
                     <?php
                     } 
                     ?>
-                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
@@ -289,7 +288,7 @@
                         </div>
                         <div class="modal-footer d-flex align-items-center justify-content-center">
                             <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                            <input class="btn btn-primary" id="save" type="submit" value="Save">
+                            <input class="btn btn-success" id="save" type="submit" value="Save">
                         </div>
                     </div>
                 </form>

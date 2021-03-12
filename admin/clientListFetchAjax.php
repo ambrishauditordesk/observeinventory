@@ -16,7 +16,7 @@ if($role == 2 || $role == 3)
 else
     $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id";
 
-$column = array('','name','profile','const_id','added_by_date','active','action');
+$column = array('','name','profile','const_id','added_by_date','active');
 
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"])){
     $query .= ' and a.name LIKE "%'.$_POST["search"]["value"].'%"';
@@ -47,7 +47,7 @@ foreach($result as $row)
 {
  $sub_array = array();
  $sub_array[] = '';
- $sub_array[] = $row['aname'];
+ $sub_array[] = "<a href='../workspace.php?cid=".trim($row['aid'])."'>".$row['aname']."</a>";
  $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
  <a href='clientMember.php?cid=".trim($row['aid'])."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
  $sub_array[] = $row['con'];
@@ -55,12 +55,9 @@ foreach($result as $row)
  {
     if($row['aact'] == 1){
         $sub_array[] = "<span class='badge badge-success small id= '".$row['aact']."''>ACTIVE</span>";
-        $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClient' src='../Icons/edit-1.svg' id='".$row['aid']."'><img class='datatable-icon editClient' src='../Icons/edit-2.svg' id='".$row['aid']."'></a>&nbsp;
-     <a href='../workspace.php?cid=".trim($row['aid'])."' class='icon-hide'><img class='datatable-icon' src='../Icons/plus-circle-1.svg'><img class='datatable-icon' src='../Icons/plus-circle.svg'></a>&nbsp;";
     }
     else{
         $sub_array[] = "<span class='badge badge-danger small id= '".$row['aact']."''>INACTIVE</span>";
-        $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClient' src='../Icons/edit-1.svg' id='".$row['aid']."'><img class='datatable-icon editClient' src='../Icons/edit-2.svg' id='".$row['aid']."'></a>";
     }
 }
   

@@ -54,9 +54,9 @@ $(window).on('load', function(e) {
     });
     setInterval(() => {
         let latestTime = new Date().getTime();
-        console.log(latestTime - timeStamp)
+        // console.log(latestTime - timeStamp)
         if ((latestTime - timeStamp) >= 600000) {
-            window.location = 'http://localhost/finance/AuditSoft/logout.php'
+            window.location = 'http://localhost/audit/logout.php'
         }
     }, 1000);
 });

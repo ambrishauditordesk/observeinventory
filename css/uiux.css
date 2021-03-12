@@ -529,10 +529,18 @@ th {
 }
 
 .p-top {
-  padding-top: 2%;
+  padding-top: 2% !important;
 }
 
 .p-bottom {
   padding-bottom: 2%;
 }
-
+.hue {
+  filter: hue-rotate(269deg);
+}
+.list-bg{
+  border-radius: 12px;
+  background-color: #e8f0ff;
+  color: rgba(37, 78, 218, 1) !important;
+  font-weight: bold !important;
+}

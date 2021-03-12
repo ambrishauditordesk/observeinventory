@@ -5,6 +5,7 @@
         header("Location: ../login");
     }
     $clientId= $_GET['cid'];
+    $wid = $_GET['wid'];
     $clientName = $con->query("select name from client where id = $clientId ")->fetch_assoc()["name"];
 ?>
 <!DOCTYPE html>
@@ -58,9 +59,9 @@
                 </a>
             </li> -->
             <li class="nav-item d-flex">
-                <a class="nav-link d-flex align-items-center" href="clientList">
+                <a class="nav-link d-flex align-items-center" href="../clientDashboard?wid=<?php echo $wid ?>">
                     <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>List Clients</span>
+                    <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
@@ -347,7 +348,7 @@
                             </div>
                             <div class="modal-footer d-flex align-items-center justify-content-center">
                                 <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                                <input class="btn btn-success" id="save" type="submit" value="Save">
                             </div>
                         </div>
                     </form>

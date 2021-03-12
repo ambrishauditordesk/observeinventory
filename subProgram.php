@@ -1,5 +1,6 @@
 <?php
     include 'dbconnection.php';
+    include 'moneyFormatter.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
@@ -193,7 +194,6 @@
                     <?php
                     } 
                     ?>
-                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
@@ -288,6 +288,9 @@
                             $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id='$wid' order by _seq,id asc";
                             $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                             ?>
+                             <div class="col-md-12 text-center p-top">
+                                    <a target="_blank" href="exportAccounts?wid=<?php echo $wid; ?>&pid=239"><button class="btn bg-violet">Export</button></a>
+                            </div> <hr>
                             <div class="form-row p-top">
                                 <div class="form-group col-md-6">
                                     <label for="input1">Balance Assets Scope</label>
@@ -300,7 +303,7 @@
                                             value="<?php echo $row1['balance_liability']; ?>" readonly>
                                 </div>
                             </div>
-                            <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                            <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr class="table-secondary">
@@ -447,20 +450,44 @@
                                     ?>
                                     </tbody>
                                 </table>
-                                <div class="row d-flex justify-content-center">
-                                <?php 
-                                    // if($balanceSheet0 || $balanceSheet1){
-                                    //     if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '239'")->fetch_assoc()['count'] != 0){
-                                    //         ?>
-                                                <!-- <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp; -->
-                                                <?php
-                                    //     }
-                                    //     ?>
-                                            <!-- <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp; -->
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
+                                </div>
+                                    <div class="row d-flex justify-content-center align-items-center p-top">
                                         <?php
-                                    // }
-                                ?>
-                                    <input type="submit" id="validateSubmit" class="btn btn-success align-middle" value="Save Details">
+                                        $query = "select * from insignificant_files where workspace_id='$wid' and pid='$prog_id'";
+                                        $result = $con->query($query);
+                                        ?>
+                                        <ul class="custom-list list-bg" style="padding-bottom: 2% !important;">
+                                            <span class="d-flex justify-content-center align-items-center">Uploaded Files</span>
+                                            <?php 
+                                            while ($row = $result->fetch_assoc()) {
+                                                if($row['fname'] != ''){
+                                                    $subMateriality = 1;
+                                                }
+                                                ?>
+                                                <li class="custom-list-items custom-list-items-action"><a
+                                                            target="_blank"
+                                                            href="<?php echo "uploads/insignificant_files/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                        </ul>
+                                    </div>
+                                    <div class="row d-flex justify-content-center p-top">
+                                    <?php 
+                                        // if($balanceSheet0 || $balanceSheet1){
+                                        //     if($con->query("select count(id) count from signoff_prepare_log where workspace_id = $wid and prog_id = '239'")->fetch_assoc()['count'] != 0){
+                                        //         ?>
+                                                    <!-- <input type="submit" name="reviewSubmit" class="btn btn-outline-primary" value = "Review Sign Off">&nbsp; -->
+                                                    <?php
+                                        //     }
+                                        //     ?>
+                                                <!-- <input type="submit" name="prepareSubmit" class="btn btn-outline-primary" value = "Prepare Sign Off">&nbsp; -->
+                                            <?php
+                                        // }
+                                    ?>
+                                    <input type="submit" id="validateSubmit" class="btn btn-success align-middle" value="Save Details"> 
                                 </div>
                             </form>
                             <div class="row d-flex justify-content-center">
@@ -612,68 +639,99 @@
                                                 ?>
                                                 <div class="col-md-12">
                                                     <i class="fas fa-info-circle" style="color:orange !important;"></i>
-                                                    <strong>Click the Save button to save respective changes before clicking on Sending Invitation.</strong>
+                                                    <strong>Click save button to save respective changes before clicking send request.</strong>
                                                 </div>
                                                 <hr>
                                                 <?php } ?>
                                         <div class="row d-flex justify-content-center p-bottom">
-                                            <input type="submit" class="btn btn-primary align-middle" value="Save"> &nbsp;
+                                            <input type="submit" class="btn btn-success align-middle" value="Save"> &nbsp;
                                             <?php 
                                             if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                 ?>
-                                            <input id="sendInvitation" type="button" class="btn bg-violet align-middle" value="Send Invitation">
+                                            <input id="sendInvitation" type="button" class="btn bg-violet align-middle" value="Send Request">
                                             <?php } ?>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        <?php 
+                            <?php 
                         }
                         elseif ($prog_id == 245){
+                            $result = $con->query("SELECT count(id) total from trial_balance where workspace_id='".$wid."'");
+                            if($result->fetch_assoc()['total'] == 0){
+                                ?>
+                                    <div class="col-md-12 text-center p-top">
+                                        <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
+                                        <a href="assets/Trial Balance Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                    </div>
+                                    <script>
+                                         swal({
+                                            title: "Download the Excel Template",
+                                            text: "No Trial Balance was there, so donwload the excel and then upload to that.",
+                                            icon: "warning",
+                                            button: "Download",
+                                            dangerMode: true,
+                                        }).then((willOUT) => {
+                                            if (willOUT) {
+                                                window.location.href = 'assets/Trial Balance Template.xlsx', {
+                                                icon: 'success',
+                                                }
+                                            }
+                                        });
+                                    </script>
+                                <?php
+                            }
+                            else{
                             ?>
-                            <div class="col-md-12 text-center p-top">
-                                <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
-                                <a href="financialStatement?wid=<?php echo $wid; ?>"><button class="btn bg-violet" style="color: white !important;">Lead Sheet Generator</button></a>
-                            </div>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <table id="trialBalanceTable" class="table display table-bordered table-striped">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">Sl</th>
-                                                                    <th scope="col">Account Number</th>
-                                                                    <th scope="col">Account Name</th>
-                                                                    <th scope="col">CY Begining Balance (PY)</th>
-                                                                    <th scope="col">CY Interim Balance</th>
-                                                                    <th scope="col">CY Activity (Movement)</th>
-                                                                    <th scope="col">CY End Balance</th>
-                                                                    <th scope="col">Client Adujstment</th>
-                                                                    <th scope="col">Audit Adjustment</th>
-                                                                    <th scope="col">CY Final Balance</th>
-                                                                    <th scope="col">Account Type</th>
-                                                                    <th scope="col">Account Class</th>
-                                                                    <th scope="col">Financial Statement</th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
+                                <div class="col-md-12 text-center p-top">
+                                    <!-- <button class="btn btn-success" >Download Trial Balance Template</button> -->
+                                    <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
+                                    <a href="assets/Trial Balance Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                    <!-- <a href="financialStatement?wid=<?php //echo $wid; ?>"><button class="btn bg-violet" style="color: white !important;">Lead Sheet Generator</button></a> -->
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <table id="trialBalanceTable" class="table display table-bordered table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <!-- <th scope="col">Sl</th> -->
+                                                                        <th scope="col">Account Number</th>
+                                                                        <th scope="col">Account Name</th>
+                                                                        <th scope="col">CY Begining Balance (PY)</th>
+                                                                        <!-- <th scope="col">CY Interim Balance</th>
+                                                                        <th scope="col">CY Activity (Movement)</th>
+                                                                        <th scope="col">CY End Balance</th>
+                                                                        <th scope="col">Client Adujstment</th>
+                                                                        <th scope="col">Audit Adjustment</th> -->
+                                                                        <th scope="col">CY Final Balance</th>
+                                                                        <th scope="col">Account Type</th>
+                                                                        <th scope="col">Account Class</th>
+                                                                        <th scope="col">Financial Statement</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php 
+                            <?php 
+                            }
                         }
                         elseif ($prog_id == 240) {
-                            $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq > 1 order by _seq,id asc";
+                            $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq >= 10 order by _seq,id asc";
                             $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                             ?>
+                            <div class="col-md-12 text-center p-top">
+                                    <a target="_blank" href="exportAccounts?wid=<?php echo $wid; ?>&pid=240"><button class="btn bg-violet">Export</button></a>
+                            </div> <hr>
                             <div class="form-row p-top">
                                 <div class="form-group col-md-6">
                                     <label for="input1">PL- Income Scope</label>
@@ -686,7 +744,7 @@
                                             value="<?php echo $row1['pl_expense']; ?>" readonly>
                                 </div>
                             </div>
-                            <form action="accountsSubmit.php?&wid=<?php echo $wid; ?>" method="post">
+                            <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr class="table-secondary">
@@ -757,6 +815,30 @@
                                         }
                                     ?>
                                 </table>
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
+                                </div>
+                                <div class="row d-flex justify-content-center align-items-center p-top">
+                                    <?php
+                                    $query = "select * from insignificant_files where workspace_id='$wid' and pid='$prog_id'";
+                                    $result = $con->query($query);
+                                    ?>
+                                    <ul class="custom-list list-bg" style="padding-bottom: 2% !important;">
+                                        <span class="d-flex justify-content-center align-items-center">Uploaded Files</span>
+                                        <?php 
+                                        while ($row = $result->fetch_assoc()) {
+                                            if($row['fname'] != ''){
+                                                $subMateriality = 1;
+                                            }
+                                            ?>
+                                            <li class="custom-list-items custom-list-items-action"><a
+                                                        target="_blank"
+                                                        href="<?php echo "uploads/insignificant_files/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                            </li>
+                                            <?php
+                                        } ?>
+                                    </ul>
+                                </div>
                                 <div class="row d-flex justify-content-center">
                                     <input type="submit" class="btn btn-success align-middle" value="Submit">
                                 </div>
@@ -781,7 +863,7 @@
                                         <th scope="col" style="border-bottom-left-radius: 0 !important;">Methods</th>
                                         <th scope="col" hidden>Id</th>
                                         <th scope="col" colspan="2">Standard %</th>
-                                        <th scope="col" colspan="2">Custom %</th>
+                                        <th scope="col">Custom %</th>
                                         <th scope="col">Amount</th>
                                         <th scope="col" style="border-bottom-right-radius: 0 !important;">Action</th>
                                     </tr>
@@ -790,8 +872,7 @@
                                         <th hidden></th>
                                         <th>High</th>
                                         <th>Low</th>
-                                        <th>High</th>
-                                        <th>Low</th>
+                                        <th></th>
                                         <th></th>
                                         <th style="border-top-right-radius: 0 !important;"></th>
                                     </tr>
@@ -815,9 +896,7 @@
                                                 <td><input type="text" size="10" name="materialityData[sHigh][]"
                                                             value="<?php echo $row['standard_high']; ?>"></td>
                                                 <td><input type="text" size="10" name="materialityData[cLow][]"
-                                                            value="<?php echo $row['custom_low']; ?>"></td>
-                                                <td><input type="text" size="10" name="materialityData[cHigh][]"
-                                                            value="<?php echo $row['custom_high']; ?>"></td>
+                                                            value="<?php echo $row['custom']; ?>"></td>
                                                 <td><input type="text" size="10" name="materialityData[amount][]"
                                                             value="<?php echo $row['amount']; ?>">
                                                 </td>
@@ -886,25 +965,25 @@
                                     accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
                                 </div>
                                 
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-md-5 col-sm-12">
+                                <div class="row d-flex justify-content-center align-items-center p-top">
                                     <?php
-                                        $query = "select * from materiality_files where workspace_id='$wid'";
-                                        $result = $con->query($query);
+                                    $query = "select * from materiality_files where workspace_id='$wid'";
+                                    $result = $con->query($query);
+                                    ?>
+                                        <ul class="custom-list list-bg" style="padding-bottom: 2% !important;">
+                                            <span class="d-flex justify-content-center align-items-center">Uploaded Files</span>
+                                        <?php 
                                         while ($row = $result->fetch_assoc()) {
                                             if($row['fname'] != ''){
                                                 $subMateriality = 1;
                                             }
-                                            
                                             ?>
-                                            <ul class="custom-list">
-                                                <li class="custom-list-items custom-list-items-action"><a
-                                                            target="_blank"
-                                                            href="<?php echo "uploads/materiality/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
-                                                </li>
-                                            </ul>
+                                            <li class="custom-list-items custom-list-items-action">
+                                                <a target="_blank" href="<?php echo "uploads/materiality/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                            </li>
                                             <?php
                                         } ?>
+                                        </ul>
                                 </div>
                             </div>
                             <hr>
@@ -927,7 +1006,7 @@
                                 }
                                 ?>
                                     <input type="submit" class="btn btn-success align-middle" value="Save Details">
-                                </div>
+                             </div>
                             </form><br>
                             <div class="row d-flex justify-content-center">
                             <?php
@@ -978,13 +1057,13 @@
                             if ($exquery->num_rows != 0) {
                                 while ($queryrow = $exquery->fetch_assoc()) {
                                     if ($queryrow['hasChild'] == 1) { 
-                                        if($queryrow['_seq'] < 2 && $seq0 != 1){
+                                        if($queryrow['_seq'] < 10 && $seq0 != 1){
                                             $seq0++;
                                             ?>
                                             <h2 class="p-top"><span class="badge badge-primary" >Balance Sheet</span></h2><br/>
                                             <?php
                                         }
-                                        if($queryrow['_seq'] >= 2 && $seq1 != 1){
+                                        if($queryrow['_seq'] >= 10 && $seq1 != 1){
                                             $seq1++;
                                             ?><br/>
                                             <h2><span class="badge badge-primary" >Profit & Loss.</span></h2>
@@ -1070,112 +1149,191 @@
                             }
                         }
                         elseif($prog_id == 395){
-                            $result = $con->query("SELECT max(account_type) account_type, max(account_class) account_class, max(financial_statement) financial_statement, sum(cy_final_bal) cy_final_bal, sum(cy_beg_bal) cy_beg_bal FROM `trial_balance` where workspace_id = $wid group by account_type, account_class, financial_statement");
-                            while($row = $result->fetch_assoc()){
-                                $diff = ($row['cy_final_bal']-$row['cy_beg_bal']);
-                                $diffPercentage = 0;
-                                if($row['cy_beg_bal'] != 0)
-                                    $diffPercentage = number_format((float)($diff/$row['cy_beg_bal'])*100, 2, '.', '');
-                                ?>
-                                <div> <?php echo $row['account_type'].", ".$row['account_class'].", ".$row['financial_statement'].", ".$row['cy_final_bal'].", ".$row['cy_beg_bal'].", Variable $ = ".$diff.", Variable % = ".$diffPercentage."%"; ?></div>
+                            ?>
+                            <style>
+                                td:nth-child(4),td:nth-child(5) {
+                                    font-weight: bold !important;
+                                }
+                                td:nth-child(2) {
+                                    font-weight: normal !important;
+                                }
+                            </style>
                             <?php
+                            $accountTypeResult = $con->query("SELECT account_type from trial_balance where workspace_id='".$wid."' group by account_type");
+                            ?>
+                            <br>
+                            <table class="table" style="width:100%; text-align: left">
+                                <thead>
+                                    <th>Financial Statement</th>
+                                    <th>CY Final Balance</th>
+                                    <th>CY Begining Balance</th>
+                                    <th>Variance ($)</th>
+                                    <th>Variance (%)</th>
+                                </thead>
+                                <tbody>
+                            <?php
+                            while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                ?>
+                                <tr>
+                                    <td colspan=5 style="text-align: left">
+                                        <b>
+                                            <h3><?php echo $accountTypeRow['account_type']; ?></h3>
+                                        </b>
+                                    </td>
+                                </tr>
+                                <?php
+                                $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
+                                while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                    $cyFinalBalTotal = $cyBegBalTotal = 0;
+                                    ?>
+                                    <tr>
+                                        <td colspan=5 style="text-align: left">
+                                            <h4><?php echo $accountClassRow['account_class']; ?></h4>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+                                    while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                        $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
+                                        $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+                                        ?>
+                                        <tr>
+                                            <td style="text-align: left"><?php echo $financialStatementRow['financial_statement'];?></td>
+                                            <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']);?></td>
+                                            <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_beg_bal']);?></td>
+                                            <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal']);?></td>
+                                            <td style="text-align: left">
+                                            <?php
+                                                $diffPercentage = 0.00;
+                                                if($financialStatementRow['cy_beg_bal'] != 0)
+                                                    $diffPercentage = number_format((float)(($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal'])/$financialStatementRow['cy_beg_bal'])*100, 2, '.', '');
+                                                echo $diffPercentage.'%';
+                                            ?>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                        <tr>
+                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total <?php echo $accountClassRow['account_class']; ?></h5></td>
+                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyFinalBalTotal); ?></h5></td>
+                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyBegBalTotal); ?></h5></td>
+                                            <td colspan=2></td>
+                                        </tr>
+                                    <?php
+                                }
+                                ?>
+                                <tr><td colspan=5>&nbsp;</td></tr>
+                                <?php
                             }
-                        }  
-                        else {
-                                $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
-                                $exquery = $con->query($query);
-                                if ($exquery->num_rows != 0) {
-                                    while ($queryrow = $exquery->fetch_assoc()) {
-                                        if ($queryrow['hasChild'] == 1) { ?>
+                            ?>
+                                </tbody>
+                            </table>
+                            <?php
+                        } 
+                        else{
+                            $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                            $exquery = $con->query($query);
+                            if ($exquery->num_rows != 0) {
+                                while ($queryrow = $exquery->fetch_assoc()) {
+                                    if ($queryrow['hasChild'] == 1) { 
+                                        ?>
                                             <div class="custom-list">
                                                 <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
                                                     class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
-                                            </div> <?php
-                                        } else { ?>
-                                            <div class="custom-list">
-                                                <div class="custom-list-items custom-list-items-action">
-                                                    <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
-                                                    <?php
-                                                        if ($queryrow['active']) { ?>
-                                                            <a href="#">
-                                                                <?php
-                                                                    if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395){ ?>
-                                                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
-                                                                            <i class="fas fa-external-link-alt"
-                                                                                style="color:blue !important;"
-                                                                                id="<?php echo $queryrow['id']; ?>">
-                                                                            </i>
-                                                                        </a>
-                                                                    <?php } 
-                                                                    else { ?>    
-                                                                        <i class="fas fa-external-link-alt signoffmodal"
+                                            </div>
+                                        <?php
+                                    } else { ?>
+                                        <div class="custom-list">
+                                            <div class="custom-list-items custom-list-items-action">
+                                                <?php echo trim($queryrow['program_name']); ?> &nbsp;&nbsp;
+                                                <?php
+                                                    if ($queryrow['active']) { ?>
+                                                        <a href="#">
+                                                            <?php
+                                                                if($queryrow['id'] == 395){
+                                                                    $trialBalanceResult = $con->query("select count(id) total from trial_balance where workspace_id = '".$wid."'");
+                                                                    if($trialBalanceResult->fetch_assoc()['total'] == 0){
+                                                                        $con->query("UPDATE workspace_log SET import = 0 WHERE workspace_id = '".$wid."' and program_id = 395");
+                                                                    }
+                                                                }
+                                                                if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395){ ?>
+                                                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
+                                                                        <i class="fas fa-external-link-alt"
                                                                             style="color:blue !important;"
                                                                             id="<?php echo $queryrow['id']; ?>">
-                                                                        </i>    
-                                                                    <?php }
-                                                                ?>
-                                                            </a> <?php
-                                                            // $prearedResult = $con->query("select id,user_id,prepare_signoff_date where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_all();
-                                                            // foreach($prearedResult as $key => $value)
-                                                            if ($queryrow['status']) { ?>
-                                                                <i class="fas fa-check-circle"
-                                                                    style="color:green !important;">
-                                                                </i>
-                                                                <?php
-                                                                $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
-                                                                if($prepareSignoff['total']){
-                                                                ?>
-                                                                <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
-                                                                <?php
-                                                                }
-                                                                $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
-                                                                if($reviewSignoff['total']){
-                                                                ?>
-                                                                <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
-                                                                <?php
-                                                                }
-                                                            } else { ?>
-                                                                <i class="fas fa-times-circle"
-                                                                    style="color:red !important;">
-                                                                </i> <?php
-                                                            } ?>
-                                                            <a href="#" id="<?php echo $queryrow['id']; ?>"
-                                                                class="buttonActive">
-                                                                <!-- <i class="fa fa-thumbs-up float-right"
-                                                                    aria-hidden="true"
-                                                                    style="color:blue !important;">
-                                                                </i> -->
-                                                                <img class="float-right" src="Icons/thumbs-up.svg" />
-                                                            </a> <?php
-                                                        } else { ?>
-                                                            <a href="#" id="<?php echo $queryrow['id']; ?>"
-                                                                class="buttonActive">
-                                                                <img class="float-right" src="Icons/Icon feather-plus.svg" />
-                                                                <!-- <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i> -->
-                                                            </a> 
+                                                                        </i>
+                                                                    </a>
+                                                                <?php } 
+                                                                else { ?>    
+                                                                    <i class="fas fa-external-link-alt signoffmodal"
+                                                                        style="color:blue !important;"
+                                                                        id="<?php echo $queryrow['id']; ?>">
+                                                                    </i>    
+                                                                <?php }
+                                                            ?>
+                                                        </a> <?php
+                                                        // $prearedResult = $con->query("select id,user_id,prepare_signoff_date where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_all();
+                                                        // foreach($prearedResult as $key => $value)
+                                                        if ($queryrow['status']) { ?>
+                                                            <i class="fas fa-check-circle"
+                                                                style="color:green !important;">
+                                                            </i>
                                                             <?php
-                                                        }
-                                                    ?>
-                                                </div>
-                                            </div> <?php
-                                        }
-                                        }
+                                                            $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
+                                                            if($prepareSignoff['total']){
+                                                            ?>
+                                                            <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
+                                                            <?php
+                                                            }
+                                                            $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
+                                                            if($reviewSignoff['total']){
+                                                            ?>
+                                                            <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
+                                                            <?php
+                                                            }
+                                                        } else { ?>
+                                                            <i class="fas fa-times-circle"
+                                                                style="color:red !important;">
+                                                            </i> <?php
+                                                        } ?>
+                                                        <a href="#" id="<?php echo $queryrow['id']; ?>"
+                                                            class="buttonActive">
+                                                            <!-- <i class="fa fa-thumbs-up float-right"
+                                                                aria-hidden="true"
+                                                                style="color:blue !important;">
+                                                            </i> -->
+                                                            <img class="float-right" src="Icons/thumbs-up.svg" />
+                                                        </a> <?php
+                                                    } else { ?>
+                                                        <a href="#" id="<?php echo $queryrow['id']; ?>"
+                                                            class="buttonActive">
+                                                            <img class="float-right" src="Icons/Icon feather-plus.svg" />
+                                                            <!-- <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i> -->
+                                                        </a> 
+                                                        <?php
+                                                    }
+                                                ?>
+                                            </div>
+                                        </div> <?php
                                     }
                                 }
+                            }
+                        }
                         ?>
                     </div>
                 </div>
-            </div>
 
-            <!-- Footer -->
-            <footer class="sticky-footer">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
-                        <?php echo date("Y"); ?></strong></span>
+                <!-- Footer -->
+                <footer class="sticky-footer">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                            <?php echo date("Y"); ?></strong></span>
+                        </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
 
         <!--Add Programme Modal -->
         <div class="modal fade" id="addProgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -1531,7 +1689,7 @@
                             </div>
                             <div class="modal-footer d-flex align-items-center justify-content-center">
                                 <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                                <input class="btn btn-success" id="save" type="submit" value="Save">
                             </div>
                         </div>
                     </form>
@@ -1653,7 +1811,7 @@
                     url: "addbspl.php",
                     type: "POST",
                     data: {
-                        prog_id: <?php echo $prog_id == 240? 34:33; ?>,
+                        prog_id: "2",
                         wid: <?php echo $wid; ?>,
                         bspl_name: bspl_name,
                         bspl_header_type: bspl_header_type
@@ -2133,47 +2291,49 @@
                 $("#signoffModal").modal('show');
             });
 
-            $(document).on('click','#validateSubmit', function(e){
-                let assetSum = liabilitySum = 0;
-                for(i in $("#balanceSheetForm > table > tbody > tr")){
-                    try {
-                        if($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")")){
-                            if($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")").attr('class') != 'table-secondary'){
-                                // console.log($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")").attr('class'))
-                                let header_type = $("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(2) > input").val();
-                                if(header_type == '1'){
-                                    if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
-                                        liabilitySum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
-                                    }
-                                }
-                                else{
-                                    if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
-                                        assetSum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (error) {
+            //Validate Asset=Liability
+            
+            // $(document).on('click','#validateSubmit', function(e){
+            //     let assetSum = liabilitySum = 0;
+            //     for(i in $("#balanceSheetForm > table > tbody > tr")){
+            //         try {
+            //             if($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")")){
+            //                 if($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")").attr('class') != 'table-secondary'){
+            //                     // console.log($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")").attr('class'))
+            //                     let header_type = $("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(2) > input").val();
+            //                     if(header_type == '1'){
+            //                         if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
+            //                             liabilitySum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
+            //                         }
+            //                     }
+            //                     else{
+            //                         if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
+            //                             assetSum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //         catch (error) {
                         
-                    }
-                }
-                // console.log(liabilitySum)
-                // console.log(assetSum)
-                if(assetSum != liabilitySum){
-                    e.preventDefault()
-                    swal({
-                                icon: "error",
-                                text: "Assets and Liabilities are not matching",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
-                                }
-                            });
-                }
-            })
+            //         }
+            //     }
+            //     // console.log(liabilitySum)
+            //     // console.log(assetSum)
+            //     if(assetSum != liabilitySum){
+            //         e.preventDefault()
+            //         swal({
+            //                     icon: "error",
+            //                     text: "Assets and Liabilities are not matching",
+            //                 }).then(function (isConfirm) {
+            //                     if (isConfirm) {
+            //                         window.location.href = window.location
+            //                                 .pathname +
+            //                             "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+            //                     }
+            //                 });
+            //     }
+            // })
 
             $(document).ready(function() {
                 var dataTable = $('#trialBalanceTable').DataTable({

@@ -87,7 +87,6 @@
                     <?php
                     } 
                     ?>
-                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>
@@ -195,12 +194,16 @@
                                                 if(!$row['freeze']){
                                                     if($_SESSION['external'] != 1){
                                                 ?>
-                                                    <a href="clientDashboard?wid=<?php echo $row['id'];?>"><i class="fas fa-external-link-alt"></i></a>
+                                                    <a href="clientDashboard?wid=<?php echo $row['id'];?>" class="icon-hide">
+                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
+                                                    </a>
                                                 <?php
                                                     }
                                                     else{
                                                         ?>
-                                                    <a href="subProgram?wid=<?php echo $row['id'];?>&pid=247"><i class="fas fa-external-link-alt"></i></a>
+                                                    <a href="subProgram?wid=<?php echo $row['id'];?>&pid=247">
+                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
+                                                    </a>
                                                         <?php
                                                     }
                                                 }
@@ -300,7 +303,7 @@
                             </div>
                             <div class="modal-footer d-flex align-items-center justify-content-center">
                                 <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-primary" id="save" type="submit" value="Save">
+                                <input class="btn btn-success" id="save" type="submit" value="Save">
                             </div>
                         </div>
                     </form>

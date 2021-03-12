@@ -70,15 +70,15 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         $accountNumber = trim($worksheet->getCellByColumnAndRow(0,$row)->getValue());
         $accountName = trim($worksheet->getCellByColumnAndRow(1,$row)->getValue());
         $cyBegBal = trim($worksheet->getCellByColumnAndRow(2,$row)->getValue());
-        $cyInterimBal = trim($worksheet->getCellByColumnAndRow(3,$row)->getValue());
-        $cyActivity = trim($worksheet->getCellByColumnAndRow(4,$row)->getValue());
-        $cyEndBal = trim($worksheet->getCellByColumnAndRow(5,$row)->getValue());
-        $cyFinalBal = trim($worksheet->getCellByColumnAndRow(8,$row)->getFormattedValue());
-        $accountType = trim($worksheet->getCellByColumnAndRow(9,$row)->getValue());
-        $accountClass = trim($worksheet->getCellByColumnAndRow(10,$row)->getValue());
-        $financialStatement = trim($worksheet->getCellByColumnAndRow(11,$row)->getValue());
+        // $cyInterimBal = trim($worksheet->getCellByColumnAndRow(3,$row)->getValue());
+        // $cyActivity = trim($worksheet->getCellByColumnAndRow(4,$row)->getValue());
+        // $cyEndBal = trim($worksheet->getCellByColumnAndRow(5,$row)->getValue());
+        $cyFinalBal = trim($worksheet->getCellByColumnAndRow(3,$row)->getFormattedValue());
+        $accountType = trim($worksheet->getCellByColumnAndRow(4,$row)->getValue());
+        $accountClass = trim($worksheet->getCellByColumnAndRow(5,$row)->getValue());
+        $financialStatement = trim($worksheet->getCellByColumnAndRow(6,$row)->getValue());
         
-        $cyBegBalAmount = $cyInterimBalAmount = $cyActivityAmount = $cyEndBalAmount = $cyFinalBalAmount = 0;
+        $cyBegBalAmount = $cyInterimBalAmount = $cyActivityAmount = $cyEndBalAmount = $cyFinalBalAmount = $value = 0;
 
         // For CY_Beg_Bal
         // $total = '';
@@ -118,20 +118,20 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         //     }
         //     $cyInterimBalAmount +=$total;
         // }
-        {
-            $total = '';
-            if($cyInterimBal[0] == '('){
-                $value = '-'.(filter_var($cyInterimBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
-            }
-            else{
-                $value = filter_var($cyInterimBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
-                if ($cyInterimBal[0] == '-' && strlen($cyInterimBal) == 1) {
-                    $value = 0;
-                }
-            }
-            $cyInterimBalAmount +=$value;
-            $cyInterimBal = $value;
-        }
+        // {
+        //     $total = '';
+        //     if($cyInterimBal[0] == '('){
+        //         $value = '-'.(filter_var($cyInterimBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
+        //     }
+        //     else{
+        //         $value = filter_var($cyInterimBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+        //         if ($cyInterimBal[0] == '-' && strlen($cyInterimBal) == 1) {
+        //             $value = 0;
+        //         }
+        //     }
+        //     $cyInterimBalAmount +=$value;
+        //     $cyInterimBal = $value;
+        // }
 
         // For CY_Activity
         // $total = '';
@@ -145,20 +145,20 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         //     }
         //     $cyActivityAmount +=$total;
         // }
-        {
-            $total = '';
-            if($cyActivity[0] == '('){
-                $value = '-'.(filter_var($cyActivity, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
-            }
-            else{
-                $value = filter_var($cyActivity,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
-                if ($cyActivity[0] == '-' && strlen($cyActivity) == 1) {
-                    $value = 0;
-                }
-            }
-            $cyActivityAmount +=$value;
-            $cyActivity = $value;
-        }
+        // {
+        //     $total = '';
+        //     if($cyActivity[0] == '('){
+        //         $value = '-'.(filter_var($cyActivity, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
+        //     }
+        //     else{
+        //         $value = filter_var($cyActivity,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+        //         if ($cyActivity[0] == '-' && strlen($cyActivity) == 1) {
+        //             $value = 0;
+        //         }
+        //     }
+        //     $cyActivityAmount +=$value;
+        //     $cyActivity = $value;
+        // }
 
         // For CY_End_Bal
         // $total = '';
@@ -172,20 +172,20 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         //     }
         //     $cyEndBalAmount +=$total;
         // }
-        {
-            $total = '';
-            if($cyEndBal[0] == '('){
-                $value = '-'.(filter_var($cyEndBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
-            }
-            else{
-                $value = filter_var($cyEndBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
-                if ($cyEndBal[0] == '-' && strlen($cyEndBal) == 1) {
-                    $value = 0;
-                }
-            }
-            $cyEndBalAmount +=$value;
-            $cyEndBal = $value;
-        }
+        // {
+        //     $total = '';
+        //     if($cyEndBal[0] == '('){
+        //         $value = '-'.(filter_var($cyEndBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
+        //     }
+        //     else{
+        //         $value = filter_var($cyEndBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+        //         if ($cyEndBal[0] == '-' && strlen($cyEndBal) == 1) {
+        //             $value = 0;
+        //         }
+        //     }
+        //     $cyEndBalAmount +=$value;
+        //     $cyEndBal = $value;
+        // }
 
         // For CY_End_Bal
         // $total = '';
@@ -216,8 +216,10 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         }
 
         // Inserting the data into database
+        // $insertQuery = "INSERT INTO `trial_balance`(`workspace_id`,`account_number`, `account_name`, `cy_beg_bal`, `cy_interim_bal`, `cy_activity`, `cy_end_bal`, `client_adjustment`, `audit_adjustment`, `cy_final_bal`, `account_type`, `account_class`, `financial_statement`) 
+        // VALUES ('$wid','$accountNumber','$accountName','$cyBegBal','$cyInterimBal','$cyActivity','$cyEndBal','','','$cyFinalBal','$accountType','$accountClass','$financialStatement')";
         $insertQuery = "INSERT INTO `trial_balance`(`workspace_id`,`account_number`, `account_name`, `cy_beg_bal`, `cy_interim_bal`, `cy_activity`, `cy_end_bal`, `client_adjustment`, `audit_adjustment`, `cy_final_bal`, `account_type`, `account_class`, `financial_statement`) 
-        VALUES ('$wid','$accountNumber','$accountName','$cyBegBal','$cyInterimBal','$cyActivity','$cyEndBal','','','$cyFinalBal','$accountType','$accountClass','$financialStatement')";
+        VALUES ('$wid','$accountNumber','$accountName','$cyBegBal','','','','','','$cyFinalBal','$accountType','$accountClass','$financialStatement')";
 
         if($con->query($insertQuery) === TRUE){
             $updatedData.= '<strong>Record created:- </strong><br>Recorded created <br> Row No:- '.($row-1)."<br>";
@@ -232,6 +234,10 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
     }
 }
 if($flag){
+    $trialBalanceResult = $con->query("select count(id) total from trial_balance where workspace_id = '".$wid."'");
+    if($trialBalanceResult->fetch_assoc()['total'] > 0){
+        // $con->query("UPDATE workspace_log SET import = 1 WHERE workspace_id = '".$wid."' and program_id = 395");
+    }
     echo "<script>
     $(document).ready(function() {
         $('#successModal').modal();
