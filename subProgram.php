@@ -881,7 +881,7 @@
                                     <?php
                                     $materiality = $subMateriality = 0;
                                         while ($row = $result->fetch_assoc()) {
-                                            if($row['standard_low'] != '' || $row['standard_high'] != '' || $row['custom_low'] != '' || $row['custom_high'] != '' || $row['amount'] != ''){
+                                            if($row['standard_low'] != '' || $row['standard_high'] != '' || $row['custom'] != '' || $row['amount'] != ''){
                                                 $materiality = 1;
                                             }
                                             ?>
