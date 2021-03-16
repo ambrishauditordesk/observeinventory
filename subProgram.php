@@ -662,10 +662,13 @@
                                 ?>
                                     <div class="col-md-12 text-center p-top">
                                         <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
+                                        <a class="btn bg-violet" target="_blank" href="tbTemplate">
+                                            <span>Download Template</span>
+                                        </a>
                                         <!-- <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a> -->
-                                        <form method="get" action="assets/TB_Template.xlsx">
+                                        <!-- <form method="get" action="tbTemplate">
                                             <button type="submit" class="btn bg-violet">Download Template</button>
-                                        </form>
+                                        </form> -->
                                     </div>
                                     <script>
                                          swal({
@@ -676,9 +679,7 @@
                                             dangerMode: true,
                                         }).then((willOUT) => {
                                             if (willOUT) {
-                                                window.location = 'http://atlats.in/audit/assets/TB_Template.xlsx', {
-                                                icon: 'success',
-                                                }
+                                                window.open("tbTemplate");
                                             }
                                         });
                                     </script>
@@ -688,9 +689,12 @@
                             ?>
                                 <div class="col-md-12 text-center p-top d-flex justify-content-center">
                                     <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>&nbsp;
-                                    <form method="get" action="assets/TB_Template.xlsx">
+                                    <a class="btn bg-violet" target="_blank" href="tbTemplate">
+                                        <span>Download Template</span>
+                                    </a>
+                                    <!-- <form method="get" action="tbTemplate">
                                         <button type="submit" class="btn bg-violet">Download Template</button>
-                                    </form>
+                                    </form> -->
                                     <!-- <a href="financialStatement?wid=<?php //echo $wid; ?>"><button class="btn bg-violet" style="color: white !important;">Lead Sheet Generator</button></a> -->
                                 </div>
                                 <div class="container">
