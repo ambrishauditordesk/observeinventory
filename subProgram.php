@@ -684,9 +684,7 @@
                             else{
                             ?>
                                 <div class="col-md-12 text-center p-top d-flex justify-content-center">
-                                    <!-- <button class="btn btn-success" >Download Trial Balance Template</button> -->
                                     <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>&nbsp;
-                                    <!-- <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a> -->
                                     <form method="get" action="assets/TB_Template.xlsx">
                                         <button type="submit" class="btn bg-violet">Download Template</button>
                                     </form>
