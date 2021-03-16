@@ -662,7 +662,10 @@
                                 ?>
                                     <div class="col-md-12 text-center p-top">
                                         <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
-                                        <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                        <!-- <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a> -->
+                                        <form method="get" action="assets/TB_Template.xlsx">
+                                            <button type="submit" class="btn bg-violet">Download Template</button>
+                                        </form>
                                     </div>
                                     <script>
                                          swal({
