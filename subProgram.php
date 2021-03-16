@@ -662,18 +662,18 @@
                                 ?>
                                     <div class="col-md-12 text-center p-top">
                                         <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
-                                        <a href="assets/Trial Balance Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                        <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
                                     </div>
                                     <script>
                                          swal({
                                             title: "Download the Excel Template",
-                                            text: "No Trial Balance was there, so donwload the excel and then upload to that.",
+                                            text: "No Trial Balance was there, so download the excel and then upload to that.",
                                             icon: "warning",
                                             button: "Download",
                                             dangerMode: true,
                                         }).then((willOUT) => {
                                             if (willOUT) {
-                                                window.location.href = 'assets/Trial Balance Template.xlsx', {
+                                                window.location = 'http://atlats.in/audit/assets/TB_Template.xlsx', {
                                                 icon: 'success',
                                                 }
                                             }
@@ -683,10 +683,13 @@
                             }
                             else{
                             ?>
-                                <div class="col-md-12 text-center p-top">
+                                <div class="col-md-12 text-center p-top d-flex justify-content-center">
                                     <!-- <button class="btn btn-success" >Download Trial Balance Template</button> -->
-                                    <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
-                                    <a href="assets/Trial Balance Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                    <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>&nbsp;
+                                    <!-- <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a> -->
+                                    <form method="get" action="assets/TB_Template.xlsx">
+                                        <button type="submit" class="btn bg-violet">Download Template</button>
+                                    </form>
                                     <!-- <a href="financialStatement?wid=<?php //echo $wid; ?>"><button class="btn bg-violet" style="color: white !important;">Lead Sheet Generator</button></a> -->
                                 </div>
                                 <div class="container">

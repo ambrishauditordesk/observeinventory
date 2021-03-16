@@ -57,6 +57,7 @@ if(isset($_GET['wid']) && !empty($_GET['wid'])){
             FROM (SELECT DISTINCT program.id,program_name,active FROM program inner join workspace_log on program.id=workspace_log.program_id where hasChild = 0 and workspace_log.workspace_id =$wid) a";
 
             $result = $con->query($query);
+            $i = 0;
             while($row = $result->fetch_assoc()){
                 ?>
                     <tr>

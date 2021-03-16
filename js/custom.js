@@ -56,7 +56,7 @@ $(window).on('load', function(e) {
         let latestTime = new Date().getTime();
         // console.log(latestTime - timeStamp)
         if ((latestTime - timeStamp) >= 600000) {
-            window.location = 'http://localhost/audit/logout.php'
+            window.location = 'http://atlats.in/audit/logout.php'
         }
     }, 1000);
 });

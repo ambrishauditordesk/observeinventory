@@ -15,7 +15,8 @@
         crossorigin="anonymous"></script>
 </head>
 
-<body style="background-image: url('Icons/bgwall.jpg');">
+<!-- <body style="background-image: url('Icons/bgwall.jpg');"> -->
+<body">
     <?php
     include 'dbconnection.php';
     session_start();
