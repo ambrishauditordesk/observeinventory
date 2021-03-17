@@ -2299,6 +2299,10 @@
                 $("#signoffModal").modal('show');
             });
 
+            $('#signoffModal').on('hidden.bs.modal', function () {
+                location.reload();
+            });
+
             //Validate Asset=Liability
             
             // $(document).on('click','#validateSubmit', function(e){
@@ -2337,7 +2341,7 @@
             //                     if (isConfirm) {
             //                         window.location.href = window.location
             //                                 .pathname +
-            //                             "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+            //                             "?pid=<?php //echo $prog_id; ?>&parent_id=<?php //echo $prog_parentId; ?>&wid=<?php //echo $wid; ?>";
             //                     }
             //                 });
             //     }
