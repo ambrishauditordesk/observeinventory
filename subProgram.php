@@ -662,20 +662,24 @@
                                 ?>
                                     <div class="col-md-12 text-center p-top">
                                         <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
-                                        <a href="assets/Trial Balance Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                        <a class="btn bg-violet" target="_blank" href="tbTemplate">
+                                            <span>Download Template</span>
+                                        </a>
+                                        <!-- <a href="assets/TB_Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a> -->
+                                        <!-- <form method="get" action="tbTemplate">
+                                            <button type="submit" class="btn bg-violet">Download Template</button>
+                                        </form> -->
                                     </div>
                                     <script>
                                          swal({
                                             title: "Download the Excel Template",
-                                            text: "No Trial Balance was there, so donwload the excel and then upload to that.",
+                                            text: "No Trial Balance was there, so download the excel and then upload to that.",
                                             icon: "warning",
                                             button: "Download",
                                             dangerMode: true,
                                         }).then((willOUT) => {
                                             if (willOUT) {
-                                                window.location.href = 'assets/Trial Balance Template.xlsx', {
-                                                icon: 'success',
-                                                }
+                                                window.open("tbTemplate");
                                             }
                                         });
                                     </script>
@@ -683,10 +687,14 @@
                             }
                             else{
                             ?>
-                                <div class="col-md-12 text-center p-top">
-                                    <!-- <button class="btn btn-success" >Download Trial Balance Template</button> -->
-                                    <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>
-                                    <a href="assets/Trial Balance Template.xlsx"><button class="btn bg-violet" download="Trial Balance Template.xlsx">Download Template</button></a>
+                                <div class="col-md-12 text-center p-top d-flex justify-content-center">
+                                    <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>&nbsp;
+                                    <a class="btn bg-violet" target="_blank" href="tbTemplate">
+                                        <span>Download Template</span>
+                                    </a>
+                                    <!-- <form method="get" action="tbTemplate">
+                                        <button type="submit" class="btn bg-violet">Download Template</button>
+                                    </form> -->
                                     <!-- <a href="financialStatement?wid=<?php //echo $wid; ?>"><button class="btn bg-violet" style="color: white !important;">Lead Sheet Generator</button></a> -->
                                 </div>
                                 <div class="container">
@@ -2291,6 +2299,10 @@
                 $("#signoffModal").modal('show');
             });
 
+            $('#signoffModal').on('hidden.bs.modal', function () {
+                location.reload();
+            });
+
             //Validate Asset=Liability
             
             // $(document).on('click','#validateSubmit', function(e){
@@ -2329,7 +2341,7 @@
             //                     if (isConfirm) {
             //                         window.location.href = window.location
             //                                 .pathname +
-            //                             "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+            //                             "?pid=<?php //echo $prog_id; ?>&parent_id=<?php //echo $prog_parentId; ?>&wid=<?php //echo $wid; ?>";
             //                     }
             //                 });
             //     }

@@ -319,15 +319,15 @@
                             </div>
                             <div class="form-group ">
                                 <label for="name">GST No.</label>
-                                <input id="gstCheck" type="text" class="form-control" name="gst" maxlength="15" style="text-transform:uppercase" required>
+                                <input id="gstCheck" type="text" class="form-control" name="gst" maxlength="15" style="text-transform:uppercase">
                             </div>
                             <div class="form-group ">
                                 <label for="name">TAN No.</label>
-                                <input id="tanCheck" type="text" class="form-control" name="tan" maxlength="10" style="text-transform:uppercase" required>
+                                <input id="tanCheck" type="text" class="form-control" name="tan" maxlength="10" style="text-transform:uppercase">
                             </div>
                             <div class="form-group ">
                                 <label for="name">CIN No.</label>
-                                <input id="cinCheck" type="text" class="form-control" name="cin" maxlength="21" style="text-transform:uppercase" required>
+                                <input id="cinCheck" type="text" class="form-control" name="cin" maxlength="21" style="text-transform:uppercase">
                             </div>
                             <div class="form-group ">
                                 <label for="name">Client Contact</label>
@@ -471,15 +471,15 @@
                             </div>
                             <div class="form-group ">
                                 <label for="name">GST No.</label>
-                                <input type="text" id="gstCheckEdit" class="form-control" name="gst" maxlength="15" value= "" style="text-transform:uppercase" required>
+                                <input type="text" id="gstCheckEdit" class="form-control" name="gst" maxlength="15" value= "" style="text-transform:uppercase">
                             </div>
                             <div class="form-group ">
                                 <label for="name">TAN No.</label>
-                                <input type="text" id="tanCheckEdit" class="form-control" name="tan" maxlength="10" value= "" style="text-transform:uppercase" required>
+                                <input type="text" id="tanCheckEdit" class="form-control" name="tan" maxlength="10" value= "" style="text-transform:uppercase">
                             </div>
                             <div class="form-group ">
                                 <label for="name">CIN No.</label>
-                                <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase" required>
+                                <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase">
                             </div>
                             <div class="form-group ">
                                 <label for="name">Status</label>
