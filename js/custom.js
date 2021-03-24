@@ -41,10 +41,10 @@ document.onkeydown = function(e) {
     }
 }
 
-window.onresize = function() {
-    if ((window.outerHeight - window.innerHeight) > 100)
-        consoleHide();
-}
+// window.onresize = function() {
+//     if ((window.outerHeight - window.innerHeight) > 100)
+//         consoleHide();
+// }
 
 // Auto Logout after 10 mins, calling after 1 min for checking
 $(window).on('load', function(e) {
@@ -56,7 +56,7 @@ $(window).on('load', function(e) {
         let latestTime = new Date().getTime();
         // console.log(latestTime - timeStamp)
         if ((latestTime - timeStamp) >= 600000) {
-            window.location = 'http://atlats.in/audit/logout.php'
+            window.location = 'http://yourfirmaudit.com/AuditSoft/logout.php'
         }
     }, 1000);
 });

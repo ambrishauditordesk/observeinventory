@@ -5,6 +5,6 @@ dbconnection.php
 .DS_Store
 
 //Ignoring Uploads 
-uploads/*
+uploads/*/*
 
 

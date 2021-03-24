@@ -38,6 +38,7 @@
     $ser = $_SERVER['HTTP_REFERER'];
     $uid = $_SESSION['id'];
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+    $prepareFlag = $flag = 0;
 
     if(isset($_POST['prepareSubmit']))
     {
