@@ -26,6 +26,7 @@
     <!-- Datatable CDN -->
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -54,6 +55,8 @@ if ($con->query($query) === true)
     $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
     $query2="insert into materiality(name,prog_id,workspace_id) SELECT name,prog_id,'$wid' workspace_id from materiality where def_prog='1'";
     $query3="insert into sub_materiality(workspace_id) values ('$wid')";
+
+
     $res1=$con->query($query1);
     $res2=$con->query($query2);
     $res3=$con->query($query3);
@@ -69,6 +72,26 @@ if ($con->query($query) === true)
         </script>";
     }
     else {
+
+        $res4 = $con->query("SELECT * FROM inquiring_of_management_questions");
+        while($row = $res4->fetch_assoc()){
+            $question_data = $row['question'];
+            $con->query("INSERT INTO inquiring_of_management_questions_answer(workspace_id, inquiring_of_management_questions, answer_option, answer_textarea) VALUES('$wid','$question_data','','')");
+        }
+
+        $res4 = $con->query("SELECT * FROM going_concern_default_procedure");
+        while($row = $res4->fetch_assoc()){
+            $procedure_data = $row['procedure'];
+            $part = $row['part'];
+            $con->query("INSERT INTO going_concern_procedures(workspace_id, procedure_data, free_text, part) VALUES('$wid','$procedure_data','','$part')");
+        }
+
+        $res4 = $con->query("SELECT * FROM going_concern_default_conclusion");
+        while($row = $res4->fetch_assoc()){
+            $conclusion_text = $row['conclusion_text'];
+            $con->query("INSERT INTO going_concern_conclusion(workspace_id, conclusion_text) VALUES('$wid','$conclusion_text')");
+        }
+
         echo "<script>
     $(document).ready(function() {
         $('#successModal').modal();

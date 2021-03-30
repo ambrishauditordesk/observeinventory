@@ -49,9 +49,15 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
     <!-- sweetalert cdn -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
-            integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
+    <link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link href="node_modules/froala-editor/css/froala_style.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script> 
+
+
+    <script src='//cdn.appdynamics.com/adrum/adrum-latest.js' type='text/javascript' charset='UTF-8'></script>
+
     <style>
         .tableFixHead {
             overflow-y: auto;
@@ -150,7 +156,7 @@
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <?php
-                if ($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id != '239' && $prog_id != '240' && $prog_id != '247') {
+                if ($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id != '239' && $prog_id != '240' && $prog_id != '247' && $prog_id != '496' && $prog_id != '258' && $prog_id != '8' && $prog_id != '259' && $prog_id != '24') {
                     ?>
                     <li class="nav-item d-flex">
                         <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
@@ -199,7 +205,7 @@
         </ul>
     </nav>
     
-    <div class="mar" <?php if($prog_id == 255 || $prog_id==230 || $prog_id==239 || $prog_id==240|| $prog_id==2|| $prog_id==19){ echo "style='height: auto !important;'"; } ?> >
+    <div class="mar" <?php if($prog_id == 255 || $prog_id==230 || $prog_id==239 || $prog_id==240|| $prog_id==2|| $prog_id==19 || $prog_id==496){ echo "style='height: auto !important;'"; } ?> >
         <!-- HEADER -->
         <div id="header">
             <div class="container-fluid" stickylevel="0" style="z-index:1200;">
@@ -1239,6 +1245,1050 @@
                             </table>
                             <?php
                         } 
+                        elseif($prog_id == 496){
+                            $auditReportResult = $con->query("select audit_report from draft_report where workspace_id = $wid");
+                            if($auditReportResult->num_rows > 0){
+                                ?>
+                                <div class="d-flex justify-content-center">
+                                    <button id="exportDOC" class="btn bg-violet mb-3 mt-3" onclick="Export2Doc()">Export to Doc</button>
+                                    <button id="save_audit_report_update" class="btn btn-success ml-1 mb-3 mt-3">Save Changes</button>
+                                </div>
+                                <div class="col-md-12 d-flex justify-content-center align-items-center">
+                                    <hr>
+                                    <i class="fas fa-info-circle" style="color:orange !important;"></i>
+                                    <strong>Click the Save Changes button to save respective data before exporting into Doc</strong>
+                                </div>
+                                <div id="editor">
+                                    <div class="fr-view">
+                                        <?php
+                                            echo $auditReportResult->fetch_assoc()['audit_report'];
+                                        ?>
+                                    </div>
+                                </div>
+                                <br>
+                                    <div class="row d-flex justify-content-center">
+                                <?php
+                                $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=496")->fetch_assoc();
+                                if($checkReviewStatus['total']){
+                                    ?>
+                                        <button class="btn btn-info" id="reviewSubmitDraft">Review Sign-Off</button>
+                                    <?php
+                                }
+                                ?>
+                                    &nbsp;
+                                    <button class="btn btn-success" id="prepareSubmitDraft">Prepare Sign-Off</button>
+                                    </div>
+                                <?php
+                            }
+                            else{
+                            ?>
+                                <br>
+                                <div class="row d-flex justify-content-start">
+                                    <form id="draft_report_form" class="d-flex col-md-10 col-lg-10 col-sm-1">    
+                                        <div class="form-group col-md-4 col-lg-4 col-sm-4">    
+                                            <label for="">Type of Audit Report</label>
+                                            <select class="form-control" name="audit_report" id="audit_report" required onchange="type_audit_report()">
+                                                <option selected value="">Choose any One!</option>
+                                                <option value="0">Unqualified Opinion</option>
+                                                <option value="1">Qualified Opinion</option>
+                                            </select>
+                                        </div>
+                                        <div id="emphasis_of_matters_div" class="form-group col-md-4 col-lg-4 col-sm-4"> 
+                                            <label for="">Emphasis of Matters</label>
+                                            <select class="form-control" name="emphasis_of_matters" id="emphasis_of_matters">
+                                                <option selected value="">Choose any One!</option>
+                                                <option value="0">No</option>
+                                                <option value="1">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div id="other_matters_div" class="form-group col-md-4 col-lg-4 col-sm-4"> 
+                                            <label for="">Other Matters</label>
+                                            <select class="form-control" name="other_matters" id="other_matters">
+                                                <option selected value="">Choose any One!</option>
+                                                <option value="0">No</option>
+                                                <option value="1">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-4 col-lg-4 col-sm-4"> 
+                                            <div class="d-flex justify-content-start align-items-end h-100">
+                                                <input type="submit" id="draft_report_form" class="btn btn-outline-primary" value="Generate Audit Report">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="draft_report_show_div">
+                                    <div class="d-flex justify-content-center">
+                                        <button id="exportDOC" class="btn bg-violet mb-3" onclick="Export2Doc()">Export to Doc</button>
+                                        <button id="save_audit_report" class="btn btn-success mb-3">Save Changes</button>
+                                    </div>
+                                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                                        <hr>
+                                        <i class="fas fa-info-circle" style="color:orange !important;"></i>
+                                        <strong>Click the Save Changes button to save respective data before exporting into Doc</strong>
+                                    </div>
+                                    <?php $clientName = $con->query("select name from workspace inner join client on workspace.client_id = client.id where workspace.id = $wid")->fetch_assoc()['name'];  ?>
+                                    <div id="editor">    
+                                        <div class="fr-view">
+                                            <div id="unqualified_opinion">
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">TO THE MEMBERS OF <?php echo $clientName; ?></span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Report on the Standalone Financial Statements</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We have audited the accompanying standalone financial statements of&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;"><?php echo $clientName; ?>&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(&ldquo;the Company&rdquo;), which comprise the Balance Sheet as at&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31st March, 20XX</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">, the Statement of Profit and Loss, the Cash Flow Statement for the year then ended, and a summary of the significant accounting policies and other explanatory information.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Management&rsquo;s Responsibility for the Standalone Financial Statements</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">The Company&rsquo;s Board of Directors is responsible for the matters stated in Section 134(5) of the Companies Act, 2013 (&ldquo;the Act&rdquo;) with respect to the preparation of these standalone financial statements that give a true and fair view of the financial position, financial performance and cash flows of the Company in accordance with the accounting principles generally accepted in India, including the Accounting Standards specified under Section 133 of the Act, read with Rule 7 of the Companies (Accounts) Rules, 2014. This responsibility also includes maintenance of adequate accounting records in accordance with the provisions of the Act for safeguarding of the assets of the Company and for preventing and detecting frauds and other irregularities; selection and application of appropriate accounting policies; making judgments and estimates that are reasonable and prudent; and design, implementation and maintenance of adequate internal financial controls, that were operating effectively for ensuring the accuracy and completeness of the accounting records, relevant to the preparation and presentation of the financial statements that give a true and fair view and are free from material misstatement, whether due to fraud or error.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Auditor&rsquo;s Responsibility</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Our responsibility is to express an opinion on these standalone financial statements based on our audit.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We have taken into account the provisions of the Act, the accounting and auditing standards and matters which are required to be included in the audit report under the provisions of the Act and the Rules made thereunder.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We conducted our audit in accordance with the Standards on Auditing specified under Section 143(10) of the Act. Those Standards require that we comply with ethical requirements and plan and perform the audit to obtain reasonable assurance about whether the financial statements are free from material misstatement.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">An audit involves performing procedures to obtain audit evidence about the amounts and the disclosures in the financial statements. The procedures selected depend on the auditor&rsquo;s judgment, including the assessment of the risks of material misstatement of the financial statements, whether due to fraud or error. In making those risk assessments, the auditor considers internal financial control relevant to the Company&rsquo;s preparation of the financial statements that give a true and fair view in order to design audit procedures that are appropriate in the circumstances. An audit also includes evaluating the appropriateness of the accounting policies used and the reasonableness of the accounting estimates made by the Company&rsquo;s Directors, as well as evaluating the overall presentation of the financial statements.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We believe that the audit evidence we have obtained is sufficient and appropriate to provide a basis for our audit opinion on the standalone financial statements.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Opinion</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">In our opinion and to the best of our information and according to the explanations given to us, the aforesaid standalone financial statements give the information required by the Act in the manner so required and give a true and fair view in conformity with the accounting principles generally accepted in India, of the state of affairs of the Company as at&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31st March, 20XX</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">, and its profit/loss and its cash flows for the year ended on that date.</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+                                                    <div id="unqualified_opinion_emphasis_of_matters_body">
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Emphasis of Matters (Optional) &nbsp;** PLEASE &nbsp;REVIEW THIS SECTION AND EDIT AND REMOVE AS NEEDED**</span></p>
+
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We draw attention to the following matters in the Notes to the financial statements:</span></p>
+
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Note X&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">to the financial statements which, describes the uncertainty related to the outcome of the lawsuit filed against the Company by&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">XYZ Company</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">.</span></p>
+
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Note Y&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">in the financial statements which indicates that the Company has accumulated losses and its net worth has been fully / substantially eroded, the Company has incurred a net loss/net cash loss during the current and previous year(s) and, the Company&rsquo;s current liabilities exceeded its current assets as at the balance sheet date. These conditions, along with other matters set forth in&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Note Y</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">, indicate the existence of a material uncertainty that may cast significant doubt about the Company&rsquo;s ability to continue as a going concern. However, the financial statements of the Company have been prepared on a going concern basis for the reasons stated in the said Note.</span></p>
+
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Our opinion is not modified in respect of these matters.</span></p>
+                                                    </div>
+                                                    <p>
+                                                        <br>
+                                                    </p>
+                                                    <div id="unqualified_opinion_other_matters_body">
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Other Matter (Optional) - ** PLEASE &nbsp;REVIEW THIS SECTION AND EDIT AND REMOVE AS NEEDED**</span></p>
+
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Mention any other matter that is financially or operationally significant to the company, if required.</span></p>
+
+                                                        <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Our opinion is not modified in respect of this matter.</span></p>
+                                                    </div>
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Report on Other Legal and Regulatory Requirements</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">As required by Section 143 (3) of the Act, we report that:</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(a) We have sought and obtained all the information and explanations which to the best of our knowledge and belief were necessary for the purposes of our audit.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(b) In our opinion, proper books of account as required by law have been kept by the Company so far as it appears from our examination of those books.</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(c) The Balance Sheet, the Statement of Profit and Loss, and the Cash Flow Statement dealt with by this Report are in agreement with the books of account.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(d) In our opinion, the aforesaid standalone financial statements comply with the Accounting Standards specified under Section 133 of the Act, read with Rule 7 of the Companies (Accounts) Rules, 2014.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(e) On the basis of the written representations received from the directors as on&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31st March, 20XX&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">taken on record by the Board of Directors, none of the directors is disqualified as on&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31st March, 20XX</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">&nbsp;from being appointed as a director in terms of Section 164 (2) of the Act.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(f) With respect to the adequacy of the internal financial controls over financial reporting of the Company and the operating effectiveness of such controls, refer to our separate Report in &ldquo;Annexure A&rdquo;.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(g) With respect to the other matters to be included in the Auditor&rsquo;s Report in accordance with Rule 11 of the Companies (Audit and Auditors) Rules, 2014, in our opinion and to the best of our information and according to the explanations given to us:</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">** PLEASE &nbsp;REVIEW THIS SECTION AND EDIT AND REMOVE AS NEEDED**</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">If applicable, mention any pending litigations which would impact the financial position of the Company.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">If applicable, mention if the Company has any long-term contracts including derivative contracts for which there were any material foreseeable losses.</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">If applicable, mention any delay in payment of statutory dues.</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Place:</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Date:</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">For <?php echo $clientName; ?></span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Chartered Accountants</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Firm&rsquo;s Registration No.)</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Signature</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(CA. Name)</span></p>
+
+                                                    <p>
+                                                        <br>
+                                                    </p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Designation)</span></p>
+
+                                                    <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Membership No. XXXX)</span></p>
+
+                                            </div>
+                                            <div id="qualified_opinion">
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">TO THE MEMBERS OF&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;"><?php echo $clientName; ?></span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Report on the Standalone Financial Statements</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We have audited the accompanying standalone financial statements of&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;"><?php echo $clientName; ?>&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(&ldquo;the Company&rdquo;), which comprise the Balance Sheet as at&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31st March, 20XX</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">, the Statement of Profit and Loss, the Cash Flow Statement for the year then ended, and a summary of the significant accounting policies and other explanatory information.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Management&rsquo;s Responsibility for the Standalone Financial Statements</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">The Company&rsquo;s Board of Directors is responsible for the matters stated in Section 134(5) of the Companies Act, 2013 (&ldquo;the Act&rdquo;) with respect to the preparation of these standalone financial statements that give a true and fair view of the financial position, financial performance and cash flows of the Company in accordance with the accounting principles generally accepted in India, including the Accounting Standards specified under Section 133 of the Act, read with Rule 7 of the Companies (Accounts) Rules, 2014. This responsibility also includes maintenance of adequate accounting records in accordance with the provisions of the Act for safeguarding of the assets of the Company and for preventing and detecting frauds and other irregularities; selection and application of appropriate accounting policies; making judgments and estimates that are reasonable and prudent; and design, implementation and maintenance of adequate internal financial controls, that were operating effectively for ensuring the accuracy and completeness of the accounting records, relevant to the preparation and presentation of the financial statements that give a true and fair view and are free from material misstatement, whether due to fraud or error.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Auditor&rsquo;s Responsibility</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Our responsibility is to express an opinion on these standalone financial statements based on our audit.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We have taken into account the provisions of the Act, the accounting and auditing standards and matters which are required to be included in the audit report under the provisions of the Act and the Rules made thereunder.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We conducted our audit in accordance with the Standards on Auditing specified under Section 143(10) of the Act. Those Standards require that we comply with ethical requirements and plan and perform the audit to obtain reasonable assurance about whether the financial statements are free from material misstatement.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">An audit involves performing procedures to obtain audit evidence about the amounts and the disclosures in the financial statements. The procedures selected depend on the auditor&rsquo;s judgment, including the assessment of the risks of material misstatement of the financial statements, whether due to fraud or error. In making those risk assessments, the auditor considers internal financial control relevant to the Company&rsquo;s preparation of the financial statements that give a true and fair view in order to design audit procedures that are appropriate in the circumstances. An audit also includes evaluating the appropriateness of the accounting policies used and the reasonableness of the accounting estimates made by the Company&rsquo;s Directors, as well as evaluating the overall presentation of the financial statements.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We believe that the audit evidence we have obtained is sufficient and appropriate to provide a&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">basis for our qualified audit opinion.</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Basis for Qualified Opinion&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Required in a Qualified Opinion)</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">&nbsp;** PLEASE &nbsp;REVIEW THIS SECTION AND EDIT AND REMOVE AS NEEDED**</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">List reasons for qualification &ndash; Examples provided below</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Included in debtors shown on the balance sheet is an amount of Rs. due from&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">XXX Private Limited</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">, a company that has ceased operations. The Company has no security for this debt. On the basis that no security has been obtained and no cash has been received during the financial year, in our opinion the Company should make a full provision for impairment&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">of Rs.XXX</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">, reducing profit before taxation for the year and net assets at&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31, March 20XX&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">by that amount.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">We were appointed as Auditors of the company on&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31 December 20XX&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">and thus did not observe the counting of the physical inventories at the beginning of the financial year. We were unable to satisfy ourselves by alternative means concerning inventory quantities held on&nbsp;</span><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">31st March 20XX.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">The Company&rsquo;s recorded turnover comprises cash sales, over which there was no system of internal control on which we could rely for the purpose of our audit. There were no other satisfactory audit procedures that we could adopt to satisfy ourselves that the recorded turnover was free from material misstatements.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Report on Other Legal and Regulatory Requirements</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">As required by Section 143 (3) of the Act, we report that:</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(a) We have sought and obtained all the information and explanations which to the best of our knowledge and belief were necessary for the purposes of our audit.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(b) In our opinion, proper books of account as required by law have been kept by the Company so far as it appears from our examination of those books.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(c) The Balance Sheet, the Statement of Profit and Loss, and the Cash Flow Statement dealt with by this Report are in agreement with the books of account.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(d) In our opinion, the aforesaid standalone financial statements comply with the Accounting Standards specified under Section 133 of the Act, read with Rule 7 of the Companies (Accounts) Rules, 2014.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(e) On the basis of the written representations received from the directors as on 31st March, 20XX taken on record by the Board of Directors, none of the directors is disqualified as on 31st March, 20XX from being appointed as a director in terms of Section 164 (2) of the Act.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(f) With respect to the adequacy of the internal financial controls over financial reporting of the Company and the operating effectiveness of such controls, refer to our separate Report in &ldquo;Annexure A&rdquo;.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(g) With respect to the other matters to be included in the Auditor&rsquo;s Report in accordance with Rule 11 of the Companies (Audit and Auditors) Rules, 2014, in our opinion and to the best of our information and according to the explanations given to us:</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">** PLEASE &nbsp;REVIEW THIS SECTION AND EDIT AND REMOVE AS NEEDED**</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">If applicable, mention any pending litigations which would impact the financial position of the Company.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">If applicable, mention if the Company has any long-term contracts including derivative contracts for which there were any material foreseeable losses.</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">If applicable, mention any delay in payment of statutory dues.</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Place:</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Date:</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">For <?php echo $clientName; ?></span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Chartered Accountants</span></p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Firm&rsquo;s Registration No.)</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">Signature</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(CA. Name)</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Designation)</span></p>
+
+                                                <p>
+                                                    <br>
+                                                </p>
+
+                                                <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">(Membership No. XXXX)</span></p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                        }
+                        elseif($prog_id == 24){
+                            $row1 = ($con->query("select balance_asset, balance_liability,pl_income,pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                            ?><br>
+                            <!-- Name-Period -->
+                            <div class="form-group col-md-12 d-flex">
+                                <div class="form-group col-md-6 text-center">
+                                    <label for="">Name :- <?php echo $clientName ?></label>
+                                </div>
+                                <div class="form-group col-md-6 text-center">
+                                    <label for="">Period :- <?php $period = $con->query("select datefrom,dateto from workspace where id='$wid'")->fetch_assoc();
+                                        $from = explode('-',$period['datefrom']);
+                                        $to = explode('-',$period['dateto']);
+                                        echo $from[0]."-".$to[0];
+                                        ?>
+                                    </label>
+                                </div>
+                            </div><hr>
+                            <!-- Input Box -->
+                            <div class="row">
+                                <div class="form-row p-top">
+                                    <div class="form-group col-md-6">
+                                        <label for="input1">Balance Assets Scope</label>
+                                        <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $row1['balance_asset']; ?>" readonly>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="input2">Balance Liability Scope</label>
+                                        <input type="text" class="form-control" name="lScope"
+                                                value="<?php echo $row1['balance_liability']; ?>" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-row p-top">
+                                    <div class="form-group col-md-6">
+                                        <label for="input1">PL- Income Scope</label>
+                                        <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $row1['pl_income']; ?>" readonly>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="input2">PL- Expense Scope</label>
+                                        <input type="text" class="form-control" name="lScope"
+                                                value="<?php echo $row1['pl_expense']; ?>" readonly>
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <!-- Add Misstatements Button -->
+                            <div class="row d-flex justify-content-center">
+                                <div class="form-group d-flex align-items-center">
+                                    <input class="btn btn-primary" type="submit" value="Add Misstatements" data-toggle="modal" data-target="#audit_summery_modal">
+                                </div> &nbsp;
+                                <a target="#" href="#"><button class="btn bg-violet" id="export2excel">Export</button></a>
+                            </div><br>
+                            <div id="export_misstatements">
+                                <?php
+                                $misstatemnentsResult = $con->query("select * from summery_of_misstatements where workspace_id=$wid");
+                                if($misstatemnentsResult->num_rows){
+                                    while($misstatementsRow=$misstatemnentsResult->fetch_assoc()){
+                                    ?>
+                                        <div>
+                                            <div class="row col-md-8">
+                                                <label class="form-group" style="color:blue; font-weight:bold;" for=""><?php echo $misstatementsRow['adjust_number'];?></label><br><br>
+                                                <label class="form-group" for="">Type : <?php echo $misstatementsRow['type'];?></label><br>
+                                                <label class="form-group" for="">Misstatement : <?php echo $misstatementsRow['misstatements'];?></label><br>
+                                                <label class="form-control" readonly><?php echo $misstatementsRow['description'];?></label><hr>
+                                            </div>
+                                            <div class="form-group col-md-8">
+                                                <table class="table table-borderless col-md-12" id="audit_misstatements">
+                                                    <tbody class="col-md-12">
+                                                    <style> 
+                                                        td, tr, table{
+                                                            text-align: left;
+                                                        }
+                                                    </style>
+                                                        <?php
+                                                            $misstatemnentsLogResult = $con->query("select * from summery_of_misstatements_log where summery_of_misstatements_id='".$misstatementsRow['id']."'");
+                                                            while($misstatementsLogRow=$misstatemnentsLogResult->fetch_assoc()){
+                                                        ?>
+                                                            <tr class="d-flex justify-content-between mr-5">                                                            
+                                                                <td style="padding:0;"><?php echo $misstatementsLogRow['account']; ?></td>
+                                                                <td style="padding:0;"><?php echo $misstatementsLogRow['amount']; ?></td>       
+                                                            </tr>
+                                                        <?php 
+                                                        } 
+                                                        ?>
+                                                    </tbody>
+                                                </table>
+                                            </div><br><br>
+                                        </div>
+                                    <?php
+                                    }
+                                ?>
+                                    <div class="row d-flex justify-content-center">
+                                        <?php
+                                            $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=24")->fetch_assoc();
+                                            if($checkReviewStatus['total']){
+                                                ?>
+                                                    <button class="btn btn-info" id="reviewSubmitAuditSummery">Review Sign-Off</button>
+                                                <?php
+                                            }
+                                            ?>
+                                            &nbsp;
+                                            <button class="btn btn-success" id="prepareSubmitAuditSummery">Prepare Sign-Off</button> 
+                                    </div>
+                                <?php
+                                } 
+                                ?>
+                            </div>
+                            <?php
+                        }
+                        elseif($prog_id == 258){
+                            ?>
+                            <div class="flex-column col-md-10 col-lg-10 col-sm-10 mt-3">
+                                <div class="form-group col-md-12 col-lg-12 col-sm-12">    
+                                    <p><strong>Entity name</strong> : <?php echo $clientName = $con->query("select name from workspace inner join client on workspace.client_id = client.id where workspace.id = $wid")->fetch_assoc()['name'];  ?></p>
+
+                                    <p><strong>Date of financial statement</strong> :<?php $workspaceDateRange = $con->query("select datefrom, dateto from workspace where id = $wid")->fetch_assoc(); echo $workspaceDateRange['datefrom'].' TO '.$workspaceDateRange['dateto']; ?> </p>
+
+                                    <p><strong>Purpose</strong></p>
+
+                                    <p>This form is used to document Management responses for initial inquiries.</p>
+
+                                    
+                                    <p>The partner in charge of the audit evidence approval of:</p>
+
+                                    <ul class="ml-5">
+                                        <li>Appropriate inquiries have been made to the management.</li>
+                                        <li>Also Whether the documentation included in the workpapers is adequate</li>
+                                    </ul>
+                                </div>
+                                <div id="question_div" class="form-group col-md-12 col-lg-12 col-sm-12"> 
+                                    <!-- <p><strong>Add Question</strong></p> -->
+                                    <button class="btn btn-outline-primary mb-3 ml-1" href="#" data-toggle="modal" data-target="#addQuestionModal">
+                                        <span>Add Question</span>
+                                    </button>
+                                    <form id="inquiring_management_form" action="inquiringManagementSubmit" method="post">
+                                            <?php 
+                                            $count = $i = 0;
+                                                $questionResult = $con->query("select id, inquiring_of_management_questions question, answer_option, answer_textarea from inquiring_of_management_questions_answer where workspace_id = '$wid'");
+                                                while($questionRow = $questionResult->fetch_assoc()){
+                                                    $i++;
+                                                    ?>
+                                                    <div class="mb-3">
+                                                        <input type="hidden" name="answer[<?php echo $count; ?>][0]" value="<?php echo $questionRow['id']; ?>">
+                                                        <label for=""><?php echo $i.') '.$questionRow['question']; ?></label>
+                                                        <div class="d-flex">
+                                                            <select name="answer[<?php echo $count; ?>][1]" class="form-control" required>
+                                                                <option value="">Choose a option</option>
+                                                                <option value="YES" <?php if($questionRow['answer_option'] == 'YES') echo "selected"; ?>>YES</option>
+                                                                <option value="NO" <?php if($questionRow['answer_option'] == 'NO') echo "selected"; ?>>NO</option>
+                                                                <option value="NA" <?php if($questionRow['answer_option'] == 'NA') echo "selected"; ?>>NA</option>
+                                                            </select>
+                                                            &ensp;
+                                                            <input name="answer[<?php echo $count; ?>][2]" class="form-control" placeholder="Have anything on mind type here..." value="<?php echo $questionRow['answer_textarea']; ?>">
+                                                            <?php
+                                                                $checkQuestion = $con->query("select inquiring_of_management_questions_answer.id id from inquiring_of_management_questions_answer where workspace_id = $wid and inquiring_of_management_questions not in ( select question from inquiring_of_management_questions )  and inquiring_of_management_questions = '".$questionRow['question']."'");
+                                                                if($checkQuestion->num_rows){
+                                                                    $questionId = $checkQuestion->fetch_assoc();
+                                                                    ?>
+                                                                        <i class="fas fa-edit editInquiringManagement" style="color:blue !important; cursor: pointer;" id="<?php echo $questionId['id']; ?>" ></i>
+                                                                        <i class="fas fa-trash-alt deleteInquiringManagementModal" style="color:red !important; cursor: pointer;" id="<?php echo $questionId['id']; ?>" ></i>
+                                                                    <?php
+                                                                }                                                    
+                                                            ?>
+                                                        </div>
+                                                    </div>
+                                            <?php
+                                            $count++;
+                                                }
+                                            ?>
+                                        <input type="hidden" name="wid" value="<?php echo $wid; ?>">
+                                        <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations..."><?php echo $con->query("select textarea from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea']; ?></textarea>
+                                        <input type="submit" id="inquiring_of_management_questions_form" class="btn btn-success" value="Save">
+                                    </form>
+                                </div>
+                                <div class="row d-flex justify-content-center">
+                                <?php
+                                $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=258")->fetch_assoc();
+                                if($checkReviewStatus['total']){
+                                    ?>
+                                        <button class="btn btn-info" id="reviewSubmitInquiryManagement">Review Sign-Off</button>
+                                    <?php
+                                }
+                                ?>
+                                    &nbsp;
+                                    <button class="btn btn-success" id="prepareSubmitInquiryManagement">Prepare Sign-Off</button>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        elseif($prog_id == 259){
+                            $row1 = ($con->query("select balance_asset, balance_liability,pl_income,pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                            ?><br>
+                            <!-- Name-End Date -->
+                            <div class="form-group col-md-12 d-flex">
+                                <div class="form-group col-md-6 text-center">
+                                    <label for="">Entity Name :- <?php echo $clientName ?></label>
+                                </div>
+                                <div class="form-group col-md-6 text-center">
+                                    <label for="">Year End Date :- <?php $period = $con->query("select dateto from workspace where id='$wid'")->fetch_assoc();
+                                        echo $period['dateto'];
+                                        ?>
+                                    </label>
+                                </div>
+                            </div><hr> 
+
+                            <!-- Export Estimate -->
+                            <div class="row d-flex justify-content-center">
+                                <a target="#" href="#"><button class="btn bg-violet" id="exportEstimate">Export</button></a>
+                            </div><br>
+
+                            <!-- Purpose DIV -->
+                            <div>
+                                <label>Purpose:</label><br>
+                                <span>
+                                    Team has assessed the level of risk for each estimate and then categorize each estimate 
+                                    (i.e., lower risk estimate, higher risk estimate or significant risk estimate) 
+                                    to assist in determining further procedures and same has been approved by Partner in charge.<br>
+                                    Team can discuss these estimates during planning event, including discussion of 
+                                    estimates and risks of material misstatement due to fraud and error
+                                    Perform procedures to review accounting estimates for evidence of management bias.
+                                </span>
+                            </div><hr>
+
+                             <!-- Add Estimate Button -->
+                             <div class="row d-flex justify-content-center">
+                                <div class="form-group d-flex align-items-center">
+                                    <input class="btn btn-primary" type="submit" value="Add Estimate" id="addEstimateRow">
+                                </div>
+                            </div><br>
+
+                            <!-- Estimate Table -->
+                            <div class="row" id="export_Estimate_page">    
+                                <div class="tableFixHead">
+                                    <form action="accountingEstimatesSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
+                                        <div class="row" style="margin: 0 !important;">    
+                                            <div>
+                                                <table id="addEstimate">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="border-bottom-left-radius: 0px !important;">Type of Estimate</th>
+                                                            <th>Name of Estimate</th>
+                                                            <th>Related accounts and disclosures</th>
+                                                            <th colspan="2">Amounts</th>
+                                                            <th colspan="5">Risk Assessment</th>
+                                                            <th>Overall Risk</th>
+                                                            <th style="border-bottom-right-radius: 0px !important;">Action</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="border-top-left-radius: 0px !important;"></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th>PY</th>
+                                                            <th>CY</th>
+                                                            <th>C</th>
+                                                            <th>E/O</th>
+                                                            <th>M/V</th>
+                                                            <th>R&O</th>
+                                                            <th>P&D</th>
+                                                            <th></th>
+                                                            <th style="border-top-right-radius: 0px !important;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="accounting_estimates">
+                                                    <?php
+                                                    
+                                                        $result = $con->query("select * from accounting_estimates where workspace_id=$wid");
+                                                        if($result->num_rows){
+                                                            while($row=$result->fetch_assoc()){
+                                                                ?>
+                                                                <tr>
+                                                                    <td>
+                                                                        <select name="submitEstimate[type][]" class="form-control" required>
+                                                                            <option value="Quantitative" <?php if($row['type'] == "Quantitative") echo "selected"; ?>>Quantitative</option>
+                                                                            <option value="Qualitative"  <?php if($row['type'] == "Qualitative") echo "selected"; ?>>Qualitative</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input name="submitEstimate[name][]" type="text" value="<?php echo $row['nameEstimate']; ?>"></td>
+                                                                    <td><input name="submitEstimate[account][]" type="text" value="<?php echo $row['account']; ?>"></td>
+                                                                    <td><input name="submitEstimate[py][]" type="number" value="<?php echo $row['py']; ?>"> </td>
+                                                                    <td><input name="submitEstimate[cy][]" type="number" value="<?php echo $row['cy']; ?>"> </td>
+                                                                    <td>
+                                                                    <select name="submitEstimate[c][]" class="form-control"required>
+                                                                        <option value="Low" <?php if($row['c'] == "Low") echo "selected"; ?>>Low</option>
+                                                                        <option value="Moderate" <?php if($row['c'] == "Moderate") echo "selected"; ?>>Moderate</option>
+                                                                        <option value="High" <?php if($row['c'] == "High") echo "selected"; ?>>High</option>
+                                                                        <option value="NA" <?php if($row['c'] == "NA") echo "selected"; ?>>NA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td>
+                                                                    <select name="submitEstimate[eo][]" class="form-control"required>
+                                                                        <option value="Low" <?php if($row['eo'] == "Low") echo "selected"; ?>>Low</option>
+                                                                        <option value="Moderate" <?php if($row['eo'] == "Moderate") echo "selected"; ?>>Moderate</option>
+                                                                        <option value="High" <?php if($row['eo'] == "High") echo "selected"; ?>>High</option>
+                                                                        <option value="NA" <?php if($row['eo'] == "NA") echo "selected"; ?>>NA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td>
+                                                                    <select name="submitEstimate[mv][]" class="form-control"required>
+                                                                        <option value="Low" <?php if($row['mv'] == "Low") echo "selected"; ?>>Low</option>
+                                                                        <option value="Moderate" <?php if($row['mv'] == "Moderate") echo "selected"; ?>>Moderate</option>
+                                                                        <option value="High" <?php if($row['mv'] == "High") echo "selected"; ?>>High</option>
+                                                                        <option value="NA" <?php if($row['mv'] == "NA") echo "selected"; ?>>NA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td>
+                                                                    <select name="submitEstimate[ro][]" class="form-control"required>
+                                                                        <option value="Low" <?php if($row['ro'] == "Low") echo "selected"; ?>>Low</option>
+                                                                        <option value="Moderate" <?php if($row['ro'] == "Moderate") echo "selected"; ?>>Moderate</option>
+                                                                        <option value="High" <?php if($row['ro'] == "High") echo "selected"; ?>>High</option>
+                                                                        <option value="NA" <?php if($row['ro'] == "NA") echo "selected"; ?>>NA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td>
+                                                                    <select name="submitEstimate[pd][]" class="form-control"required>
+                                                                        <option value="Low" <?php if($row['pd'] == "Low") echo "selected"; ?>>Low</option>
+                                                                        <option value="Moderate" <?php if($row['pd'] == "Moderate") echo "selected"; ?>>Moderate</option>
+                                                                        <option value="High" <?php if($row['pd'] == "High") echo "selected"; ?>>High</option>
+                                                                        <option value="NA"  <?php if($row['pd'] == "NA") echo "selected"; ?>>NA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td>
+                                                                    <select name="submitData[risk][]" class="form-control"required>
+                                                                        <option value="Low Risk" <?php if($row['risk'] == "Low Risk") echo "selected"; ?>>Low Risk</option>
+                                                                        <option value="Significant Risk" <?php if($row['risk'] == "Significant Risk") echo "selected"; ?>>Significant Risk</option>
+                                                                        <option value="High Risk" <?php if($row['risk'] == "High Risk") echo "selected"; ?>>High Risk</option>
+                                                                        <option value="NA" <?php if($row['risk'] == "NA") echo "selected"; ?>>NA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fas fa-trash-alt deleteAccountingEstimate" style="color:red !important; cursor: pointer;" id="<?php echo $row['id']; ?>" ></i>
+                                                                    </td>
+                                                                </tr>
+                                                           <?php }
+                                                        }
+                                                    else{
+                                                    ?>
+                                                        <tr id="addRowEstimate0">
+                                                            <td>
+                                                                <select name="submitEstimate[type][]" class="form-control" required>
+                                                                    <option value="Quantitative">Quantitative</option>
+                                                                    <option value="Qualitative">Qualitative</option>
+                                                                </select>
+                                                            </td>
+                                                            <td><input name="submitEstimate[name][]" type="text"></td>
+                                                            <td><input name="submitEstimate[account][]" type="text"></td>
+                                                            <td> <input name="submitEstimate[py][]" type="number"> </td>
+                                                            <td> <input name="submitEstimate[cy][]" type="number"> </td>
+                                                            <td>
+                                                            <select name="submitEstimate[c][]" class="form-control"required>
+                                                                <option value="Low">Low</option>
+                                                                <option value="Moderate">Moderate</option>
+                                                                <option value="High">High</option>
+                                                                <option value="NA">NA</option>
+                                                            </select>
+                                                            </td>
+                                                            <td>
+                                                            <select name="submitEstimate[eo][]" class="form-control"required>
+                                                                <option value="Low">Low</option>
+                                                                <option value="Moderate">Moderate</option>
+                                                                <option value="High">High</option>
+                                                                <option value="NA">NA</option>
+                                                            </select>
+                                                            </td>
+                                                            <td>
+                                                            <select name="submitEstimate[mv][]" class="form-control"required>
+                                                                <option value="Low">Low</option>
+                                                                <option value="Moderate">Moderate</option>
+                                                                <option value="High">High</option>
+                                                                <option value="NA">NA</option>
+                                                            </select>
+                                                            </td>
+                                                            <td>
+                                                            <select name="submitEstimate[ro][]" class="form-control"required>
+                                                                <option value="Low">Low</option>
+                                                                <option value="Moderate">Moderate</option>
+                                                                <option value="High">High</option>
+                                                                <option value="NA">NA</option>
+                                                            </select>
+                                                            </td>
+                                                            <td>
+                                                            <select name="submitEstimate[pd][]" class="form-control"required>
+                                                                <option value="Low">Low</option>
+                                                                <option value="Moderate">Moderate</option>
+                                                                <option value="High">High</option>
+                                                                <option value="NA">NA</option>
+                                                            </select>
+                                                            </td>
+                                                            <td>
+                                                            <select name="submitData[risk][]" class="form-control"required>
+                                                                <option value="Low Risk">Low Risk</option>
+                                                                <option value="Significant Risk">Significant Risk</option>
+                                                                <option value="High Risk">High Risk</option>
+                                                                <option value="NA">NA</option>
+                                                            </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr id="addRowEstimate1"></tr>
+                                                    <?php }
+                                                    ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Documents Observations</label>
+                                            <textarea name= "comments" class="form-control" rows="3"><?php echo $con->query("select comments from accounting_estimates_comments where workspace_id=$wid")->fetch_assoc()['comments'];?></textarea>
+                                        </div>
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
+                                            <input type="submit" class="btn btn-success align-middle" value="Save"> 
+                                        </div><br>
+                                    </form> 
+                                    <div class="row d-flex justify-content-center">
+                                        <?php
+                                            $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=259")->fetch_assoc();
+                                            if($checkReviewStatus['total']){
+                                                ?>
+                                                    <button class="btn btn-info" id="reviewSubmitEstimate">Review Sign-Off</button>
+                                                <?php
+                                            }
+                                            ?>
+                                            &nbsp;
+                                            <button class="btn btn-success" id="prepareSubmitEstimate">Prepare Sign-Off</button> 
+                                    </div><br>
+                                    <div class="row d-flex justify-content-center align-items-center p-top">
+                                        <?php
+                                        $query = "select * from accounting_estimates_files where workspace_id='$wid'";
+                                        $result = $con->query($query);
+                                        ?>
+                                            <ul class="custom-list list-bg" style="padding-bottom: 2% !important;">
+                                                <span class="d-flex justify-content-center align-items-center">Uploaded Files</span>
+                                            <?php 
+                                            while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                <li class="custom-list-items custom-list-items-action">
+                                                    <a target="_blank" href="<?php echo "uploads/accounting_estimates/" . $row['file_name']; ?>"><?php echo $row['file_name']; ?></a>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                            </ul>
+                                    </div>                         
+                                </div>
+                            </div>
+
+                            <?php
+                        }
+                        elseif($prog_id == 8){
+                            ?>
+                            <div class="flex-column col-md-10 col-lg-10 col-sm-10 mt-3">
+                                <button id="exportGoingConcern" class="btn bg-violet mb-3 ml-2" onclick = "exportGoingConcern()">Export</button>
+                                <?php $goingConcernDecRadio = $con->query("select * from going_concern where workspace_id = $wid")->fetch_assoc(); ?>
+                                <form action="goingConcernAjax.php" method="post" enctype="multipart/form-data">
+                                    <div id="goingConcernDiv" class="form-group col-md-12 col-lg-12 col-sm-12">
+                                        <p><strong>Entity name</strong> : <?php echo $clientName = $con->query("select name from workspace inner join client on workspace.client_id = client.id where workspace.id = $wid")->fetch_assoc()['name'];  ?></p>
+
+                                        <p><strong>Date of financial statement</strong> :<?php $workspaceDateRange = $con->query("select datefrom, dateto from workspace where id = $wid")->fetch_assoc(); echo $workspaceDateRange['datefrom'].' TO '.$workspaceDateRange['dateto']; ?> </p>
+
+                                        <p><strong>Purpose</strong></p>
+
+                                        <p>This form is used to document our procedures to meet the requirements of Going Concern assessment.</p>
+                                        
+                                        <p>The partner in charge of the audit evidence approval of:</p>
+
+                                        <ul class="ml-5">
+                                            <li>The conclusion on the appropriateness of management’s use of the going concern basis of accounting in the preparation of the financial statements.</li>
+                                            <li>The conclusion reached as to whether there is substantial doubt about an entity’s ability to continue as a going concern for a reasonable period.</li>
+                                            <li>Whether the documentation included in the workpapers is adequate</li>
+                                        </ul>
+
+                                        <p><strong>Information produced by the entity.</strong></p>
+                                        <p>The risks of information provided by the entity, when applicable, are addressed as part of our going concern procedures.</p>
+                                        <br>
+                                        <p><h3>Part A: Scope &amp; Strategy</h3></p>
+                                        <p><b>Consider whether there are conditions or events that raise substantial doubt about Going Concern</b></p>
+                                        <p>We may make inquiries of management when considering whether there are conditions or events that raise substantial doubt. If we do, indicate the names and titles of whom we made inquiries.</p>
+                                        <br>
+                                    
+                                        <table id="addPartAATable" class="table thead-light table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Name:</b></th>
+                                                    <th><b>Title:</b></th>
+                                                    <th><b>Date:</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>    
+                                            <?php 
+                                            $result = $con->query("select name, title, date from going_concern_name_title_date where workspace_id = '$wid' and part = 'A'");
+                                            if($result->num_rows > 0){
+                                                $i = 0;
+                                                while($row = $result->fetch_assoc()){
+                                                    ?>
+                                                    <tr id="<?php echo $i; ?>">
+                                                        <td><input type="text" name="going_concern_name_title_date_a[<?php echo $i; ?>][0]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['name']; ?>"></td>
+                                                        <td><input type="text" name="going_concern_name_title_date_a[<?php echo $i; ?>][1]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['title']; ?>"></td>
+                                                        <td><input type="text" name="going_concern_name_title_date_a[<?php echo $i++; ?>][2]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['date']; ?>"></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            else{
+                                                ?>
+                                                <tr id="0">
+                                                    <td><input type="text" name="going_concern_name_title_date_a[0][0]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                    <td><input type="text" name="going_concern_name_title_date_a[0][1]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                    <td><input type="text" name="going_concern_name_title_date_a[0][2]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <button id="addPartAARow" class="btn btn-outline-primary mb-3">Add Row</button>
+                                        <style>
+                                            td, tr, table{
+                                                text-align: left;
+                                            }
+                                            .table thead th{
+                                                vertical-align: middle;
+                                            }
+                                        </style>
+                                        <table id="addPartABTable" class="table thead-light table-stripped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Procedures</b></th>
+                                                    <th><b>Document results of procedures here and cross reference to the applicable documentation:</b></th>
+                                                    <th><b>Action</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            $i = 0;
+                                            $alphabet = 'a';
+                                            $result = $con->query("select id, procedure_data, free_text from going_concern_procedures where workspace_id = '$wid' and part = 'A' ");
+                                            while($row = $result->fetch_assoc()){
+                                            ?>
+                                                <tr>
+                                                    <td><label for=""><?php echo $alphabet++.')'.$row['procedure_data']; ?></label></td>
+                                                    <input type="hidden" name="freeTextA[<?php echo $i; ?>][0]" value="<?php echo $row['id']; ?>">
+                                                    <td><input type="text" name="freeTextA[<?php echo $i++; ?>][1]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['free_text']; ?>"></td>
+                                                    <td>
+                                                    <?php
+                                                        $checkQuestion = $con->query("select id from going_concern_procedures where workspace_id = '$wid' and going_concern_procedures.part = 'A' and procedure_data not in (SELECT going_concern_default_procedure.procedure from going_concern_default_procedure where part = 'A') and id= '".$row['id']."'");
+                                                        if($checkQuestion->num_rows){
+                                                            ?>
+                                                                <i class="fas fa-edit editProcedure" style="color:blue !important; cursor: pointer;" id="<?php echo $row['id']; ?>" ></i>
+                                                                <i class="fas fa-trash-alt deleteProcedureModal" style="color:red !important; cursor: pointer;" id="<?php echo $row['id']; ?>" ></i>
+                                                            <?php
+                                                        }                                                    
+                                                    ?></td>
+                                                </tr>
+                                                <?php       
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <button id="addPartABRow" class="btn btn-outline-primary mb-3 ml-1" href="#" data-toggle="modal" data-target="#addProcedureABModal">
+                                            <span>Add Procedure</span>
+                                        </button>
+                                        <p>Document additional considerations as needed:</p>
+                                        <textarea name="desc_a" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_a']; ?></textarea>
+                                        <br>
+                                        <p><h3>Part B: Execute &amp; Conclude</h3></p>
+                                        <p>Procedures to evaluate the entity’s ability to continue as a going concern</p>
+                                        <p>We evaluate whether there is substantial doubt about the entity’s ability to continue as a going concern for a reasonable period of time based on the results of our procedures performed during the audit. We consider whether our procedures identify conditions or events that may raise substantial doubt about the entity’s ability to continue as a going concern.</p>
+                                        <p>Management’s evaluation and supporting analysis of going concern is often an important consideration to our evaluation of the entity’s ability to continue as a going concern.</p>
+                                        <p>We may make inquiries of management when evaluating the entity’s ability to continue as a going concern. If we do, indicate the names and titles of whom we made inquiries</p>
+                                        <table id="addPartBATable" class="table thead-light table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Name:</b></th>
+                                                    <th><b>Title:</b></th>
+                                                    <th><b>Date:</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php 
+                                            $result = $con->query("select name, title, date from going_concern_name_title_date where workspace_id = '$wid' and part = 'B'");
+                                            if($result->num_rows > 0){
+                                                $i = 0;
+                                                while($row = $result->fetch_assoc()){
+                                                    ?>
+                                                    <tr id="<?php echo $i; ?>">
+                                                        <td><input type="text" name="going_concern_name_title_date_b[<?php echo $i; ?>][0]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['name']; ?>"></td>
+                                                        <td><input type="text" name="going_concern_name_title_date_b[<?php echo $i; ?>][1]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['title']; ?>"></td>
+                                                        <td><input type="text" name="going_concern_name_title_date_b[<?php echo $i++; ?>][2]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['date']; ?>"></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            else{
+                                                ?>
+                                                <tr id="0">
+                                                    <td><input type="text" name="going_concern_name_title_date_b[0][0]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                    <td><input type="text" name="going_concern_name_title_date_b[0][1]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                    <td><input type="text" name="going_concern_name_title_date_b[0][2]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <button id="addPartBARow" class="btn btn-outline-primary mb-3">Add Row</button>
+                                        <style>
+                                            td, tr, table{
+                                                text-align: left;
+                                            }
+                                            .table thead th{
+                                                vertical-align: middle;
+                                            }
+                                        </style> 
+                                        <table id="addPartBBTable" class="table thead-light table-stripped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Procedures</b></th>
+                                                    <th><b>Document results of procedures here and cross reference to the applicable documentation:</b></th>
+                                                    <th><b>Action</b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            $i = 0;
+                                            $alphabet = 'a';
+                                            $result = $con->query("select id, procedure_data, free_text from going_concern_procedures where workspace_id = '$wid' and part = 'B' ");
+                                            while($row = $result->fetch_assoc()){
+                                            ?>
+                                                <tr>
+                                                    <td><label for=""><?php echo $alphabet++.')'.$row['procedure_data']; ?></label></td>
+                                                    <input type="hidden" name="freeTextB[<?php echo $i; ?>][0]" value="<?php echo $row['id']; ?>">
+                                                    <td><input type="text" name="freeTextB[<?php echo $i++; ?>][1]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['free_text']; ?>"></td>
+                                                    <td>
+                                                    <?php
+                                                        $checkQuestion = $con->query("select id from going_concern_procedures where workspace_id = '$wid' and going_concern_procedures.part = 'B' and procedure_data not in (SELECT going_concern_default_procedure.procedure from going_concern_default_procedure where part = 'B') and id= '".$row['id']."'");
+                                                        if($checkQuestion->num_rows){
+                                                            ?>
+                                                                <i class="fas fa-edit editProcedure" style="color:blue !important; cursor: pointer;" id="<?php echo $row['id']; ?>" ></i>
+                                                                <i class="fas fa-trash-alt deleteProcedureModal" style="color:red !important; cursor: pointer;" id="<?php echo $row['id']; ?>" ></i>
+                                                            <?php
+                                                        }                                                    
+                                                    ?></td>
+                                                </tr>
+                                                <?php       
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <button id="addPartBBRow" class="btn btn-outline-primary mb-3 ml-1" href="#" data-toggle="modal" data-target="#addProcedureBBModal">
+                                            <span>Add Procedure</span>
+                                        </button>
+                                        <p>Document additional considerations as needed:</p>
+                                        <textarea name="desc_b" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_b']; ?></textarea>
+                                        <br>
+                                        <p><b>Conclusion</b></p>
+                                        <p><b><i>We did not give consideration to modification of our auditor’s report</i></b></p>
+                                        <p>Choose anyone from the options given below:</p>
+                                        <?php
+                                        $conclusionNumber = 0;
+                                            $conclusionResult = $con->query("select * from going_concern_conclusion where workspace_id = $wid");
+                                            while($conclusionRow = $conclusionResult->fetch_assoc()){
+                                                ?>
+                                                <input type="radio" id="<?php echo $conclusionRow['id']; ?>" name="conclusion" value="<?php echo $conclusionNumber; ?>" <?php if($goingConcernDecRadio['going_concern_radio'] == $conclusionNumber) echo 'checked'; ?> >
+                                                <label for="<?php echo $conclusionNumber++; ?>"><?php echo $conclusionRow['going_concern_conclusion_data']; ?>&nbsp;<i class="fas fa-edit editTextarea" style="color:blue !important; cursor: pointer;" id="<?php echo $conclusionRow['id']; ?>" ></i></label><br>
+                                                <?php
+                                            }
+                                        ?>
+                                        <br>
+                                        <p>Document additional considerations as needed:</p>
+                                        <textarea name="desc_c" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_c']; ?></textarea>
+                                    </div>
+                                    <input type="hidden" name="wid" value="<?php echo $wid; ?>">
+                                    <input type="hidden" name="pid" value="<?php echo $prog_id; ?>">
+                                    <input type="hidden" name="parent_id" value="<?php echo $prog_parentId; ?>">
+                                    <input type="hidden" name="status" value="1">
+                                    <div class="row d-flex justify-content-center align-items-center">
+                                        <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
+                                    </div>
+                                    
+                                    <div class="row d-flex justify-content-center align-items-center p-top">
+                                        <?php
+                                        $query = "select * from going_concern_files where workspace_id='$wid'";
+                                        $result = $con->query($query);
+                                        ?>
+                                            <ul class="custom-list list-bg" style="padding-bottom: 2% !important;">
+                                                <span class="d-flex justify-content-center align-items-center">Uploaded Files</span>
+                                            <?php 
+                                            while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                <li class="custom-list-items custom-list-items-action">
+                                                    <a target="_blank" href="<?php echo "uploads/going_concern_files/" . $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                            </ul>
+                                    </div>
+                                    <hr>
+                                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                                        <hr>
+                                        <i class="fas fa-info-circle" style="color:orange !important;"></i>
+                                        <strong>Click the save button to save respective files/data before signing off</strong>
+                                    </div>
+                                    <button id="goingConcernSubmit" class="btn btn-success">Save</button>
+                                </form>
+                                <div class="row d-flex justify-content-center">
+                                    <?php
+                                        $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=8")->fetch_assoc();
+                                        if($checkReviewStatus['total']){
+                                            ?>
+                                                <button class="btn btn-info" id="reviewSubmitGoingConcern">Review Sign-Off</button>
+                                            <?php
+                                        }
+                                        ?>
+                                        &nbsp;
+                                        <button class="btn btn-success" id="prepareSubmitGoingConcern">Prepare Sign-Off</button> 
+                                </div>
+                            </div>
+                            <?php
+                        }
                         else{
                             $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                             $exquery = $con->query($query);
@@ -1265,7 +2315,7 @@
                                                                         $con->query("UPDATE workspace_log SET import = 0 WHERE workspace_id = '".$wid."' and program_id = 395");
                                                                     }
                                                                 }
-                                                                if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395){ ?>
+                                                                if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24){ ?>
                                                                     <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
                                                                         <i class="fas fa-external-link-alt"
                                                                             style="color:blue !important;"
@@ -1331,7 +2381,6 @@
                         ?>
                     </div>
                 </div>
-
                 <!-- Footer -->
                 <footer class="sticky-footer">
                     <div class="container my-auto">
@@ -1342,7 +2391,6 @@
                     </div>
                 </footer>
             </div>
-
         <!--Add Programme Modal -->
         <div class="modal fade" id="addProgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -1704,11 +2752,279 @@
                 </div>
             </div>
         </div>
+
+        <!--Add Question Modal -->
+        <div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Add Question Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Question Name</label>
+                                <input type="text" class="form-control" name="name" id="question_name" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="addQuestionSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Add Procedure Part A Modal -->
+        <div class="modal fade" id="addProcedureABModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Add Procedure Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Procedures Name</label>
+                                <textarea class="form-control" name="name" id="procedure_a_name" cols="30" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="addProcedureASubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Add Procedure Part B Modal -->
+        <div class="modal fade" id="addProcedureBBModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form>
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Add Procedure Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Procedures Name</label>
+                                <textarea class="form-control" name="name" id="procedure_b_name" cols="30" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="addProcedureBSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Edit Procedure Part A Modal -->
+        <div class="modal fade" id="editProcedureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form method="post" action="editProcedure">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Edit Procedure Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Procedures Name</label>
+                                <input type="hidden" name="prodecureId" id="prodecureId">
+                                <textarea class="form-control" name="name" id="procedure_name" cols="30" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="editProcedureASubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Edit Inquiring Management Part A Modal -->
+        <div class="modal fade" id="editInquiringManagementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form method="post" action="editInquiringManagement">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Edit Question Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Question Name</label>
+                                <input type="hidden" name="inquiringManagementId" id="inquiringManagementId">
+                                <textarea class="form-control" name="name" id="inquiringManagement_name" cols="30" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="editInquiringManagementSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Edit Conclusion Textarea Modal -->
+        <div class="modal fade" id="editTextareaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form method="post" action="editConclusion">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Edit Textarea Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Textarea Name</label>
+                                <input type="hidden" name="id" id="id">
+                                <textarea class="form-control" name="name" id="textarea_name" cols="30" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="editTextareaSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Summery Modal-->
+        <div class="modal fade" id="audit_summery_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="audit_summery_form" id="audit_summery" method="post" action="auditSummerySubmit.php?wid=<?php echo $wid; ?>">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <div class="form-group">
+                                    <label for="">Add New Adjusment</label>
+                                </div>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <br>
+                            <div class="container card">
+                                <div class="row d-flex justify-content-between">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="adjust_number">Adjustment Number</label>
+                                            <div class="form-group">
+                                                <input class="" type="text" name="adjustment_number" value="<?php echo $con->query("select count(id) total from summery_of_misstatements where workspace_id=$wid")->fetch_assoc()["total"] == 0 ? "AJ-01" : ++$con->query("SELECT adjust_number from summery_of_misstatements where workspace_id=$wid order by id DESC LIMIT 1")->fetch_assoc()["adjust_number"]; ?>" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex col-md-12 p-0">
+                                            <div class="form-group col-md-6">
+                                                <label for="">Type</label>
+                                                <select class="form-control col-md-12" name="type" id="type" required>
+                                                    <option value="">Choose any One!</option>
+                                                    <option value="Factual">Factual</option>
+                                                    <option value="Judgmental">Judgmental</option>
+                                                    <option value="Projected">Projected</option>
+                                                    <option value="Reclassification">Reclassification</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6"> 
+                                                <label for="">Add Misstatement</label>
+                                                <select class="form-control col-md-12" name="misstatement" id="misstatement" required>
+                                                    <option value="">Choose any One!</option>
+                                                    <option value="Uncorrected">Uncorrected</option>
+                                                    <option value="Corrected">Corrected</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="missstatements_description">Description</label>
+                                            <div class="form-group">
+                                                <textarea name= "missstatements_description" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="missstatements_details">Details</label>
+                                            <div class="form-group">
+                                                <table class="table table-borderless" id="tablogic_miss">
+                                                    <tbody>
+                                                        <tr id='addr0'>                                                            
+                                                            <td>
+                                                                <select class="form-control" name="misstatements_account[]" id="misstatements_account" required>
+                                                                    <option>Select Account !</option>
+                                                                        <?php
+                                                                            $accQuery = $con->query("select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid'");
+                                                                            while ($accResult = $accQuery->fetch_assoc()) {
+                                                                        ?>
+                                                                            <option value="<?php echo $accResult['program_name']; ?>">
+                                                                                <?php echo $accResult['program_name']; ?>
+                                                                            </option>
+                                                                        <?php
+                                                                            }
+                                                                        ?>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input name="misstatements_amount[]" class="form-control input-lg sum" type="number" placeholder="Enter Amount">
+                                                            </td>
+                                                        </tr>
+                                                        <tr id='addr1'></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col d-flex justify-content-between">
+                                                    <a href="#" id="add_row_miss" class="btn btn-outline-primary pull-left">Add</a>
+                                                    <a href="#" id='delete_row_miss' class="btn btn-outline-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                    <input class="btn btn-primary" type="submit" id="submit_misstatements" value="Save">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Custom scripts for all pages-->
+    <script src="vendor/Export-Html-To-Word-Document-With-Images-Using-jQuery-Word-Export-Plugin/FileSaver.js"></script>
+    <script src="vendor/Export-Html-To-Word-Document-With-Images-Using-jQuery-Word-Export-Plugin/jquery.wordexport.js"></script>
+    <script type="text/javascript" src="node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
     <script src="js/sb-admin-2.min.js"></script>
     <script src="js/custom.js"></script>
+    
 
     <script>
         $(document).ready(function () {
@@ -1719,7 +3035,7 @@
 
             setInterval(() => {
                 let uploaded = localStorage.getItem('uploaded');
-                if(uploaded){
+                if(uploaded == true){
                     document.getElementsByClassName('refreshmodal')[0].click();
                     localStorage.removeItem('uploaded');
                 }
@@ -1729,6 +3045,125 @@
                 alert(mid);
                 $('#abody').append('<tr id="R' + (i + 1) +
                     '"><td class="row-index text-center"></td></tr>');
+            });
+
+            var i = 1;
+            b = i - 1;
+            $("#add_table").click(function() {
+                $('#addr' + i).html($('#addr' + b).html()).find('td:first-child');
+                $('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
+                i++;
+            });
+            //Delete Row Function for sales add form
+            $("#delete_row").click(function() {
+                if (i > 1) {
+                    $("#addr" + (i - 1)).html('');
+                    i--;
+                }
+            });
+            //Add Row in Summery of Misstatements
+            var j = 1;
+            a = j - 1;
+            $("#add_row_miss").click(function() {
+                $('#addr' + j).html($('#addr' + a).html()).find('td:first-child');
+                $('#tablogic_miss').append('<tr id="addr' + (j + 1) + '"></tr>');
+                j++;
+            });
+            //Delete Row Function for Summery of Misstatements
+            $("#delete_row_miss").click(function() {
+                if (j > 1) {
+                    $("#addr" + (j - 1)).html('');
+                    j--;
+                }
+            });
+            //Add Row in Accounting Estimates
+            var x = 1;
+            y = x - 1;
+            $("#addEstimateRow").click(function() {
+                // $('#addRowEstimate' + x).html($('#addRowEstimate' + y).html()).find('td:first-child');
+                // $('#addEstimate').append('<tr id="addRowEstimate' + (x + 1) + '"></tr>');
+                // x++;
+                $("#accounting_estimates").append('<tr>'+
+                '                                                            <td>'+
+                '                                                                <select name="submitEstimate[type][]" class="form-control" required>'+
+                '                                                                    <option value="Quantitative">Quantitative</option>'+
+                '                                                                    <option value="Qualitative">Qualitative</option>'+
+                '                                                                </select>'+
+                '                                                            </td>'+
+                '                                                            <td><input name="submitEstimate[name][]" type="text"></td>'+
+                '                                                            <td><input name="submitEstimate[account][]" type="text"></td>'+
+                '                                                            <td> <input name="submitEstimate[py][]" type="number"> </td>'+
+                '                                                            <td> <input name="submitEstimate[cy][]" type="number"> </td>'+
+                '                                                            <td>'+
+                '                                                            <select name="submitEstimate[c][]" class="form-control"required>'+
+                '                                                                <option value="Low">Low</option>'+
+                '                                                                <option value="Moderate">Moderate</option>'+
+                '                                                                <option value="High">High</option>'+
+                '                                                                <option value="NA">NA</option>'+
+                '                                                            </select>'+
+                '                                                            </td>'+
+                '                                                            <td>'+
+                '                                                            <select name="submitEstimate[eo][]" class="form-control"required>'+
+                '                                                                <option value="Low">Low</option>'+
+                '                                                                <option value="Moderate">Moderate</option>'+
+                '                                                                <option value="High">High</option>'+
+                '                                                                <option value="NA">NA</option>'+
+                '                                                            </select>'+
+                '                                                            </td>'+
+                '                                                            <td>'+
+                '                                                            <select name="submitEstimate[mv][]" class="form-control"required>'+
+                '                                                                <option value="Low">Low</option>'+
+                '                                                                <option value="Moderate">Moderate</option>'+
+                '                                                                <option value="High">High</option>'+
+                '                                                                <option value="NA">NA</option>'+
+                '                                                            </select>'+
+                '                                                            </td>'+
+                '                                                            <td>'+
+                '                                                            <select name="submitEstimate[ro][]" class="form-control"required>'+
+                '                                                                <option value="Low">Low</option>'+
+                '                                                                <option value="Moderate">Moderate</option>'+
+                '                                                                <option value="High">High</option>'+
+                '                                                                <option value="NA">NA</option>'+
+                '                                                            </select>'+
+                '                                                            </td>'+
+                '                                                            <td>'+
+                '                                                            <select name="submitEstimate[pd][]" class="form-control"required>'+
+                '                                                                <option value="Low">Low</option>'+
+                '                                                                <option value="Moderate">Moderate</option>'+
+                '                                                                <option value="High">High</option>'+
+                '                                                                <option value="NA">NA</option>'+
+                '                                                            </select>'+
+                '                                                            </td>'+
+                '                                                            <td>'+
+                '                                                            <select name="submitData[risk][]" class="form-control"required>'+
+                '                                                                <option value="Low Risk">Low Risk</option>'+
+                '                                                                <option value="Significant Risk">Significant Risk</option>'+
+                '                                                                <option value="High Risk">High Risk</option>'+
+                '                                                                <option value="NA">NA</option>'+
+                '                                                            </select>'+
+                '                                                            </td>'+
+                '                                                        </tr>'
+)
+            });
+            // //Delete Row Function for Summery of Misstatements
+            // $("#delete_row_miss").click(function() {
+            //     if (x > 1) {
+            //         $("#addr" + (x - 1)).html('');
+            //         x--;
+            //     }
+            // });
+            $(document).on('click', '#submit_misstatements',function(e){
+                let sumMisstatements = 0;
+                $('.sum').each(function(){
+                    sumMisstatements += parseFloat(this.value);            
+                });
+                if(sumMisstatements != 0){
+                    e.preventDefault();
+                    swal({
+                        icon: "error",
+                        text: "Sum should be ZERO!",
+                    })
+                }
             });
 
             $(document).on('click', '.buttonActive', function () {
@@ -2302,6 +3737,41 @@
             $('#signoffModal').on('hidden.bs.modal', function () {
                 location.reload();
             });
+            $("#draft_report_show_div").hide()
+
+            $('#addQuestionSubmit').on('click', function (e) {
+                e.preventDefault();
+                var question_name = $("#question_name").val();
+                $.ajax({
+                    url: "addInquiringManagementQuestionAjax.php",
+                    type: "POST",
+                    data: {
+                        wid: <?php echo $wid; ?>,
+                        name: question_name,
+                    },
+                    success: function (response) {
+                        if (response) {
+                            swal({
+                                icon: "success",
+                                text: question_name + " Added",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            swal({
+                                icon: "error",
+                                text: "Failed!",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
 
             //Validate Asset=Liability
             
@@ -2550,6 +4020,692 @@
                             }
                         });
                     }
+                }
+            });
+        });
+
+        let audit_report_data;
+        let audit_report;
+        let other_matter;
+        let emphasis_of_matters;
+        let editor = new FroalaEditor('#editor')
+
+        function type_audit_report(e){
+            audit_report = $("#audit_report").val();
+            if(audit_report == 1){
+                $("#emphasis_of_matters").attr("required",false)
+                $("#other_matters").attr("required",false)
+                $("#emphasis_of_matters_div").hide();
+                $("#other_matters_div").hide();
+            }
+            else{
+                $("#emphasis_of_matters").attr("required",true)
+                $("#other_matters").attr("required",true)
+                $("#emphasis_of_matters_div").show();
+                $("#other_matters_div").show();
+            }
+        }
+
+        $("#draft_report_form").submit(function(e){
+            e.preventDefault();
+            $("#draft_report_show_div").show()
+            audit_report = $("#audit_report").val();
+            other_matter = $("#other_matters").val();
+            emphasis_of_matters = $("#emphasis_of_matters").val();
+            
+            if(audit_report == 0){
+                $("#unqualified_opinion").show();
+                $("#qualified_opinion").hide();
+                emphasis_of_matters == 0 ? $("#unqualified_opinion_emphasis_of_matters_body").hide():$("#unqualified_opinion_emphasis_of_matters_body").show()
+                other_matter == 0 ? $("#unqualified_opinion_other_matters_body").hide():$("#unqualified_opinion_other_matters_body").show()
+                audit_report_data = $('#unqualified_opinion').html()
+            }
+            else{
+                $("#unqualified_opinion").hide();
+                $("#qualified_opinion").show()
+                audit_report_data = $('#qualified_opinion').html();
+                emphasis_of_matters = 0;
+                other_matter = 0;
+            }
+        });
+
+        $(document).on('click','#save_audit_report', function(e){
+            $.ajax({
+                url: "draftReportAjax.php",
+                type: "POST",
+                data: {
+                    wid: <?php echo $wid; ?>,
+                    type_report_audit_report:audit_report,
+                    audit_report_data:audit_report_data,
+                    emphasis_of_matters:emphasis_of_matters,
+                    other_matter:other_matter,
+                    status:"0"
+                },
+                success: function (response) {
+                    let text = response == 1 ? "Report Saved Successfully" : "Report Did not Saved";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#save_audit_report_update', function(e){
+            $.ajax({
+                url:"draftReportAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    audit_report_data:$(".fr-view>").html(),
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Report Saved Successfully" : "Report Did not Saved";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitDraft', function(e){
+            $.ajax({
+                url:"draftReportAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    audit_report_data:$(".fr-view>").html(),
+                    status:"2"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Updated";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitDraft', function(e){
+            $.ajax({
+                url:"draftReportAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    audit_report_data:$(".fr-view>").html(),
+                    status:"3"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitInquiryManagement', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"258",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitInquiryManagement', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"258",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitGoingConcern', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"8",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitGoingConcern', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"8",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        function Export2Doc(){
+            var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+            "xmlns='http://www.w3.org/TR/REC-html40'>" +
+            "<head><meta charset='utf-8'></head><body>";
+            var footer = "</body></html>";
+            audit_report_data = audit_report_data == null ? $(".fr-view>").html() : audit_report_data;
+            var sourceHTML = header + audit_report_data + footer;
+            var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            var fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            <?php $draftResult = $con->query("select type_of_audit_report from draft_report where workspace_id = $wid")->fetch_assoc(); ?>
+            fileDownload.download = 'Draft Report <?php echo $draftResult['type_of_audit_report'] == 1 ? "Qualified":"Unqualified"; ?> .doc';
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+        }
+        
+        function exportGoingConcern(){
+            $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").hide();
+            $('#goingConcernDiv').find('input[type=text]').each(function() {
+                $(this).replaceWith("<span class='inputLabel'>" + this.value + "</span>");
+            });
+            $('#goingConcernDiv').find('input[type=radio]').each(function() {
+                if($(this).attr('checked') == null){
+                    $('label[for="'+ $(this).val() +'"]').css("font-weight","normal");
+                    $('label[for="'+ $(this).val() +'"]').hide();
+                    $(this).hide()
+                }
+                else{
+                    $('label[for="'+ $(this).val() +'"]').css("font-weight","bold");
+                    let data = $('label[for="'+ $(this).val() +'"]').html();
+                    $('label[for="'+ $(this).val() +'"]').html('[ OPTION SELECTED ]'+ data + '[ OPTION SELECTED ]');
+                }
+            });
+
+            
+            var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+            "xmlns='http://www.w3.org/TR/REC-html40'>" +
+            "<head><meta charset='utf-8'></head><body>";
+            var footer = "</body></html>";
+            let goingConcernDiv = $("#goingConcernDiv").html();
+            var sourceHTML = header + goingConcernDiv + footer;
+            var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            var fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = 'Going Concern.doc';
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+
+
+            // $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").attr("display","block")
+            
+            // $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").hide();
+            // $('#goingConcernDiv').find('input[type=text]').each(function() {
+            //     $(this).replaceWith("<span class='inputLabel'>" + this.value + "</span>");
+            // });
+            // $('#goingConcernDiv').find('input[type=radio]').each(function() {
+            //     if($(this).attr('checked') == null){
+            //         $('label[for="'+ $(this).val() +'"]').hide();
+            //         $(this).hide()
+            //     }
+            // });
+            // $("#goingConcernDiv").wordExport();
+            $('#goingConcernDiv').find('.inputLabel').each(function() {
+                $(this).replaceWith("<input type='text' class='form-group' value='" + $(this).html() + "'/>");
+            });
+
+            $('#goingConcernDiv').find('input[type=radio]').each(function() {
+                $('label[for="'+ $(this).val() +'"]').css("font-weight","bold");
+                if($(this).attr('checked') == null){
+                    $('label[for="'+ $(this).val() +'"]').show();
+                    $(this).show()
+                }
+                else{
+                    $('label[for="'+ $(this).val() +'"]').css("font-weight","bold");
+                    $('label[for="'+ $(this).val() +'"]').html(data);
+                }
+            });
+            $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").show();
+        }
+
+        $('#addProcedureASubmit').on('click', function (e) {
+            e.preventDefault();
+            var procedure_name = $("#procedure_a_name").val();
+            $.ajax({
+                url: "goingConcernAjax.php",
+                type: "POST",
+                data: {
+                    wid: <?php echo $wid; ?>,
+                    name: procedure_name,
+                    part_name: 'A',
+                    status: '0'
+                },
+                success: function (response) {
+                    if (response) {
+                        swal({
+                            icon: "success",
+                            text: procedure_name + " Added",
+                        }).then(function (isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: "Failed!",
+                        }).then(function (isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        $('#addProcedureBSubmit').on('click', function (e) {
+            e.preventDefault();
+            var procedure_name = $("#procedure_b_name").val();
+            $.ajax({
+                url: "goingConcernAjax.php",
+                type: "POST",
+                data: {
+                    wid: <?php echo $wid; ?>,
+                    name: procedure_name,
+                    part_name: 'B',
+                    status: '0'
+                },
+                success: function (response) {
+                    if (response) {
+                        swal({
+                            icon: "success",
+                            text: procedure_name + " Added",
+                        }).then(function (isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            text: "Failed!",
+                        }).then(function (isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        $("#addPartABRow, #addPartBBRow").click(function(e){
+            e.preventDefault()
+        })
+
+        $(document).on('click', '#addPartAARow', function(e){
+            e.preventDefault()
+            let trID = $("#addPartAATable > tbody > tr:nth-last-child(1)").attr('id');
+            $("#addPartAATable > tbody").append('<tr id = "'+ ++trID+'"><td><input type="text" name="going_concern_name_title_date_a['+ trID +'][0]" class="form-group col-md-12 col-lg-12 col-sm-12"></td><td><input type="text" name="going_concern_name_title_date_a['+ trID +'][1]" class="form-group col-md-12 col-lg-12 col-sm-12"></td><td><input type="text" name="going_concern_name_title_date_a['+ trID +'][2]" class="form-group col-md-12 col-lg-12 col-sm-12"></td></tr>');
+        });
+
+        $(document).on('click', '#addPartBARow', function(e){
+            e.preventDefault()
+            let trID = $("#addPartAATable > tbody > tr:nth-last-child(1)").attr('id');
+            $("#addPartBATable > tbody").append('<tr id = "'+ ++trID+'"><td><input type="text" name="going_concern_name_title_date_b['+ trID +'][0]" class="form-group col-md-12 col-lg-12 col-sm-12"></td><td><input type="text" name="going_concern_name_title_date_b['+ trID +'][1]" class="form-group col-md-12 col-lg-12 col-sm-12"></td><td><input type="text" name="going_concern_name_title_date_b['+ trID +'][2]" class="form-group col-md-12 col-lg-12 col-sm-12"></td></tr>');
+        });
+
+        $(document).on('click', '.editProcedure', function(e){
+            let id = $(this).attr('id')
+            $.ajax({
+                url: 'getProcedure.php',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response){
+                    $("#editProcedureModal #procedure_name").html(response);
+                    $("#editProcedureModal #prodecureId").val(id)
+                    $("#editProcedureModal").modal('show')
+                }
+            });
+        });
+
+        $(document).on('click', '.editInquiringManagement', function(e){
+            let id = $(this).attr('id')
+            $.ajax({
+                url: 'getInquiringManagement.php',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response){
+                    $("#editInquiringManagementModal #inquiringManagement_name").html(response);
+                    $("#editInquiringManagementModal #inquiringManagementId").val(id)
+                    $("#editInquiringManagementModal").modal('show')
+                }
+            });
+        });
+
+        $(document).on('click', '.editTextarea', function(e){
+            let id = $(this).attr('id')
+            $.ajax({
+                url: 'getTextarea.php',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response){
+                    $("#editTextareaModal #textarea_name").html(response);
+                    $("#editTextareaModal #id").val(id);
+                    $("#editTextareaModal").modal('show')
+                }
+            });
+        });
+
+        $(document).on('click', '.deleteProcedureModal', function(e){
+            var id = $(this).attr('id');
+            $.ajax({
+                url:"procedureDelete.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    id:id
+                },
+                success: function(response){
+                    let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.deleteInquiringManagementModal', function(e){
+            var id = $(this).attr('id');
+            $.ajax({
+                url:"inquireingManagementDelete.php",
+                type:"POST",
+                data:{
+                    id:id,
+                    wid:<?php echo $wid; ?>
+                },
+                success: function(response){
+                    let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitAccountEstimate', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"259",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+        
+        $(document).on('click', '#reviewSubmitAccountEstimate', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"259",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitAuditSummery', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"24",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == "1" ? "Updated Successfully" : "Did not Update";
+                    let icon = response == "1" ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitAuditSummery', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"24",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $("#export2excel").click(function(e) {   
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export_misstatements').html())); // content is the id of the DIV element  
+            e.preventDefault();   
+        }); 
+
+        $("#exportEstimate").click(function(e) {   
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export_Estimate_page').html())); // content is the id of the DIV element  
+            e.preventDefault();   
+        });
+
+        $(document).on('click', '.deleteAccountingEstimate', function(e){
+            var id = $(this).attr('id');
+            $.ajax({
+                url:"accountingEstimateDelete.php",
+                type:"POST",
+                data:{
+                    id:id,
+                    wid:<?php echo $wid; ?>
+                },
+                success: function(response){
+                    let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitEstimate', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"259",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitEstimate', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"259",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == "1" ? "Updated Successfully" : "Did not Update";
+                    let icon = response == "1" ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        }
+                    });
                 }
             });
         });

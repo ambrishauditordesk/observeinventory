@@ -59,4 +59,14 @@ $(window).on('load', function(e) {
             window.location = 'http://yourfirmaudit.com/AuditSoft/logout.php'
         }
     }, 1000);
+    // console.log(window.screen.width)
+    if(window.screen.width<1000)
+    {
+        swal({
+            icon: "warning",
+            text: "Logging in from a mobile device is not supported. Please login from a computer device!",
+        }).then(function() {
+            window.location.href = "../logout"
+        });
+    }
 });

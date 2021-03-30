@@ -36,7 +36,6 @@
     {
         if($con->query("insert into signoff_review_log(workspace_id,prog_id,user_id,review_signoff_date) values ('$wid','$prog_id','$uid','$date')") === TRUE)
         {
-            $con->query("update workspace_log set status='1' where program_id='$prog_id' and workspace_id='$wid'");
             $flag = 1;
         }
     }
