@@ -5,13 +5,17 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
     }
-    
     $clientId = $_SESSION['client_id'];
+    $wid = base64_decode($_GET['wid']);
+    if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
+        header('Location: login');
+    }
+    
+    
     $clientName = $con->query("select name from client where id = ".$clientId)->fetch_assoc()['name'];
-    $prog_id = $_GET['pid'];
+    $prog_id = base64_decode($_GET['pid']);
     if(isset($_GET['parent_id']))
-        $prog_parentId = $_GET['parent_id'];
-    $wid = $_GET['wid'];
+        $prog_parentId = base64_decode($_GET['parent_id']);
     if(isset($_SESSION['breadcrumb']))
         $bread = $_SESSION['breadcrumb'];
     $tmp = array();
@@ -56,7 +60,7 @@
     <script src="http://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script> 
 
 
-    <script src='//cdn.appdynamics.com/adrum/adrum-latest.js' type='text/javascript' charset='UTF-8'></script>
+    <!-- <script src='//cdn.appdynamics.com/adrum/adrum-latest.js' type='text/javascript' charset='UTF-8'></script> -->
 
     <style>
         .tableFixHead {
@@ -110,7 +114,7 @@
         <div class="side-footer">
             <div class="side-body">
                 <div class="dash">
-                    <a href="clientDashboard?wid=<?php echo $wid;?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    <a href="clientDashboard?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Workspace
                     </a>
                 </div>
@@ -123,8 +127,7 @@
                                 if ($queryrow['hasChild'] == 1) {
                                     ?>
                                         <div class="sub-dash" id="employees" style="margin-top: 1rem !important;">
-                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
-                                                <img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important;"/> &nbsp;
+                                            <a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">
                                                 <?php echo trim($queryrow['program_name']); ?>
                                             </a>
                                         </div>
@@ -195,10 +198,22 @@
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <?php 
                         if($_SESSION['role'] == '-1'){
-                    ?>
-                        <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
+                        ?>
+                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <?php
+                        }
                     ?>
                 </div>
             </li>
@@ -227,7 +242,7 @@
                             if($_SESSION['external'] == 0){
                                 ?>
                                 <li class="breadcrumb-item"><a
-                                            href="clientDashboard.php?wid=<?php echo $wid; ?>">Dashboard</a>
+                                            href="clientDashboard.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">Dashboard</a>
                                 </li>
                                 <?php
                                 
@@ -272,8 +287,7 @@
                                             <?php
                                         } else {
                                             ?>
-                                            <li class="breadcrumb-item"><a
-                                                        href="subProgram.php?pid=<?php echo $bread[$i]['pid']; ?>&parent_id=<?php echo $bread[$i]['parent_id']; ?>&wid=<?php echo $wid; ?>"><?php echo $bread[$i]['name']; ?></a>
+                                            <li class="breadcrumb-item"><a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($bread[$i]['pid']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($bread[$i]['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"><?php echo $bread[$i]['name']; ?></a>
                                             </li>
                                             <?php
                                         }
@@ -1027,13 +1041,13 @@
                                 $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
                                 if($reviewSignoff['total']){
                                 ?>
-                                <button class="btn btn-outline-success fetchReview" id="230">Reviewer Sign Off</button>&nbsp;
+                                <button class="btn btn-outline-success fetchReview" id="230">Reviewer Log</button>&nbsp;
                                 <?php
                                 }
                                 $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=230")->fetch_assoc();
                                 if($prepareSignoff['total']){
                                 ?>
-                                <button class="btn btn-outline-success fetchPrepare" id="230">Preparer Sign Off</button>
+                                <button class="btn btn-outline-success fetchPrepare" id="230">Preparer Log</button>
                                 <?php
                                 }
                                 ?>
@@ -1051,7 +1065,7 @@
                                 if ($queryrow['hasChild'] == 1)
                                 { ?>
                                     <div class="custom-list">
-                                        <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                        <a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"
                                         class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                     </div> <?php
                                 }
@@ -1080,13 +1094,13 @@
                                         if($queryrow['_seq'] >= 10 && $seq1 != 1){
                                             $seq1++;
                                             ?><br/>
-                                            <h2><span class="badge badge-primary" >Profit & Loss.</span></h2>
+                                            <h2><span class="badge badge-primary" >Profit & Loss</span></h2>
                                             <br/>
                                             <?php
                                         }
                                         ?>
                                         <div class="custom-list">
-                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                            <a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"
                                                 class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                         </div> <?php
                                     }
@@ -1100,7 +1114,7 @@
                                                         <a href="#">
                                                             <?php
                                                                 if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
-                                                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
+                                                                    <a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">    
                                                                         <i class="fas fa-external-link-alt"
                                                                             style="color:blue !important;"
                                                                             id="<?php echo $queryrow['id']; ?>">
@@ -1628,14 +1642,22 @@
                                 <?php
                                 $misstatemnentsResult = $con->query("select * from summery_of_misstatements where workspace_id=$wid");
                                 if($misstatemnentsResult->num_rows){
+                                    
                                     while($misstatementsRow=$misstatemnentsResult->fetch_assoc()){
                                     ?>
                                         <div>
                                             <div class="row col-md-8">
-                                                <label class="form-group" style="color:blue; font-weight:bold;" for=""><?php echo $misstatementsRow['adjust_number'];?></label><br><br>
+                                                <label for="" class=" d-flex">
+                                                    <label class="form-group col-md-11" style="color:blue; font-weight:bold;" for=""><?php echo $misstatementsRow['adjust_number'];?></label>
+                                                    <label for="" class="">
+                                                        <i class="fas fa-pen editMisstatement" style="color:blue !important; cursor: pointer;" id="<?php echo $misstatementsRow['id']; ?>" ></i>
+                                                        <i class="fas fa-trash-alt deleteMisstatementModal" style="color:red !important; cursor: pointer;" id="<?php echo $misstatementsRow['id']; ?>" ></i>
+                                                    </label>
+                                                </label><br><br>
                                                 <label class="form-group" for="">Type : <?php echo $misstatementsRow['type'];?></label><br>
                                                 <label class="form-group" for="">Misstatement : <?php echo $misstatementsRow['misstatements'];?></label><br>
                                                 <label class="form-control" readonly><?php echo $misstatementsRow['description'];?></label><hr>
+
                                             </div>
                                             <div class="form-group col-md-8">
                                                 <table class="table table-borderless col-md-12" id="audit_misstatements">
@@ -1651,7 +1673,7 @@
                                                         ?>
                                                             <tr class="d-flex justify-content-between mr-5">                                                            
                                                                 <td style="padding:0;"><?php echo $misstatementsLogRow['account']; ?></td>
-                                                                <td style="padding:0;"><?php echo $misstatementsLogRow['amount']; ?></td>       
+                                                                <td style="padding:0;"><?php echo numberToCurrency($misstatementsLogRow['amount']); ?></td>       
                                                             </tr>
                                                         <?php 
                                                         } 
@@ -2225,7 +2247,7 @@
                                         <textarea name="desc_b" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_b']; ?></textarea>
                                         <br>
                                         <p><b>Conclusion</b></p>
-                                        <p><b><i>We did not give consideration to modification of our auditor’s report</i></b></p>
+                                        <p><b><i><?php echo $goingConcernDecRadio['conclusion_text'] == '' ? 'We did not give consideration to modification of our auditor’s report': $goingConcernDecRadio['conclusion_text'] ; ?></i></b><i class="fas fa-edit editConclusion" style="color:blue !important; cursor: pointer;" id="<?php echo $goingConcernDecRadio['id']; ?>" ></i></p>
                                         <p>Choose anyone from the options given below:</p>
                                         <?php
                                         $conclusionNumber = 0;
@@ -2297,7 +2319,7 @@
                                     if ($queryrow['hasChild'] == 1) { 
                                         ?>
                                             <div class="custom-list">
-                                                <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                                                <a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"
                                                     class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                             </div>
                                         <?php
@@ -2316,7 +2338,7 @@
                                                                     }
                                                                 }
                                                                 if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24){ ?>
-                                                                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">    
+                                                                    <a href="subProgram.php?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">    
                                                                         <i class="fas fa-external-link-alt"
                                                                             style="color:blue !important;"
                                                                             id="<?php echo $queryrow['id']; ?>">
@@ -2341,14 +2363,43 @@
                                                             $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
                                                             if($prepareSignoff['total']){
                                                             ?>
-                                                            <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Sign Off</button>
+                                                            <button class="btn btn-outline-primary fetchPrepare" id="<?php echo $queryrow['id']; ?>">Preparer Log</button>
                                                             <?php
                                                             }
                                                             $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=".$queryrow['id'])->fetch_assoc();
                                                             if($reviewSignoff['total']){
                                                             ?>
-                                                            <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Sign Off</button>
+                                                            <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Log</button>
                                                             <?php
+                                                            }
+                                                            if($prog_parentId == 2){
+                                                                ?>
+                                                                &ensp;&ensp;
+                                                                <?php
+                                                                $id = $queryrow['id'];
+                                                                $assertionResult = $con->query("select * from assertion where workspace_id = '$wid' and program_id = $id");
+                                                                while($assertionRow = $assertionResult->fetch_assoc()){
+                                                                    if($assertionRow['assertion_value'] == 'E/O'){
+                                                                        ?>
+                                                                            <label class="badge badge-primary form-check-label" for="inlineCheckbox1">E/O</label>  
+                                                                        <?php
+                                                                    }
+                                                                    if($assertionRow['assertion_value'] == 'M/V'){
+                                                                        ?>
+                                                                            <label class="badge badge-danger form-check-label" for="inlineCheckbox1">M/V</label>  
+                                                                        <?php
+                                                                    }
+                                                                    if($assertionRow['assertion_value'] == 'R&O'){
+                                                                        ?>
+                                                                            <label class="badge badge-warning form-check-label" for="inlineCheckbox1">R&O</label>  
+                                                                        <?php
+                                                                    }
+                                                                    if($assertionRow['assertion_value'] == 'P&D'){
+                                                                        ?>
+                                                                            <label class="badge badge-info form-check-label" for="inlineCheckbox1">P&D</label>  
+                                                                        <?php
+                                                                    }
+                                                                }
                                                             }
                                                         } else { ?>
                                                             <i class="fas fa-times-circle"
@@ -2579,6 +2630,28 @@
                             </div>
                             <br>
                             <div class="container card">
+                            <?php
+                                if($prog_parentId == 2){
+                            ?>
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-check form-check-inline">
+                                        <input name="assertion[]" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="E/O">
+                                        <label class="badge badge-primary form-check-label" for="inlineCheckbox1">E/O</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input name="assertion[]" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="M/V">
+                                        <label class="badge badge-danger form-check-label" for="inlineCheckbox2">M/V</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input name="assertion[]" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="R&O">
+                                        <label class="badge badge-warning form-check-label" for="inlineCheckbox3">R&O</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input name="assertion[]" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="P&D">
+                                        <label class="badge badge-info form-check-label" for="inlineCheckbox3">P&D</label>
+                                    </div>
+                                </div>
+                            <?php  } ?>
                                 <div class="row d-flex justify-content-between">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -2650,7 +2723,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Preparer Sign Off</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Preparer Log</h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -2686,7 +2759,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"> Reviewer Sign Off </h5>
+                            <h5 class="modal-title" id="exampleModalLabel"> Reviewer Log </h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -2918,7 +2991,36 @@
             </div>
         </div>
 
-        <!-- Audit Summery Modal-->
+        <!--Edit Conclusion Text Modal -->
+        <div class="modal fade" id="editConclusionTextmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form method="post" action="editConclusionText">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> Edit Conclusion Text Dialog Box </h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="name">Conclusion Text Name</label>
+                                <input type="hidden" name="id" id="id">
+                                <input type="hidden" name="wid" value="<?php echo $wid; ?>">
+                                <input class="form-control" name="name" id="editConclusionText_name" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <input class="btn btn-primary" type="submit" id="editTextareaSubmit" value="Done">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Audit Summery Modal-->
         <div class="modal fade" id="audit_summery_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -3016,6 +3118,105 @@
             </div>
         </div>
 
+        <!-- Edit Audit Summery Modal-->
+        <div class="modal fade" id="edit_audit_summery_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="audit_summery_form" id="edit_audit_summery" method="post" action="editAuditSummerySubmit.php?wid=<?php echo $wid; ?>">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <div class="form-group">
+                                    <label for="">Add New Adjusment</label>
+                                </div>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <br>
+                            <div class="container card">
+                                <div class="row d-flex justify-content-between">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="adjust_number">Adjustment Number</label>
+                                            <div class="form-group">
+                                                <input class="form_group" type="text" name="editAdjustment_number" id="editAdjustment_number" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex col-md-12 p-0">
+                                            <div class="form-group col-md-6">
+                                                <label for="">Type</label>
+                                                <select class="form-control col-md-12" name="editType" id="editType" required>
+                                                    <option value="">Choose any One!</option>
+                                                    <option value="Factual">Factual</option>
+                                                    <option value="Judgmental">Judgmental</option>
+                                                    <option value="Projected">Projected</option>
+                                                    <option value="Reclassification">Reclassification</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6"> 
+                                                <label for="">Add Misstatement</label>
+                                                <select class="form-control col-md-12" name="editMisstatement" id="editMisstatement" required>
+                                                    <option value="">Choose any One!</option>
+                                                    <option value="Uncorrected">Uncorrected</option>
+                                                    <option value="Corrected">Corrected</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="missstatements_description">Description</label>
+                                            <div class="form-group">
+                                                <textarea name= "editMissstatements_description" class="form-control" id="editMissstatements_description" ></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="missstatements_details">Details</label>
+                                            <div class="form-group">
+                                                <table class="table table-borderless" id="editTablogic_miss">
+                                                    <tbody>
+                                                        <tr id='addr0'>                                                            
+                                                            <td>
+                                                                <select class="form-control" name="misstatements_account[]" id="misstatements_account0" required>
+                                                                    <option>Select Account !</option>
+                                                                        <?php
+                                                                            $accQuery = $con->query("select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid'");
+                                                                            while ($accResult = $accQuery->fetch_assoc()) {
+                                                                        ?>
+                                                                            <option value="<?php  echo $accResult['program_name']; ?>">
+                                                                                <?php echo $accResult['program_name']; ?>
+                                                                            </option>
+                                                                        <?php
+                                                                            }
+                                                                        ?>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input name="misstatements_amount[]" id="misstatements_amount0" class="form-control input-lg sum" type="number" placeholder="Enter Amount">
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col d-flex justify-content-between">
+                                                    <a href="#" id="edit_add_row_miss" class="btn btn-outline-primary pull-left">Add</a>
+                                                    <a href="#" id='edit_delete_row_miss' class="btn btn-outline-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                <input type="hidden" name="logId" id="logId">
+                                    <input class="btn btn-primary" type="submit" id="editsubmit_misstatements" value="Save">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Custom scripts for all pages-->
@@ -3035,7 +3236,7 @@
 
             setInterval(() => {
                 let uploaded = localStorage.getItem('uploaded');
-                if(uploaded == true){
+                if(uploaded){
                     document.getElementsByClassName('refreshmodal')[0].click();
                     localStorage.removeItem('uploaded');
                 }
@@ -3084,67 +3285,68 @@
                 // $('#addEstimate').append('<tr id="addRowEstimate' + (x + 1) + '"></tr>');
                 // x++;
                 $("#accounting_estimates").append('<tr>'+
-                '                                                            <td>'+
-                '                                                                <select name="submitEstimate[type][]" class="form-control" required>'+
-                '                                                                    <option value="Quantitative">Quantitative</option>'+
-                '                                                                    <option value="Qualitative">Qualitative</option>'+
-                '                                                                </select>'+
-                '                                                            </td>'+
-                '                                                            <td><input name="submitEstimate[name][]" type="text"></td>'+
-                '                                                            <td><input name="submitEstimate[account][]" type="text"></td>'+
-                '                                                            <td> <input name="submitEstimate[py][]" type="number"> </td>'+
-                '                                                            <td> <input name="submitEstimate[cy][]" type="number"> </td>'+
-                '                                                            <td>'+
-                '                                                            <select name="submitEstimate[c][]" class="form-control"required>'+
-                '                                                                <option value="Low">Low</option>'+
-                '                                                                <option value="Moderate">Moderate</option>'+
-                '                                                                <option value="High">High</option>'+
-                '                                                                <option value="NA">NA</option>'+
-                '                                                            </select>'+
-                '                                                            </td>'+
-                '                                                            <td>'+
-                '                                                            <select name="submitEstimate[eo][]" class="form-control"required>'+
-                '                                                                <option value="Low">Low</option>'+
-                '                                                                <option value="Moderate">Moderate</option>'+
-                '                                                                <option value="High">High</option>'+
-                '                                                                <option value="NA">NA</option>'+
-                '                                                            </select>'+
-                '                                                            </td>'+
-                '                                                            <td>'+
-                '                                                            <select name="submitEstimate[mv][]" class="form-control"required>'+
-                '                                                                <option value="Low">Low</option>'+
-                '                                                                <option value="Moderate">Moderate</option>'+
-                '                                                                <option value="High">High</option>'+
-                '                                                                <option value="NA">NA</option>'+
-                '                                                            </select>'+
-                '                                                            </td>'+
-                '                                                            <td>'+
-                '                                                            <select name="submitEstimate[ro][]" class="form-control"required>'+
-                '                                                                <option value="Low">Low</option>'+
-                '                                                                <option value="Moderate">Moderate</option>'+
-                '                                                                <option value="High">High</option>'+
-                '                                                                <option value="NA">NA</option>'+
-                '                                                            </select>'+
-                '                                                            </td>'+
-                '                                                            <td>'+
-                '                                                            <select name="submitEstimate[pd][]" class="form-control"required>'+
-                '                                                                <option value="Low">Low</option>'+
-                '                                                                <option value="Moderate">Moderate</option>'+
-                '                                                                <option value="High">High</option>'+
-                '                                                                <option value="NA">NA</option>'+
-                '                                                            </select>'+
-                '                                                            </td>'+
-                '                                                            <td>'+
-                '                                                            <select name="submitData[risk][]" class="form-control"required>'+
-                '                                                                <option value="Low Risk">Low Risk</option>'+
-                '                                                                <option value="Significant Risk">Significant Risk</option>'+
-                '                                                                <option value="High Risk">High Risk</option>'+
-                '                                                                <option value="NA">NA</option>'+
-                '                                                            </select>'+
-                '                                                            </td>'+
-                '                                                        </tr>'
-)
+                                '                                                            <td>'+
+                                '                                                                <select name="submitEstimate[type][]" class="form-control" required>'+
+                                '                                                                    <option value="Quantitative">Quantitative</option>'+
+                                '                                                                    <option value="Qualitative">Qualitative</option>'+
+                                '                                                                </select>'+
+                                '                                                            </td>'+
+                                '                                                            <td><input name="submitEstimate[name][]" type="text"></td>'+
+                                '                                                            <td><input name="submitEstimate[account][]" type="text"></td>'+
+                                '                                                            <td> <input name="submitEstimate[py][]" type="number"> </td>'+
+                                '                                                            <td> <input name="submitEstimate[cy][]" type="number"> </td>'+
+                                '                                                            <td>'+
+                                '                                                            <select name="submitEstimate[c][]" class="form-control"required>'+
+                                '                                                                <option value="Low">Low</option>'+
+                                '                                                                <option value="Moderate">Moderate</option>'+
+                                '                                                                <option value="High">High</option>'+
+                                '                                                                <option value="NA">NA</option>'+
+                                '                                                            </select>'+
+                                '                                                            </td>'+
+                                '                                                            <td>'+
+                                '                                                            <select name="submitEstimate[eo][]" class="form-control"required>'+
+                                '                                                                <option value="Low">Low</option>'+
+                                '                                                                <option value="Moderate">Moderate</option>'+
+                                '                                                                <option value="High">High</option>'+
+                                '                                                                <option value="NA">NA</option>'+
+                                '                                                            </select>'+
+                                '                                                            </td>'+
+                                '                                                            <td>'+
+                                '                                                            <select name="submitEstimate[mv][]" class="form-control"required>'+
+                                '                                                                <option value="Low">Low</option>'+
+                                '                                                                <option value="Moderate">Moderate</option>'+
+                                '                                                                <option value="High">High</option>'+
+                                '                                                                <option value="NA">NA</option>'+
+                                '                                                            </select>'+
+                                '                                                            </td>'+
+                                '                                                            <td>'+
+                                '                                                            <select name="submitEstimate[ro][]" class="form-control"required>'+
+                                '                                                                <option value="Low">Low</option>'+
+                                '                                                                <option value="Moderate">Moderate</option>'+
+                                '                                                                <option value="High">High</option>'+
+                                '                                                                <option value="NA">NA</option>'+
+                                '                                                            </select>'+
+                                '                                                            </td>'+
+                                '                                                            <td>'+
+                                '                                                            <select name="submitEstimate[pd][]" class="form-control"required>'+
+                                '                                                                <option value="Low">Low</option>'+
+                                '                                                                <option value="Moderate">Moderate</option>'+
+                                '                                                                <option value="High">High</option>'+
+                                '                                                                <option value="NA">NA</option>'+
+                                '                                                            </select>'+
+                                '                                                            </td>'+
+                                '                                                            <td>'+
+                                '                                                            <select name="submitData[risk][]" class="form-control"required>'+
+                                '                                                                <option value="Low Risk">Low Risk</option>'+
+                                '                                                                <option value="Significant Risk">Significant Risk</option>'+
+                                '                                                                <option value="High Risk">High Risk</option>'+
+                                '                                                                <option value="NA">NA</option>'+
+                                '                                                            </select>'+
+                                '                                                            </td>'+
+                                '                                                        </tr>'
+                )
             });
+
             // //Delete Row Function for Summery of Misstatements
             // $("#delete_row_miss").click(function() {
             //     if (x > 1) {
@@ -3152,9 +3354,10 @@
             //         x--;
             //     }
             // });
+
             $(document).on('click', '#submit_misstatements',function(e){
                 let sumMisstatements = 0;
-                $('.sum').each(function(){
+                $('#audit_summery_modal .sum').each(function(){
                     sumMisstatements += parseFloat(this.value);            
                 });
                 if(sumMisstatements != 0){
@@ -3165,6 +3368,23 @@
                     })
                 }
             });
+            
+
+            $(document).on('click', '#editsubmit_misstatements',function(e){
+                let sumMisstatements = 0;
+                $('#edit_audit_summery_modal .sum').each(function(){
+                    sumMisstatements += parseFloat(this.value);            
+                });
+                console.log(sumMisstatements)
+                if(sumMisstatements != 0){
+                    e.preventDefault();
+                    swal({
+                        icon: "error",
+                        text: "Sum should be ZERO!",
+                    })
+                }
+            });
+
 
             $(document).on('click', '.buttonActive', function () {
                 var id = $(this).attr('id');
@@ -3185,7 +3405,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3196,7 +3416,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3226,7 +3446,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3237,7 +3457,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3268,7 +3488,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3279,7 +3499,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3307,7 +3527,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3318,7 +3538,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3343,7 +3563,7 @@
                                 text: "New Request" + " Added",
                             }).then(function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                    window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3354,7 +3574,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3381,7 +3601,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3392,7 +3612,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3419,7 +3639,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         } else {
@@ -3430,7 +3650,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                         }
@@ -3468,7 +3688,7 @@
                         //         if (isConfirm) {
                         //             window.location.href = window.location
                         //                     .pathname +
-                        //                 "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        //                 "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         //         }
                         //     });
                         // }
@@ -3480,7 +3700,7 @@
                         //         if (isConfirm) {
                         //             window.location.href = window.location
                         //                     .pathname +
-                        //                 "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                        //                 "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         //         }
                         //     });
                         // }
@@ -3526,7 +3746,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                     }
@@ -3571,7 +3791,7 @@
                                 if (isConfirm) {
                                     window.location.href = window.location
                                             .pathname +
-                                        "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                                        "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                                 }
                             });
                     }
@@ -3811,7 +4031,7 @@
             //                     if (isConfirm) {
             //                         window.location.href = window.location
             //                                 .pathname +
-            //                             "?pid=<?php //echo $prog_id; ?>&parent_id=<?php //echo $prog_parentId; ?>&wid=<?php //echo $wid; ?>";
+            //                             "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
             //                     }
             //                 });
             //     }
@@ -4029,6 +4249,8 @@
         let other_matter;
         let emphasis_of_matters;
         let editor = new FroalaEditor('#editor')
+        new FroalaEditor('#procedure_a_name')
+        new FroalaEditor('#procedure_b_name')
 
         function type_audit_report(e){
             audit_report = $("#audit_report").val();
@@ -4089,7 +4311,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4113,7 +4335,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4137,7 +4359,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4161,7 +4383,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4185,7 +4407,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4209,7 +4431,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4233,7 +4455,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4257,7 +4479,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4447,9 +4669,69 @@
                 success: function(response){
                     $("#editProcedureModal #procedure_name").html(response);
                     $("#editProcedureModal #prodecureId").val(id)
+                    new FroalaEditor('#procedure_name')
                     $("#editProcedureModal").modal('show')
                 }
             });
+        });
+
+        $(document).on('click', '.editMisstatement', function(e){
+            let id = $(this).attr('id')
+            $.ajax({
+                url: 'getMisstatement.php',
+                type: 'POST',
+                data: {
+                    id: id,
+                    wid: <?php echo $wid; ?>
+                },
+                success: function(response){
+                    response = JSON.parse(response)
+                    $("#edit_audit_summery_modal #editAdjustment_number").val(response['adjust_number']);
+                    $("#edit_audit_summery_modal #editMissstatements_description").html(response['description']);
+                    $('#edit_audit_summery_modal #editMisstatement option[value='+response['misstatements']+']').attr('selected','selected');
+                    $('#edit_audit_summery_modal #editType option[value='+response['type']+']').attr('selected','selected');
+                    $("#edit_audit_summery_modal #logId").val(id);
+
+                    var x = 1;
+                    
+                    for(i in response['log']){
+                        if( i > 0){
+                            $('#editTablogic_miss').append('<tr id="addr' + x + '"></tr>');
+                            $('#editTablogic_miss #addr' + x).html($('#editTablogic_miss #addr' + (i-1)).html()).find('td:first-child');
+                            x++;
+                        }
+                        $('#editTablogic_miss tr:nth-last-child(1) #misstatements_account0 option[value="'+response['log'][i][0]+'"]').attr('selected','selected');
+                        $('#editTablogic_miss tr:nth-last-child(1) #misstatements_amount0').val(response['log'][i][1]);
+                    }
+
+                    $("#edit_audit_summery_modal").modal("show");
+                }
+            });
+        });
+
+
+        //Add Row in Summery of Misstatements Edit
+        $("#edit_add_row_miss").click(function() {
+            // $('#editTablogic_miss #addr' + x).html($('#editTablogic_miss #addr' + a).html()).find('td:first-child');
+            
+            var x = $('#editTablogic_miss').find('tr').length
+            
+            $('#editTablogic_miss').append('<tr id="addr' + x + '"></tr>');
+            $('#editTablogic_miss #addr' + x).html($('#tablogic_miss #addr0').html()).find('td:first-child');
+            
+        });
+
+        //Delete Row Function for Summery of Misstatements Edit
+        $("#edit_delete_row_miss").click(function() {
+            var x = $('#editTablogic_miss tr:nth-last-child(1)').attr('id')
+            var y = $('#editTablogic_miss tr:first-child').attr('id')
+            if(x != y){
+                $("#editTablogic_miss #" + x).remove();
+            }
+        });
+
+        $('#edit_audit_summery_modal').on('hidden.bs.modal', function () {
+            window.location.reload();
         });
 
         $(document).on('click', '.editInquiringManagement', function(e){
@@ -4463,6 +4745,7 @@
                 success: function(response){
                     $("#editInquiringManagementModal #inquiringManagement_name").html(response);
                     $("#editInquiringManagementModal #inquiringManagementId").val(id)
+                    new FroalaEditor('#inquiringManagement_name')
                     $("#editInquiringManagementModal").modal('show')
                 }
             });
@@ -4479,7 +4762,49 @@
                 success: function(response){
                     $("#editTextareaModal #textarea_name").html(response);
                     $("#editTextareaModal #id").val(id);
+                    new FroalaEditor('#textarea_name')
                     $("#editTextareaModal").modal('show')
+                }
+            });
+        });
+
+        $(document).on('click', '.editConclusion', function(e){
+            let id = $(this).attr('id')
+            console.log(id)
+            $.ajax({
+                url: 'getConclusionText.php',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response){
+                    $("#editConclusionTextmodal #editConclusionText_name").val(response);
+                    $("#editConclusionTextmodal #id").val(id);
+                    $("#editConclusionTextmodal").modal('show')
+                }
+            });
+        });
+
+        $(document).on('click', '.deleteMisstatementModal', function(e){
+            var id = $(this).attr('id');
+            $.ajax({
+                url:"misstatementDelete.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    id:id
+                },
+                success: function(response){
+                    let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
+                        }
+                    });
                 }
             });
         });
@@ -4501,7 +4826,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4525,7 +4850,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4549,7 +4874,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4573,7 +4898,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4597,7 +4922,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4621,7 +4946,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4655,7 +4980,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4679,7 +5004,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }
@@ -4703,7 +5028,7 @@
                         text: text,
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = window.location.pathname + "?pid=<?php echo $prog_id; ?>&parent_id=<?php echo $prog_parentId; ?>&wid=<?php echo $wid; ?>";
+                            window.location.href = window.location.pathname + "?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>";
                         }
                     });
                 }

@@ -60,7 +60,7 @@
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="clientList">
                     <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>List Clients</span>
+                    <span>Clients List</span>
                 </a>
             </li>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
@@ -76,19 +76,25 @@
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
-                        </a>
-                    <div class="dropdown-divider"></div> -->
                     <?php 
                         if($_SESSION['role'] == '-1'){
+                        ?>
+                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <?php
+                        }
                     ?>
-                        <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
-                    ?>
-                    <a class="dropdown-item" href="../logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
                 </div>
             </li>
         </ul>

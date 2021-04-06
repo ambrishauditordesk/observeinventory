@@ -60,7 +60,7 @@
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="clientList">
                     <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>List Clients</span>
+                    <span>Clients List</span>
                 </a>
             </li>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">

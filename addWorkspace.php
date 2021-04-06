@@ -89,7 +89,7 @@ if ($con->query($query) === true)
         $res4 = $con->query("SELECT * FROM going_concern_default_conclusion");
         while($row = $res4->fetch_assoc()){
             $conclusion_text = $row['conclusion_text'];
-            $con->query("INSERT INTO going_concern_conclusion(workspace_id, conclusion_text) VALUES('$wid','$conclusion_text')");
+            $con->query("INSERT INTO going_concern_conclusion(workspace_id, going_concern_conclusion_data) VALUES('$wid','$conclusion_text')");
         }
 
         echo "<script>

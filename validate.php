@@ -85,14 +85,15 @@
         $dateTime = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s");
         $location = $json['city'].', '.$json['region'].', '.$json['country'].' ( '.$json['loc'].' )';
     
-        $email = trim($_POST["email"]);
+        // $email = trim($_POST["email"]);
+        $email = $con -> real_escape_string($_POST['email']);
         $con->query("insert into loginlog(email,ip,dateTime,location,browser,status) values('$email','$ip','$dateTime','$location','$browser','')");
         $loginLogId = $con->insert_id;
         echo $loginLogId;
-        $pass = trim($_POST["password"]);
+        // $pass = trim($_POST["password"]);
+        $pass = $con -> real_escape_string($_POST['password']);
         $pass = md5($pass);
         $users = $con->query("SELECT * FROM user WHERE email= '$email' and password= '$pass'");
-        
         
         if ($users->num_rows != 0) {
             $usersrow = $users->fetch_assoc();

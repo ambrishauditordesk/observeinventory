@@ -29,6 +29,7 @@
     $prog_id = $_POST['prog_id'];
     $sign = $_SESSION['signoff'];
     $uid = $_SESSION['id'];
+    $assertion = trim($_POST['assertion']);
     $ser = $_SERVER['HTTP_REFERER'];
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
 
@@ -80,6 +81,11 @@
             $comment = $_SESSION['name'].": ".trim($_POST['newComment']);
             if($con->query("insert into signoff_comments_log(workspace_id,prog_id,user_id,comments,comments_date) values ('$wid','$prog_id','$uid','$comment','$date')") === TRUE)
                 $flagComment = 1;
+        }
+
+        $con->query("delete from assertion where workspace_id = $wid and program_id = $prog_id");
+        foreach ($_POST['assertion'] as $key => $value) {
+            $con->query("insert into assertion(workspace_id, program_id, assertion_value) values('$wid','$prog_id','$value')");
         }
     }
     $icon = ($flag || $flagComment || $flagFile) == 0?'error':'success';

@@ -7,8 +7,12 @@
     if (isset($_SESSION['accessLevel']) && !empty($_SESSION['accessLevel']) && $_SESSION['accessLevel'] != '1') {
         header('Location: login');
     }
+    $clientID = base64_decode($_GET['cid']);
+    if($con->query("select * from client where id = $clientID")->num_rows == 0){
+        header('Location: login');
+    }
 
-    $_SESSION['client_id'] = $clientID = $_GET['cid'];
+    $_SESSION['client_id'] = $clientID;
     $_SESSION['cname'] = $clientName = $con->query("select name from client where id = $clientID ")->fetch_assoc()["name"];
 ?>
 <!DOCTYPE html>
@@ -61,7 +65,7 @@
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="admin/clientList">
                     <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>List Clients</span>
+                    <span>Clients List</span>
                 </a>
             </li>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
@@ -77,17 +81,24 @@
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
-                        </a>
-                    <div class="dropdown-divider"></div> -->
                     <?php 
                         if($_SESSION['role'] == '-1'){
-                    ?>
-                        <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
+                        ?>
+                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <?php
+                        }
                     ?>
                 </div>
             </li>
@@ -166,77 +177,85 @@
         <?php } 
         ?>
         <!-- TABLE -->
-        <div class="container pt-4">
-            <div class="row">
-                <div class="card-body" style="width:10px;">
-                    <div class="table-responsive" style="border-radius: 12px !important;">
-                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table id="workspaceTable" class="table display table-bordered table-striped" style="border-collapse: inherit !important;">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col shadow-remove">From</th>
-                                            <th scope="col shadow-remove">To</th>
-                                            <th scope="col shadow-remove">Actions</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                                $query = "Select * from workspace where client_id = $clientID";
-                                                $result = $con->query($query);
-                                                if ($result->num_rows != 0) {
-                                                    while ($row = $result->fetch_assoc()) {
-                                            ?>
+        <?php
+        $query = "Select * from workspace where client_id = $clientID";
+        $result = $con->query($query);
+        if ($result->num_rows > 0) {
+            ?>
+            <div class="container pt-4">
+                <div class="row">
+                    <div class="card-body" style="width:10px;">
+                        <div class="table-responsive" style="border-radius: 12px !important;">
+                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="workspaceTable" class="table display table-bordered table-striped" style="border-collapse: inherit !important;">
+                                            <thead>
                                             <tr>
-                                                <td><?php echo $row['datefrom']; ?></td>
-                                                <td><?php echo $row['dateto']; ?></td>
-                                                <td>
-                                                <?php
-                                                if(!$row['freeze']){
-                                                    if($_SESSION['external'] != 1){
-                                                ?>
-                                                    <a href="clientDashboard?wid=<?php echo $row['id'];?>" class="icon-hide">
-                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
-                                                    </a>
-                                                <?php
-                                                    }
-                                                    else{
-                                                        ?>
-                                                    <a href="subProgram?wid=<?php echo $row['id'];?>&pid=247">
-                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
-                                                    </a>
-                                                        <?php
-                                                    }
-                                                }
-                                                else{
-                                                    if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1'){
-                                                    ?>
-                                                        <a id="<?php echo $row['id']; ?>" class="freeze" href="#"><i class="fas fa-unlock"></i></a>
-                                                    <?php
-                                                    }
-                                                    else{
-                                                        ?>
-                                                        <span class="badge badge-danger">Locked!</span>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                                </td>
+                                                <th scope="col shadow-remove">From</th>
+                                                <th scope="col shadow-remove">To</th>
+                                                <th scope="col shadow-remove">Actions</th>
                                             </tr>
-                                            <?php
-                                            }
-                                        }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                            <?php     
+                                                while ($row = $result->fetch_assoc()) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $row['datefrom']; ?></td>
+                                                        <td><?php echo $row['dateto']; ?></td>
+                                                        <td>
+                                                        <?php
+                                                        if(!$row['freeze']){
+                                                            if($_SESSION['external'] != 1){
+                                                                ?>
+                                                                    <a href="clientDashboard?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>" class="icon-hide">
+                                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
+                                                                    </a>
+                                                                <?php
+                                                            }
+                                                            else{
+                                                                ?>
+                                                                    <a href="subProgram?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode('247'); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">
+                                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
+                                                                    </a>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        else{
+                                                            if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1'){
+                                                            ?>
+                                                                <a id="<?php echo $row['id']; ?>" class="freeze" href="#"><i class="fas fa-unlock"></i></a>
+                                                            <?php
+                                                            }
+                                                            else{
+                                                                ?>
+                                                                <span class="badge badge-danger">Locked!</span>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php
+        }
+        else{
+                                                    
+            header('Location: login');
+        }
+        ?>
 
         <!--ADD WORKSPACE -->
         <div class="modal fade" id="addWorkspaceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

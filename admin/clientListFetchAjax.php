@@ -47,9 +47,10 @@ foreach($result as $row)
 {
  $sub_array = array();
  $sub_array[] = '';
- $sub_array[] = "<a href='../workspace.php?cid=".trim($row['aid'])."'>".$row['aname']."</a>";
+ 
+ $sub_array[] = "<a href='../workspace.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
  $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
- <a href='clientMember.php?cid=".trim($row['aid'])."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
+ <a href='clientMember.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
  $sub_array[] = $row['con'];
  $sub_array[] = $row['adate'];
  {

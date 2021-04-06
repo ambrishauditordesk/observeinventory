@@ -2743,7 +2743,7 @@ input[type="submit"].btn-block {
   left: 0;
 }
 .dropdown-menu-right {
-  right: 0;
+  /* right: 0; */
   left: auto;
 }
 @media (min-width: 576px) {

@@ -60,9 +60,19 @@
             $date = trim($_POST["going_concern_name_title_date_b"][$i][2]);
             $con->query("INSERT INTO going_concern_name_title_date(workspace_id, name, title, date, part) VALUES('$wid','$name','$title','$date','B')");
         }
+        
+        $conclusionTextResult = $con->query("select conclusion_text from going_concern where id = $id");
+        if($conclusionTextResult->num_rows){
+            $conclusionText = $conclusionTextResult->fetch_assoc()['conclusion_text'];
+        }
+        else{
+            $conclusionText = "We did not give consideration to modification of our auditor’s report";
+        }
+
+
 
         $con->query("DELETE FROM going_concern where workspace_id = $wid");
-        $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c) VALUES('$wid','$conclusion','$descA','$descB','$descC')");
+        $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c, conclusion_text) VALUES('$wid','$conclusion','$descA','$descB','$descC','$conclusionText')");
 
         for($i = 0; $i<sizeof($_POST['freeTextA']); $i++){
             $id = trim($_POST['freeTextA'][$i][0]);

@@ -5,7 +5,12 @@ if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
     header("Location: index");
 }
 $clientName = $_SESSION['cname'];
-$wid = $_GET['wid'];
+
+$clientId = $_SESSION['client_id'];
+$wid = base64_decode($_GET['wid']);
+if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
+    header('Location: login');
+}
 $_SESSION['breadcrumb'] = array();
 ?>
 <!DOCTYPE html>
@@ -52,7 +57,7 @@ $_SESSION['breadcrumb'] = array();
         <div class="side-footer">
             <div class="side-body">
                 <div class="dash">
-                    <a href="clientDashboard?wid=<?php echo $wid;?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    <a href="clientDashboard?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Workspace
                     </a>
                 </div>
@@ -97,7 +102,7 @@ $_SESSION['breadcrumb'] = array();
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="admin/clientList">
                     <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>List Clients</span>
+                    <span>Clients List</span>
                 </a>
             </li>
             <!-- Dropdown -->
@@ -116,12 +121,23 @@ $_SESSION['breadcrumb'] = array();
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <?php 
                         if($_SESSION['role'] == '-1'){
-                    ?>
-                        <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
-                    ?>
-
+                        ?>
+                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <?php
+                        }
+                        ?>
                 </div>
             </li>
         </ul>
@@ -165,7 +181,7 @@ $_SESSION['breadcrumb'] = array();
                     while ($queryrow = $exquery->fetch_assoc()) {?>
                 <div class="col-md-12 custom-list" style="flex-direction:row; align-items:center;">
                     <div class="col-md-12">
-                    <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>"
+                    <a href="subProgram.php?did=<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"
                         class="custom-list-items"><b><?php echo trim($queryrow['program_name']); ?></b>
                     </a>
                         <?php

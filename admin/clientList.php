@@ -85,17 +85,24 @@
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
-                        </a>
-                    <div class="dropdown-divider"></div> -->
                     <?php 
                         if($_SESSION['role'] == '-1'){
-                    ?>
-                        <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
+                        ?>
+                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <?php
+                        }
                     ?>
                 </div>
             </li>
@@ -196,8 +203,16 @@
                                     <h6 class="">
                                     <img src="../Icons/Group 3.svg">
                                     </h6>
-                                    <p class="text-count"><?php $userId = $_SESSION['id'];
-                                        echo $con->query("SELECT count(id) total FROM client where active = 1 group by id")->num_rows; ?>
+                                    <p class="text-count">
+                                        <?php 
+                                            $userId = $_SESSION['id'];
+                                            if($_SESSION['role'] > 1){
+                                                echo $con->query("SELECT count(client.id) total FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = $userId and active = 1 GROUP by client.id")->num_rows;
+                                            }
+                                            else{
+                                                echo $con->query("SELECT count(id) total FROM client where active = 1 group by id")->num_rows; 
+                                            }
+                                        ?>
                                     </p>
                                     <h6 class="card-subtitle mb-2">Audits</h6>
                                 </div>
@@ -208,8 +223,15 @@
                                     <h6 class="">
                                         <img src="../Icons/Group 2.svg">
                                     </h6>
-                                    <p class="text-count"><?php $userId = $_SESSION['id'];
-                                        echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id where b.status = '0' group by a.client_id")->num_rows;?>
+                                    <p class="text-count">
+                                        <?php $userId = $_SESSION['id'];
+                                            if($_SESSION['role'] > 1){
+                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id inner join user_client_log c on a.client_id=c.client_id where c.user_id = $userId and b.status = '0' group by a.client_id")->num_rows;   
+                                            }
+                                            else{
+                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id where b.status = '0' group by a.client_id")->num_rows;
+                                            }
+                                        ?>
                                     </p>
                                     <h6 class="card-subtitle mb-2">Audits</h6>
                                 </div>
@@ -220,8 +242,15 @@
                                     <h6 class="">
                                     <img src="../Icons/Group 1.svg">
                                     </h6>
-                                    <p class="text-count"><?php $userId = $_SESSION['id'];
-                                        echo $con->query("select count(id) completed from workspace where workspace.freeze = '1'")->fetch_assoc()['completed'];?>
+                                    <p class="text-count">
+                                        <?php $userId = $_SESSION['id'];
+                                            if($_SESSION['role'] > 1){
+                                                echo $con->query("select count(a.id) completed from workspace a inner join user_client_log b on a.client_id=b.client_id where b.user_id = $userId and a.freeze = '1'")->num_rows;   
+                                            }
+                                            else{
+                                                echo $con->query("select count(id) completed from workspace where workspace.freeze = '1'")->fetch_assoc()['completed'];
+                                            }
+                                        ?>
                                     </p>
                                     <h6 class="card-subtitle mb-2">Audits</h6>
                                 </div>
