@@ -29,7 +29,6 @@
     $prog_id = $_POST['prog_id'];
     $sign = $_SESSION['signoff'];
     $uid = $_SESSION['id'];
-    $assertion = trim($_POST['assertion']);
     $ser = $_SERVER['HTTP_REFERER'];
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
 

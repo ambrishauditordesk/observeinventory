@@ -40,7 +40,7 @@ $desig = array();
 $addedById = $_SESSION['id'];
 
 // Getting the CST Time
-$addedByDate = date_format(date_create("now", new DateTimeZone('America/Chicago')), "Y-m-d");
+$addedByDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d");
 
 $uploadOk = 1;
 

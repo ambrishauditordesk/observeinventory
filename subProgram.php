@@ -2372,40 +2372,41 @@
                                                             <button class="btn btn-outline-success fetchReview" id="<?php echo $queryrow['id']; ?>">Reviewer Log</button>
                                                             <?php
                                                             }
-                                                            if($prog_parentId == 2){
-                                                                ?>
-                                                                &ensp;&ensp;
-                                                                <?php
-                                                                $id = $queryrow['id'];
-                                                                $assertionResult = $con->query("select * from assertion where workspace_id = '$wid' and program_id = $id");
-                                                                while($assertionRow = $assertionResult->fetch_assoc()){
-                                                                    if($assertionRow['assertion_value'] == 'E/O'){
-                                                                        ?>
-                                                                            <label class="badge badge-primary form-check-label" for="inlineCheckbox1">E/O</label>  
-                                                                        <?php
-                                                                    }
-                                                                    if($assertionRow['assertion_value'] == 'M/V'){
-                                                                        ?>
-                                                                            <label class="badge badge-danger form-check-label" for="inlineCheckbox1">M/V</label>  
-                                                                        <?php
-                                                                    }
-                                                                    if($assertionRow['assertion_value'] == 'R&O'){
-                                                                        ?>
-                                                                            <label class="badge badge-warning form-check-label" for="inlineCheckbox1">R&O</label>  
-                                                                        <?php
-                                                                    }
-                                                                    if($assertionRow['assertion_value'] == 'P&D'){
-                                                                        ?>
-                                                                            <label class="badge badge-info form-check-label" for="inlineCheckbox1">P&D</label>  
-                                                                        <?php
-                                                                    }
-                                                                }
-                                                            }
                                                         } else { ?>
                                                             <i class="fas fa-times-circle"
                                                                 style="color:red !important;">
                                                             </i> <?php
-                                                        } ?>
+                                                        }
+                                                        if($prog_parentId == 2){
+                                                            ?>
+                                                            &ensp;&ensp;
+                                                            <?php
+                                                            $id = $queryrow['id'];
+                                                            $assertionResult = $con->query("select * from assertion where workspace_id = '$wid' and program_id = $id");
+                                                            while($assertionRow = $assertionResult->fetch_assoc()){
+                                                                if($assertionRow['assertion_value'] == 'E/O'){
+                                                                    ?>
+                                                                        <label class="badge badge-primary form-check-label" for="inlineCheckbox1">E/O</label>  
+                                                                    <?php
+                                                                }
+                                                                if($assertionRow['assertion_value'] == 'M/V'){
+                                                                    ?>
+                                                                        <label class="badge badge-danger form-check-label" for="inlineCheckbox1">M/V</label>  
+                                                                    <?php
+                                                                }
+                                                                if($assertionRow['assertion_value'] == 'R&O'){
+                                                                    ?>
+                                                                        <label class="badge badge-warning form-check-label" for="inlineCheckbox1">R&O</label>  
+                                                                    <?php
+                                                                }
+                                                                if($assertionRow['assertion_value'] == 'P&D'){
+                                                                    ?>
+                                                                        <label class="badge badge-info form-check-label" for="inlineCheckbox1">P&D</label>  
+                                                                    <?php
+                                                                }
+                                                            }
+                                                        } 
+                                                        ?>
                                                         <a href="#" id="<?php echo $queryrow['id']; ?>"
                                                             class="buttonActive">
                                                             <!-- <i class="fa fa-thumbs-up float-right"
