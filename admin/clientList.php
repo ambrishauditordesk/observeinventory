@@ -129,8 +129,7 @@
             <div class="settings">
                 <div class="settings-items-top-div">
                     <div class="settings-items settingsmodal">
-                        <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        Settings
+                        <a href="../settings" class="text-decoration-none"><img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings</a>
                     </div>
                     <div class="settings-items">
                         <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
