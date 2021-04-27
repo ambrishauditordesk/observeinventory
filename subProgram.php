@@ -187,10 +187,16 @@
                             }
                         ?></label>
                     </div>
+                    <?php
+                    if($prog_id == 1 || $prog_id == 2 || $prog_id == 12 || $prog_id == 19 || $prog_id == 230 || $prog_id == 239 || $prog_id == 240 || $prog_id == 245 || $prog_id == 247 || $prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 262 || $prog_id == 266){
+                    ?>
                     <div id="helpButton" class="settings-items">
                         <a href="#" class="text-decoration-none"><img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Help</a>
                     </div>
+                    <?php
+                    }
+                    ?>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
