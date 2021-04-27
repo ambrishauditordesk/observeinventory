@@ -138,7 +138,7 @@
             <div class="settings">
                 <div class="settings-items-top-div">
                     <div class="settings-items d-flex justify-content-between align-items-center">
-                        <a href="settings" class="text-decoration-none">
+                        <a href="../settings" class="text-decoration-none">
                             <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
                         </a>
                         <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_7">7</span></label>
