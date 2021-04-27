@@ -10,6 +10,7 @@ $clientId = $_SESSION['client_id'];
 $wid = base64_decode($_GET['wid']);
 
 $_SESSION['fileLocation'] = 'uploads/'.$clientId.$clientName.'/'.$wid;
+$_SESSION['workspace_id'] = $wid;
 
 if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
     header('Location: login');

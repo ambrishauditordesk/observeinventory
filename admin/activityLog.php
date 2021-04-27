@@ -169,6 +169,7 @@
             "serverSide": true,
             "searching": true,
             "order": [],
+            "bInfo" : false,
             "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;

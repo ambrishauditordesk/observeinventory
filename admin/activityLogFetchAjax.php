@@ -11,6 +11,12 @@ $query = "SELECT id,email,activity_date_time,activity_captured FROM activity_log
 
 $column = array('','email','activity_date_time','activity_captured');
 
+if (isset($_SESSION['workspace_id']) && !empty($_SESSION['workspace_id'])){
+    $wid = $_SESSION['workspace_id'];
+    $query .= ' and workspace_id = '.$wid;
+}
+
+
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"])){
     $query .= ' and email LIKE "%'.$_POST["search"]["value"].'%"';
 }
