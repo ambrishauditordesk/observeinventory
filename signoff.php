@@ -31,12 +31,15 @@
     $uid = $_SESSION['id'];
     $ser = $_SERVER['HTTP_REFERER'];
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+    $email = $_SESSION['email'];
+    $pname = $con->query("select program_name from program where id = $prog_id")->fetch_assoc()['program_name'];
 
     if(isset($_POST['reviewSubmit']))
     {
         if($con->query("insert into signoff_review_log(workspace_id,prog_id,user_id,review_signoff_date) values ('$wid','$prog_id','$uid','$date')") === TRUE)
         {
             $flag = 1;
+            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Review Sign Off done for program:- $pname ')");
         }
     }
     if(isset($_POST['prepareSubmit']))
@@ -44,6 +47,7 @@
         if($con->query("insert into signoff_prepare_log(workspace_id,prog_id,user_id,prepare_signoff_date) values ('$wid','$prog_id','$uid','$date')") === TRUE)
         {
             $con->query("update workspace_log set status='1' where program_id='$prog_id' and workspace_id='$wid'");
+            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Prepare Sign Off done for program:- $pname ')");
             $flag = 1;
         }
     }
@@ -72,14 +76,18 @@
                 $name = $fileName[$i]['name'];
                 $tmp_name = $fileName[$i]['tmp_name'];
                 if(move_uploaded_file($tmp_name, $path . $name))
-                    if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file) values ('$wid','$prog_id','$uid','$name')") === TRUE)
+                    if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file) values ('$wid','$prog_id','$uid','$name')") === TRUE){
                         $flagFile = 1;
+                        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");
+                    }
             }
         }
         if(!empty(trim($_POST['newComment']))){
             $comment = $_SESSION['name'].": ".trim($_POST['newComment']);
-            if($con->query("insert into signoff_comments_log(workspace_id,prog_id,user_id,comments,comments_date) values ('$wid','$prog_id','$uid','$comment','$date')") === TRUE)
+            if($con->query("insert into signoff_comments_log(workspace_id,prog_id,user_id,comments,comments_date) values ('$wid','$prog_id','$uid','$comment','$date')") === TRUE){
                 $flagComment = 1;
+                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New Comment:- $comment')");
+            }
         }
 
         $con->query("delete from assertion where workspace_id = $wid and program_id = $prog_id");

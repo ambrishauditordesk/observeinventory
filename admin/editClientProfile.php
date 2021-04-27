@@ -120,22 +120,14 @@ if($uploadOk){
         </script>";
     }
     ?>
-
     <script>
-        $(document).ready(function() {
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;
         if(darkmode)
         {
             document.documentElement.classList.toggle('dark-mode');
-            // document.querySelectorAll('.dark-invert').forEach((result) => {
-            //     result.classList.toggle('invert-dark-mode');
-            // });
-            $("#settingsModal #dark-active").attr('checked','checked');
+            
         }
         else if(!darkmode){
             document.documentElement.classList.remove('dark-mode');
-            $("#settingsModal #dark-inactive").attr('checked','checked');
         }
-    });
     </script>
-

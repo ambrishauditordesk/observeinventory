@@ -139,12 +139,9 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Sl</th>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">IP Address</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Location</th>
-                                                <th scope="col">Browser</th>
-                                                <th scope="col">Status</th>
+                                                <th scope="col">Activity Email ID</th>
+                                                <th scope="col">Date and Time for Activity</th>
+                                                <th scope="col">Activity detail</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -177,7 +174,7 @@
                 return nRow;
             },
             "ajax": {
-                url: "loginLogFetchAjax.php",
+                url: "activityLogFetchAjax.php",
                 type: "POST"
             }
         });

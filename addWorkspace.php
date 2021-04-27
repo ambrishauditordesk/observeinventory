@@ -92,6 +92,11 @@ if ($con->query($query) === true)
             $con->query("INSERT INTO going_concern_conclusion(workspace_id, going_concern_conclusion_data) VALUES('$wid','$conclusion_text')");
         }
 
+        $clientName = $con->query("select name from client where id = $clientID")->fetch_assoc()['name'];
+        
+        // shell_exec('mkdir -p uploads/'.$clientID.$clientName.'/'.$wid.'/');
+        // shell_exec('chmod -R 777 uploads/'.$clientID.$clientName.'/'.$wid.'/');
+
         echo "<script>
     $(document).ready(function() {
         $('#successModal').modal();

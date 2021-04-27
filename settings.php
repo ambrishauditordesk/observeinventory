@@ -50,6 +50,9 @@
         .card-body{
             margin: 0 13.5%;
         }
+        .custom-control{
+            padding-left: 2.5rem;
+        }
         </style>
 </head>
 
@@ -70,7 +73,7 @@
             {
             ?>
             <li class="nav-item d-flex">
-                <a class="nav-link d-flex align-items-center" href="clientDashboard?wid=<?php echo $wid ?>">
+                <a class="nav-link d-flex align-items-center" href="clientDashboard?qid=<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&jid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">
                     <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
                     <span>Dashboard</span>
                 </a>
@@ -80,7 +83,7 @@
             <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="admin/clientList">
                     <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>List Clients</span>
+                    <span>Client List</span>
                 </a>
             </li>
             <?php } ?>
@@ -134,9 +137,10 @@
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
-                    <div class="settings-items settingsmodal">
-                        <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        Settings
+                    <div class="settings-items">
+                        <a href="settings" class="text-decoration-none">
+                            <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
+                        </a>
                     </div>
                     <div class="settings-items">
                         <img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
@@ -229,31 +233,39 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="account">
-                        <h6>Mode</h6>
+                        <h6>Tools Settings</h6>
                         <hr>
                         <form>
-                        <div class="form-group">
-                            <label for="username">Chat Assistance</label>
-                            <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter your username" value="">
-                        </div>
-                        <hr>
-                        <div class="form-group">
-                            <label class="d-block text-danger">Help Desk Number</label>
-                            <input type="text" class="form-control" id="number" aria-describedby="numberHelp" value="1800-600-5958">
-                        </div>
-                        <div class="form-group">
-                            <label class="d-block text-danger">Email Us</label>
-                            <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="yourfirmaudit@gmail.com">
-                        </div>
-                        <div class="form-group">
-                            <label class="d-block text-danger">24/7 online chat assistance</label>
-                            <input type="text" class="form-control" id="chat" aria-describedby="chatHelp" value="">
-                        </div>
-                        <div class="form-group">
-                            <label class="d-block text-danger">24/7 Help Desk Number</label>
-                            <input type="text" class="form-control" id="24Number" aria-describedby="24NumberHelp" value="">
-                        </div>
-                        <!-- <button class="btn btn-danger" type="button">Delete Account</button> -->
+                            <div class="d-flex">
+                                <label>Mode</label>
+                                <div class="form-group custom-control custom-switch">    
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" value="true">
+                                    <label class="custom-control-label" for="customSwitch1">Toggle this switch to turn on/off dark mode</label>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Chat Assistance</label>
+                                <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter your username" value="">
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="d-block text-danger">Help Desk Number</label>
+                                <input type="text" class="form-control" id="number" aria-describedby="numberHelp" value="1800-600-5958">
+                            </div>
+                            <div class="form-group">
+                                <label class="d-block text-danger">Email Us</label>
+                                <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="yourfirmaudit@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="d-block text-danger">24/7 online chat assistance</label>
+                                <input type="text" class="form-control" id="chat" aria-describedby="chatHelp" value="">
+                            </div>
+                            <div class="form-group">
+                                <label class="d-block text-danger">24/7 Help Desk Number</label>
+                                <input type="text" class="form-control" id="24Number" aria-describedby="24NumberHelp" value="">
+                            </div>
+                            <!-- <button class="btn btn-danger" type="button">Delete Account</button> -->
                         </form>
                     </div>
                     <div class="tab-pane" id="billing">
@@ -294,43 +306,6 @@
             </div>
         </div>
 
-        <!-- Settings Modal -->
-        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
-                <div class="modal-content">
-                    <!-- <form method="post" action="editAClient"> -->
-                    <form>
-                        <div class="modal-body">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div><br>
-                            <div class="form-group ">
-                                <label for="name">Dark Mode</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
-                                <label class="form-check-label" for="exampleRadios1">
-                                    Inactive
-                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
-                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
-                                <label class="form-check-label" for="exampleRadios2" name="active">
-                                    Active
-                                </label>
-                            </div>
-                            <div class="modal-footer d-flex align-items-center justify-content-center">
-                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-success" id="save" type="submit" value="Save">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <!-- Footer -->
         <footer class="sticky-footer">
             <div class="container my-auto">
@@ -353,120 +328,42 @@
     <script src="js/multiselect-master/dist/js/multiselect.js"></script>
     <script>
     $(document).ready(function() {
-        get_data();
-
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;
         if(darkmode)
         {
             document.documentElement.classList.toggle('dark-mode');
-            // document.querySelectorAll('.dark-invert').forEach((result) => {
-            //     result.classList.toggle('invert-dark-mode');
-            // });
-            $("#settingsModal #dark-active").attr('checked','checked');
+            $("#customSwitch1").attr("checked","checked");
         }
-        else if(!darkmode){
+        else{
             document.documentElement.classList.remove('dark-mode');
-            $("#settingsModal #dark-inactive").attr('checked','checked');
+            $("#customSwitch1").removeAttr('checked');
         }
     });
-
-    $(document).on('click', '.editClient', function() {
-        var id = $(this).attr("id");
-        $.ajax({
-            url: "editClientMemberFetchAjax.php",
-            type: "POST",
-            data: {
-                id: id,
-                cid: <?php echo $clientId; ?>
-            },
-            success: function(data) {
-                obj = JSON.parse(data);
-                console.log(obj);
-                id = obj.id;
-                $("#editModal #name1").val(obj.name);
-                $("#editModal #email1").val(obj.email);
-                $("#editModal #active1 option[value=" + obj.active + "]").attr(
-                    'selected', 'selected');
-                $("#editModal #design").val(obj.designation);
-                $("#editModal").modal('show');
-            }
-        });
-    });
-
-
-    function get_data() {
-        var dataTable = $('#clientMemberTable').DataTable({
-            "destroy": true,
-            "processing": true,
-            "serverSide": true,
-            "searching": true,
-            "order": [],
-            "fnRowCallback": function(nRow, aData, iDisplayIndex) {
-                $("td:first", nRow).html(iDisplayIndex + 1);
-                return nRow;
-            },
-            "ajax": {
-                url: "clientMemberProfileFetchAjax.php",
+    $("#customSwitch1").click(function(){
+        var id = <?php echo $_SESSION['id']; ?>;
+        if($("#customSwitch1").prop('checked') == true){
+            document.documentElement.classList.toggle('dark-mode');
+            $.ajax({
+                url: "darkmode.php",
                 type: "POST",
                 data: {
-                    cid: <?php echo $clientId ?>
+                    id: id,
+                    active: 1
                 }
-            }
-        });
-    }
-
-    $(document).on('click','.settingsmodal', function() {
-        $("#settingsModal").modal('show');
-    });
-
-    $('input[type=radio][name=darkmode]').change(function() {
-        if(this.value == '1')
-        {
-            document.documentElement.classList.toggle('dark-mode');
-            // document.querySelectorAll('.dark-invert').forEach((result) => {
-            //     result.classList.toggle('invert-dark-mode');
-            // });
+            });
         }
-        else if(this.value == '0'){
+        else{
             document.documentElement.classList.remove('dark-mode');
             document.documentElement.classList.remove('invert-dark-mode');
-        }
-    });
-
-    $(document).on('click', '#save', function(e) {
-        e.preventDefault();
-        var id = <?php echo $_SESSION['id']; ?>;
-        var active = $('input[name="darkmode"]:checked').val();
-        $.ajax({
-            url: "darkmode.php",
-            type: "POST",
-            data: {
-                id: id,
-                active: active
-            },
-            success: function(response) {
-                console.log(response);
-                if (response) {
-                    swal({
-                        icon: "success",
-                        text: "Updated!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            window.location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            window.location.reload();
-                        }
-                    });
+            $.ajax({
+                url: "darkmode.php",
+                type: "POST",
+                data: {
+                    id: id,
+                    active: 0
                 }
-            }
-        });
+            });
+        }
     });
     </script>
 </body>

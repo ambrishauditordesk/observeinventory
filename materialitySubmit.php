@@ -39,16 +39,21 @@
     $ser = $_SERVER['HTTP_REFERER'];
     $uid = $_SESSION['id'];
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+    $email = $_SESSION['email'];
     $prepareFlag = $flag = 0;
 
     if(isset($_POST['prepareSubmit']))
     {
+        $pname = $con->query("select program_name from program where id = 230")->fetch_assoc()['program_name'];
         $con->query("insert into signoff_prepare_log(workspace_id,prog_id,user_id,prepare_signoff_date) values('$wid','230','$uid','$date')");
+        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Prepare Sign Off done for program:- $pname ')");
         $prepareFlag = 1;
     }
     elseif(isset($_POST['reviewSubmit']))
     {
+        $pname = $con->query("select program_name from program where id = 230")->fetch_assoc()['program_name'];
         $con->query("insert into signoff_review_log(workspace_id,prog_id,user_id,review_signoff_date) values('$wid','230','$uid','$date')");
+        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Review Sign Off done for program:- $pname ')");
         $reviewFlag = 1;
     }
     else
@@ -104,11 +109,16 @@
             $j = sizeof($sLow);
             $flag = 0;
 
+            $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+            $email = $_SESSION['email'];
+
             for ($i = 0; $i < $j; $i++) 
             {
                 if($con->query("update materiality set amount = '$amount[$i]', standard_low='$sLow[$i]', standard_high='$sHigh[$i]', custom='$cLow[$i]' where workspace_id='$wid' and id = '$id[$i]'") === TRUE)
                 {
                     $flag=1;
+                    $pname = $con->query("select name from materiality where id = '$id[$i]' and workspace_id='$wid'")->fetch_assoc()['program_name'];
+                    $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploaded for $pname ,Materiality.')");
                 }
                 else
                 {
@@ -119,9 +129,15 @@
 
             if($filePresent){
                 $con->query("insert into materiality_files(fname,submat_id,workspace_id) values ('$name','$submat_id','$wid')");
-                if(!move_uploaded_file($tmp_name, $path . $name)){
+                $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+                $email = $_SESSION['email'];
+                if(move_uploaded_file($tmp_name, $path . $name) == true){
+                    $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploaded for Materiality.')");
+                }
+                else{
                     // File write permission is not given in the server.
                     $error.= "<p>File was not uploaded but record created. Contact Admin ASAP.</p>";
+                    $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploading failed for Materiality.')");
                 }
             }
             $con->query("UPDATE sub_materiality SET comments = '$comment',balance_asset='$aScope',balance_liability='$lScope',pl_income='$pliScope',pl_expense= '$pleScope' WHERE workspace_id=$wid");

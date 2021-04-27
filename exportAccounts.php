@@ -148,3 +148,11 @@ $prog_id = $_GET["pid"];
     });
     </script>
 </body>
+<?php
+
+$date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+$email = $_SESSION['email'];
+$pname = $prog_id == 239 ? "Balance Sheet":"Profit & Loss";
+$con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$pname Account exported.')");
+
+?>

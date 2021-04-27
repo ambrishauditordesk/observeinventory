@@ -88,6 +88,7 @@
                     if($uploadOk){
                         if(move_uploaded_file($tmp_name, $path.$name)){
                             $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");
+                            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','File uploaded $name')");
                             $success = 1;
                         }
                     }

@@ -66,6 +66,13 @@ if(isset($_GET['wid']) && !empty($_GET['wid'])){
             ?>
         </tbody>
     </table>
+    <?php 
+
+    $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+    $email = $_SESSION['email'];
+    $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Request Client Assistance exported.')");
+
+    ?>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

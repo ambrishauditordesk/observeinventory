@@ -37,6 +37,9 @@
             $flag = 1;
         }
         $con->query("INSERT INTO inquiring_of_management_questions_textarea(workspace_id,textarea) VALUES('$wid','$textareaResult')");
+        $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+        $email = $_SESSION['email'];
+        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Inquiring Managements New entery done')");
         // $con->query("update workspace_log set status='1' where program_id='258' and workspace_id='$wid'");
     }
     if($flag){

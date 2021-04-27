@@ -131,6 +131,10 @@ if($uploadOk) {
         $uid = $con->insert_id;
         $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
     }
+        
+    shell_exec('mkdir -p uploads/'.$cid.$name.'/');
+    shell_exec('chmod -R 777 uploads/'.$cid.$name.'/');
+    
     echo "<script>
             $(document).ready(function() {
             $('#successModal').modal();

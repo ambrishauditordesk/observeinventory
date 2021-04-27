@@ -9,7 +9,15 @@ body{
 	background-position:center;
 	position:relative;
     overflow-y: hidden;
+    /* Prevent text selection of an <body> element in all major browsers */
+    -youbkit-touch-callout: none; /* iOS Safari */
+    -youbkit-user-select: none;   /* Chrome 6.0+, Safari 3.1+, Edge & Opera 15+ */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;        /* IE 10+ and Edge */
+    user-select: none;            /* Non-prefixed version,
+    currently supported by Chrome and Opera */
 }
+
 a{
   text-decoration:none;
   color:#444444;
@@ -380,6 +388,44 @@ th {
     left: 0;
     bottom: 0;
 } */
+.helpDesign{
+    height: 40px;
+    width: 40px;
+    font-size: 18px;
+    color: #000;
+    background-color:rgb(0, 50, 255, 50%);
+    border: 1px solid #000;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+
+}
+
+.helpDesign:hover, .helpDesignSelected{
+    height: 45px;
+    width: 45px;;
+    color: #fff;
+    background-color:#254eda;
+    /* box-shadow: 0px 1px 8px 1px rgb(0,0,0,0.65); */
+}
+
+.helpDesign:hover{
+    box-shadow: 0px 1px 8px 1px rgb(0,0,0,0.65);   
+}
+
+.helpDesignNotSelected{
+    color: #fff;
+    background-color:rgb(0, 50, 255, 50%);
+    box-shadow: 0 0 0 0;
+}
+
+#left-arrow, #right-arrow{
+    cursor: pointer;
+}
+
 /* Media query */
 @media (max-width: 767px) {
    nav h1{

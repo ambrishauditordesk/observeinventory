@@ -103,8 +103,9 @@
             </div>
             <div class="settings">
                 <span class="settings-items">
-                    <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                    Settings
+                    <a href="../settings" class="text-decoration-none">
+                        <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
+                    </a>
                 </span>
                 <br>
                 <span class="settings-items">
@@ -348,6 +349,16 @@
     <script>
     $(document).ready(function() {
         get_data();
+
+        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+        if(darkmode)
+        {
+            document.documentElement.classList.toggle('dark-mode');
+            
+        }
+        else if(!darkmode){
+            document.documentElement.classList.remove('dark-mode');
+        }
 
         // $('#lstview').multiselect();
         // $('#lstview_to').multiselect();

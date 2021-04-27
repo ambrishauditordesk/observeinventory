@@ -47,22 +47,27 @@ foreach($result as $row)
 {
  $sub_array = array();
  $sub_array[] = '';
- 
- $sub_array[] = "<a href='../workspace.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
- $sub_array[] = "<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
- <a href='clientMember.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
+ {
+    if($row['aact'] == 1){
+        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;<a href='../workspace.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
+    }
+    else{
+        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;".$row['aname'];
+    }
+ }
+ $sub_array[] = "<label class='mt-2'><span class='helpDesign help_8'>8</span></label>&nbsp;<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
+ <label class='mt-2'><span class='helpDesign help_9'>9</span></label>&nbsp;<a href='clientMember.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
  $sub_array[] = $row['con'];
  $sub_array[] = $row['adate'];
  {
     if($row['aact'] == 1){
-        $sub_array[] = "<span class='badge badge-success small id= '".$row['aact']."''>ACTIVE</span>";
+        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_10'>10</span></label>&nbsp;<span class='badge badge-success small id= '".$row['aact']."''>ACTIVE</span>";
     }
     else{
-        $sub_array[] = "<span class='badge badge-danger small id= '".$row['aact']."''>INACTIVE</span>";
+        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_10'>10</span></label>&nbsp;<span class='badge badge-danger small id= '".$row['aact']."''>INACTIVE</span>";
     }
 }
-  
- 
+
  $data[] = $sub_array;
 }
 function get_all_data($con)

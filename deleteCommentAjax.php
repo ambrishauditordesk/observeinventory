@@ -8,8 +8,15 @@
         $wid = $result['workspace_id'];
         $prog_id = $result['prog_id'];
         $response = 0;
+        
+        $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+        $email = $_SESSION['email'];
+        $pname = $con->query("select program_name from program where id = $prog_id")->fetch_assoc()['program_name'];
+        $comments = $con->query("select comments from signoff_comments_log where id='$id'")->fetch_assoc()['comments'];
+        
         if($con->query("delete from signoff_comments_log where id = '$id'") === TRUE)
         {
+            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$comments Comment has been deleted for program:- $pname ')");
             $response = 1;
             $commentResult = $con->query("select count(id) total from signoff_comments_log where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_assoc()['total'];
             $fileResult = $con->query("select count(id) total from signoff_files_log where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_assoc()['total'];
@@ -17,6 +24,7 @@
                 $con->query("update workspace_log set status = 0 where workspace_id = $wid and program_id = $prog_id");
                 $con->query("delete from signoff_prepare_log where workspace_id = $wid and prog_id = $prog_id");
                 $con->query("delete from signoff_review_log where workspace_id = $wid and prog_id = $prog_id");
+                $con->query("delete from assertion where workspace_id = $wid and program_id = $prog_id");
             }
         }
         echo $response;

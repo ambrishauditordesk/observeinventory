@@ -29,6 +29,9 @@
         $wid = trim($_POST['wid']);
         $con->query("INSERT INTO going_concern_procedures(workspace_id, procedure_data, free_text, part) VALUES('$wid','$name','','$part_name')");
         $flag = 1;
+        $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+        $email = $_SESSION['email'];
+        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Going Concen New Entry done.')");
     }
     if($_POST['status'] == 1){
 
@@ -68,8 +71,6 @@
         else{
             $conclusionText = "We did not give consideration to modification of our auditor’s report";
         }
-
-
 
         $con->query("DELETE FROM going_concern where workspace_id = $wid");
         $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c, conclusion_text) VALUES('$wid','$conclusion','$descA','$descB','$descC','$conclusionText')");
@@ -125,6 +126,10 @@
             }
         }
         $flag = $uploadOk == 1 ? 1 : 0;
+
+        $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+        $email = $_SESSION['email'];
+        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Going Concen updated.')");
     }
     $ser = $_SERVER['HTTP_REFERER'];
     if($flag){

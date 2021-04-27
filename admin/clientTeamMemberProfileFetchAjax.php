@@ -3,7 +3,7 @@ include '../dbconnection.php';
 session_start();
 $cid = $_POST['cid'];
 $column = array('','name','email','active','design','edit');
-$query = "SELECT * FROM user where client_id='$cid'";
+$query = "SELECT user.id id, user.name name, user.email email, user.designation designation, user.active active FROM `user` inner join user_client_log on user.id=user_client_log.user_id where user.client_id = '$cid' or user_client_log.client_id = '$cid'";
 if(isset($_POST["search"]["value"]) && !empty($_POST["search"]["value"]))
 {
  $query .= ' and user.name LIKE "%'.$_POST["search"]["value"].'%"';
@@ -64,7 +64,7 @@ foreach($result as $row)
 }
 function get_all_data($con)
 {
- $query = "SELECT COUNT(id) AS total FROM `user` where client_id = '$cid'";
+ $query = "SELECT COUNT(user.id) AS total FROM `user` inner join user_client_log on user.id=user_client_log.user_id where user.client_id = '$cid' or user_client_log.client_id = '$cid'";
  $statement = $con->query($query)->fetch_assoc()["total"];
  return $statement;
 }

@@ -70,3 +70,7 @@ $(window).on('load', function(e) {
         });
     }
 });
+
+$('body').bind('cut copy', function(e) {
+    e.preventDefault();
+});

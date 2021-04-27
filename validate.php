@@ -51,7 +51,8 @@
 <?php 
     include 'dbconnection.php';
     session_start();
-    $ser = $_SERVER['HTTP_REFERER'];
+    // $ser = $_SERVER['HTTP_REFERER'];
+    $ser = 'login';
 
     if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
         echo "<script>
@@ -101,12 +102,14 @@
                 $con->query("update loginlog set status = 'Success' where id = $loginLogId");
                 $_SESSION['id'] = $usersrow['id'];
                 $_SESSION['name'] = $usersrow['name'];
-                $_SESSION['email'] = $usersrow['email'];
+                $email = $_SESSION['email'] = $usersrow['email'];
                 $_SESSION['role'] = $usersrow['accessLevel'];
                 $_SESSION['reg_date'] = $usersrow['reg_date'];
                 $_SESSION['signoff'] = $usersrow['signoff_init'];
                 $_SESSION['darkmode'] = $usersrow['darkmode'];
                 $_SESSION['external'] = 0;
+                $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+                // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Successfully LoggedIn.')");
                 if($usersrow['client_id'] != ''){
                     $_SESSION['external'] = 1;
                     $_SESSION['external_client_id'] = $usersrow['client_id'];

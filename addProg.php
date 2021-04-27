@@ -12,6 +12,10 @@
             $new_id = $con->insert_id;
             if($con->query("insert into workspace_log(workspace_id,program_id) values ('$wid','$new_id')") === TRUE)
             {
+                $typeName = $type == 1 ? 'Programme' : 'Step';
+                $email = $_SESSION['email'];
+                $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$typeName added:- $name')");
                 echo 1;
             }
             else

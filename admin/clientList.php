@@ -53,9 +53,10 @@
                 if($_SESSION['role'] != 3){
                     ?>
             <li class="nav-item d-flex">
+                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
                 <a class="nav-link d-flex align-items-center" href="members.php">
                 <img class="nav-icon" src="../Icons/Group 4.svg"/>&nbsp;&nbsp;
-                    <span>Team Members</span>
+                    <span>Firm Members</span>
                     <!-- <i class="fas fa-users fa-1x"></i> -->
                 </a>
             </li>
@@ -65,6 +66,7 @@
                 if($_SESSION['role'] != 3){
                     ?>
             <li class="nav-item d-flex">
+                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_1">1</span></label>
                 <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#addClientModal">
                     <img class="nav-icon" src="../Icons/Group 5.svg"/>&nbsp;&nbsp;
                     <span>Add Client</span>
@@ -73,6 +75,7 @@
             <?php } 
             ?>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
+                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_3">3</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
                 </span>
@@ -88,7 +91,8 @@
                     <?php 
                         if($_SESSION['role'] == '-1'){
                         ?>
-                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -128,21 +132,25 @@
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
-                    <div class="settings-items settingsmodal">
-                        <!-- <a href="../settings" class="text-decoration-none"> -->
+                    <div class="settings-items d-flex justify-content-between align-items-center">
+                        <a href="settings" class="text-decoration-none">
                             <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
-                        <!-- </a> -->
+                        </a>
+                        <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_7">7</span></label>
                     </div>
-                    <div class="settings-items">
-                        <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        Help
+                    <div id="helpButton" class="settings-items">
+                        <a href="#" class="text-decoration-none"><img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Help</a>
                     </div>
                 </div>
-                <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+                    <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_12">12</span></label>
+                </div>
             </div>
         </div>
     </div>
-
     <div class="mar">
         <!-- HEADER -->
         <!-- <div id="header">
@@ -204,6 +212,7 @@
                                     <h6 class="">
                                     <img src="../Icons/Group 3.svg">
                                     </h6>
+                                    <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_4">4</span></label>
                                     <p class="text-count">
                                         <?php 
                                             $userId = $_SESSION['id'];
@@ -224,13 +233,14 @@
                                     <h6 class="">
                                         <img src="../Icons/Group 2.svg">
                                     </h6>
+                                    <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
                                             if($_SESSION['role'] > 1){
-                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id inner join user_client_log c on a.client_id=c.client_id where c.user_id = $userId and b.status = '0' group by a.client_id")->num_rows;   
+                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id inner join user_client_log c on a.client_id=c.client_id inner join client d on d.id=c.client_id where c.user_id = $userId and b.status = '0' and d.active=1 group by a.client_id")->num_rows;   
                                             }
                                             else{
-                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id where b.status = '0' group by a.client_id")->num_rows;
+                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id inner join client c on c.id=a.client_id where b.status = '0' and c.active=1 group by a.client_id")->num_rows;
                                             }
                                         ?>
                                     </p>
@@ -243,10 +253,11 @@
                                     <h6 class="">
                                     <img src="../Icons/Group 1.svg">
                                     </h6>
+                                    <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_6">6</span></label>
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
                                             if($_SESSION['role'] > 1){
-                                                echo $con->query("select count(a.id) completed from workspace a inner join user_client_log b on a.client_id=b.client_id where b.user_id = $userId and a.freeze = '1'")->num_rows;   
+                                                echo $con->query("select count(a.id) completed from workspace a inner join user_client_log b on a.client_id=b.client_id where b.user_id = $userId and a.freeze = '1' group by a.id")->num_rows;   
                                             }
                                             else{
                                                 echo $con->query("select count(id) completed from workspace where workspace.freeze = '1'")->fetch_assoc()['completed'];
@@ -509,6 +520,10 @@
                                 <label for="name">CIN No.</label>
                                 <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase">
                             </div>
+                            <?php
+                                if($_SESSION['role'] < 3)
+                                {
+                            ?>
                             <div class="form-group ">
                                 <label for="name">Status</label>
                             </div>
@@ -522,50 +537,75 @@
                                     Active
                                 </label>
                             </div>
+                            <?php
+                                }
+                            ?>
                         </div>
                         <div class="modal-footer  d-flex align-items-center justify-content-center">
                             <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
+                            <?php
+                                if($_SESSION['role'] < 3)
+                                {
+                            ?>
                             <input class="btn btn-warning" type="reset" value="Reset">
                             <input class="btn btn-primary" type="submit" value="Done">
+                            <?php 
+                                }
+                            ?>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        
-        <!-- Settings Modal -->
-        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
-                <div class="modal-content">
-                    <!-- <form method="post" action="editAClient"> -->
-                    <form>
-                        <div class="modal-body">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div><br>
-                            <div class="form-group ">
-                                <label for="name">Dark Mode</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-inactive" value="0">
-                                <label class="form-check-label" for="exampleRadios1">
-                                    Inactive
-                                </label> &nbsp; &nbsp; &nbsp; &nbsp;
-                                <input class="form-check-input darkmode" type="radio" name="darkmode" id="dark-active" value="1">
-                                <label class="form-check-label" for="exampleRadios2" name="active">
-                                    Active
-                                </label>
-                            </div>
-                            <div class="modal-footer d-flex align-items-center justify-content-center">
-                                <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
-                                <input class="btn btn-success" id="save" type="submit" value="Save">
-                            </div>
+
+        <div class="d-flex justify-content-center">
+            <div id="helpDescription" class="col-md-11">
+                <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
+                    <div class="card-body">
+                        <div id="help_1">
+                            <p>1. Add Client icon helps you add client to your client list.</p>
+                            <p>To add a client enter all the required client details and you are required to enter 1 client contact minimum. You can add more than one client contact by using add row section on bottom left section</p>
+                            <p>Client list is identified with a unique PAN, GST, or TAN number. If you are having an error in saving the client information, please ensure that the PAN, GST, or TAX number is unique for each client.</p>
+                            <p>If you wish to add a clients with similar PAN, GST or TAN number please contact firm administrator.</p>
+                            <p>Once done click on “Done” to save. </p>
+                            <p>If you wish to change or erase all the information, click on reset.</p>
                         </div>
-                    </form>
+                        <div id="help_2">
+                            <p>2. Team members button helps you add you add your team members and allocation clients to each specific member.</p>
+                        </div>
+                        <div id="help_3">
+                            <p>3. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                        </div>
+                        <div id="help_4">
+                            <p>4. Total Assigned – Reflects the count of engagements assigned to you included InProgress and completed engagement.</p>
+                        </div>
+                        <div id="help_5">
+                            <p>5. In progress – Reflects the count of current engagement you are assigned to and currently in actively in edit and in progress. Reach out to firm administrator to get your self allocated to any specific engagement.</p> 
+                        </div>
+                        <div id="help_6">
+                            <p>6. Completed – Reflects the count of engagements feezed and not available for edits. Reach out to firm administrator to unlock any freezed engagement.</p>
+                        </div>
+                        <div id="help_7">
+                            <p>7. Settings – Your Settings are personalized based on your role in your firm and can be accessed at all times for chat, email and reaching out to a specialist for any help.</p>
+                        </div>
+                        <div id="help_8">
+                            <p>8. Client profile – Once a client is added , you can edit information or update client profile using this feature.</p>
+                        </div>
+                        <div id="help_9">
+                            <p>9. Client Contacts – You can add client contacts to give them access to see your client document list. All the members on the client contacts can only view your clint request list.</p>
+                        </div>
+                        <div id="help_10">
+                            <p>10. Status – Active status reflect that the engagement is still in progress and not been freezed. Inactive status means the engagements is no longer available for edits and you should reach out to a firm administrator for further help.</p>
+                        </div>
+                        <div id="help_11">
+                            <p>11. Client name – Click on your designed client name to access client workspace.</p>
+                        </div>
+                        <div id="help_12">
+                            <p>12. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                        </div>
+                        <i id="left-arrow" class="fas fa-arrow-left"></i>
+                        <i id="right-arrow" class="fas fa-arrow-right"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -596,7 +636,8 @@
                     },
             "ajax": {
                 url: "clientListFetchAjax.php",
-                type: "POST"
+                type: "POST",
+                async: false
             }
         });
     }
@@ -604,6 +645,250 @@
     $(document).ready(function() {
 
         get_data();
+
+        $(".helpDesign, #helpDescription").hide();
+
+        $("#helpButton").click(function(e){
+            $(".helpDesign, #helpDescription").toggle();
+            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            $("#help_1").show();
+            $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+        });
+
+        $(".help_1").click(function(e){
+            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_1").show();
+            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_2").click(function(e){
+            $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_2").show();
+            $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_3").click(function(e){
+            $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_3").show();
+            $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_4").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_4").show();
+            $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_5").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_5").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+        
+        $(".help_6").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_6").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_7").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_7").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_8").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_8").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_9").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_9").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
+        });
+
+        $(".help_10").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_10").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
+        });
+
+        $(".help_11").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_11").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
+        });
+
+        $(".help_12").click(function(e){
+            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+            $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+            $("#help_12").show();
+            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
+        });
+
+        $("#right-arrow").click(function(e){
+            if($(".help_1").hasClass("helpDesignSelected")){
+                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_2").show();
+                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_2").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_3").show();
+                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_3").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_4").show();
+                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_4").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_5").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_5").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_6").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_6").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_7").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_7").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_8").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_8").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_9").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_9").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_10").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
+            }
+            else if($(".help_10").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_11").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
+            }
+            else if($(".help_11").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_12").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
+            }
+            else if($(".help_12").hasClass("helpDesignSelected")){
+                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_1").show();
+                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+        });
+
+        $("#left-arrow").click(function(e){
+            if($(".help_1").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_12").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
+            }
+            else if($(".help_2").hasClass("helpDesignSelected")){
+                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_1").show();
+                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_3").hasClass("helpDesignSelected")){
+                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_2").show();
+                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_4").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_3").show();
+                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_5").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_4").show();
+                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_6").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_5").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_7").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_6").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_8").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_7").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_9").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_8").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_10").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_9").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
+            }
+            else if($(".help_11").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_10").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
+            }
+            else if($(".help_12").hasClass("helpDesignSelected")){
+                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                $("#help_11").show();
+                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
+            }
+        });
 
         var i = 1;
         b = i - 1;
@@ -624,14 +909,10 @@
         if(darkmode)
         {
             document.documentElement.classList.toggle('dark-mode');
-            // document.querySelectorAll('.dark-invert').forEach((result) => {
-            //     result.classList.toggle('invert-dark-mode');
-            // });
-            $("#settingsModal #dark-active").attr('checked','checked');
+            
         }
         else if(!darkmode){
             document.documentElement.classList.remove('dark-mode');
-            $("#settingsModal #dark-inactive").attr('checked','checked');
         }
     });
 
@@ -818,60 +1099,6 @@
         });
     });
 
-    $(document).on('click','.settingsmodal', function() {
-        $("#settingsModal").modal('show');
-    });
-
-    $('input[type=radio][name=darkmode]').change(function() {
-        if(this.value == '1')
-        {
-            document.documentElement.classList.toggle('dark-mode');
-            // document.querySelectorAll('.dark-invert').forEach((result) => {
-            //     result.classList.toggle('invert-dark-mode');
-            // });
-        }
-        else if(this.value == '0'){
-            document.documentElement.classList.remove('dark-mode');
-            document.documentElement.classList.remove('invert-dark-mode');
-        }
-    });
-
-    $(document).on('click', '#save', function(e) {
-        e.preventDefault();
-        var id = <?php echo $_SESSION['id']; ?>;
-        var active = $('input[name="darkmode"]:checked').val();
-        $.ajax({
-            url: "../darkmode.php",
-            type: "POST",
-            data: {
-                id: id,
-                active: active
-            },
-            success: function(response) {
-                console.log(response);
-                if (response) {
-                    swal({
-                        icon: "success",
-                        text: "Updated!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            window.location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            window.location.reload();
-                        }
-                    });
-                }
-                // $("#editModal").modal('hide');
-            }
-        });
-    });
     </script>
 </body>
 
