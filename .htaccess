@@ -22,9 +22,14 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 #  RewriteBase /
 # </IfModule>
 
-ErrorDocument 404 http://yourfirmaudit.com/AuditSoft/error
-ErrorDocument 403 http://yourfirmaudit.com/AuditSoft/error
-ErrorDocument 500 http://yourfirmaudit.com/AuditSoft/error
+# ErrorDocument 404 http://yourfirmaudit.com/AuditSoft/error
+# ErrorDocument 403 http://yourfirmaudit.com/AuditSoft/error
+# ErrorDocument 500 http://yourfirmaudit.com/AuditSoft/error
+
+ErrorDocument 404 http://atlats.in/audit/error
+ErrorDocument 403 http://atlats.in/audit/error
+ErrorDocument 500 http://atlats.in/audit/error
+
 AddCharset UTF-8 .php
 <Files "dbconnection.php">  
   Require all denied
