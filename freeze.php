@@ -1,5 +1,11 @@
 <?php
 include 'dbconnection.php';
+session_start();
+
+if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
+    header("Location: ./");
+}
+
 $wid = trim($_POST['id']);
 $freeze = trim($_POST['freeze']);
 $con->query("update workspace set freeze = $freeze where id= $wid");
@@ -7,4 +13,5 @@ $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y
 $email = $_SESSION['email'];
 $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Workspace Freezed.')");
 echo 1;
+
 ?>

@@ -2,18 +2,32 @@
     include 'dbconnection.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
-        header("Location: login");
+        header("Location: ./");
     }
-    if (isset($_SESSION['accessLevel']) && !empty($_SESSION['accessLevel']) && $_SESSION['accessLevel'] != '1') {
-        header('Location: login');
-    }
+    if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+        $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+        $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+        $diff=date_diff($currentDate,$loggedInDate);
+		if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+			header('Location: logout');
+		}
+	}
+    
     $clientID = base64_decode($_GET['cid']);
+    
     if($con->query("select * from client where id = $clientID")->num_rows == 0){
-        header('Location: login');
+        header('Location: ./');
     }
 
     $_SESSION['client_id'] = $clientID;
-    $_SESSION['cname'] = $clientName = $con->query("select name from client where id = $clientID ")->fetch_assoc()["name"];
+    
+    $clientName = $con->query("select added_by_id, name from client where id = $clientID ")->fetch_assoc();
+    
+    $_SESSION['cname'] = $clientName['name'];
+    $added_by_id = $clientName['added_by_id'];
+    $clientName = $clientName['name'];
+    
+    $_SESSION['upload_file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$_SESSION['cname'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +118,7 @@
                                 <?php
                             }
                         ?>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                     </div>
                 </li>
             </div>
@@ -189,7 +204,12 @@
         ?>
         <!-- TABLE -->
         <?php
-        $query = "Select * from workspace where client_id = $clientID";
+        if($_SESSION['external'] != 1){
+            $query = "Select * from workspace where client_id = $clientID";
+        }
+        else{
+            $query = "Select * from workspace inner join accounts_log on accounts_log.workspace_id = workspace.id where client_id = $clientID and client_contact_id = ".$_SESSION['id'];
+        }
         $result = $con->query($query);
         if ($result->num_rows > 0) {
             ?>
@@ -218,23 +238,14 @@
                                                         <td>
                                                         <?php
                                                         if(!$row['freeze']){
-                                                            if($_SESSION['external'] != 1){
-                                                                ?>
-                                                                    <a href="clientDashboard?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>" class="icon-hide">
-                                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
-                                                                    </a>
-                                                                <?php
-                                                            }
-                                                            else{
-                                                                ?>
-                                                                    <a href="subProgram?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode('247'); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">
-                                                                        <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
-                                                                    </a>
-                                                                <?php
-                                                            }
+                                                        ?>
+                                                            <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" class="icon-hide">
+                                                                <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
+                                                            </a>
+                                                        <?php
                                                         }
                                                         else{
-                                                            if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1'){
+                                                            if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1' || $_SESSION['role'] == '4'){
                                                             ?>
                                                                 <a id="<?php echo $row['id']; ?>" class="freeze" href="#"><i class="fas fa-unlock"></i></a>
                                                             <?php
@@ -270,10 +281,13 @@
         }
         ?>
 
-        <div class="d-flex justify-content-center">
+        <div id = "helpDescriptionTop" class="d-flex justify-content-center">
             <div id="helpDescription" class="col-md-11">
                 <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
                     <div class="card-body">
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <div id="help_1">
                             <p>1. Add workspace: For every client your can create multiple workspace based on the period of your engagement.</p>
                             <p>Once you click on add workspace and enter the dates you will be able to access the Audit dashboard.</p><br>
@@ -312,6 +326,35 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!--ADD WORKSPACE -->
         <div class="modal fade" id="addWorkspaceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -366,6 +409,8 @@
 
     $(document).ready(function(){
 
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
+
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;
         if(darkmode)
         {
@@ -375,6 +420,10 @@
         else if(!darkmode){
             document.documentElement.classList.remove('dark-mode');
         }
+
+        $("#helpDescription > div > div > .close").click(function(e){
+            $(".helpDesign, #helpDescription").toggle();
+        });
 
         $(".helpDesign, #helpDescription").hide();
 
@@ -504,7 +553,31 @@
                 $("#help_5").show();
                 $("#help_1, #help_2, #help_3, #help_4, #help_6").hide();
             }
+        });        
+
+        $(document).on('click','.freeze',function(e){
+            $.ajax({
+                url: 'freeze.php',
+                type: 'POST',
+                data: {
+                    id: $(this).attr("id"),
+                    freeze: 0
+                },
+                success: function(data){
+                    if (data) {
+                    swal({
+                        icon: "success",
+                        text: "Workspace unlocked!",
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = <?php echo "'workspace.php?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;
+                        }
+                    });
+                    }
+                }
+            });
         });
+
     });
 
     $(document).ready(function(){

@@ -67,7 +67,11 @@
             </li>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -437,9 +441,13 @@
             "serverSide": true,
             "searching": true,
             "order": [],
+            "bInfo": false,
             "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;
+            },
+            "drawCallback": function(settings) {
+                $(".helpDesign, #helpDescription").hide();
             },
             "ajax": {
                 url: "clientFetchAjax.php",

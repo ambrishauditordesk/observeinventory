@@ -2,19 +2,56 @@
 include 'dbconnection.php';
 session_start();
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
-    header("Location: index");
+    header("Location: ./");
 }
+if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+    $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+    $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+    $diff=date_diff($currentDate,$loggedInDate);
+    if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+        header('Location: logout');
+    }
+}
+
 $clientName = $_SESSION['cname'];
 
 $clientId = $_SESSION['client_id'];
 $wid = base64_decode($_GET['wid']);
 
-$_SESSION['fileLocation'] = 'uploads/'.$clientId.$clientName.'/'.$wid;
-$_SESSION['workspace_id'] = $wid;
-
 if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
     header('Location: login');
 }
+$_SESSION['workspace_id'] = $wid;
+$_SESSION['upload_file_location'] = $_SESSION['upload_file_location'].'/'.$_SESSION['workspace_id'].'/';
+
+
+$folderStatus = $con->query("select * from client_temp_folder where workspace_id = $wid");
+if($folderStatus->num_rows == 0){
+
+    function generateRandomFolderName($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+    
+    $_SESSION['tempFolderName'] = generateRandomFolderName();
+    $con->query("insert into client_temp_folder(workspace_id, folder_name) values('$wid','".$_SESSION['tempFolderName']."')");
+    shell_exec('mkdir view/'.$_SESSION['tempFolderName'].'/');
+    shell_exec('chmod -R 777 view/'.$_SESSION['tempFolderName'].'/');
+}
+else{
+    $_SESSION['tempFolderName'] = $folderStatus->fetch_assoc()['folder_name'];
+}
+
+if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
+    header("Location: subProgram?aid=". base64_encode(md5($clientName))."&gid=".base64_encode(md5($clientName))."&fid=".base64_encode(md5($clientName))."&eid=".base64_encode(md5($clientName))."&pid=".base64_encode('247')."&cid=".base64_encode(md5($clientName))."&bid=".base64_encode(md5($clientName))."&aid=". base64_encode(md5($clientName))."&zid=". base64_encode(md5($clientName))."&yid=". base64_encode(md5($clientName))."&wid=". base64_encode($wid)."&xid=". base64_encode(md5($clientName)));
+}
+
+
 $_SESSION['breadcrumb'] = array();
 ?>
 <!DOCTYPE html>
@@ -61,7 +98,7 @@ $_SESSION['breadcrumb'] = array();
         <div class="side-footer">
             <div class="side-body">
                 <div class="dash">
-                    <a href="clientDashboard?<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Workspace
                     </a>
                 </div>
@@ -103,7 +140,7 @@ $_SESSION['breadcrumb'] = array();
                     </li>
                     <li class="nav-item d-flex">
                         <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
-                        <a class="nav-link d-flex align-items-center" href="admin/clientTeamMembers?sid=<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&jid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">
+                        <a class="nav-link d-flex align-items-center" href="admin/clientTeamMembers?sid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
                         <img class="nav-icon" src="Icons/Group 4.svg"/>&nbsp;&nbsp;
                         <span>Team Members</span>
                         </a>
@@ -121,7 +158,11 @@ $_SESSION['breadcrumb'] = array();
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_4">4</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -152,6 +193,7 @@ $_SESSION['breadcrumb'] = array();
                             <?php
                         }
                         ?>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>
@@ -196,7 +238,7 @@ $_SESSION['breadcrumb'] = array();
                     <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                 <div class="col-md-12 custom-list" style="flex-direction:row; align-items:center;">
                     <div class="col-md-12">
-                    <a href="subProgram.php?did=<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>"
+                    <a href="subProgram.php?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
                         class="custom-list-items"><b><?php echo trim($queryrow['program_name']); ?></b>
                     </a>
                         <?php
@@ -240,10 +282,13 @@ $_SESSION['breadcrumb'] = array();
             ?>
         </div>
 
-        <div class="d-flex justify-content-center">
+        <div id = "helpDescriptionTop" class="d-flex justify-content-center">
             <div id="helpDescription" class="col-md-11">
                 <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
                     <div class="card-body">
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <div id="help_1">
                             <p>1. Audit Pillars : We have divided fieldwork in five pillars. You can not add or remove any pillar .</p>
                         </div>
@@ -284,6 +329,37 @@ $_SESSION['breadcrumb'] = array();
                 </div>
             </div>
         </footer>
+
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
    
@@ -304,7 +380,13 @@ $_SESSION['breadcrumb'] = array();
     <script>
     $(document).ready(function() {
 
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
+
         $(".helpDesign, #helpDescription").hide();
+
+        $("#helpDescription > div > div > .close").click(function(e){
+            $(".helpDesign, #helpDescription").hide();
+        });
 
         $("#helpButton").click(function(e){
             $(".helpDesign, #helpDescription").toggle();
@@ -473,7 +555,10 @@ $_SESSION['breadcrumb'] = array();
             $.ajax({
                 url: 'freeze.php',
                 type: 'POST',
-                data: {id: <?php echo $wid; ?>,freeze: 1},
+                data: {
+                    id: <?php echo $wid; ?>,
+                    freeze: 1
+                },
                 success: function(data){
                     if (data) {
                             swal({
@@ -481,7 +566,7 @@ $_SESSION['breadcrumb'] = array();
                                 text: "Thank You for Freezing",
                             }).then(function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = "workspace?cid=<?php echo $_SESSION['client_id']; ?>";
+                                    window.location.href = <?php echo "'workspace.php?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;
                                 }
                             });
                         }

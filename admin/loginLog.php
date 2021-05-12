@@ -65,7 +65,11 @@
             </li>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -87,6 +91,7 @@
                         <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                         <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
                         <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>
@@ -116,10 +121,10 @@
                             <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
                         </a>
                     </div>
-                    <div class="settings-items">
+                    <!-- <div class="settings-items">
                         <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Help
-                    </div>
+                    </div> -->
                 </div>
                 <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
             </div>
@@ -155,6 +160,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        
     </div>
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -166,15 +202,22 @@
     <script src="../js/custom.js"></script>
     <script>
     $(document).ready(function() {
+        
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
+
         var dataTable = $('#clientListTable').DataTable({
             "destroy": true,
             "processing": true,
             "serverSide": true,
             "searching": true,
             "order": [],
+            "bInfo": false,
             "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;
+            },
+            "drawCallback": function(settings) {
+                $(".helpDesign, #helpDescription").hide();
             },
             "ajax": {
                 url: "loginLogFetchAjax.php",

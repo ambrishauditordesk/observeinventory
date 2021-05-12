@@ -16,7 +16,7 @@
         if($con->query("delete from signoff_files_log where id = '$id'") === TRUE)
         {
             $fileName = $result['file'];
-            unlink("uploads/program_files/".$result['file']);
+            unlink($_SESSION['upload_file_location'].$result['file']);
             $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$fileName File has been deleted for program:- $pname ')");
             $response = 1;
             $commentResult = $con->query("select count(id) total from signoff_comments_log where workspace_id = '$wid' and prog_id = '$prog_id'")->fetch_assoc()['total'];

@@ -3,6 +3,7 @@
     {
         include '../dbconnection.php';
         session_start();
+
         $name = trim($_POST['name']);
         $email = trim($_POST['email']);
         $pass = md5(trim($_POST['password']));
@@ -30,7 +31,16 @@
         }
         $regDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");
         $res= $con->query("insert into user(name,email,password,accessLevel,active,reg_date,signoff_init) values('$name', '$email', '$pass', '$role', '1', '$regDate', '$signOff')");
-        if($res)
+        $user_id = $con->insert_id;
+
+        if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+            $firm_id = trim($_POST['firm_id']);
+        }
+        else{
+            $firm_id = $_SESSION['firm_id'];
+        }
+        $result = $con->query("insert into firm_user_log(firm_id,user_id) values('$firm_id','$user_id')");
+        if($result)
         {
             echo 1;
         }

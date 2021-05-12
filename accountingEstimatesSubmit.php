@@ -23,6 +23,7 @@
     $comments = trim($_POST['comments']);
     $wid = $_GET['wid'];
     $ser = $_SERVER['HTTP_REFERER'];
+    $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
     
     //File Upload
     $filePresent = 0;
@@ -47,11 +48,11 @@
                     $new .= ".".$str[$j];
                 }
             }
-            $name = trim($new." ".$date." .".end($str));;
+            $name = trim($new." ".$date." .".end($str));
             // $tmp_name = $fileName['file']['tmp_name'];
             // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
             $tmp_name = $_FILES['file']['tmp_name'];
-            $path = 'uploads/accounting_estimates/';
+            $path = $_SESSION['upload_file_location'];
         }
     }
 

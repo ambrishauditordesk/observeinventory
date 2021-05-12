@@ -9,9 +9,15 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
-    if (isset($_SESSION['accessLevel']) && !empty($_SESSION['accessLevel']) && $_SESSION['accessLevel'] != '1') {
-        header('Location: ../login');
-    }
+    
+    if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+        $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+        $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+        $diff=date_diff($currentDate,$loggedInDate);
+		if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+			header('Location: ../logout');
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,9 +32,8 @@
 
     <!-- Custom fonts for this template-->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.24/features/searchHighlight/dataTables.searchHighlight.css">
 
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
@@ -43,7 +48,8 @@
     <!-- Datatable CDN -->
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
+    <script src="https://cdn.datatables.net/plug-ins/1.10.24/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
+    <script src="https://bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
     <!-- SweetAlert -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
 </head>
@@ -55,7 +61,7 @@
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
             <?php 
-                if($_SESSION['role'] != 3){
+                if($_SESSION['role'] != 5){
                     ?>
             <li class="nav-item d-flex">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
@@ -68,7 +74,7 @@
             <?php } 
             ?>
             <?php 
-                if($_SESSION['role'] != 3){
+                if($_SESSION['role'] != 3 && $_SESSION['role'] != 5){
                     ?>
             <li class="nav-item d-flex">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_1">1</span></label>
@@ -82,7 +88,11 @@
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_3">3</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -113,6 +123,7 @@
                             <?php
                         }
                     ?>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>
@@ -221,11 +232,11 @@
                                     <p class="text-count">
                                         <?php 
                                             $userId = $_SESSION['id'];
-                                            if($_SESSION['role'] > 1){
-                                                echo $con->query("SELECT count(client.id) total FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = $userId and active = 1 GROUP by client.id")->num_rows;
+                                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                                echo $con->query("select count(client.id) assigned FROM client inner join user_client_log on user_client_log.client_id=client.id where user_client_log.user_id= $userId and active = 1")->fetch_assoc()['assigned'];
                                             }
                                             else{
-                                                echo $con->query("SELECT count(id) total FROM client where active = 1 group by id")->num_rows; 
+                                                echo $con->query("select count(client.id) assigned FROM client where  active = 1")->fetch_assoc()['assigned']; 
                                             }
                                         ?>
                                     </p>
@@ -241,11 +252,11 @@
                                     <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
-                                            if($_SESSION['role'] > 1){
-                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id inner join user_client_log c on a.client_id=c.client_id inner join client d on d.id=c.client_id where c.user_id = $userId and b.status = '0' and d.active=1 group by a.client_id")->num_rows;   
+                                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) <> ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) progress FROM client inner join user_client_log on user_client_log.client_id=client.id where user_client_log.user_id=$userId and active = 1")->fetch_assoc()['progress'];   
                                             }
                                             else{
-                                                echo $con->query("select count(a.id) progress from workspace a inner join workspace_log b on a.id=b.workspace_id inner join client c on c.id=a.client_id where b.status = '0' and c.active=1 group by a.client_id")->num_rows;
+                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) <> ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) progress FROM client where active = 1")->fetch_assoc()['progress'];
                                             }
                                         ?>
                                     </p>
@@ -261,11 +272,11 @@
                                     <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_6">6</span></label>
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
-                                            if($_SESSION['role'] > 1){
-                                                echo $con->query("select count(a.id) completed from workspace a inner join user_client_log b on a.client_id=b.client_id where b.user_id = $userId and a.freeze = '1' group by a.id")->num_rows;   
+                                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = $userId and active = 1")->fetch_assoc()['completed'];   
                                             }
                                             else{
-                                                echo $con->query("select count(id) completed from workspace where workspace.freeze = '1'")->fetch_assoc()['completed'];
+                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client where active = 1")->fetch_assoc()['completed'];
                                             }
                                         ?>
                                     </p>
@@ -277,7 +288,9 @@
                 </div>
             </div>
         </div>
-      
+      <?php
+        if($_SESSION['role'] != 3 || $_SESSION['role'] != 5){
+            ?>
         <!--Add Client Form -->
         <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -296,6 +309,27 @@
                                 <label for="name">Client Name</label>
                                 <input type="text" class="form-control" maxlength="99" name="clientname" required>
                             </div>
+                            <?php
+                            if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                                ?>
+                                <div class="form-group ">
+                                    <label for="country">Firm </label>
+                                    <select class="form-control" name="firm_id" required>
+                                        <option>Select a Firm !</option>
+                                            <?php
+                                                $consQuery = $con->query("select id,firm_name from firm_details");
+                                                while ($consResult = $consQuery->fetch_assoc()) {
+                                            ?>
+                                        <option value="<?php echo $consResult['id']; ?>">
+                                            <?php echo $consResult['firm_name']; ?></option>
+                                            <?php
+                                                }
+                                            ?>
+                                    </select>
+                                </div>
+                            <?php
+                                }
+                            ?>
                             <div class="form-group ">
                                 <label for="name">Nick Name</label>
                                 <input type="text" class="form-control" maxlength="99" name="nickname">
@@ -562,11 +596,17 @@
                 </div>
             </div>
         </div>
+        <?php
+        }
+        ?>
 
-        <div class="d-flex justify-content-center">
+        <div id = "helpDescriptionTop" class="d-flex justify-content-center">
             <div id="helpDescription" class="col-md-11">
                 <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
                     <div class="card-body">
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <div id="help_1">
                             <p>1. Add Client icon helps you add client to your client list.</p>
                             <p>To add a client enter all the required client details and you are required to enter 1 client contact minimum. You can add more than one client contact by using add row section on bottom left section</p>
@@ -614,6 +654,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
     </div>
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -631,25 +701,44 @@
             "serverSide": true,
             "searching": true,
             "order": [],
+            "bInfo": false,
             "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;
             },
             "drawCallback": function(settings) {
-                        var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
-                        pagination.toggle(this.api().page.info().pages > 1);
-                    },
+                var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+                pagination.toggle(this.api().page.info().pages > 1);
+                $(".helpDesign, #helpDescription").hide();
+            },
+            "columnDefs": [
+                { orderable: false, targets: -6 },
+                { orderable: false, targets: -4 }
+            ],
             "ajax": {
                 url: "clientListFetchAjax.php",
                 type: "POST",
                 async: false
             }
         });
+
+        dataTable.on( 'draw', function () {
+            var body = $( dataTable.table().body() );
+    
+            body.unhighlight();
+            body.highlight( dataTable.search() );  
+        });
     }
 
     $(document).ready(function() {
 
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
+
         get_data();
+
+        $("#helpDescription > div > div > .close").click(function(e){
+            $(".helpDesign, #helpDescription").toggle();
+        });
 
         $(".helpDesign, #helpDescription").hide();
 

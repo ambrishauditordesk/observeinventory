@@ -22,6 +22,16 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 #  RewriteBase /
 # </IfModule>
 
+RewriteEngine on
+RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
+RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
+RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
+
+<FilesMatch "\.(doc|docx|xlxs|txt|pdf|rtf)$">
+  ForceType application/octet-stream
+  Header set Content-Disposition attachment
+</FilesMatch>
+
 ErrorDocument 404 http://yourfirmaudit.com/AuditSoft/error
 ErrorDocument 403 http://yourfirmaudit.com/AuditSoft/error
 ErrorDocument 500 http://yourfirmaudit.com/AuditSoft/error
@@ -34,11 +44,13 @@ AddCharset UTF-8 .php
 <Files "dbconnection.php">  
   Require all denied
 </Files>
+
 # Protect the htaccess file
 <Files .htaccess>
 Order Allow,Deny
 Deny from all
 </Files>
+
 # X-XSS-Protection
 # Extra Security Headers
 # X-Frame-Options

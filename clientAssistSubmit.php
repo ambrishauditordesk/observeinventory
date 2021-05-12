@@ -84,7 +84,7 @@
                     $name = trim($new." ".$date." .".end($str));
                     // $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
                     $tmp_name = $_FILES['file']['tmp_name'][$id[$i]][$x];
-                    $path = 'uploads/clientrequest/';
+                    $path = $_SESSION['upload_file_location'];
                     if($uploadOk){
                         if(move_uploaded_file($tmp_name, $path.$name)){
                             $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");

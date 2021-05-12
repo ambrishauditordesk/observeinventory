@@ -71,7 +71,7 @@
                 // $tmp_name = $fileName['file']['tmp_name'];
                 // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
                 $tmp_name = $_FILES['file']['tmp_name'];
-                $path = 'uploads/insignificant_files/';
+                $path = $_SESSION['upload_file_location'];
             }
         }
         

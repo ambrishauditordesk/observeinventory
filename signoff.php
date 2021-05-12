@@ -71,7 +71,7 @@
                 $fileName[$i]['tmp_name'] = $_FILES['file']['tmp_name'][$i];
             }
             //move
-            $path = './uploads/program_files/';
+            $path = $_SESSION['upload_file_location'];
             for($i = 0; $i < sizeof($fileName); $i++){
                 $name = $fileName[$i]['name'];
                 $tmp_name = $fileName[$i]['tmp_name'];

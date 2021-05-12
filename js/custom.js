@@ -75,3 +75,6 @@ $(window).on('load', function(e) {
 $('body').bind('cut copy', function(e) {
     e.preventDefault();
 });
+$(document).ready(function(e){
+    document.getElementsByTagName("html")[0].style.visibility = "visible";         
+});

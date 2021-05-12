@@ -4,7 +4,6 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
-    echo 1;
     if(isset($_GET['wid']) && !empty($_GET['wid']))
         $wid = base64_decode($_GET['wid']);
         
@@ -68,7 +67,7 @@
             {
             ?>
             <li class="nav-item d-flex">
-                <a class="nav-link d-flex align-items-center" href="../clientDashboard?wid=<?php echo $wid ?>">
+                <a class="nav-link d-flex align-items-center" href="../clientDashboard?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
                     <img class="nav-icon" src="../Icons/Group 3.svg"/>&nbsp;&nbsp;
                     <span>Dashboard</span>
                 </a>
@@ -84,7 +83,11 @@
             <?php } ?>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -114,6 +117,7 @@
                             <?php
                         }
                     ?>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>
@@ -139,13 +143,14 @@
             <div class="settings">
                 <div class="settings-items-top-div">
                     <div class="settings-items settingsmodal">
-                        <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        Settings
+                        <a href="../settings" class="text-decoration-none">
+                            <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
+                        </a>
                     </div>
-                    <div class="settings-items">
+                    <!-- <div class="settings-items">
                         <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Help
-                    </div>
+                    </div> -->
                 </div>
                 <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
             </div>
@@ -378,6 +383,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        
     </div>
 
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -391,7 +427,10 @@
     <script src="../js/multiselect-master/dist/js/multiselect.js"></script>
     <script>
     $(document).ready(function() {
+        
         get_data();
+
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
 
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;
         if(darkmode)
@@ -444,6 +483,14 @@
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;
             },
+            "drawCallback": function(settings) {
+                $(".helpDesign, #helpDescription").hide();
+            },
+            "columnDefs": [
+                { orderable: false, targets: -6 },
+                { orderable: false, targets: -2 },
+                { orderable: false, targets: -1 }
+            ],
             "ajax": {
                 url: "clientTeamMemberProfileFetchAjax.php",
                 type: "POST",
@@ -537,59 +584,15 @@
         });
     });
 
-    $(document).on('click','.settingsmodal', function() {
-        $("#settingsModal").modal('show');
-    });
-
-    $('input[type=radio][name=darkmode]').change(function() {
-        if(this.value == '1')
-        {
-            document.documentElement.classList.toggle('dark-mode');
-            // document.querySelectorAll('.dark-invert').forEach((result) => {
-            //     result.classList.toggle('invert-dark-mode');
-            // });
-        }
-        else if(this.value == '0'){
-            document.documentElement.classList.remove('dark-mode');
-            document.documentElement.classList.remove('invert-dark-mode');
-        }
-    });
-
-    $(document).on('click', '#save', function(e) {
-        e.preventDefault();
-        var id = <?php echo $_SESSION['id']; ?>;
-        var active = $('input[name="darkmode"]:checked').val();
-        $.ajax({
-            url: "../darkmode.php",
-            type: "POST",
-            data: {
-                id: id,
-                active: active
-            },
-            success: function(response) {
-                console.log(response);
-                if (response) {
-                    swal({
-                        icon: "success",
-                        text: "Updated!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            window.location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            window.location.reload();
-                        }
-                    });
-                }
-            }
-        });
-    });
+    let darkmode = <?php echo $_SESSION['darkmode']; ?>;
+    if(darkmode)
+    {
+        document.documentElement.classList.toggle('dark-mode');
+        
+    }
+    else if(!darkmode){
+        document.documentElement.classList.remove('dark-mode');
+    }
     </script>
 </body>
 

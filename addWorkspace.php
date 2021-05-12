@@ -92,10 +92,17 @@ if ($con->query($query) === true)
             $con->query("INSERT INTO going_concern_conclusion(workspace_id, going_concern_conclusion_data) VALUES('$wid','$conclusion_text')");
         }
 
-        $clientName = $con->query("select name from client where id = $clientID")->fetch_assoc()['name'];
+        $clientName = $con->query("select added_by_id, added_by_date, name from client where id = $clientID")->fetch_assoc();
         
-        // shell_exec('mkdir -p uploads/'.$clientID.$clientName.'/'.$wid.'/');
-        // shell_exec('chmod -R 777 uploads/'.$clientID.$clientName.'/'.$wid.'/');
+        if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+            $firmId = $con->query("select firm_details.id id from user inner join user_client_log on user_client_log.user_id = user.id inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id where user_client_log.client_id = $clientID and user.accessLevel = 4")->fetch_assoc()['id'];
+            shell_exec('mkdir -p uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('chmod -R 777 uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+        }
+        else{
+            shell_exec('mkdir -p uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+        }
 
         echo "<script>
     $(document).ready(function() {

@@ -4,8 +4,16 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
-    if (isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] == '3') {
+    if (isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] == '5') {
         header('Location: ../login');
+    }
+    if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+        $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+        $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+        $diff=date_diff($currentDate,$loggedInDate);
+        if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+            header('Location: logout');
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -32,17 +40,18 @@
     <link href="../css/uiux.css" rel="stylesheet" type="text/css">
 
     <!-- JQuery CDN -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
     <!-- Datatable CDN -->
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.24/features/searchHighlight/dataTables.searchHighlight.css">
+    
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.24/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
+    <script src="https://bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
 
     <!-- SweetAlert -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
-        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
 </head>
 
 <body style="overflow-y: scroll" oncontextmenu="return false">
@@ -67,7 +76,11 @@
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -81,7 +94,8 @@
                     <?php 
                         if($_SESSION['role'] == '-1'){
                         ?>
-                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -97,6 +111,7 @@
                             <?php
                         }
                     ?>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>
@@ -144,7 +159,6 @@
         <br>
 
         <div class="row justify-content-md-center" style="width: 100% !important;">
-
             <!-- Total Members -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
@@ -155,7 +169,16 @@
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <?php
-                                $query = "SELECT COUNT(id) AS total FROM user where accessLevel > '".$_SESSION['role']."' and client_id is null";
+                                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1 ){
+                                        $query = "SELECT COUNT(id) AS total FROM firm_user_log where firm_id = ".$_SESSION['firm_id'];
+                                    }
+                                    elseif($_SESSION['role'] == 1){
+                                        $query = "SELECT COUNT(id) AS total FROM user where client_id is null and accessLevel != -1";
+                                    }
+                                    elseif($_SESSION['role'] == -1){
+                                        $query = "SELECT COUNT(id) AS total FROM user where client_id is null ";
+                                    }
+                                
                                 $totalMembers = $con->query($query);
                                 if ($totalMembers->num_rows != 0) {
                                     $count = $totalMembers->fetch_assoc();
@@ -180,6 +203,10 @@
                 </div>
             </div>
 
+            <?php
+                if($_SESSION['role'] != 3 && $_SESSION['role'] != 5){
+            ?>
+
             <!-- Register a Member -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
@@ -195,11 +222,14 @@
                                     <i class="fas fa-fw fa-user-plus fa-2x text-gray-300"></i>
                                 </div>
                             </div>
-                            <label class=' mt-2'><span class='helpDesign help_2'>2</span></label>
                         </a>
+                        <label class=' mt-2'><span class='helpDesign help_2'>2</span></label>
                     </div>
                 </div>
             </div>
+            <?php
+                }
+            ?>
 
         </div>
 
@@ -216,13 +246,26 @@
                                             <tr>
                                                 <th scope="col">Sl</th>
                                                 <th scope="col">Name</th>
+                                                <?php
+                                                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                                                        ?>
+                                                            <th scope="col">Firm Name</th>
+                                                        <?php                       
+                                                    }
+                                                ?>
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Role</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Registration Date</th>
                                                 <th scope="col">SignOff Initials</th>
+                                                <?php
+                                                    if($_SESSION['role'] != 3 && $_SESSION['role'] != 5){
+                                                ?>
                                                 <th scope="col">Edit</th>
                                                 <th scope="col">Client</th>
+                                                <?php
+                                                    }
+                                                ?>
                                             </tr>
                                         </thead>
                                     </table>
@@ -233,6 +276,9 @@
                 </div>
             </div>
         </div>
+        <?php
+            if($_SESSION['role'] != 3 && $_SESSION['role'] != 5){
+        ?>
 
         <!-- Register a Member Form -->
         <div class="modal fade" id="registerMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -271,13 +317,55 @@
                                     {
                                     ?>
                                     <option value="1">Software Admin</option>
-                                    <?php
-                                    }
-                                    ?>
+                                    <option value="4">Firm Admin</option>
                                     <option value="2">Audit Admin</option>
                                     <option value="3">Audit Member</option>
+                                    <?php
+                                    }
+                                    elseif($_SESSION['role'] == 1){
+                                        ?>
+                                        <option value="4">Firm Admin</option>
+                                        <option value="2">Audit Admin</option>
+                                        <option value="3">Audit Member</option>
+                                        <?php
+                                    }
+                                    elseif($_SESSION['role'] == 4){
+                                        ?>
+                                        <option value="2">Audit Admin</option>
+                                        <option value="3">Audit Member</option>
+                                        <?php
+                                    }
+                                    elseif($_SESSION['role'] == 2){
+                                        ?>
+                                        <option value="3">Audit Member</option>
+                                        <?php
+                                    }
+                                    
+                                    ?>
                                 </select>
                             </div>
+                            <?php
+                                    if($_SESSION['role'] == -1 || $_SESSION['role'] == 1)
+                                    {
+                                    ?>
+                            <div class="form-group ">
+                                <label for="name">Firm</label>
+                                <select name="firm_id" id="firm_id" class="form-control" required>
+                                    <option value="">Select Firm</option>
+                                    <?php
+                                        $result = $con->query("Select * from firm_details");
+                                        while($row = $result->fetch_assoc()){
+                                            ?>
+                                            <option value="<?php echo $row['id']; ?>"><?php echo $row['firm_name']; ?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                                <?php
+                            }
+                            
+                            ?>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
@@ -398,10 +486,17 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center">
+        <?php
+            }
+        ?>
+
+        <div id = "helpDescriptionTop" class="d-flex justify-content-center">
             <div id="helpDescription" class="col-md-11">
                 <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
                     <div class="card-body">
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <div id="help_1">
                             <p>1. Total members: Reflect the count of your firm members currently actively added your firm software.</p>
                         </div>
@@ -433,6 +528,35 @@
             </div>
         </div>
 
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -447,7 +571,14 @@
     <script src="../js/multiselect-master/dist/js/multiselect.js"></script>
     <script>
     $(document).ready(function() {
+
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
+        
         get_data();
+
+        $("#helpDescription > div > div > .close").click(function(e){
+            $(".helpDesign, #helpDescription").toggle();
+        });
 
         $(".helpDesign, #helpDescription").hide();
 
@@ -637,26 +768,16 @@
                     name:name,
                     selectedValues:selectedValues
                 },
-                success: function(data){    
-                    if (data) {
+                success: function(data){  
+                    data = JSON.parse(data);  
                     swal({
-                        icon: "success",
-                        text: "Updated",
+                        icon: data['status'] == true? 'success':'error',
+                        text: data['text'],
                     }).then(function(isConfirm) {
                         if (isConfirm) {
                             location.reload();
                         }
                     });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                }
                 }
             });    
         });
@@ -702,15 +823,51 @@
             "serverSide": true,
             "searching": true,
             "order": [],
+            "bInfo": false,
             "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                 $("td:first", nRow).html(iDisplayIndex + 1);
                 return nRow;
             },
+            "drawCallback": function(settings) {
+                $(".helpDesign, #helpDescription").hide();
+            },
+            "columnDefs": [
+                <?php
+                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                ?>
+                    { orderable: false, targets: -10 },
+                    { orderable: false, targets: -2 },
+                    { orderable: false, targets: -1 }
+                
+                <?php
+                    }
+                    elseif($_SESSION['role'] == 4 || $_SESSION['role'] == 2){
+                        ?>
+                { orderable: false, targets: -9 },
+                { orderable: false, targets: -2 },
+                { orderable: false, targets: -1 }
+                        <?php
+                    }
+                    else {
+                        ?>
+                { orderable: false, targets: -7 }
+                        <?php
+                    }
+                    ?>
+
+            ],
             "ajax": {
                 url: "memberFetchAjax.php",
                 type: "POST",
                 async: false
             }
+        });
+
+        dataTable.on( 'draw', function () {
+            var body = $( dataTable.table().body() );
+    
+            body.unhighlight();
+            body.highlight( dataTable.search() );  
         });
     }
 
@@ -820,7 +977,8 @@
         var email = $("#email").val();
         var password = $("#password").val();
         var role = $("#role").val();
-        // var signoff = $("#signoff").val();
+        
+        
         $.ajax({
             url: "addMember.php",
             type: "POST",
@@ -828,8 +986,19 @@
                 name: name,
                 email: email,
                 password: password,
-                role: role
-                // signoff: signoff
+                <?php
+                    if($_SESSION['role'] == -1 || $_SESSION['role'] == 1){
+                        ?>
+                            role: role,
+                            firm_id: $("#firm_id").val()
+                        <?php
+                    }
+                    else{
+                        ?>
+                            role: role
+                        <?php
+                    }
+                ?>
             },
             success: function(response) {
                 if (response) {

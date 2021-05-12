@@ -51,8 +51,6 @@
 <?php 
     include 'dbconnection.php';
     session_start();
-    // $ser = $_SERVER['HTTP_REFERER'];
-    $ser = 'login';
 
     if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
         echo "<script>
@@ -61,22 +59,31 @@
                     text: 'Please Enter a Valid Verification Code!',
                 }).then(function(isConfirm) {
                     if (isConfirm) {
-                        window.location.href = '$ser';
+                        window.location.href = 'login';
                     }
                 });
             </script>";
     }
     else{
-        if (isset($_SESSION['email']) && !empty($_SESSION['email'])){
-            if($_SESSION['accessLevel'] == '-1'){
-                header("Location: admin/clientList");    
+        if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+            $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+            $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+            $diff=date_diff($currentDate,$loggedInDate);
+            if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+                header('Location: logout');
             }
             else{
-                header("Location: admin/clientList");
+                if(!isset($_POST['email']) && empty($_POST['email']) && !isset($_POST['password']) && empty($_POST['password'])){
+                    header('Location: ./');
+                }
+                else{
+                    header('Location: admin/clientList');
+                }
             }
         }
+        
         if(!isset($_POST['email']) && empty($_POST['email']) && !isset($_POST['password']) && empty($_POST['password'])){
-            header('Location: index');
+            header('Location: ./');
         }
 
         $location = json_decode(file_get_contents("https://geolocation-db.com/json/"),true);
@@ -90,7 +97,6 @@
         $email = $con -> real_escape_string($_POST['email']);
         $con->query("insert into loginlog(email,ip,dateTime,location,browser,status) values('$email','$ip','$dateTime','$location','$browser','')");
         $loginLogId = $con->insert_id;
-        echo $loginLogId;
         // $pass = trim($_POST["password"]);
         $pass = $con -> real_escape_string($_POST['password']);
         $pass = md5($pass);
@@ -98,53 +104,77 @@
         
         if ($users->num_rows != 0) {
             $usersrow = $users->fetch_assoc();
-            if($usersrow['active'] == 1){
-                $con->query("update loginlog set status = 'Success' where id = $loginLogId");
-                $_SESSION['id'] = $usersrow['id'];
-                $_SESSION['name'] = $usersrow['name'];
-                $email = $_SESSION['email'] = $usersrow['email'];
-                $_SESSION['role'] = $usersrow['accessLevel'];
-                $_SESSION['reg_date'] = $usersrow['reg_date'];
-                $_SESSION['signoff'] = $usersrow['signoff_init'];
-                $_SESSION['darkmode'] = $usersrow['darkmode'];
-                $_SESSION['external'] = 0;
-                $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
-                // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Successfully LoggedIn.')");
-                if($usersrow['client_id'] != ''){
-                    $_SESSION['external'] = 1;
-                    $_SESSION['external_client_id'] = $usersrow['client_id'];
-                    $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
-                    if($checkAccess){
-                        header('Location: workspace?cid='.$usersrow['client_id']);
+            if(!$usersrow['logged_status']){
+                if($usersrow['active'] == 1){
+                    $con->query("update loginlog set status = 'Success' where id = $loginLogId");
+                    
+                    $_SESSION['id'] = $usersrow['id'];
+                    $_SESSION['name'] = $usersrow['name'];
+                    $email = $_SESSION['email'] = $usersrow['email'];
+                    $_SESSION['role'] = $usersrow['accessLevel'];
+                    $_SESSION['reg_date'] = $usersrow['reg_date'];
+                    $_SESSION['signoff'] = $usersrow['signoff_init'];
+                    $_SESSION['darkmode'] = $usersrow['darkmode'];
+                    $_SESSION['external'] = 0;
+                    $_SESSION['logged_in_date'] = $dateTime;
+                    $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+                    // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Successfully LoggedIn.')");
+                    if($usersrow['client_id'] != ''){
+                        $_SESSION['external'] = 1;
+                        $_SESSION['external_client_id'] = $usersrow['client_id'];
+                        $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
+                        if($checkAccess){
+                            $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($usersrow['client_id']);
+                            $con->query("update user set logged_status = 1 where id = ".$usersrow['id']);
+                            header('Location: workspace?vid='.$location);
+                        }
+                        else{
+                            session_unset();
+                            session_destroy();
+                            echo "<script>
+                                    swal({
+                                        icon: 'error',
+                                        text: 'No accounts have been assigned to you!',
+                                    }).then(function(isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.href = 'login';
+                                        }
+                                    });
+                                </script>";
+                        }
                     }
                     else{
-                        session_unset();
-                        session_destroy();
-                        echo "<script>
-                                swal({
-                                    icon: 'error',
-                                    text: 'Access Denied!',
-                                }).then(function(isConfirm) {
-                                    if (isConfirm) {
-                                        window.location.href = '$ser';
-                                    }
-                                });
-                            </script>";
+                        if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                            $_SESSION['firm_id'] = $con->query("select firm_id from firm_user_log where user_id = ".$_SESSION['id'])->fetch_assoc()['firm_id'];
+                            $_SESSION['firm_details'] = $con->query("select * from firm_details where id = ".$_SESSION['firm_id'])->fetch_assoc();
+                        }
+                        $con->query("update user set logged_status = 1 where id = ".$usersrow['id']);
+                        header('Location: admin/clientList');
                     }
                 }
                 else{
-                    header('Location: admin/clientList');
-                }
+                    $con->query("update loginlog set status = 'Access Denied' where id = $loginLogId");
+                    echo "<script>
+                            swal({
+                                icon: 'error',
+                                text: 'Access Denied!',
+                            }).then(function(isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = 'login';
+                                }
+                            });
+                        </script>";
+                }   
             }
             else{
-                $con->query("update loginlog set status = 'Access Denied' where id = $loginLogId");
+                $con->query("update loginlog set status = 'Already logged in' where id = $loginLogId");
                 echo "<script>
                         swal({
                             icon: 'error',
-                            text: 'Access Denied!',
+                            text: 'Already Logged In',
                         }).then(function(isConfirm) {
                             if (isConfirm) {
-                                window.location.href = '$ser';
+                                window.location.href = './';
                             }
                         });
                     </script>";
@@ -158,7 +188,7 @@
                         text: 'Wrong UserName or Password!',
                     }).then(function(isConfirm) {
                         if (isConfirm) {
-                            window.location.href = '$ser';
+                            window.location.href = 'login';
                         }
                     });
                 </script>";

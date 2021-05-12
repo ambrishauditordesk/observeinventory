@@ -1,8 +1,14 @@
 <?php
 include '../dbconnection.php';
-$id = $_POST['id'];
+session_start();
 
-$data = $con->query("select id,name from user where id =$id");
-    $newData = array();
-    $newData = $data->fetch_assoc();
-    echo json_encode($newData);
+// if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+//     $data = $con->query("select client.id id, name FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = ".$_SESSION['id']);
+// }
+// else{
+//     $data = $con->query("select client.id id, name FROM client");
+// }
+$data = $con->query("select id, name from user where id = ".$_POST['id']);
+$newData = array();
+$newData = $data->fetch_assoc();
+echo json_encode($newData);

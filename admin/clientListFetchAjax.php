@@ -11,10 +11,13 @@ if(!$_POST){
 $role =$_SESSION['role'];
 $userId = $_SESSION['id'];
 
-if($role == 2 || $role == 3)
-    $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id where a.id in (select client_id from user_client_log where user_id=$userId)";
-else
+if($role == 2 || $role == 3 || $role == 4){
+    // $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id where a.id in (select client_id from user_client_log where user_id=$userId)";
+    $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id inner join user_client_log on a.id=user_client_log.client_id where user_client_log.user_id =$userId";
+}
+else{
     $query = "select a.id aid, a.name aname, b.const con, a.added_by_date adate, a.active aact FROM client a INNER JOIN constitution b on a.const_id= b.id";
+}
 
 $column = array('','name','profile','const_id','added_by_date','active');
 
@@ -32,6 +35,7 @@ $query1 = '';
 if($_POST["length"] != -1){
     $query1 = 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
 }
+
 //$statement = $con->prepare($query);
 $statement = $con->query($query);
 //$statement->execute();
@@ -49,14 +53,14 @@ foreach($result as $row)
  $sub_array[] = '';
  {
     if($row['aact'] == 1){
-        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;<a href='../workspace.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
+        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;<a href='../workspace.php?gid=".base64_encode(md5(trim($row['aid'])))."&xid=".base64_encode(md5(trim($row['aid'])))."&yid=".base64_encode(md5(trim($row['aid'])))."&zid=".base64_encode(md5(trim($row['aid'])))."&aid=".base64_encode(md5(trim($row['aid'])))."&sid=".base64_encode(md5(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
     }
     else{
         $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;".$row['aname'];
     }
  }
  $sub_array[] = "<label class='mt-2'><span class='helpDesign help_8'>8</span></label>&nbsp;<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
- <label class='mt-2'><span class='helpDesign help_9'>9</span></label>&nbsp;<a href='clientMember.php?gid=".md5(base64_encode(trim($row['aid'])))."&xid=".md5(base64_encode(trim($row['aid'])))."&yid=".md5(base64_encode(trim($row['aid'])))."&zid=".md5(base64_encode(trim($row['aid'])))."&aid=".md5(base64_encode(trim($row['aid'])))."&sid=".md5(base64_encode(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
+ <label class='mt-2'><span class='helpDesign help_9'>9</span></label>&nbsp;<a href='clientMember.php?gid=".base64_encode(md5(trim($row['aid'])))."&xid=".base64_encode(md5(trim($row['aid'])))."&yid=".base64_encode(md5(trim($row['aid'])))."&zid=".base64_encode(md5(trim($row['aid'])))."&aid=".base64_encode(md5(trim($row['aid'])))."&sid=".base64_encode(md5(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
  $sub_array[] = $row['con'];
  $sub_array[] = $row['adate'];
  {

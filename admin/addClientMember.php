@@ -17,7 +17,7 @@
         }
         else
         {
-            $res= $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation) values('$cid','$name', '$email', '$pass', '3', '1','$design')");
+            $res= $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation) values('$cid','$name', '$email', '$pass', '5', '1','$design')");
             $uid= $con->insert_id;
             $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
             if($res)

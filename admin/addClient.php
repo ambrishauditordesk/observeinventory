@@ -54,6 +54,11 @@ if (!empty($_POST['clientname']) && isset($_POST['clientname'])) {
     }
 }
 
+if($_SESSION['role'] == -1 || $_SESSION['role'] == 1){
+    $firm_id = trim($_POST['firm_id']);
+    $firmLeaderId = $con->query("SELECT user.id id FROM user inner join firm_user_log on firm_user_log.user_id = user.id where firm_user_log.firm_id = $firm_id and user.accessLevel = 4")->fetch_assoc()['id'];
+}
+
 //Nickname
 $nickName = trim($_POST['nickname']);
 
@@ -126,14 +131,22 @@ if($uploadOk) {
     $con->query("insert into client(active,added_by_id,added_by_date,name,nickname,incorp_date,const_id,industry_id,address,city,state,pincode,country,pan,gst,tan,cin)
     values('1','$addedById','$addedByDate','$name','$nickName','$date','$const','$industry','$add','$city','$state','$pin','$country','$pan','$gst','$tan','$cin')");
     $cid = $con->insert_id;
+    if($_SESSION['role'] != -1 || $_SESSION['role'] != 1){
+        $con->query("insert into user_client_log(user_id,client_id) values('$addedById','$cid')");
+        shell_exec('mkdir -p uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
+        shell_exec('chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
+    }
+    else{
+        $con->query("insert into user_client_log(user_id,client_id) values('$firmLeaderId','$cid')");
+        shell_exec('mkdir -p uploads/'.$firm_id.'/'.$cid.$name.'/');
+        shell_exec('chmod -R 777 uploads/'.$firm_id.'/'.$cid.$name.'/');
+    }
+
     for($i=0;$i<$count;$i++){
         $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','3','1','$desig[$i]')");
         $uid = $con->insert_id;
         $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
     }
-        
-    shell_exec('mkdir -p uploads/'.$cid.$name.'/');
-    shell_exec('chmod -R 777 uploads/'.$cid.$name.'/');
     
     echo "<script>
             $(document).ready(function() {

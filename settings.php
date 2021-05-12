@@ -8,6 +8,14 @@
     //     $wid = $_GET['wid'];
     // $clientId= $_GET['cid'];
     // $clientName = $con->query("select name from client where id = $clientId ")->fetch_assoc()["name"];
+    if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+        $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+        $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+        $diff=date_diff($currentDate,$loggedInDate);
+		if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+			header('Location: logout');
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +40,7 @@
     <link href="css/custom.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/uiux.css" rel="stylesheet" type="text/css">
+    <link href="css/chat.css" rel="stylesheet" type="text/css">
 
     <!-- JQuery CDN -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -40,7 +49,6 @@
     <!-- Datatable CDN -->
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
     <!-- SweetAlert -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
         integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
@@ -73,7 +81,7 @@
             {
             ?>
             <li class="nav-item d-flex">
-                <a class="nav-link d-flex align-items-center" href="clientDashboard?qid=<?php echo md5(base64_encode($clientName)); ?>&gid=<?php echo md5(base64_encode($clientName)); ?>&fid=<?php echo md5(base64_encode($clientName)); ?>&eid=<?php echo md5(base64_encode($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo md5(base64_encode($clientName)); ?>&bid=<?php echo md5(base64_encode($clientName)); ?>&aid=<?php echo md5(base64_encode($clientName)); ?>&zid=<?php echo md5(base64_encode($clientName)); ?>&jid=<?php echo md5(base64_encode($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo md5(base64_encode($clientName)); ?>">
+                <a class="nav-link d-flex align-items-center" href="clientDashboard?qid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
                     <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
                     <span>Dashboard</span>
                 </a>
@@ -89,7 +97,11 @@
             <?php } ?>
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                    <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                    <?php
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $row = $img_query->fetch_assoc();
+                    ?>
+                    <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -142,10 +154,10 @@
                             <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
                         </a>
                     </div>
-                    <div class="settings-items">
+                    <!-- <div class="settings-items">
                         <img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Help
-                    </div>
+                    </div> -->
                 </div>
                 <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
             </div>
@@ -202,35 +214,69 @@
                 </div>
                 <div class="card-body tab-content">
                     <div class="tab-pane active" id="profile">
+                    <?php 
+                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                        ?>
                         <h6>YOUR FIRM INFORMATION</h6>
                         <hr>
                         <form>
-                        <div class="form-group">
-                            <label for="fullName">Firm Name</label>
-                            <input type="text" class="form-control" id="fullName" aria-describedby="fullNameHelp" placeholder="Enter your Firm Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="bio">Contact Address</label>
-                            <textarea class="form-control autosize" id="bio" placeholder="Enter contact address" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="url">Firm Email</label>
-                            <input type="text" class="form-control" id="url" placeholder="Enter your email address" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="location">Firm Leader</label>
-                            <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Multicurrency</label>
-                            <select class="form-select">
-                                <option value="Yes">Yes</option>
-                                <option value="No" selected>No</option>
-                            </select>
-                        </div>
+                            <div class="form-group">
+                                <label for="fullName">Firm Name</label>
+                                <input type="text" class="form-control" id="fullName" aria-describedby="fullNameHelp" placeholder="Enter your Firm Name" value="<?php echo $_SESSION['firm_details']['firm_name']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Contact Address</label>
+                                <textarea class="form-control autosize" id="bio" placeholder="Enter contact address" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;"><?php echo $_SESSION['firm_details']['firm_address']; ?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="url">Firm Email</label>
+                                <input type="text" class="form-control" id="url" placeholder="Enter your email address" value="<?php echo $_SESSION['firm_details']['firm_email']; ?>" value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Firm Leader</label>
+                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Multicurrency</label>
+                                <select class="form-select">
+                                    <option value="Yes">Yes</option>
+                                    <option value="No" selected>No</option>
+                                </select>
+                            </div>
                         <!-- <button type="button" class="btn btn-primary">Update Profile</button>
                         <button type="reset" class="btn btn-light">Reset Changes</button> -->
                         </form>
+                        <?php
+                    }
+                    else{
+                        ?>
+                            <h6>Chat Member List:-</h6>
+                            <table>
+                                <thead>
+                                    <th>Firm Name</th>
+                                    <th>Employee Name</th>
+                                    <th>Employee Role</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody>  
+                                <?php
+                                    $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id");
+                                    while($row = $result->fetch_assoc()){
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $row['firm_name']; ?></td>
+                                                <td><?php echo $row['name']; ?></td>
+                                                <td><?php echo $row['role']; ?></td>
+                                                <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="selectedUser badge badge-success">Chat Now</span></a></td>
+                                            </tr>
+                                        <?php
+                                    }
+                                ?>
+                                </tbody>
+                            </table>
+                        <?php
+                    }
+                    ?>
                     </div>
                     <div class="tab-pane" id="account">
                         <h6>Tools Settings</h6>
@@ -306,6 +352,28 @@
             </div>
         </div>
 
+        <div class="messenger">
+            <div id="live-chat">
+                <header class="clearfix">
+                    <h4>Chat</h4>
+                    <!-- <span class="chat-message-counter">3</span> -->
+                </header>
+                <a href="#" class="chat-close"><i class="fas fa-times"></i></a>
+                <div class="chat">
+                    
+                    <div class="chat-history">
+
+                    </div> <!-- end chat-history -->
+
+                    <form id="chatForm">
+                        <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>
+                        <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
+                        <!-- <i class="far fa-paper-plane"></i> -->
+                    </form>
+                </div> <!-- end chat -->
+	        </div>
+        </div>
+        
         <!-- Footer -->
         <footer class="sticky-footer">
             <div class="container my-auto">
@@ -328,6 +396,17 @@
     <script src="js/multiselect-master/dist/js/multiselect.js"></script>
     <script>
     $(document).ready(function() {
+        // window.user_id_to = 0;
+        $('#live-chat .chat').hide();
+
+        $(".selectedUser").click(function(e){
+            e.preventDefault();
+            window.user_id_to = $(this).attr("id");
+        })
+
+
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
+
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;
         if(darkmode)
         {
@@ -339,6 +418,7 @@
             $("#customSwitch1").removeAttr('checked');
         }
     });
+
     $("#customSwitch1").click(function(){
         var id = <?php echo $_SESSION['id']; ?>;
         if($("#customSwitch1").prop('checked') == true){
@@ -365,6 +445,188 @@
             });
         }
     });
+
+    $('#live-chat header').on('click', function() {
+        <?php
+            if($_SESSION['role'] != 1 || $_SESSION['role'] != -1){
+                ?>
+                $.ajax({
+                    url: "getChatAjax.php",
+                    type: "POST",
+                    data: {
+                        <?php
+                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                echo "user_id:".$_SESSION['id'];
+                            }
+                            else{
+                                ?>
+                                user_id: window.user_id_to
+                                <?php
+                            }
+                        ?>
+                    },
+                    success: function(data){
+                        $(".chat-history").empty();
+                        data = JSON.parse(data);
+                        var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
+                        var chatHistoryEnding = "</div></div><hr>"
+                        for(let i in data){
+                            $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+                        }
+                        $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
+                    }
+                });
+                <?php
+            }
+            else{
+                ?>
+                $.ajax({
+                    url: "getChatAjax.php",
+                    type: "POST",
+                    data: {
+                        <?php
+                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                echo "user_id:".$_SESSION['id'];
+                            }
+                            else{
+                                ?>
+                                user_id: window.user_id_to;
+                                <?php
+                            }
+                        ?>
+                    },
+                    success: function(data){
+                        $(".chat-history").empty();
+                        data = JSON.parse(data);
+                        var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
+                        var chatHistoryEnding = "</div></div><hr>"
+                        for(let i in data){
+                            $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+                        }
+                        $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
+                    }
+                });
+                <?php
+            }
+        ?>
+        
+        $('.chat').slideToggle(300, 'swing');
+        $('.chat-message-counter').fadeToggle(300, 'swing');
+    });
+
+    $('#live-chat .chat-close').on('click', function(e) {
+        e.preventDefault();
+        $('#live-chat .chat').fadeOut(300);
+    });
+
+    $("#chatForm").submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url: "insertChatAjax.php",
+            type: "POST",
+            data: {
+                text: $("#chatText").val(),
+                <?php
+                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                        echo "user_id:".$con->query("select id from user where accessLevel = 1")->fetch_assoc()['id'];
+                    }
+                    else{
+                        ?>
+                            user_id: window.user_id_to
+                        <?php
+                    }
+                ?>
+            },
+            success: function(data){
+                if(data){
+                    $("#chatText").val('');
+                    $.ajax({
+                        url: "getChatAjax.php",
+                        type: "POST",
+                        data: {
+                            <?php
+                                if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                    echo "user_id:".$_SESSION['id'];
+                                }
+                                else{
+                                    ?>
+                                    user_id: window.user_id_to
+                                    <?php
+                                }
+                            ?>
+                        },
+                        success: function(data){
+                            $(".chat-history").empty();
+                            data = JSON.parse(data);
+                            var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
+                            var chatHistoryEnding = "</div></div><hr>"
+                            for(let i in data){
+                                $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    // function refreshChat(user_id_to){
+    //     $.ajax({
+    //         url: "getChatAjax.php",
+    //         type: "POST",
+    //         data: {
+    //             <?php
+    //                 if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+    //                     echo "user_id:".$_SESSION['id'];
+    //                 }
+    //                 else{
+    //                     ?>
+    //                     user_id: user_id_to
+    //                     <?php
+    //                 }
+    //             ?>
+    //         },
+    //         success: function(data){
+    //             $(".chat-history").empty();
+    //             data = JSON.parse(data);
+    //             var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
+    //             var chatHistoryEnding = "</div></div><hr>"
+    //             for(let i in data){
+    //                 $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+    //             }
+    //         }
+    //     });
+    // }
+
+    setInterval(function(){
+        $.ajax({
+            url: "getChatAjax.php",
+            type: "POST",
+            data: {
+                <?php
+                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                        echo "user_id:".$_SESSION['id'];
+                    }
+                    else{
+                        ?>
+                        user_id: window.user_id_to
+                        <?php
+                    }
+                ?>
+            },
+            success: function(data){
+                $(".chat-history").empty();
+                data = JSON.parse(data);
+                var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
+                var chatHistoryEnding = "</div></div><hr>"
+                for(let i in data){
+                    $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+                }
+                $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
+            }
+        });
+    }, 2000);
+
     </script>
 </body>
 

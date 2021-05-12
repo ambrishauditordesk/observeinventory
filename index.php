@@ -3,8 +3,19 @@ session_start();
 if(isset($_SESSION['external_client_id']) && !empty($_SESSION['external_client_id']) && $_SESSION['external_client_id']  != ''){
     header('Location: workspace?cid='.$_SESSION['external_client_id']);
 }
-elseif(isset($_SESSION['id']) && !empty($_SESSION['id']) && $_SESSION['id']!= ''){
-    header('Location: admin/clientList');
+
+if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+    $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+    $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+    $diff=date_diff($currentDate,$loggedInDate);
+    if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+        header('Location: logout');
+    }
+    else{
+        if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
+            header("Location: admin/clientList");
+        }
+    }
 }
 ?>
 <!DOCTYPE html>

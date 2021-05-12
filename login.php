@@ -1,9 +1,20 @@
 <?php
     include 'dbconnection.php';
 	session_start();
-	if (isset($_SESSION['email']) && !empty($_SESSION['email'])){
-            header("Location: admin/clientList");    
-        }
+
+	if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
+        $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
+        $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
+        $diff=date_diff($currentDate,$loggedInDate);
+		if($diff->format("%a") > 1 || $diff->format("%m") > 1 || $diff->format("%y") > 1){
+			header('Location: logout');
+		}
+		else{
+			if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
+				header("Location: admin/clientList");
+			}
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,18 +44,18 @@
 		<div class="white-panel">
 			<div class="login-show">
 				<h2>LOGIN</h2>
-						<form method = "post" action = "validate.php">
-							<input type="text" name = "email" placeholder="Email" required>
-							<input type="password" name = "password" placeholder="Password" required>
-							<div class="form-group">
-								<input type="text" name="vercode" class="form-control" placeholder="Verfication Code" autocomplete="off" required>
-							</div>
-							<div class="form-group" style="display:flex; align-items:center">
-								<label class="checkbox-inline">Verification Code:</label>&nbsp;
-								<img src="captcha.php" >
-							</div>
-							<input type="submit"  value= "Login">
-						</form>
+					<form method = "post" action = "validate.php">
+						<input type="text" name = "email" placeholder="Email" required>
+						<input type="password" name = "password" placeholder="Password" required>
+						<div class="form-group">
+							<input type="text" name="vercode" class="form-control" placeholder="Verfication Code" autocomplete="off" required>
+						</div>
+						<div class="form-group" style="display:flex; align-items:center">
+							<label class="checkbox-inline">Verification Code:</label>&nbsp;
+							<img src="captcha.php" >
+						</div>
+						<input type="submit"  value= "Login">
+					</form>
 			</div>
 			<div class="register-show">
 				<h2>Reset Password</h2>		
@@ -56,6 +67,9 @@
 	<script src="js/custom.js"></script>
 <script>
 		$(document).ready(function(){
+
+			document.getElementsByTagName("html")[0].style.visibility = "visible";
+			
 		    $('.login-info-box').fadeOut();
 		    $('.login-show').addClass('show-log-panel');
 		});
