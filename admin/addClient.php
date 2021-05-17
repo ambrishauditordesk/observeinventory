@@ -150,19 +150,20 @@ if($uploadOk) {
     
     echo "<script>
             $(document).ready(function() {
-            document.getElementsByTagName('html')[0].style.visibility = 'visible';
-            $('#successModal').modal(); <
+                document.getElementsByTagName('html')[0].style.visibility = 'visible';
+                $('#successModal').modal();
+            });
         </script>"; 
-     }
-    else{
-        echo "<script>
-                $(document).ready(function() {
+}
+else{
+    echo "<script>
+            $(document).ready(function() {
                 document.getElementsByTagName('html')[0].style.visibility = 'visible';
                 $('#unsuccessModal').modal();
-                });
-            </script>";
-    }
-    ?>
+            });
+        </script>";
+}
+?>
 
 <!--Success Modal-->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
