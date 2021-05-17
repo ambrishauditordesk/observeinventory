@@ -22,11 +22,15 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 #  RewriteBase /
 # </IfModule>
 
-RewriteEngine on
-RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
-RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
+# RewriteEngine on
+# RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
+# RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
 # RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
-RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf)$ - [F]
+
+ RewriteEngine on
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats [NC]
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats.*$ [NC]
+ RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
 
 <FilesMatch "\.(doc|docx|xlxs|txt|pdf|rtf)$">
   ForceType application/octet-stream
