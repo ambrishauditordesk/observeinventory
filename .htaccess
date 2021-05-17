@@ -25,7 +25,8 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 RewriteEngine on
 RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
 RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
-RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
+# RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
+RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf)$ - [F]
 
 <FilesMatch "\.(doc|docx|xlxs|txt|pdf|rtf)$">
   ForceType application/octet-stream
