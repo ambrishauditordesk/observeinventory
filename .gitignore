@@ -6,5 +6,6 @@ dbconnection.php
 
 //Ignoring Uploads 
 uploads/*/*
+images/*
 
 
