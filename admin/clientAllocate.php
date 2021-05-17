@@ -12,13 +12,13 @@ if(isset($_POST))
         $uid = $_POST['memberId'];
         $userRole = $con->query("select accessLevel from user where id = $uid")->fetch_assoc()['accessLevel'];
         if($userRole == 3 || $userRole == 2){
-            $con->query("delete from user_client_log where user_id = '$uid'");
+            $deleteClient = $con->query("delete from user_client_log where user_id = '$uid'");
             foreach($client as $cid)
             {
                 $result = $con->query("insert into user_client_log(client_id,user_id) values('$cid','$uid')");
             }
-            $data = array();
-            if($result)
+            // $data = array();
+            if($result || $deleteClient)
             {
                 $data['status'] = true;
                 $data['text'] = 'Successfully Allocated';

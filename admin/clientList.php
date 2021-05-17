@@ -665,7 +665,7 @@
                                 <span aria-hidden="true">×</span>
                             </button>
                     </div>
-                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                    <form action="../updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">

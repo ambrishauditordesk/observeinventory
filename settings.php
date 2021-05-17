@@ -250,8 +250,7 @@
                     }
                     else{
                         ?>
-                            <h6>Chat Member List:-</h6>
-                            <table>
+                            <table class="table">
                                 <thead>
                                     <th>Firm Name</th>
                                     <th>Employee Name</th>
@@ -260,7 +259,7 @@
                                 </thead>
                                 <tbody>  
                                 <?php
-                                    $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id");
+                                    $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id where role.id != 3 and role.id != 5");
                                     while($row = $result->fetch_assoc()){
                                         ?>
                                             <tr>
@@ -366,7 +365,8 @@
                     </div> <!-- end chat-history -->
 
                     <form id="chatForm">
-                        <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>
+                        <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
+                        <!-- <input type="file" class="file" id="chatFile" name="chatFile"> -->
                         <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
                         <!-- <i class="far fa-paper-plane"></i> -->
                     </form>
@@ -490,7 +490,7 @@
                             }
                             else{
                                 ?>
-                                user_id: window.user_id_to;
+                                user_id: window.user_id_to
                                 <?php
                             }
                         ?>

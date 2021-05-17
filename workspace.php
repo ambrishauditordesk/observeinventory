@@ -27,7 +27,8 @@
     $added_by_id = $clientName['added_by_id'];
     $clientName = $clientName['name'];
     
-    $_SESSION['upload_file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$_SESSION['cname'];
+    $name = str_replace(' ', '', $_SESSION['cname']);
+    $_SESSION['upload_file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -327,35 +328,6 @@
             </div>
         </footer>
 
-        <!-- Profile Photo Modal -->
-        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                    </div>
-                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
-                            </div>
-                            <div class="form-group ">
-                                <label for="name">Upload Photo</label>
-                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
-                            </div>
-                        <div> 
-                        <div class="modal-footer justify-content-center">
-                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <!--ADD WORKSPACE -->
         <div class="modal fade" id="addWorkspaceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered  modal-size" role="document">
@@ -394,6 +366,34 @@
             </div>
         </div>
 
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 

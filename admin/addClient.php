@@ -131,17 +131,17 @@ if($uploadOk) {
     $con->query("insert into client(active,added_by_id,added_by_date,name,nickname,incorp_date,const_id,industry_id,address,city,state,pincode,country,pan,gst,tan,cin)
     values('1','$addedById','$addedByDate','$name','$nickName','$date','$const','$industry','$add','$city','$state','$pin','$country','$pan','$gst','$tan','$cin')");
     $cid = $con->insert_id;
-    if($_SESSION['role'] != -1 || $_SESSION['role'] != 1){
+    $name = str_replace(' ', '', $name);
+    if($_SESSION['role'] != -1 && $_SESSION['role'] != 1){
         $con->query("insert into user_client_log(user_id,client_id) values('$addedById','$cid')");
-        shell_exec('mkdir -p uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
-        shell_exec('chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
+        shell_exec('mkdir -p ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
+        shell_exec('chmod -R 777 ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
     }
     else{
         $con->query("insert into user_client_log(user_id,client_id) values('$firmLeaderId','$cid')");
-        shell_exec('mkdir -p uploads/'.$firm_id.'/'.$cid.$name.'/');
-        shell_exec('chmod -R 777 uploads/'.$firm_id.'/'.$cid.$name.'/');
+        shell_exec('mkdir -p ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+        shell_exec('chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
     }
-
     for($i=0;$i<$count;$i++){
         $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','3','1','$desig[$i]')");
         $uid = $con->insert_id;
@@ -150,13 +150,14 @@ if($uploadOk) {
     
     echo "<script>
             $(document).ready(function() {
-            $('#successModal').modal();
-            });
-        </script>";
-    }
+            document.getElementsByTagName('html')[0].style.visibility = 'visible';
+            $('#successModal').modal(); <
+        </script>"; 
+     }
     else{
         echo "<script>
                 $(document).ready(function() {
+                document.getElementsByTagName('html')[0].style.visibility = 'visible';
                 $('#unsuccessModal').modal();
                 });
             </script>";
