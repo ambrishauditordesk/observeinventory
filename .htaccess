@@ -28,8 +28,8 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 # RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
 
  RewriteEngine on
- RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats [NC]
- RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats.*$ [NC]
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?yourfirmaudit [NC]
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?yourfirmaudit.*$ [NC]
  RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
 
 <FilesMatch "\.(doc|docx|xlxs|txt|pdf|rtf)$">
