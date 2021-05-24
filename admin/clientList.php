@@ -104,7 +104,7 @@
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <?php 
-                        if($_SESSION['role'] == '-1'){
+                        if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
                             <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
                             <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>

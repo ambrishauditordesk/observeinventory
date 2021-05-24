@@ -118,6 +118,7 @@
             }
         } 
         if($filePresent){
+            // $con->query("insert into accounting_estimates_files(workspace_id,file_name,status,deletedDate) values('$wid','$name','0','')");
             $con->query("insert into accounting_estimates_files(workspace_id,file_name) values('$wid','$name')");
             move_uploaded_file($tmp_name, $path . $name);
         } 

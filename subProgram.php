@@ -4337,7 +4337,8 @@
                     url: "deleteFileAjax.php",
                     type: "POST",
                     data: {
-                        id: id
+                        id: id,
+                        type: '1'
                     },
                     success: function(data){
                         let responseText = data == 1?'File is deleted':'File not deleted'

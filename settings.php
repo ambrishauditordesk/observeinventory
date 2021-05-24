@@ -214,8 +214,8 @@
                 </div>
                 <div class="card-body tab-content">
                     <div class="tab-pane active" id="profile">
-                    <?php 
-                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                        <?php 
+                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
                         ?>
                         <h6>YOUR FIRM INFORMATION</h6>
                         <hr>
@@ -238,7 +238,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Multicurrency</label>
-                                <select class="form-select">
+                                <select class="form-control" disabled>
                                     <option value="Yes">Yes</option>
                                     <option value="No" selected>No</option>
                                 </select>
@@ -247,35 +247,35 @@
                         <button type="reset" class="btn btn-light">Reset Changes</button> -->
                         </form>
                         <?php
-                    }
-                    else{
+                        }
+                        else{
+                            ?>
+                                <table class="table">
+                                    <thead>
+                                        <th>Firm Name</th>
+                                        <th>Employee Name</th>
+                                        <th>Employee Role</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody>  
+                                    <?php
+                                        $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id where role.id != 3 and role.id != 5");
+                                        while($row = $result->fetch_assoc()){
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $row['firm_name']; ?></td>
+                                                    <td><?php echo $row['name']; ?></td>
+                                                    <td><?php echo $row['role']; ?></td>
+                                                    <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="badge badge-success">Chat Now</span></a></td>
+                                                </tr>
+                                            <?php
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            <?php
+                        }
                         ?>
-                            <table class="table">
-                                <thead>
-                                    <th>Firm Name</th>
-                                    <th>Employee Name</th>
-                                    <th>Employee Role</th>
-                                    <th>Action</th>
-                                </thead>
-                                <tbody>  
-                                <?php
-                                    $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id where role.id != 3 and role.id != 5");
-                                    while($row = $result->fetch_assoc()){
-                                        ?>
-                                            <tr>
-                                                <td><?php echo $row['firm_name']; ?></td>
-                                                <td><?php echo $row['name']; ?></td>
-                                                <td><?php echo $row['role']; ?></td>
-                                                <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="selectedUser badge badge-success">Chat Now</span></a></td>
-                                            </tr>
-                                        <?php
-                                    }
-                                ?>
-                                </tbody>
-                            </table>
-                        <?php
-                    }
-                    ?>
                     </div>
                     <div class="tab-pane" id="account">
                         <h6>Tools Settings</h6>
@@ -290,8 +290,8 @@
 
                             </div>
                             <div class="form-group">
-                                <label for="username">Chat Assistance</label>
-                                <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter your username" value="">
+                                <label for="username">Chat Assistance</label><br>
+                                <input type="button" class="btn btn-primary" id="chatAssistance"value="Chat Now!">
                             </div>
                             <hr>
                             <div class="form-group">
@@ -300,7 +300,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">Email Us</label>
-                                <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="yourfirmaudit@gmail.com">
+                                <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="yourfirmaudit@gmail.com" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">24/7 online chat assistance</label>
@@ -319,15 +319,58 @@
                         <form>
                             <div class="form-group">
                                 <label for="fullName">Subcription</label>
-                                <input type="text" class="form-control" id="subcription" aria-describedby="fullNameHelp" placeholder="It's simply free option to upgrade">
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="fullName">Add Workspace</label>
-                                <input type="text" class="form-control" id="add_workspace" aria-describedby="fullNameHelp" placeholder="Form open up to submit request">
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="fullName">Billing</label>
-                                <input type="text" class="form-control" id="billing_subsection" aria-describedby="fullNameHelp" placeholder="Only for Paid customers blank for free">
+                                <section class="pricing py-2 px-2">
+                                    <div class="container">
+                                        <div class="row col-lg-12 justify-content-center">
+                                            <!-- Free Tier -->
+                                            <div class="col-lg-5">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted text-uppercase text-center">Free</h5>
+                                                        <h6 class="card-price text-center">&#8377;0<span class="period">/month</span></h6>
+                                                        <hr>
+                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Free</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Plus Tier -->
+                                            <div class="col-lg-5">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted text-uppercase text-center">Pro</h5>
+                                                        <h6 class="card-price text-center">&#8377;500<span class="period">/month</span></h6>
+                                                        <hr>
+                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Buy</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <br>
+                                        <div class="row col-lg-12 justify-content-center">
+                                            <!-- Pro Tier -->
+                                            <div class="col-lg-5">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted text-uppercase text-center">Go Pro</h5>
+                                                        <h6 class="card-price text-center">&#8377;2500<span class="period">/month</span></h6>
+                                                        <hr>
+                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Buy</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Pro Tier -->
+                                            <div class="col-lg-5">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="custom text-muted text-uppercase text-center">Custom Pro</h5>
+                                                        <h6 class="card-price text-center">Advanced needs?</h6>
+                                                        <hr>
+                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Get Quote</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                             </div>
                             <div class="form-group mb-0">
                                 <label for="fullName">Payment History</label>
@@ -337,13 +380,40 @@
                                 <label for="fullName">Firm Storage space</label>
                                 <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" placeholder="10MB for free customers">
                             </div>
-                            <div class="form-group mb-0">
-                                <label for="fullName">Storage space used</label>
-                                <input type="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" placeholder="Only for Paid customers blank for free">
+                            <div class="form-group mb-0 col-md-4 p-0">
+                                <label for="fullName">Storage space used</label><br>
+                                <?php
+                                    $f = 'uploads/'.$_SESSION['firm_id'];
+                                    $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
+                                    $size = fgets ( $io )  ;
+                                    $size = substr ( $size, 0, strpos ( $size, "\t" ) );
+                                    pclose ( $io );
+                                ?>
+                                <input type="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo ceil(($size/1024)).' MB'; ?>">
                             </div>
                             <div class="form-group mb-0">
-                                <label for="fullName">Add Storage space</label>
-                                <input type="text" class="form-control" id="firm_storage_space_add" aria-describedby="fullNameHelp" placeholder="Only for Paid customers blank for free">
+                                <label for="fullName">Add Storage space</label><br>
+                                <form action="#">
+                                    <div class="row col-md-12">
+                                        <div class="col-md-4 p-0">
+                                            <select class="form-control" aria-label="Default select example">
+                                                <option selected>Select Storage</option>
+                                                <option value="1">1 GB</option>
+                                                <option value="5">5 GB</option>
+                                                <option value="10">10 GB</option>
+                                                <option value="15">15 GB</option>
+                                                <option value="20">20 GB</option>
+                                                <option value="25">25 GB</option>
+                                            </select>
+                                        </div> &emsp;
+                                        <div class="col-md-2 p-0">
+                                            <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                        </div>
+                                        <div class="col-md-4 mt-1">
+                                            <label><h4>&#8377;100/GB monthly</h4></label>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </form>
                     </div>
@@ -365,10 +435,13 @@
                     </div> <!-- end chat-history -->
 
                     <form id="chatForm">
+                        <input type="hidden" id="user_id" name="user_id">
                         <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
-                        <!-- <input type="file" class="file" id="chatFile" name="chatFile"> -->
+                        <div class="image_upload">
+                            <label for="file"><img src="images/upload.png"/></label>
+                            <input type="file" name="file" id="file" accept=".jpg, .png" />
+                        </div>
                         <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
-                        <!-- <i class="far fa-paper-plane"></i> -->
                     </form>
                 </div> <!-- end chat -->
 	        </div>
@@ -446,7 +519,7 @@
         }
     });
 
-    $('#live-chat header').on('click', function() {
+    $('#live-chat header, .selectedUser, #chatAssistance').on('click', function() {
         <?php
             if($_SESSION['role'] != 1 || $_SESSION['role'] != -1){
                 ?>
@@ -521,22 +594,28 @@
 
     $("#chatForm").submit(function(e){
         e.preventDefault();
+        <?php
+            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+        ?>
+            $("#user_id").val(<?php echo $con->query("select id from user where accesslevel = 1")->fetch_assoc()['id']; ?>);
+        <?php
+            }
+            else{
+            ?>
+            $("#user_id").val(window.user_id_to);
+        <?php
+            }
+        ?>
+        var form = $('#chatForm')[0];
+        var data = new FormData(form);
         $.ajax({
             url: "insertChatAjax.php",
+            enctype: 'multipart/form-data',
             type: "POST",
-            data: {
-                text: $("#chatText").val(),
-                <?php
-                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                        echo "user_id:".$con->query("select id from user where accessLevel = 1")->fetch_assoc()['id'];
-                    }
-                    else{
-                        ?>
-                            user_id: window.user_id_to
-                        <?php
-                    }
-                ?>
-            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: data,
             success: function(data){
                 if(data){
                     $("#chatText").val('');

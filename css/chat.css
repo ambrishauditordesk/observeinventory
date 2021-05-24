@@ -16,9 +16,9 @@
 }
 
 #live-chat header {
-	background: #293239;
+	background:rgb(160, 240, 133) !important;
 	border-radius: 5px 5px 0 0;
-	color: #fff;
+	color: #000;
 	cursor: pointer;
 	padding: 16px 24px;
 }
@@ -78,7 +78,7 @@
 	position: relative;
 	top: -50px;
 	right: 5px;
-	background: #1b2126;
+	background: rgb(160, 240, 133) !important;
 	border-radius: 50%;
 	color: #e2e0e0;
 	display: block;
@@ -100,7 +100,7 @@
 }
 
 .chat-history {
-	height: 252px;
+	height: 500px;
 	padding: 8px 24px;
 	overflow-y: scroll;
 }
@@ -126,4 +126,19 @@
 .chat-feedback {
 	font-style: italic;	
 	margin: 0 0 0 80px;
+}
+
+.image_upload > input
+{
+    display: none;
+}
+
+.image_upload img
+{
+    width: 24px;
+    cursor: pointer;
+}
+
+.chatImage{
+	border-radius: 0px !important;
 }

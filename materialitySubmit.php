@@ -128,6 +128,7 @@
             }
 
             if($filePresent){
+                // $con->query("insert into materiality_files(fname,submat_id,workspace_id,status,deletedDate) values ('$name','$submat_id','$wid','0','')");
                 $con->query("insert into materiality_files(fname,submat_id,workspace_id) values ('$name','$submat_id','$wid')");
                 $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
                 $email = $_SESSION['email'];

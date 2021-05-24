@@ -76,6 +76,7 @@
                 $name = $fileName[$i]['name'];
                 $tmp_name = $fileName[$i]['tmp_name'];
                 if(move_uploaded_file($tmp_name, $path . $name))
+                    // if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file,status,deletedDate) values ('$wid','$prog_id','$uid','$name',0,'')") === TRUE){
                     if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file) values ('$wid','$prog_id','$uid','$name')") === TRUE){
                         $flagFile = 1;
                         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");

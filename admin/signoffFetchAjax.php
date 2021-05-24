@@ -7,7 +7,7 @@ $newData = array();
 $data = $con->query("select program_name from program inner join workspace_log on program.id = workspace_log.program_id where program_id='$id' and workspace_id='$wid'");
 $newData['pname'] = $data->fetch_assoc();
 
-$data = $con->query("select id,file from signoff_files_log where workspace_id='$wid' and prog_id='$id'");
+$data = $con->query("select id,file from signoff_files_log where workspace_id='$wid' and prog_id='$id' and status = 0");
 $newData['file'] = $data->fetch_all();
 
 $data = $con->query("select id,comments,comments_date from signoff_comments_log where workspace_id='$wid' and prog_id='$id'");

@@ -107,6 +107,7 @@
             }
 
             if($filePresent){
+                // $con->query("insert into insignificant_files(fname,workspace_id,pid,status,deletedDate) values ('$name','$wid','$pid','0','')");
                 $con->query("insert into insignificant_files(fname,workspace_id,pid) values ('$name','$wid','$pid')");
                 if(!move_uploaded_file($tmp_name, $path . $name)){
                     $flag = 0;
