@@ -389,7 +389,7 @@
                                     $size = substr ( $size, 0, strpos ( $size, "\t" ) );
                                     pclose ( $io );
                                 ?>
-                                <input type="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo ceil(($size/1024)).' MB'; ?>" readonly>
+                                <input type="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
                             </div>
                             <div class="form-group mb-0">
                                 <label for="fullName">Add Storage space</label><br>

@@ -58,9 +58,11 @@
 					</form>
 			</div>
 			<div class="register-show">
-				<h2>Reset Password</h2>		
-				<input type="text" placeholder="Email">
-				<input type="button" value="Reset">
+				<h2>Reset Password</h2>
+				<form method = "post" action = "resetPassword">
+					<input type="email" name="email" placeholder="Email" required>
+					<input type="submit" value="Reset">
+				</form>
 			</div>
 		</div>
     </div>

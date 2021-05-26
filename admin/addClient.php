@@ -143,7 +143,7 @@ if($uploadOk) {
         shell_exec('chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
     }
     for($i=0;$i<$count;$i++){
-        $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','3','1','$desig[$i]')");
+        $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','3','1','$desig[$i]','','')");
         $uid = $con->insert_id;
         $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
     }

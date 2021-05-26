@@ -30,7 +30,7 @@
             }
         }
         $regDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");
-        $res= $con->query("insert into user(name,email,password,accessLevel,active,reg_date,signoff_init) values('$name', '$email', '$pass', '$role', '1', '$regDate', '$signOff')");
+        $res= $con->query("insert into user(name,email,password,accessLevel,active,reg_date,signoff_init,reset_code,img) values('$name', '$email', '$pass', '$role', '1', '$regDate', '$signOff','','')");
         $user_id = $con->insert_id;
 
         if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
