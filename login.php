@@ -19,6 +19,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link href="css/custom.css" rel="stylesheet">
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -47,12 +48,12 @@
 					<form method = "post" action = "validate.php">
 						<input type="text" name = "email" placeholder="Email" required>
 						<input type="password" name = "password" placeholder="Password" required>
-						<div class="form-group">
-							<input type="text" name="vercode" class="form-control" placeholder="Verfication Code" autocomplete="off" required>
-						</div>
 						<div class="form-group" style="display:flex; align-items:center">
-							<label class="checkbox-inline">Verification Code:</label>&nbsp;
-							<img src="captcha.php" >
+							<img src="getCaptcha.php?rand=<?php echo rand(); ?>" id='captcha'>
+							<a href="#"><i id="reloadCaptcha" class="fas fa-redo-alt"></i></a>
+						</div>
+						<div class="form-group">
+							<input type="text" name="vercode" class="form-control" placeholder="Enter the Security Code" autocomplete="off" required>
 						</div>
 						<input type="submit"  value= "Login">
 					</form>
@@ -96,6 +97,13 @@
         $('.login-show').addClass('show-log-panel');
         $('.register-show').removeClass('show-log-panel');
 		    }
+		});
+
+		$("#reloadCaptcha").click(function(){
+			var captchaImage = $('#captcha').attr('src');	
+			captchaImage = captchaImage.substring(0,captchaImage.lastIndexOf("?"));
+			captchaImage = captchaImage+"?rand="+Math.random()*1000;
+			$('#captcha').attr('src', captchaImage);
 		});
 </script>
   

@@ -84,7 +84,7 @@
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
                         $row = $img_query->fetch_assoc();
                     ?>
                     <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
@@ -187,7 +187,7 @@
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <?php
-                                        $totalMembers = $con->query("SELECT COUNT(user.id) AS total FROM `user` inner join user_client_log on user.id=user_client_log.user_id where user.client_id = '$clientId' or user_client_log.client_id = '$clientId' ORDER BY user.name DESC");
+                                        $totalMembers = $con->query("SELECT COUNT(user.id) AS total FROM `user` inner join user_client_log on user.id=user_client_log.user_id where user.client_id = '$clientId' or user_client_log.client_id = '$clientId' and user.accessLevel > 1 ORDER BY user.name DESC");
                                     if ($totalMembers->num_rows != 0) {
                                         $count = $totalMembers->fetch_assoc();
                                         echo " " . $count['total'];
@@ -211,7 +211,7 @@
             </div>
 
             <!-- Register a Member -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#registerMemberModal">
@@ -228,7 +228,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- DATATABLE -->
@@ -544,45 +544,45 @@
 
     });
 
-    $('#registerSubmit').on('click', function(e) {
-        e.preventDefault();
-        var name = $("#name").val();
-        var email = $("#email").val();
-        var password = $("#password").val();
-        var design = $("#design1").val();
-        $.ajax({
-            url: "addClientMember.php",
-            type: "POST",
-            data: {
-                name: name,
-                email: email,
-                password: password,
-                design: design,
-                cid: <?php echo $clientId; ?>
-            },
-            success: function(response) {
-                if (response) {
-                    swal({
-                        icon: "success",
-                        text: name + " Added",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Already Exists!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                }
-            }
-        });
-    });
+    // $('#registerSubmit').on('click', function(e) {
+    //     e.preventDefault();
+    //     var name = $("#name").val();
+    //     var email = $("#email").val();
+    //     var password = $("#password").val();
+    //     var design = $("#design1").val();
+    //     $.ajax({
+    //         url: "addClientMember.php",
+    //         type: "POST",
+    //         data: {
+    //             name: name,
+    //             email: email,
+    //             password: password,
+    //             design: design,
+    //             cid: <?php echo $clientId; ?>
+    //         },
+    //         success: function(response) {
+    //             if (response) {
+    //                 swal({
+    //                     icon: "success",
+    //                     text: name + " Added",
+    //                 }).then(function(isConfirm) {
+    //                     if (isConfirm) {
+    //                         location.reload();
+    //                     }
+    //                 });
+    //             } else {
+    //                 swal({
+    //                     icon: "error",
+    //                     text: "Already Exists!",
+    //                 }).then(function(isConfirm) {
+    //                     if (isConfirm) {
+    //                         location.reload();
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     });
+    // });
 
     let darkmode = <?php echo $_SESSION['darkmode']; ?>;
     if(darkmode)

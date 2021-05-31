@@ -99,10 +99,20 @@
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
-                        $row = $img_query->fetch_assoc();
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
+                        if($img_query->num_rows == 1){
+                            $row = $img_query->fetch_assoc();
+                            ?>
+                            <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
+                            <?php
+                        }
+                        else{
+                            ?>
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                            <?php
+                        }
+                        
                     ?>
-                    <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -117,15 +127,30 @@
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
                         </a>
-                    <div class="dropdown-divider"></div> -->
-                    <?php 
-                        if($_SESSION['role'] == '-1'){
-                    ?>
-                        <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
-                    ?>
-                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                        <div class="dropdown-divider"></div> -->
+                        <?php 
+                        if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
+                        ?>
+                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-sign-in-alt"></i>Login Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
+                            <?php
+                        }
+                        ?>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>

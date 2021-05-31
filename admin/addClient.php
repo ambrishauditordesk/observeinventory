@@ -29,11 +29,13 @@
 <body>
 <?php
 include '../dbconnection.php';
+include '../customMailer.php';
 session_start();
 
 $cname = array();
 $email = array();
 $pass = array();
+$tempPass = array();
 $desig = array();
 
 
@@ -116,7 +118,8 @@ foreach (($_POST['email']) as $emailID) {
 $i =0;
 
 foreach (($_POST['pass']) as $password) {
-    $pass[$i++] = md5(trim($password));
+    $pass[$i] = md5(trim($password));
+    $tempPass[$i++] = trim($password);
 }
 
 //Designation
@@ -142,10 +145,59 @@ if($uploadOk) {
         shell_exec('mkdir -p ../uploads/'.$firm_id.'/'.$cid.$name.'/');
         shell_exec('chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
     }
+    $successEmailList = $unSuccessEmailList = '';
+    $sub = "You have been added as a Client member";
+    if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
+        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+     }
+     elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
+        $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
+     }
+     elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
+        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+     }
+
     for($i=0;$i<$count;$i++){
-        $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','3','1','$desig[$i]','','')");
+        $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','5','1','$desig[$i]','','')");
         $uid = $con->insert_id;
         $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
+        
+
+         $msg = "<div>
+         <div>Hello ".$cname[$i].",</div>
+         <br />
+         <div>You have been added as a Client member to join Digital audit workspace by your auditor. Use your user
+         id to login to the client request list you have been allocated to. You can uploaded documents and reply
+         to auditors request using the below details.</div>
+         <br />
+         <div>Your email id: ".$email[$i]."</div>
+         <div>Your temporary password: ".$tempPass[$i]."</div>
+         <br/>
+         <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
+         <br />
+         <br />
+         <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
+         <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
+         <div>contact the Help desk or your firm administrator.</div>
+         <br />
+         <div>Thank you.</div>
+         <br />
+         <div>The Auditedg Team</div>
+         </div>";
+         
+        if(customMailer($email[$i],$msg,$sub)){
+            if(empty($successEmailList))
+                $successEmailList = $email;
+            else
+                $successEmailList .= ','.$email;
+        }else{
+            if(empty($unSuccessEmailList))
+                $unSuccessEmailList = $email;
+            else
+                $unSuccessEmailList .= ','.$email;
+        }
+
+        sleep(2);
     }
     
     echo "<script>
@@ -175,7 +227,28 @@ else{
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Successfully added <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a></div>
+            <div class="modal-body">
+                Successfully added <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a>
+                <p>
+                    <?php
+                        if(!empty($successEmailList)){
+                            ?>
+                            Emails has been send with invitation link to:-<br><?php echo $successEmailList; ?><br>
+                            <?php
+                            if(!empty($unSuccessEmailList)){
+                                ?>
+                                    Emails has not been send to:-<br><?php echo $unSuccessEmailList; ?><br>
+                                <?php
+                            }
+                        }
+                        else{
+                            ?>
+                                Emails has not been send to:-<br><?php echo $unSuccessEmailList; ?><br>
+                            <?php
+                        }
+                    ?>
+                </p>
+            </div>
             <div class="modal-footer">
                 <a class="btn btn-primary" href="clientList">OK</a>
             </div>

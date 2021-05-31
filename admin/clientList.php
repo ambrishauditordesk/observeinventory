@@ -89,10 +89,20 @@
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_3">3</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
-                        $row = $img_query->fetch_assoc();
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
+                        if($img_query->num_rows == 1){
+                            $row = $img_query->fetch_assoc();
+                            ?>
+                            <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
+                            <?php
+                        }
+                        else{
+                            ?>
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                            <?php
+                        }
+                        
                     ?>
-                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -107,11 +117,9 @@
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
                             <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
-                            <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
                         <?php
                         }   
                         else{
@@ -119,7 +127,7 @@
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
                             <?php
                         }
                     ?>
@@ -233,11 +241,12 @@
                                         <?php 
                                             $userId = $_SESSION['id'];
                                             if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                                echo $con->query("select count(client.id) assigned FROM client inner join user_client_log on user_client_log.client_id=client.id where user_client_log.user_id= $userId and active = 1")->fetch_assoc()['assigned'];
+                                                $assigned = $con->query("select count(client.id) assigned FROM client inner join user_client_log on user_client_log.client_id=client.id where user_client_log.user_id= $userId and active = 1")->fetch_assoc()['assigned'];
                                             }
                                             else{
-                                                echo $con->query("select count(client.id) assigned FROM client where  active = 1")->fetch_assoc()['assigned']; 
+                                                $assigned = $con->query("select count(client.id) assigned FROM client where  active = 1")->fetch_assoc()['assigned'];
                                             }
+                                            echo $assigned == ''? '0':$assigned;
                                         ?>
                                     </p>
                                     <h6 class="card-subtitle mb-2">Audits</h6>
@@ -253,11 +262,12 @@
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
                                             if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) <> ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) progress FROM client inner join user_client_log on user_client_log.client_id=client.id where user_client_log.user_id=$userId and active = 1")->fetch_assoc()['progress'];   
+                                                $progress = $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) <> ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) progress FROM client inner join user_client_log on user_client_log.client_id=client.id where user_client_log.user_id=$userId and active = 1")->fetch_assoc()['progress'];
                                             }
                                             else{
-                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) <> ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) progress FROM client where active = 1")->fetch_assoc()['progress'];
+                                                $progress = $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) <> ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) progress FROM client where active = 1")->fetch_assoc()['progress'];
                                             }
+                                            echo $progress == ''? '0':$progress;
                                         ?>
                                     </p>
                                     <h6 class="card-subtitle mb-2">Audits</h6>
@@ -273,11 +283,12 @@
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
                                             if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = $userId and active = 1")->fetch_assoc()['completed'];   
+                                                $completed = $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = $userId and active = 1")->fetch_assoc()['completed'];   
                                             }
                                             else{
-                                                echo $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client where active = 1")->fetch_assoc()['completed'];
+                                                $completed = $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client where active = 1")->fetch_assoc()['completed'];
                                             }
+                                            echo $completed == ''? '0':$completed;
                                         ?>
                                     </p>
                                     <h6 class="card-subtitle mb-2">Audits</h6>

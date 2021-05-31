@@ -8,7 +8,7 @@ require "vendor/phpmailer/phpmailer/src/PHPMailer.php";
 require "vendor/phpmailer/phpmailer/src/SMTP.php";
 require "vendor/phpmailer/phpmailer/src/Exception.php";
 
-function customMailer($to,$msg, $sub){
+function customMailer($to,$msg,$sub){
 
    $mail = new PHPMailer();
    $mail->isSMTP();
@@ -29,12 +29,13 @@ function customMailer($to,$msg, $sub){
    $mail->IsHTML(true);
    $mail->addAddress($to);
    $mail->addCC("sdey@alltechliquids.com");
-   if(!$mail->send()) { 
-      return 0; 
+   $mail->addCC("sujoyb@alltechliquids.com");
+   $data = 0;
+   if($mail->send()) { 
+      $data = 1;
    }
-   else { 
-      return 1; 
-   } 
+   $mail->ClearAllRecipients();
+   return $data;
 }
 
 ?>

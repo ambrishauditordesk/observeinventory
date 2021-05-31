@@ -66,7 +66,7 @@
       input[type="password"]:focus {
       background: #fff
       }
-      span {
+      .formHint {
       border-radius: 5px;
       display: block;
       font-size: 1.3em;
@@ -74,12 +74,12 @@
       position: absolute;
       background: #2F558E;
       left: 105%;
-      top: 25px;
-      width: 160px;
+      top: 50%;
+      width: 100%;
       padding: 7px 10px;
       color: #fff;
       }
-      span:after {
+      .formHint:after {
       right: 100%;
       top: 50%;
       border: solid transparent;
@@ -124,16 +124,21 @@
    if($result->num_rows == 1){
       $id = $result->fetch_assoc()['id'];
       ?>
-      <form id="resetForm" action="#" method="post">
+      <form id="resetForm" action="#" method="post" autocomplete="off">
          <p>
             <label for="password">Password</label>
             <input id="password" name="password" type="password">
-            <span>Enter a password longer than 8 characters</span>
+            <label class="formHint" style="top: 0;">Must be longer than 8 characters.<br>Must contain 1 lower case character.<br>Must contain 1 upper case character.<br>Must contain 1 number.<br>Must contain 1 special character</label>
+            <a href="" class="text-decoration-none position-absolute" id="showPasswordButton" style="top: 50%; right: 0;"><i class="fas fa-eye fa-3x"></i></a>
+            <a href="" class="text-decoration-none d-none position-absolute" id="hidePasswordButton" style="top: 50%; right: 0;"><i class="fas fa-eye-slash fa-3x"></i></a>
+         </p>
+         <p class="d-none" id="showPasswordTextDiv">
+            <label id="showPasswordText"></label>
          </p>
          <p>
             <label for="confirm_password">Confirm Password</label>
             <input id="confirm_password" name="confirm_password" type="password">
-            <span>Please confirm your password</span>
+            <label class="formHint">Please confirm your password</label>
          </p>
          <p>
             <input id="submit" type="submit" value="SUBMIT" >
@@ -161,47 +166,69 @@
     crossorigin="anonymous"></script>
 <script>
    $(document).ready(function(){
-      var $password = $("#password");
-      var $confirmPass = $("#confirm_password");
+         var $password = $("#password");
+         var $confirmPass = $("#confirm_password");
 
-      //Check the length of the Password
-      function checkLength(){
-      return $password.val().length > 8;
-      }
+         //Check the length of the Password
+         function checkLength(){
+            return $password.val().length > 8;
+         }
 
-      //Check to see if the value for pass and confirmPass are the same
-      function samePass(){
-      return $password.val()===$confirmPass.val();
-      }
+         function checkLengthConfirm(){
+            return $confirmPass.val().length > 8;
+         }
 
-      //If checkLength() is > 8 then we'll hide the hint
-      function PassLength(){
-      if(checkLength()){
-         $password.next().hide();
-      }else{
-         $password.next().show();
-      }
-      }
+         //Check to see if the value for pass and confirmPass are the same
+         function samePass(){
+            if($password.val()===$confirmPass.val() && checkLengthConfirm() && checkLength()){
+               $("#confirm_password").css('border','2px solid green');
+               return $password.val()===$confirmPass.val();
+            }
+            else{
+               $("#confirm_password").css('border','1px solid #e5e5e5');
+               return $password.val()===$confirmPass.val();
+            }
+         }
 
-      //If samePass returns true, we'll hide the hint
-      function PassMatch(){
-      if(samePass()){
-         $confirmPass.next().hide();
-      }else{
-         $confirmPass.next().show();
-      }
-      }
-      function canSubmit(){
-      return samePass() && checkLength();
-      }
-      function enableSubmitButton(){
-      $("#submit").prop("disabled",!canSubmit());
-      }
-      //Calls the enableSubmitButton() function to disable the button
-      enableSubmitButton();
+         //If checkLength() is > 8 then we'll hide the hint
+         function PassValidate(){
+            if(checkLength() && PassValidateRegex()){
+               $("#password").css('border','2px solid green');
+               $password.next().hide();
+            }else{
+               $("#password").css('border','1px solid #e5e5e5');
+               $password.next().show();
+            }
+         }
 
-         $password.keyup(PassLength).keyup(PassMatch).keyup(enableSubmitButton);
-         $confirmPass.focus(PassMatch).keyup(PassMatch).keyup(enableSubmitButton);
+         function PassValidateRegex(){
+            var pattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$");
+            console.log(pattern.test($password.val()))
+            return pattern.test($password.val());
+         }
+
+         //If samePass returns true, we'll hide the hint
+         function PassMatch(){
+            if(samePass()){
+               $confirmPass.next().hide();
+            }else{
+               $confirmPass.next().show();
+            }
+         }
+         function canSubmit(){
+            return samePass() && checkLength();
+         }
+         function enableSubmitButton(){
+            $("#submit").prop("disabled",!canSubmit());
+         }
+         function showPassword(){
+            $("#showPasswordText").html($password.val())
+         }
+         //Calls the enableSubmitButton() function to disable the button
+         enableSubmitButton();
+
+         $password.keyup(PassValidate).keyup(PassMatch).keyup(enableSubmitButton).keyup(showPassword);
+         $confirmPass.focus(PassMatch).focus(checkLengthConfirm).keyup(PassMatch).keyup(enableSubmitButton);
       });
 
       $("#resetForm").submit(function(e){
@@ -225,5 +252,19 @@
             }
          })
       });
+
+      $("#showPasswordButton").click(function(e){
+         e.preventDefault();
+         $("#hidePasswordButton").removeClass("d-none");
+         $("#showPasswordButton").addClass("d-none");
+         $("#showPasswordTextDiv").removeClass("d-none")
+      });
+
+      $("#hidePasswordButton").click(function(e){
+         e.preventDefault();
+         $("#showPasswordButton").removeClass("d-none");
+         $("#hidePasswordButton").addClass("d-none");
+         $("#showPasswordTextDiv").addClass("d-none")
+      })
 
 </script>

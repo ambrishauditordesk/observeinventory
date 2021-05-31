@@ -68,7 +68,7 @@
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
                         $row = $img_query->fetch_assoc();
                     ?>
                     <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">

@@ -1,9 +1,12 @@
 <?php
 include 'dbconnection.php';
+include 'getProgramStatus.php';
+
 session_start();
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
     header("Location: ./");
 }
+
 if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
     $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
     $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
@@ -13,10 +16,10 @@ if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
     }
 }
 
+$wid = base64_decode($_GET['wid']);
 $clientName = $_SESSION['cname'];
 
 $clientId = $_SESSION['client_id'];
-$wid = base64_decode($_GET['wid']);
 
 if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
     header('Location: login');
@@ -50,7 +53,6 @@ else{
 if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
     header("Location: subProgram?aid=". base64_encode(md5($clientName))."&gid=".base64_encode(md5($clientName))."&fid=".base64_encode(md5($clientName))."&eid=".base64_encode(md5($clientName))."&pid=".base64_encode('247')."&cid=".base64_encode(md5($clientName))."&bid=".base64_encode(md5($clientName))."&aid=". base64_encode(md5($clientName))."&zid=". base64_encode(md5($clientName))."&yid=". base64_encode(md5($clientName))."&wid=". base64_encode($wid)."&xid=". base64_encode(md5($clientName)));
 }
-
 
 $_SESSION['breadcrumb'] = array();
 ?>
@@ -98,7 +100,7 @@ $_SESSION['breadcrumb'] = array();
         <div class="side-footer">
             <div class="side-body">
                 <div class="dash">
-                    <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    <a href="workspace?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($clientId); ?>&cid=<?php echo base64_encode($clientId); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Workspace
                     </a>
                 </div>
@@ -159,10 +161,20 @@ $_SESSION['breadcrumb'] = array();
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_4">4</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
-                        $row = $img_query->fetch_assoc();
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
+                        if($img_query->num_rows == 1){
+                            $row = $img_query->fetch_assoc();
+                            ?>
+                            <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
+                            <?php
+                        }
+                        else{
+                            ?>
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                            <?php
+                        }
+                        
                     ?>
-                    <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -182,16 +194,16 @@ $_SESSION['breadcrumb'] = array();
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
                         <?php
                         }   
                         else{
                             ?>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
                             <?php
                         }
                         ?>
@@ -218,8 +230,18 @@ $_SESSION['breadcrumb'] = array();
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="span-heading">Audit Program</span>
                     <?php
-                        $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid and workspace_log.status=1")->fetch_assoc()['cnt'];
-                        $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where workspace_log.workspace_id=$wid")->fetch_assoc()['cnt'];
+                        $querys1 = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 1")->fetch_assoc()['total'];
+                        $querys = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 0")->fetch_assoc()['total'];
+
+                        $totalCount = (int)$con->query("SELECT count(id) total from materiality where workspace_id = $wid")->fetch_assoc()['total'];
+                        $statusCount = (int)$con->query("SELECT count(id) total FROM materiality where workspace_id = $wid and ( standard_low != '' or standard_high != '' or custom != '' or amount != '' )")->fetch_assoc()['total'];
+
+                        $totalCount += (int)$con->query("SELECT count(id) total FROM workspace_log where program_id >= 35 and program_id <= 46 and workspace_id = $wid")->fetch_assoc()['total'];
+                        $statusCount += (int)$con->query("SELECT count(id) total FROM workspace_log where program_id >= 35 and program_id <= 46 and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
+
+                        $querys += $totalCount;
+                        $querys1 += $statusCount;
+
                         $per = number_format((float)0, 2, '.', '');
                         if($querys1 != 0){
                             $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
@@ -254,11 +276,12 @@ $_SESSION['breadcrumb'] = array();
                             $color='bg-primary';
                         elseif($queryrow['id']==19)
                             $color='bg-violet';
-                        $querys1 = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid' and workspace_log.status=1")->fetch_assoc()['cnt'];
-                        $querys = $con->query("select count(program.id) cnt from program inner join workspace_log on program.id=workspace_log.program_id where parent_id='".$queryrow['id']."' and workspace_log.workspace_id='$wid'")->fetch_assoc()['cnt'];
+
+                            $data = getProgramStatus($queryrow['id'],$wid);
+                        
                         $per = number_format((float)0, 2, '.', '');
                         if($querys != 0){
-                            $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
+                            $per = number_format((float)($data['statusCount']/$data['totalCount'])*100, 2, '.', '');
                         }
                     ?>
                     <span class="completion <?php echo $color; ?>"><?php echo $per."%"; ?></span>

@@ -7,7 +7,12 @@ if (!isset($_SESSION['email']) && empty($_SESSION['email'])){
 // if(!$_POST){
 //     header("Location: ../index");
 // }
-$query = "SELECT id,email,activity_date_time,activity_captured FROM activity_log where 1 ";
+if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+    $query = "SELECT id,email,activity_date_time,activity_captured FROM activity_log where 1 ";
+}
+else{
+    $query = "SELECT activity_log.id id,activity_log.email email,activity_date_time,activity_captured FROM activity_log inner join user on activity_log.email = user.email where user.accessLevel != 1 and user.accessLevel != -1 ";
+}
 
 $column = array('','email','activity_date_time','activity_captured');
 
@@ -24,7 +29,7 @@ if(isset($_POST['order'])){
     $query .= ' ORDER BY '.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
 }
 else{
-    $query .= ' ORDER BY id DESC ';
+    $query .= ' ORDER BY activity_log.id DESC ';
 }
 
 $query1 = '';

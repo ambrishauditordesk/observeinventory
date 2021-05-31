@@ -77,7 +77,7 @@
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
                         $row = $img_query->fetch_assoc();
                     ?>
                     <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">

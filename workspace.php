@@ -28,6 +28,9 @@
     $clientName = $clientName['name'];
     
     $name = str_replace(' ', '', $_SESSION['cname']);
+    if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
+        $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
+    }
     $_SESSION['upload_file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
 ?>
 <!DOCTYPE html>
@@ -79,16 +82,36 @@
             </li> -->
             <li class="nav-item d-flex">
             <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
-                <a class="nav-link d-flex align-items-center" href="admin/clientList">
-                    <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
-                    <span>Clients List</span>
-                </a>
+                <?php
+                if($_SESSION['role'] != 5){
+                    ?>
+                    <a class="nav-link d-flex align-items-center" href="admin/clientList">
+                        <img class="nav-icon" src="Icons/Group 3.svg"/>&nbsp;&nbsp;
+                        <span>Clients List</span>
+                    </a>
+                    <?php
+                }
+                ?>
             </li>
             <div class="d-flex justify-content-between align-items-center">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_4">4</span></label>
                 <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px;">
                     <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
-                        <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                        <?php
+                            $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
+                            if($img_query->num_rows == 1){
+                                $row = $img_query->fetch_assoc();
+                                ?>
+                                <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
+                                <?php
+                            }
+                            else{
+                                ?>
+                                <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                                <?php
+                            }
+                            
+                        ?>
                     </span>
                     <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,11 +126,9 @@
                             if($_SESSION['role'] == '-1'){
                             ?>
                                 <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
-                                <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                                <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
                             <?php
                             }   
                             else{
@@ -115,7 +136,7 @@
                                 <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                                <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
                                 <?php
                             }
                         ?>
@@ -142,24 +163,31 @@
                     Workspace
                 </div>
             </div>
-            <div class="settings">
-                <div class="settings-items-top-div">
-                    <div class="settings-items d-flex justify-content-between align-items-center">
-                        <a href="settings" class="text-decoration-none">
-                            <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
-                        </a>
-                        <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
+            
+                <div class="settings">
+                <?php
+                    if($_SESSION['role'] != 5){
+                        ?>
+                    <div class="settings-items-top-div">
+                        <div class="settings-items d-flex justify-content-between align-items-center">
+                            <a href="settings" class="text-decoration-none">
+                                <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
+                            </a>
+                            <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
+                        </div>
+                        <div id="helpButton" class="settings-items">
+                            <a href="#" class="text-decoration-none"><img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                            Help</a>
+                        </div>
                     </div>
-                    <div id="helpButton" class="settings-items">
-                        <a href="#" class="text-decoration-none"><img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        Help</a>
+                    <?php
+                        }
+                    ?>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
+                        <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_6">6</span></label>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
-                    <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_6">6</span></label>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -209,7 +237,7 @@
             $query = "Select * from workspace where client_id = $clientID";
         }
         else{
-            $query = "Select * from workspace inner join accounts_log on accounts_log.workspace_id = workspace.id where client_id = $clientID and client_contact_id = ".$_SESSION['id'];
+            $query = "Select workspace.* from workspace inner join accounts_log on accounts_log.workspace_id = workspace.id where client_id = $clientID and client_contact_id = ".$_SESSION['id'];
         }
         $result = $con->query($query);
         if ($result->num_rows > 0) {

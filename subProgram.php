@@ -2,7 +2,6 @@
     include 'dbconnection.php';
     include 'moneyFormatter.php';
     session_start();
-    echo 1;
 
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
@@ -18,6 +17,7 @@
 	}
 
     $clientId = $_SESSION['client_id'];
+
     $wid = base64_decode($_GET['wid']);
     if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
         header('Location: login');
@@ -127,9 +127,22 @@
         <div class="side-footer">
             <div class="side-body">
                 <div class="dash">
+                <?php
+                    if($_SESSION['role'] != 5){
+                        ?>
                     <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                    Workspace
+                    Dashboard
                     </a>
+                    <?php
+                    }
+                    else{
+                        ?>
+                        <a href="workspace?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        Workspace
+                        </a>
+                        <?php
+                    }
+                    ?>
                 </div>
                 <?php
                     if($_SESSION['external'] == 0){
@@ -172,6 +185,9 @@
                 ?>
             </div>
             <div class="settings">
+            <?php
+                    if($_SESSION['role'] != 5){
+                        ?>
                 <div class="settings-items-top-div">
                     <div class="settings-items d-flex justify-content-between align-items-center">
                         <a href="settings" class="text-decoration-none">
@@ -210,6 +226,9 @@
                     }
                     ?>
                 </div>
+                <?php
+                    }
+                    ?>
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
                     <label class="d-flex justify-content-center align-items-center mt-2">
@@ -302,10 +321,20 @@
                 
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
-                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']);
-                        $row = $img_query->fetch_assoc();
+                        $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
+                        if($img_query->num_rows == 1){
+                            $row = $img_query->fetch_assoc();
+                            ?>
+                            <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
+                            <?php
+                        }
+                        else{
+                            ?>
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                            <?php
+                        }
+                        
                     ?>
-                    <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -2029,7 +2058,7 @@
                                                                 ?>
                                                                 <tr>
                                                                     <td>
-                                                                        <select name="submitEstimate[type][]" class="form-control" required>
+                                                                        <select name="submitEstimate[type][]" class="form-control minWidth150" required>
                                                                             <option value="Quantitative" <?php if($row['type'] == "Quantitative") echo "selected"; ?>>Quantitative</option>
                                                                             <option value="Qualitative"  <?php if($row['type'] == "Qualitative") echo "selected"; ?>>Qualitative</option>
                                                                         </select>
@@ -2039,7 +2068,7 @@
                                                                     <td><input name="submitEstimate[py][]" type="number" value="<?php echo $row['py']; ?>"> </td>
                                                                     <td><input name="submitEstimate[cy][]" type="number" value="<?php echo $row['cy']; ?>"> </td>
                                                                     <td>
-                                                                    <select name="submitEstimate[c][]" class="form-control"required>
+                                                                    <select name="submitEstimate[c][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['c'] == "Low") echo "selected"; ?>>Low</option>
                                                                         <option value="Moderate" <?php if($row['c'] == "Moderate") echo "selected"; ?>>Moderate</option>
                                                                         <option value="High" <?php if($row['c'] == "High") echo "selected"; ?>>High</option>
@@ -2047,7 +2076,7 @@
                                                                     </select>
                                                                     </td>
                                                                     <td>
-                                                                    <select name="submitEstimate[eo][]" class="form-control"required>
+                                                                    <select name="submitEstimate[eo][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['eo'] == "Low") echo "selected"; ?>>Low</option>
                                                                         <option value="Moderate" <?php if($row['eo'] == "Moderate") echo "selected"; ?>>Moderate</option>
                                                                         <option value="High" <?php if($row['eo'] == "High") echo "selected"; ?>>High</option>
@@ -2055,7 +2084,7 @@
                                                                     </select>
                                                                     </td>
                                                                     <td>
-                                                                    <select name="submitEstimate[mv][]" class="form-control"required>
+                                                                    <select name="submitEstimate[mv][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['mv'] == "Low") echo "selected"; ?>>Low</option>
                                                                         <option value="Moderate" <?php if($row['mv'] == "Moderate") echo "selected"; ?>>Moderate</option>
                                                                         <option value="High" <?php if($row['mv'] == "High") echo "selected"; ?>>High</option>
@@ -2063,7 +2092,7 @@
                                                                     </select>
                                                                     </td>
                                                                     <td>
-                                                                    <select name="submitEstimate[ro][]" class="form-control"required>
+                                                                    <select name="submitEstimate[ro][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['ro'] == "Low") echo "selected"; ?>>Low</option>
                                                                         <option value="Moderate" <?php if($row['ro'] == "Moderate") echo "selected"; ?>>Moderate</option>
                                                                         <option value="High" <?php if($row['ro'] == "High") echo "selected"; ?>>High</option>
@@ -2071,7 +2100,7 @@
                                                                     </select>
                                                                     </td>
                                                                     <td>
-                                                                    <select name="submitEstimate[pd][]" class="form-control"required>
+                                                                    <select name="submitEstimate[pd][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['pd'] == "Low") echo "selected"; ?>>Low</option>
                                                                         <option value="Moderate" <?php if($row['pd'] == "Moderate") echo "selected"; ?>>Moderate</option>
                                                                         <option value="High" <?php if($row['pd'] == "High") echo "selected"; ?>>High</option>
@@ -2079,7 +2108,7 @@
                                                                     </select>
                                                                     </td>
                                                                     <td>
-                                                                    <select name="submitData[risk][]" class="form-control"required>
+                                                                    <select name="submitData[risk][]" class="form-control minWidth150"required>
                                                                         <option value="Low Risk" <?php if($row['risk'] == "Low Risk") echo "selected"; ?>>Low Risk</option>
                                                                         <option value="Significant Risk" <?php if($row['risk'] == "Significant Risk") echo "selected"; ?>>Significant Risk</option>
                                                                         <option value="High Risk" <?php if($row['risk'] == "High Risk") echo "selected"; ?>>High Risk</option>
@@ -4190,32 +4219,26 @@
                         wid: <?php echo trim($wid); ?>
                     },
                     success: function(data){
-                        // let obj = JSON.parse(data)
-                        console.log(data);
-                        // if(obj.status){
-                        //     swal({
-                        //         icon: "success",
-                        //         text: obj.response,
-                        //     }).then(function (isConfirm) {
-                        //         if (isConfirm) {
-                        //             window.location.href = window.location
-                        //                     .pathname +
-                        //                 "?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>";
-                        //         }
-                        //     });
-                        // }
-                        // else{
-                        //     swal({
-                        //         icon: "error",
-                        //         text: obj.response,
-                        //     }).then(function (isConfirm) {
-                        //         if (isConfirm) {
-                        //             window.location.href = window.location
-                        //                     .pathname +
-                        //                 "?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>";
-                        //         }
-                        //     });
-                        // }
+                        let obj = JSON.parse(data)
+                        if(obj.status == 1){
+                            text = 'Email successfully send for '+obj.successEmailList;
+                            if(obj.unsuccessEmailList != ''){
+                                text += ' and email sending was unsuccessfull for '+obj.unsuccessEmailList+' email id\'s';
+                            }
+                        }
+                        else{
+                            text = 'Email sending was unsuccessful for '+obj.unsuccessEmailList+' email id\'s';
+                        }
+                        swal({
+                            icon: obj.status == 1 ? 'success':'error',
+                            text: text,
+                        }).then(function (isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = window.location
+                                        .pathname +
+                                    "?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>";
+                            }
+                        }); 
                     }
                 });
             });

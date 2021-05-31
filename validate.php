@@ -56,7 +56,7 @@
         echo "<script>
                 swal({
                     icon: 'error',
-                    text: 'Please Enter a Valid Verification Code!',
+                    text: 'Please Enter a Valid Security Code!',
                 }).then(function(isConfirm) {
                     if (isConfirm) {
                         window.location.href = 'login';
@@ -106,6 +106,12 @@
             $usersrow = $users->fetch_assoc();
             if(!$usersrow['logged_status']){
                 if($usersrow['active'] == 1){
+                    if($usersrow['first_logged_status'] == 1){
+                        $resetCode = bin2hex(random_bytes(50));
+                        $con->query("update user set reset_code = '$resetCode', first_logged_status = 0 where id = ".$usersrow['id']);
+                        header('Location: reset?code='.$resetCode.'&email='.$email);
+                    }
+
                     $con->query("update loginlog set status = 'Success' where id = $loginLogId");
                     
                     $_SESSION['id'] = $usersrow['id'];

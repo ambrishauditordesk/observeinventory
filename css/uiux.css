@@ -545,3 +545,7 @@ th {
   color: rgba(37, 78, 218, 1) !important;
   font-weight: bold !important;
 }
+
+.minWidth150{
+  min-width: 150px;
+}
