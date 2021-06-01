@@ -271,6 +271,7 @@
                                 <table class="table">
                                     <thead>
                                         <th>Firm Name</th>
+                                        <th>Firm Unique ID</th>
                                         <th>Firm Address</th>
                                         <th>Firm Email</th>
                                         <!-- <th>Action</th> -->
@@ -278,16 +279,27 @@
                                     <tbody>  
                                     <?php
                                         $result = $con->query("SELECT * from firm_details");
-                                        while($row = $result->fetch_assoc()){
+                                        if($result->num_rows){
+                                            while($row = $result->fetch_assoc()){
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $row['firm_name']; ?></td>
+                                                        <td><?php echo 'AE/'.date('Y').'/'.strtoupper(substr(md5($row['id']),3,8)); ?></td>
+                                                        <td><?php echo $row['firm_address']; ?></td>
+                                                        <td><?php echo $row['firm_email']; ?></td>
+                                                    </tr>
+                                                <?php
+                                            }
+                                        }
+                                        else{
                                             ?>
                                                 <tr>
-                                                    <td><?php echo $row['firm_name']; ?></td>
-                                                    <td><?php echo $row['firm_address']; ?></td>
-                                                    <td><?php echo $row['firm_email']; ?></td>
+                                                    <td colspan="4">No Firm is registered.</td>
                                                 </tr>
                                             <?php
                                         }
                                     ?>
+                                        
                                     </tbody>
                                 </table>
                             <?php
