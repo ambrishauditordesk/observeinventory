@@ -10,13 +10,13 @@ RewriteRule ^(.*)$ $1.php [NC,L]
   Header set Content-Disposition attachment
 </FilesMatch>
 
- RewriteEngine on
- RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
- RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
- RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
- ErrorDocument 404 http://localhost/AuditSoft/error
- ErrorDocument 403 http://localhost/AuditSoft/error
- ErrorDocument 500 http://localhost/AuditSoft/error
+# RewriteEngine on
+# RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
+# RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
+# RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
+# ErrorDocument 404 http://localhost/AuditSoft/error
+# ErrorDocument 403 http://localhost/AuditSoft/error
+# ErrorDocument 500 http://localhost/AuditSoft/error
 
 # RewriteEngine on
 # RewriteCond %{HTTP_REFERER} !^http://(www\.)?yourfirmaudit [NC]
@@ -26,13 +26,13 @@ RewriteRule ^(.*)$ $1.php [NC,L]
 # ErrorDocument 403 http://yourfirmaudit.com/AuditSoft/error
 # ErrorDocument 500 http://yourfirmaudit.com/AuditSoft/error
 
-# RewriteEngine on
-# RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats [NC]
-# RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats.*$ [NC]
-# RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
-# ErrorDocument 404 http://atlats.in/audit/error
-# ErrorDocument 403 http://atlats.in/audit/error
-# ErrorDocument 500 http://atlats.in/audit/errorx
+ RewriteEngine on
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats [NC]
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats.*$ [NC]
+ RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
+ ErrorDocument 404 http://atlats.in/audit/error
+ ErrorDocument 403 http://atlats.in/audit/error
+ ErrorDocument 500 http://atlats.in/audit/errorx
 
 AddCharset UTF-8 .php
 <Files "dbconnection.php">  
