@@ -230,8 +230,8 @@ $_SESSION['breadcrumb'] = array();
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="span-heading">Audit Program</span>
                     <?php
-                        $querys1 = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 1")->fetch_assoc()['total'];
-                        $querys = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 0")->fetch_assoc()['total'];
+                        $querys1 = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 1 and import=1")->fetch_assoc()['total'];
+                        $querys = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and import=1")->fetch_assoc()['total'];
 
                         $totalCount = (int)$con->query("SELECT count(id) total from materiality where workspace_id = $wid")->fetch_assoc()['total'];
                         $statusCount = (int)$con->query("SELECT count(id) total FROM materiality where workspace_id = $wid and ( standard_low != '' or standard_high != '' or custom != '' or amount != '' )")->fetch_assoc()['total'];

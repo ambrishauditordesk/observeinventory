@@ -294,10 +294,10 @@
                                     <p class="text-count">
                                         <?php $userId = $_SESSION['id'];
                                             if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                                $completed = $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = $userId and active = 1")->fetch_assoc()['completed'];   
+                                                $completed = $con->query("select sum(freeze) completed from workspace inner join client on workspace.client_id = client.id inner join user_client_log on client.id=user_client_log.client_id where user_client_log.user_id = 2 and active = 1")->fetch_assoc()['completed'];   
                                             }
                                             else{
-                                                $completed = $con->query("select sum( if( (select count(freeze) from workspace where workspace.client_id = client.id ) = ( select count(freeze) from workspace where workspace.client_id = client.id and freeze = 1), 1, 0)) completed FROM client where active = 1")->fetch_assoc()['completed'];
+                                                $completed = $con->query("select sum(freeze) completed from workspace inner join client on workspace.client_id = client.id where active = 1")->fetch_assoc()['completed'];
                                             }
                                             echo $completed == ''? '0':$completed;
                                         ?>

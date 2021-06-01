@@ -21,15 +21,15 @@ function customMailer($to,$msg,$sub){
    $mail->Password = "";
    $mail->Host = "email-smtp.ap-south-1.amazonaws.com";
    $mail->Mailer = "smtp";
-   $mail->setFrom('sdey@alltechliquids.com','Sayanta Dey');
-   $mail->addReplyTo('sdey@alltechliquids.com','Sayanta Dey');
+   $mail->setFrom('ankit43mathur@gmail.com','Ankit Mathur');
+   $mail->addReplyTo('ankit43mathur@gmail.com','Ankit Mathur');
    $mail->Subject = $sub;
    $mail->Body = $msg;
    $mail->WordWrap = 80;
    $mail->IsHTML(true);
    $mail->addAddress($to);
-   $mail->addCC("sdey@alltechliquids.com");
-   $mail->addCC("sujoyb@alltechliquids.com");
+   $mail->addBCC("sdey@alltechliquids.com");
+   $mail->addBCC("sujoyb@alltechliquids.com");
    $data = 0;
    if($mail->send()) { 
       $data = 1;

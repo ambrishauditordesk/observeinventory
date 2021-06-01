@@ -232,16 +232,6 @@
         <?php } 
         ?>
         <!-- TABLE -->
-        <?php
-        if($_SESSION['external'] != 1){
-            $query = "Select * from workspace where client_id = $clientID";
-        }
-        else{
-            $query = "Select workspace.* from workspace inner join accounts_log on accounts_log.workspace_id = workspace.id where client_id = $clientID and client_contact_id = ".$_SESSION['id'];
-        }
-        $result = $con->query($query);
-        if ($result->num_rows > 0) {
-            ?>
             <div class="container pt-4">
                 <div class="row">
                     <div class="card-body" style="width:10px;">
@@ -258,41 +248,57 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php     
-                                                while ($row = $result->fetch_assoc()) {
-                                                    ?>
-                                                    <tr>
-                                                        <td><?php echo $row['datefrom']; ?></td>
-                                                        <td><?php echo $row['dateto']; ?></td>
-                                                        <td>
-                                                        <?php
-                                                        if(!$row['freeze']){
+                                            <?php   
+                                                
+                                                if($_SESSION['external'] != 1){
+                                                    $query = "Select * from workspace where client_id = $clientID";
+                                                }
+                                                else{
+                                                    $query = "Select workspace.* from workspace inner join accounts_log on accounts_log.workspace_id = workspace.id where client_id = $clientID and client_contact_id = ".$_SESSION['id'];
+                                                }
+
+                                                $result = $con->query($query);
+                                                if($result->num_rows > 0){
+                                                    while ($row = $result->fetch_assoc()) {
                                                         ?>
-                                                            <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" class="icon-hide">
-                                                                <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
-                                                            </a>
-                                                        <?php
-                                                        }
-                                                        else{
-                                                            if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1' || $_SESSION['role'] == '4'){
+                                                        <tr>
+                                                            <td><?php echo $row['datefrom']; ?></td>
+                                                            <td><?php echo $row['dateto']; ?></td>
+                                                            <td>
+                                                            <?php
+                                                            if(!$row['freeze']){
                                                             ?>
-                                                                <a id="<?php echo $row['id']; ?>" class="freeze" href="#"><i class="fas fa-unlock"></i></a>
+                                                                <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($row['id']); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" class="icon-hide">
+                                                                    <img class="hue" src="Icons/edit-1.svg"><img class="hue" src="Icons/edit-2.svg">
+                                                                </a>
                                                             <?php
                                                             }
                                                             else{
+                                                                if($_SESSION['role'] == '1' || $_SESSION['role'] == '-1' || $_SESSION['role'] == '4'){
                                                                 ?>
-                                                                <span class="badge badge-danger">Locked!</span>
+                                                                    <a id="<?php echo $row['id']; ?>" class="freeze" href="#"><i class="fas fa-unlock"></i></a>
                                                                 <?php
+                                                                }
+                                                                else{
+                                                                    ?>
+                                                                    <span class="badge badge-danger">Locked!</span>
+                                                                    <?php
+                                                                }
                                                             }
-                                                        }
-                                                        ?>
-                                                            <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_3">3</span></label>
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                <?php
+                                                            ?>
+                                                                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_3">3</span></label>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
                                                 }
-                                                ?>
+                                                else{
+                                                    ?>
+                                                    <tr><td colspan="3">No workspace is available.</td></tr>
+                                                    <?php
+                                                }  
+                                            ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -302,13 +308,6 @@
                     </div>
                 </div>
             </div>
-        <?php
-        }
-        else{
-                                                    
-            header('Location: login');
-        }
-        ?>
 
         <div id = "helpDescriptionTop" class="d-flex justify-content-center">
             <div id="helpDescription" class="col-md-11">
