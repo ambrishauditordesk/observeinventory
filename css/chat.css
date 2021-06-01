@@ -100,7 +100,7 @@
 }
 
 .chat-history {
-	height: 500px;
+	height: 350px;
 	padding: 8px 24px;
 	overflow-y: scroll;
 }

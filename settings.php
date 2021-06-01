@@ -102,7 +102,7 @@
                         if($img_query->num_rows == 1){
                             $row = $img_query->fetch_assoc();
                             ?>
-                            <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
+                            <img class = "profilePhoto" src="images/<?php echo $row['img']; ?>">
                             <?php
                         }
                         else{
@@ -263,20 +263,19 @@
                                 <table class="table">
                                     <thead>
                                         <th>Firm Name</th>
-                                        <th>Employee Name</th>
-                                        <th>Employee Role</th>
-                                        <th>Action</th>
+                                        <th>Firm Address</th>
+                                        <th>Firm Email</th>
+                                        <!-- <th>Action</th> -->
                                     </thead>
                                     <tbody>  
                                     <?php
-                                        $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id where role.id != 3 and role.id != 5");
+                                        $result = $con->query("SELECT * from firm_details");
                                         while($row = $result->fetch_assoc()){
                                             ?>
                                                 <tr>
                                                     <td><?php echo $row['firm_name']; ?></td>
-                                                    <td><?php echo $row['name']; ?></td>
-                                                    <td><?php echo $row['role']; ?></td>
-                                                    <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="badge badge-success">Chat Now</span></a></td>
+                                                    <td><?php echo $row['firm_address']; ?></td>
+                                                    <td><?php echo $row['firm_email']; ?></td>
                                                 </tr>
                                             <?php
                                         }
@@ -288,6 +287,9 @@
                         ?>
                     </div>
                     <div class="tab-pane" id="account">
+                        <?php 
+                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                        ?>
                         <h6>Tools Settings</h6>
                         <hr>
                         <form>
@@ -297,7 +299,6 @@
                                     <input type="checkbox" class="custom-control-input" id="customSwitch1" value="true">
                                     <label class="custom-control-label" for="customSwitch1">Toggle this switch to turn on/off dark mode</label>
                                 </div>
-
                             </div>
                             <div class="form-group">
                                 <label for="username">Chat Assistance</label><br>
@@ -322,6 +323,46 @@
                             </div>
                             <!-- <button class="btn btn-danger" type="button">Delete Account</button> -->
                         </form>
+                        <?php
+                        }
+                        else{
+                            ?>
+                            <form>
+                                <div class="d-flex justify-content-center">
+                                    <label>Dark Mode</label>
+                                    <div class="form-group custom-control custom-switch">    
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch1" value="true">
+                                        <label class="custom-control-label" for="customSwitch1">Toggle this switch to turn on/off dark mode</label>
+                                    </div>
+                                </div>
+                                <h5 class="text-muted text-uppercase text-center">Chat Tool</h5>
+                                <table class="table">
+                                    <thead>
+                                        <th>Firm Name</th>
+                                        <th>Employee Name</th>
+                                        <th>Employee Role</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody>  
+                                    <?php
+                                        $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id where role.id != 3 and role.id != 5");
+                                        while($row = $result->fetch_assoc()){
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $row['firm_name']; ?></td>
+                                                    <td><?php echo $row['name']; ?></td>
+                                                    <td><?php echo $row['role']; ?></td>
+                                                    <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="badge badge-success">Chat Now</span></a></td>
+                                                </tr>
+                                            <?php
+                                        }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </form>
+                            <?php
+                        }
+                        ?>
                     </div>
                     <div class="tab-pane" id="billing">
                         <h6>BILLING SETTINGS</h6>

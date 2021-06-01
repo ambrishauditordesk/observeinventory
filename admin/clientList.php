@@ -60,6 +60,18 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
+        <?php
+            if($_SESSION['role'] == 1){
+                ?>
+                <li class="nav-item d-flex">
+                <a class="nav-link d-flex align-items-center" data-toggle="modal" data-target="#addFirmModal" href="#">
+                <img class="nav-icon" style="width:30px;height:30px;" src="../Icons/plus-circle-1.svg"/>&nbsp;&nbsp;
+                    <span>Add Firm</span>
+                </a>
+            </li>
+        <?php
+            }
+        ?>
             <?php 
                 if($_SESSION['role'] != 5){
                     ?>
@@ -68,7 +80,6 @@
                 <a class="nav-link d-flex align-items-center" href="members.php">
                 <img class="nav-icon" src="../Icons/Group 4.svg"/>&nbsp;&nbsp;
                     <span>Firm Members</span>
-                    <!-- <i class="fas fa-users fa-1x"></i> -->
                 </a>
             </li>
             <?php } 
@@ -302,6 +313,7 @@
       <?php
         if($_SESSION['role'] != 3 || $_SESSION['role'] != 5){
             ?>
+
         <!--Add Client Form -->
         <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -662,6 +674,44 @@
                         <i id="left-arrow" class="fas fa-arrow-left"></i>
                         <i id="right-arrow" class="fas fa-arrow-right"></i>
                     </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- Add Firm Modal -->
+         <div class="modal fade" id="addFirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Firm Details</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="addFirm" method="POST" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Firm Name</label>
+                                <input type="text" class="form-control" name="firmName">
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Firm Address</label>
+                                <textarea class="form-control" name="firmAdd"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Firm Email</label>
+                                <input type="email" class="form-control" name="firmEmail">
+                            </div>
+                            <!-- <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div> -->
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="addFirm" value="Add">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
