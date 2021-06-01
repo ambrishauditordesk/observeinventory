@@ -57,8 +57,8 @@ $(window).on('load', function(e) {
         // console.log(latestTime - timeStamp)
         if ((latestTime - timeStamp) >= 600000) {
             // window.location = 'http://localhost/AuditSoft/logout'
-            // window.location = 'http://yourfirmaudit.com/AuditSoft/logout'
-            window.location = 'http://atlats.in/audit/logout'
+            window.location = 'http://yourfirmaudit.com/AuditSoft/logout'
+            // window.location = 'http://atlats.in/audit/logout'
         }
     }, 1000);
     // console.log(window.screen.width)
