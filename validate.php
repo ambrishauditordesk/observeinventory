@@ -111,51 +111,52 @@
                         $con->query("update user set reset_code = '$resetCode', first_logged_status = 0 where id = ".$usersrow['id']);
                         header('Location: reset?code='.$resetCode.'&email='.$email);
                     }
-
-                    $con->query("update loginlog set status = 'Success' where id = $loginLogId");
+                    else{
+                        $con->query("update loginlog set status = 'Success' where id = $loginLogId");
                     
-                    $_SESSION['id'] = $usersrow['id'];
-                    $_SESSION['name'] = $usersrow['name'];
-                    $email = $_SESSION['email'] = $usersrow['email'];
-                    $_SESSION['role'] = $usersrow['accessLevel'];
-                    $_SESSION['reg_date'] = $usersrow['reg_date'];
-                    $_SESSION['signoff'] = $usersrow['signoff_init'];
-                    $_SESSION['darkmode'] = $usersrow['darkmode'];
-                    $_SESSION['external'] = 0;
-                    $_SESSION['logged_in_date'] = $dateTime;
-                    $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
-                    // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Successfully LoggedIn.')");
-                    if($usersrow['client_id'] != ''){
-                        $_SESSION['external'] = 1;
-                        $_SESSION['external_client_id'] = $usersrow['client_id'];
-                        $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
-                        if($checkAccess){
-                            $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($usersrow['client_id']);
-                            $con->query("update user set logged_status = 1 where id = ".$usersrow['id']);
-                            header('Location: workspace?vid='.$location);
+                        $_SESSION['id'] = $usersrow['id'];
+                        $_SESSION['name'] = $usersrow['name'];
+                        $email = $_SESSION['email'] = $usersrow['email'];
+                        $_SESSION['role'] = $usersrow['accessLevel'];
+                        $_SESSION['reg_date'] = $usersrow['reg_date'];
+                        $_SESSION['signoff'] = $usersrow['signoff_init'];
+                        $_SESSION['darkmode'] = $usersrow['darkmode'];
+                        $_SESSION['external'] = 0;
+                        $_SESSION['logged_in_date'] = $dateTime;
+                        $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+                        // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Successfully LoggedIn.')");
+                        if($usersrow['client_id'] != ''){
+                            $_SESSION['external'] = 1;
+                            $_SESSION['external_client_id'] = $usersrow['client_id'];
+                            $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
+                            if($checkAccess){
+                                $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($usersrow['client_id']);
+                                $con->query("update user set logged_status = 1 where id = ".$usersrow['id']);
+                                header('Location: workspace?vid='.$location);
+                            }
+                            else{
+                                session_unset();
+                                session_destroy();
+                                echo "<script>
+                                        swal({
+                                            icon: 'error',
+                                            text: 'No accounts have been assigned to you!',
+                                        }).then(function(isConfirm) {
+                                            if (isConfirm) {
+                                                window.location.href = 'login';
+                                            }
+                                        });
+                                    </script>";
+                            }
                         }
                         else{
-                            session_unset();
-                            session_destroy();
-                            echo "<script>
-                                    swal({
-                                        icon: 'error',
-                                        text: 'No accounts have been assigned to you!',
-                                    }).then(function(isConfirm) {
-                                        if (isConfirm) {
-                                            window.location.href = 'login';
-                                        }
-                                    });
-                                </script>";
-                        }
-                    }
-                    else{
-                        if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                            $_SESSION['firm_id'] = $con->query("select firm_id from firm_user_log where user_id = ".$_SESSION['id'])->fetch_assoc()['firm_id'];
-                            $_SESSION['firm_details'] = $con->query("select * from firm_details where id = ".$_SESSION['firm_id'])->fetch_assoc();
-                        }
-                        $con->query("update user set logged_status = 1 where id = ".$usersrow['id']);
-                        header('Location: admin/clientList');
+                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                $_SESSION['firm_id'] = $con->query("select firm_id from firm_user_log where user_id = ".$_SESSION['id'])->fetch_assoc()['firm_id'];
+                                $_SESSION['firm_details'] = $con->query("select * from firm_details where id = ".$_SESSION['firm_id'])->fetch_assoc();
+                            }
+                            $con->query("update user set logged_status = 1 where id = ".$usersrow['id']);
+                            header('Location: admin/clientList');
+                        }   
                     }
                 }
                 else{
