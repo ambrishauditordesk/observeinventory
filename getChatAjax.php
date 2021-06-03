@@ -4,12 +4,11 @@ session_start();
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])){
     header("Location: ../index");    
 }
-
-$user_id = trim($_POST['user_id']);
 if(isset($_POST['user_id']) || !empty($_POST['user_id'])){
     $data = [];
     $i = 0;
-
+    $user_id = trim($_POST['user_id']);
+        
     if($_SESSION['role'] != 1 && $_SESSION['role'] != -1 ){
         if($con->query("select id from firm_user_log where firm_id = ".$_SESSION['firm_id']." and user_id = ".$_SESSION['id'])->num_rows > 0){
             $result = $con->query("select chat_date, user_id_from, chat_text, status from chat_history where ( user_id_from = $user_id or user_id_from = (select id from user where accessLevel = 1)) and ( user_id_to = $user_id or user_id_to = (select id from user where accessLevel = 1))");

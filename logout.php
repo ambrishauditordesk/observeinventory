@@ -7,7 +7,7 @@ include 'dbconnection.php';
         
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
         $email = $_SESSION['email'];
-        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Logged Out successfully.')");
+        // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Logged Out successfully.')");
 
         $con->query("update user set logged_status = 0 where id = $userId");
         //Check the login status for the client user and delete temp folder.

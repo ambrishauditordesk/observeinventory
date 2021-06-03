@@ -397,15 +397,24 @@
                                     <tbody>  
                                     <?php
                                         $result = $con->query("SELECT firm_name, user.id id, user.name name, role.role_name role from user inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id inner join role on user.accessLevel = role.id where role.id != 3 and role.id != 5");
-                                        while($row = $result->fetch_assoc()){
+                                        if($result->num_rows){
+                                            while($row = $result->fetch_assoc()){
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $row['firm_name']; ?></td>
+                                                        <td><?php echo $row['name']; ?></td>
+                                                        <td><?php echo $row['role']; ?></td>
+                                                        <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="badge badge-success">Chat Now</span></a></td>
+                                                    </tr>
+                                                <?php
+                                            }
+                                        }
+                                        else{
                                             ?>
-                                                <tr>
-                                                    <td><?php echo $row['firm_name']; ?></td>
-                                                    <td><?php echo $row['name']; ?></td>
-                                                    <td><?php echo $row['role']; ?></td>
-                                                    <td><a href="#" class="selectedUser" id="<?php echo $row['id']; ?>" ><span class="badge badge-success">Chat Now</span></a></td>
-                                                </tr>
-                                            <?php
+                                            <tr>
+                                                <td colspan="4">No member available for chat</td>
+                                            </tr>
+                                        <?php
                                         }
                                     ?>
                                     </tbody>
