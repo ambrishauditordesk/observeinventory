@@ -2,6 +2,7 @@
     $servername = "localhost";
     $dbuser = "root";
     $dbpass = "yourfirmaudit@1";
+    
     $dbname= "audit";
 // Create connection
     $con = new mysqli($servername, $dbuser, $dbpass , $dbname);
