@@ -122,19 +122,25 @@
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
-                        </a>
-                    <div class="dropdown-divider"></div> -->
                     <?php 
-                        if($_SESSION['role'] == '-1'){
+                        if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
+                        ?>
+                            <a class="dropdown-item" href="../loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                        <?php
+                        }   
+                        else{
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
+                            <?php
+                        }
                     ?>
-                        <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
-                    <?php
-                    } 
-                    ?>
-                    <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#photoModal"><i class="fas fa-user-circle hue" style="color:blue;"></i>Update Profile Photo</a>
                 </div>
             </li>
         </ul>
@@ -343,6 +349,31 @@
                             </div>
                             <!-- <button class="btn btn-danger" type="button">Delete Account</button> -->
                         </form>
+                        <div class="messenger">
+                            <div id="live-chat">
+                                <header class="clearfix">
+                                    <h4>Chat</h4>
+                                    <!-- <span class="chat-message-counter">3</span> -->
+                                </header>
+                                <a href="#" class="chat-close"><i class="fas fa-times"></i></a>
+                                <div class="chat">
+                                    
+                                    <div class="chat-history">
+
+                                    </div> <!-- end chat-history -->
+
+                                    <form id="chatForm">
+                                        <input type="hidden" id="user_id" name="user_id">
+                                        <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
+                                        <div class="image_upload">
+                                            <label for="file"><i class="fas fa-2x fa-paperclip"></i></label>
+                                            <input type="file" name="file" id="file" accept=".jpg, .png" />
+                                        </div>
+                                        <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
+                                    </form>
+                                </div> <!-- end chat -->
+                            </div>
+                        </div>
                         <?php
                         }
                         else{
@@ -380,6 +411,32 @@
                                     </tbody>
                                 </table>
                             </form>
+
+                            <div class="messenger">
+                                <div id="live-chat">
+                                    <header class="clearfix">
+                                        <h4>Chat</h4>
+                                        <!-- <span class="chat-message-counter">3</span> -->
+                                    </header>
+                                    <a href="#" class="chat-close"><i class="fas fa-times"></i></a>
+                                    <div class="chat">
+                                        
+                                        <div class="chat-history">
+
+                                        </div> <!-- end chat-history -->
+
+                                        <form id="chatForm">
+                                            <input type="hidden" id="user_id" name="user_id">
+                                            <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
+                                            <div class="image_upload">
+                                                <label for="file"><i class="fas fa-2x fa-paperclip"></i></label>
+                                                <input type="file" name="file" id="file" accept=".jpg, .png" />
+                                            </div>
+                                            <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
+                                        </form>
+                                    </div> <!-- end chat -->
+                                </div>
+                            </div>
                             <?php
                         }
                         ?>
@@ -492,31 +549,7 @@
             </div>
         </div>
 
-        <div class="messenger">
-            <div id="live-chat">
-                <header class="clearfix">
-                    <h4>Chat</h4>
-                    <!-- <span class="chat-message-counter">3</span> -->
-                </header>
-                <a href="#" class="chat-close"><i class="fas fa-times"></i></a>
-                <div class="chat">
-                    
-                    <div class="chat-history">
-
-                    </div> <!-- end chat-history -->
-
-                    <form id="chatForm">
-                        <input type="hidden" id="user_id" name="user_id">
-                        <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
-                        <div class="image_upload">
-                            <label for="file"><i class="fas fa-2x fa-paperclip"></i></label>
-                            <input type="file" name="file" id="file" accept=".jpg, .png" />
-                        </div>
-                        <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
-                    </form>
-                </div> <!-- end chat -->
-	        </div>
-        </div>
+       
         
         <!-- Footer -->
         <footer class="sticky-footer">
@@ -527,6 +560,36 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Profile Photo Modal -->
+        <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile Photo </h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <form action="updatePhoto" method="POST" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="uid" value="<?php echo $_SESSION['id']; ?>">
+                            </div>
+                            <div class="form-group ">
+                                <label for="name">Upload Photo</label>
+                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
+                            </div>
+                        <div> 
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

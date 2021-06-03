@@ -61,7 +61,7 @@
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
         <?php
-            if($_SESSION['role'] == 1){
+            if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
                 ?>
                 <li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" data-toggle="modal" data-target="#addFirmModal" href="#">
@@ -187,23 +187,6 @@
         </div>
     </div>
     <div class="mar">
-        <!-- HEADER -->
-        <!-- <div id="header">
-            <div class="container-fluid border-top" stickylevel="0" style="z-index:1200;">
-
-
-                <div class="row pt-1">
-                    <div class="col-md-4">
-                        <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;">
-                        <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
-                    </div>
-                    <div class="col-md-4 text-center font-2">
-                        <h3 style="padding-top: 5px;"><?php //echo strtoupper($_SESSION['name'] . " Clients"); ?> PROJECT STATISTICS</h3>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    
         <div class="row" style="padding: 0 0 0 2% !important; width: 100% !important; height: auto !important; margin: 0 !important;">
             <div class="col-md-10" style="width: 100% !important;"> 
                 <!-- DATATABLE -->
@@ -713,7 +696,9 @@
                         </div>
                     </form>
                 </div>
+                </div>
             </div>
+        </div>
         </div>
 
         <!-- Profile Photo Modal -->
