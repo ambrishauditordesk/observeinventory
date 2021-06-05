@@ -97,11 +97,13 @@ if ($con->query($query) === true)
         if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
             $firmId = $con->query("select firm_details.id id from user inner join user_client_log on user_client_log.user_id = user.id inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id where user_client_log.client_id = $clientID and user.accessLevel = 4")->fetch_assoc()['id'];
             shell_exec('mkdir -p uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
-            shell_exec('chmod -R 777 uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('sudo chown -R root:root uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('sudo chmod -R 777 uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
         }
         else{
             shell_exec('mkdir -p uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
-            shell_exec('chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('sudo chown -R root:root uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('sudo chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
         }
 
         echo "<script>

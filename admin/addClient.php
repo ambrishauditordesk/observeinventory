@@ -138,12 +138,14 @@ if($uploadOk) {
     if($_SESSION['role'] != -1 && $_SESSION['role'] != 1){
         $con->query("insert into user_client_log(user_id,client_id) values('$addedById','$cid')");
         shell_exec('mkdir -p ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
-        shell_exec('chmod -R 777 ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
+        shell_exec('sudo chown -R root:root ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
+        shell_exec('sudo chmod -R 777 ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
     }
     else{
         $con->query("insert into user_client_log(user_id,client_id) values('$firmLeaderId','$cid')");
         shell_exec('mkdir -p ../uploads/'.$firm_id.'/'.$cid.$name.'/');
-        shell_exec('chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+        shell_exec('sudo chown -R root:root ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+        shell_exec('sudo chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
     }
     $successEmailList = $unSuccessEmailList = '';
     $sub = "You have been added as a Client member";

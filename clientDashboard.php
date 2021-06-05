@@ -25,7 +25,7 @@ if($con->query("select * from workspace where id = $wid and client_id = $clientI
     header('Location: login');
 }
 $_SESSION['workspace_id'] = $wid;
-$_SESSION['upload_file_location'] = $_SESSION['upload_file_location'].'/'.$_SESSION['workspace_id'].'/';
+$_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['workspace_id'].'/';   
 
 
 $folderStatus = $con->query("select * from client_temp_folder where workspace_id = $wid");
@@ -236,8 +236,8 @@ $_SESSION['breadcrumb'] = array();
                         $totalCount = (int)$con->query("SELECT count(id) total from materiality where workspace_id = $wid")->fetch_assoc()['total'];
                         $statusCount = (int)$con->query("SELECT count(id) total FROM materiality where workspace_id = $wid and ( standard_low != '' or standard_high != '' or custom != '' or amount != '' )")->fetch_assoc()['total'];
 
-                        $totalCount += (int)$con->query("SELECT count(id) total FROM workspace_log where program_id >= 35 and program_id <= 46 or program_id >= 231 and program_id <= 237 and workspace_id = $wid")->fetch_assoc()['total'];
-                        $statusCount += (int)$con->query("SELECT count(id) total FROM workspace_log where program_id >= 35 and program_id <= 46 or program_id >= 231 and program_id <= 237 and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
+                        $totalCount += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 and program_id <= 46 ) or ( program_id >= 231 and program_id <= 237 ) and workspace_id = $wid")->fetch_assoc()['total'];
+                        $statusCount += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 or program_id <= 46 ) and ( program_id >= 231 or program_id <= 237 ) and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
 
                         $querys += $totalCount;
                         $querys1 += $statusCount;

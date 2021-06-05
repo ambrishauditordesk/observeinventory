@@ -31,7 +31,7 @@
     if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
         $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
     }
-    $_SESSION['upload_file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
+    $_SESSION['file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
 ?>
 <!DOCTYPE html>
 <html lang="en">

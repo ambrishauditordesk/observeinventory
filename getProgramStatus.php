@@ -23,8 +23,8 @@ function getProgramStatus($id, $wid){
         $data['totalCount'] = (int)$con->query("SELECT count(id) total from materiality where workspace_id = $wid")->fetch_assoc()['total'];
         $data['statusCount'] = (int)$con->query("SELECT count(id) total FROM materiality where workspace_id = $wid and ( standard_low != '' or standard_high != '' or custom != '' or amount != '' )")->fetch_assoc()['total'];
 
-        $data['totalCount'] += (int)$con->query("SELECT count(id) total FROM workspace_log where program_id >= 35 and program_id <= 46 or program_id >= 231 and program_id <= 237 and workspace_id = $wid")->fetch_assoc()['total'];
-        $data['statusCount'] += (int)$con->query("SELECT count(id) total FROM workspace_log where program_id >= 35 and program_id <= 46 or program_id >= 231 and program_id <= 237 and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
+        $data['totalCount'] += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 and program_id <= 46 ) or ( program_id >= 231 and program_id <= 237 ) and workspace_id = $wid")->fetch_assoc()['total'];
+        $data['statusCount'] += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 or program_id <= 46 ) and ( program_id >= 231 or program_id <= 237 ) and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
 
     }
     
