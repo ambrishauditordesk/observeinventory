@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
     include 'dbconnection.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
@@ -28,13 +30,27 @@
     $clientName = $clientName['name'];
     
     $name = str_replace(' ', '', $_SESSION['cname']);
+    $hasFirmId = false;
     if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
         $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
+        $hasFirmId = true;
     }
     if(isset($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
-        $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
+        $firm_id = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID");
+        if($firm_id->num_rows > 0){
+            $_SESSION['firm_id'] = $firm_id->fetch_assoc()['id'];
+            $hasFirmId = true;
+        }
     }
-    $_SESSION['file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
+
+    if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] > 1 ){
+        $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
+        $hasFirmId = true;
+    }
+
+    if($hasFirmId){
+        $_SESSION['file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -126,7 +142,7 @@
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                         <?php 
-                            if($_SESSION['role'] == '-1'){
+                            if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                             ?>
                                 <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
@@ -196,36 +212,39 @@
 
     <div class="mar">
         <!-- HEADER -->
-        <div id="header"><div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
-            <div class="row pt-1">
-                <div class="col-md-4">
-                    <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
+        <div id="header">
+            <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
+                <div class="row pt-1">
+                    <div class="col-md-4">
+                        <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
+                    </div>
+                    <div class="col-md-4 text-center font-2 getContent" href="admin/clientList">
+                        <h3><?php echo strtoupper($clientName . " Workspace"); ?></h3>
+                    </div>    
                 </div>
-                <div class="col-md-4 text-center font-2 getContent" href="admin/clientList">
-                    <h3><?php echo strtoupper($clientName . " Workspace"); ?></h3>
-                </div>    
             </div>
-        </div><br>
+        </div>
+        <br>
 
         <!-- ADD WORKSPACE BUTTON -->
         <?php 
             if($_SESSION['role'] != 3 && $_SESSION['role'] != 2 && $_SESSION['external'] != 1){
         ?>
         <div class = "row justify-content-md-center" style="width: 100% !important;">   
-            <div class="col-xl-3 col-md-6 mb-4 ">                       
+            <div class="col-xl-3 col-md-6 mb-4 ">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
-                    <a class="nav-link" href="#" data-toggle="modal" data-target="#addWorkspaceModal">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <span>Add Workspace</span>
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#addWorkspaceModal">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span>Add Workspace</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">  
+                                    <i class="fas fa-fw fa-user-plus fa-2x text-gray-300"></i>
                                 </div>
                             </div>
-                            <div class="col-auto">  
-                                <i class="fas fa-fw fa-user-plus fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
                         </a>
                         <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_1">1</span></label>
                     </div>
@@ -244,11 +263,11 @@
                                     <div class="col-sm-12">
                                         <table id="workspaceTable" class="table display table-bordered table-striped" style="border-collapse: inherit !important;">
                                             <thead>
-                                            <tr>
-                                                <th scope="col shadow-remove">From</th>
-                                                <th scope="col shadow-remove">To</th>
-                                                <th scope="col shadow-remove">Actions</th>
-                                            </tr>
+                                                <tr>
+                                                    <th scope="col shadow-remove">From</th>
+                                                    <th scope="col shadow-remove">To</th>
+                                                    <th scope="col shadow-remove">Actions</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                             <?php   

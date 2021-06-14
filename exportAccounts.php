@@ -108,14 +108,23 @@ $prog_id = $_GET["pid"];
             <?php
             $query = "select assets_liabilities_check.program_name,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id=$wid order by program._seq";
             $result = $con->query($query);
+            $i = 0;
             while($row = $result->fetch_assoc()){
                 ?>
                 <tr>
                     <td><?php echo ++$i; ?></td>
                     <td><?php echo $row['program_name']; ?></td>
                     <td><?php echo $row['amount']; ?></td>
-                    <td><?php echo $row['type']; ?></td>
-                    <td><?php echo $row['risk']; ?></td>
+                    <td><?php echo $row['type'] == '0'? 'Significant Account':'Non-Significant Account'; ?></td>
+                    <td><?php
+                        if($row['risk']){
+                            echo $row['risk'] == 1 ? 'Moderate':'High';
+                        }
+                        else{
+                            echo 'Low';
+                        }
+                        ?>
+                    </td>
                     <td><?php echo $row['import']; ?></td>
                 </tr>
             <?php

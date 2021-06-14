@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     include 'dbconnection.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
@@ -622,6 +625,7 @@
     $(document).ready(function() {
         // window.user_id_to = 0;
         $('#live-chat .chat').hide();
+        // let user_id_to;
 
         $(".selectedUser").click(function(e){
             e.preventDefault();
@@ -641,221 +645,114 @@
             document.documentElement.classList.remove('dark-mode');
             $("#customSwitch1").removeAttr('checked');
         }
-    });
 
-    $("#customSwitch1").click(function(){
-        var id = <?php echo $_SESSION['id']; ?>;
-        if($("#customSwitch1").prop('checked') == true){
-            document.documentElement.classList.toggle('dark-mode');
-            $.ajax({
-                url: "darkmode.php",
-                type: "POST",
-                data: {
-                    id: id,
-                    active: 1
-                }
-            });
-        }
-        else{
-            document.documentElement.classList.remove('dark-mode');
-            document.documentElement.classList.remove('invert-dark-mode');
-            $.ajax({
-                url: "darkmode.php",
-                type: "POST",
-                data: {
-                    id: id,
-                    active: 0
-                }
-            });
-        }
-    });
 
-    $('#live-chat header, .selectedUser, #chatAssistance').on('click', function() {
-        <?php
-            if($_SESSION['role'] != 1 || $_SESSION['role'] != -1){
-                ?>
+
+        $("#customSwitch1").click(function(){
+            var id = <?php echo $_SESSION['id']; ?>;
+            if($("#customSwitch1").prop('checked') == true){
+                document.documentElement.classList.toggle('dark-mode');
                 $.ajax({
-                    url: "getChatAjax.php",
+                    url: "darkmode.php",
                     type: "POST",
                     data: {
-                        <?php
-                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                echo "user_id:".$_SESSION['id'];
-                            }
-                            else{
-                                ?>
-                                user_id: window.user_id_to
-                                <?php
-                            }
-                        ?>
-                    },
-                    success: function(data){
-                        $(".chat-history").empty();
-                        data = JSON.parse(data);
-                        var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
-                        var chatHistoryEnding = "</div></div><hr>"
-                        for(let i in data){
-                            $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
-                        }
-                        $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
+                        id: id,
+                        active: 1
                     }
                 });
-                <?php
             }
             else{
-                ?>
+                document.documentElement.classList.remove('dark-mode');
+                document.documentElement.classList.remove('invert-dark-mode');
                 $.ajax({
-                    url: "getChatAjax.php",
+                    url: "darkmode.php",
                     type: "POST",
                     data: {
-                        <?php
-                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                echo "user_id:".$_SESSION['id'];
-                            }
-                            else{
-                                ?>
-                                user_id: window.user_id_to
-                                <?php
-                            }
-                        ?>
-                    },
-                    success: function(data){
-                        $(".chat-history").empty();
-                        data = JSON.parse(data);
-                        var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
-                        var chatHistoryEnding = "</div></div><hr>"
-                        for(let i in data){
-                            $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
-                        }
-                        $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
+                        id: id,
+                        active: 0
                     }
                 });
-                <?php
             }
-        ?>
-        
-        $('.chat').slideToggle(300, 'swing');
-        $('.chat-message-counter').fadeToggle(300, 'swing');
-    });
+        });
+        $('#live-chat header, .selectedUser, #chatAssistance').on('click', function() {
+            console.log(window.user_id_to)
+            getChat();
+            $('.chat').slideToggle(300, 'swing');
+            $('.chat-message-counter').fadeToggle(300, 'swing');
+        });
 
-    $('#live-chat .chat-close').on('click', function(e) {
-        e.preventDefault();
-        $('#live-chat .chat').fadeOut(300);
-    });
+        $('#live-chat .chat-close').on('click', function(e) {
+            e.preventDefault();
+            $('#live-chat .chat').fadeOut(300);
+        });
 
-    $("#chatForm").submit(function(e){
-        e.preventDefault();
-        <?php
-            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-        ?>
-            $("#user_id").val(<?php echo $con->query("select id from user where accesslevel = 1")->fetch_assoc()['id']; ?>);
-        <?php
-            }
-            else{
+        $("#chatForm").submit(function(e){
+            e.preventDefault();
+            <?php
+                if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
             ?>
-            $("#user_id").val(window.user_id_to);
-        <?php
-            }
-        ?>
-        var form = $('#chatForm')[0];
-        var data = new FormData(form);
-        $.ajax({
-            url: "insertChatAjax.php",
-            enctype: 'multipart/form-data',
-            type: "POST",
-            processData: false,
-            contentType: false,
-            cache: false,
-            data: data,
-            success: function(data){
-                if(data){
-                    $("#chatText").val('');
-                    $.ajax({
-                        url: "getChatAjax.php",
-                        type: "POST",
-                        data: {
-                            <?php
-                                if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                                    echo "user_id:".$_SESSION['id'];
-                                }
-                                else{
-                                    ?>
-                                    user_id: window.user_id_to
-                                    <?php
-                                }
-                            ?>
-                        },
-                        success: function(data){
-                            $(".chat-history").empty();
-                            data = JSON.parse(data);
-                            var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
-                            var chatHistoryEnding = "</div></div><hr>"
-                            for(let i in data){
-                                $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
-                            }
-                        }
-                    });
+                $("#user_id").val(<?php echo $con->query("select id from user where accesslevel = 1")->fetch_assoc()['id']; ?>);
+            <?php
                 }
-            }
-        });
-    });
-
-    // function refreshChat(user_id_to){
-    //     $.ajax({
-    //         url: "getChatAjax.php",
-    //         type: "POST",
-    //         data: {
-    //             <?php
-    //                 if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-    //                     echo "user_id:".$_SESSION['id'];
-    //                 }
-    //                 else{
-    //                     ?>
-    //                     user_id: user_id_to
-    //                     <?php
-    //                 }
-    //             ?>
-    //         },
-    //         success: function(data){
-    //             $(".chat-history").empty();
-    //             data = JSON.parse(data);
-    //             var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
-    //             var chatHistoryEnding = "</div></div><hr>"
-    //             for(let i in data){
-    //                 $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
-    //             }
-    //         }
-    //     });
-    // }
-
-    setInterval(function(){
-        $.ajax({
-            url: "getChatAjax.php",
-            type: "POST",
-            data: {
-                <?php
-                    if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
-                        echo "user_id:".$_SESSION['id'];
-                    }
-                    else{
-                        ?>
-                        user_id: window.user_id_to
-                        <?php
-                    }
+                else{
                 ?>
-            },
-            success: function(data){
-                $(".chat-history").empty();
-                data = JSON.parse(data);
-                var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
-                var chatHistoryEnding = "</div></div><hr>"
-                for(let i in data){
-                    $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+                $("#user_id").val(window.user_id_to);
+            <?php
                 }
-                $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
-            }
+            ?>
+            var form = $('#chatForm')[0];
+            var data = new FormData(form);
+            $.ajax({
+                url: "insertChatAjax.php",
+                enctype: 'multipart/form-data',
+                type: "POST",
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: data,
+                success: function(data){
+                    if(data){
+                        $("#chatText").val('');
+                        getChat();
+                    }
+                }
+            });
         });
-    }, 2000);
+
+        setInterval(function(){
+            getChat();
+        }, 5000);
+
+        function getChat(){
+            $.ajax({
+                url: "getChatAjax.php",
+                type: "POST",
+                data: {
+                    <?php
+                        if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                            echo "user_id:".$_SESSION['id'];
+                        }
+                        else{
+                            ?>
+                            user_id: window.user_id_to
+                            <?php
+                        }
+                    ?>
+                },
+                success: function(data){
+                    $(".chat-history").empty();
+                    console.log(window.user_id_to)
+                    data = JSON.parse(data);
+                    var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
+                    var chatHistoryEnding = "</div></div><hr>"
+                    for(let i in data){
+                        $(".chat-history").append(chatHistoryStarting+"<span class='chat-time'>"+data[i][0]+"</span><h5>"+data[i][1]+"</h5><p>"+data[i][2]+"</p>"+chatHistoryEnding);
+                    }
+                    $(".chat-history").scrollTop($(".chat-history")[0].scrollHeight);
+                }
+            });
+        }
+    });
 
     </script>
 </body>

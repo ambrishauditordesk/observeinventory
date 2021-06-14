@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     include 'dbconnection.php';
     include 'moneyFormatter.php';
     session_start();
@@ -166,14 +169,14 @@
                 <?php
                     if($_SESSION['role'] != 5){
                         ?>
-                    <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    <a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Dashboard
                     </a>
                     <?php
                     }
                     else{
                         ?>
-                        <a href="workspace?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                        <a href="workspace?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                         Workspace
                         </a>
                         <?php
@@ -443,8 +446,7 @@
                                     echo "<label><span class='helpDesign help_9'>9</span></label>";   
                                 }
                                 ?>
-                                <li class="breadcrumb-item"><a
-                                            href="clientDashboard.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">Dashboard</a>
+                                <li class="breadcrumb-item"><a href="clientDashboard.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">Dashboard</a>
                                 </li>
                                 <?php
                                 
@@ -617,63 +619,63 @@
                                                     // }
                                                     if ($row['header_type'] == 1) {
                                                         ?>
-                                                    <tr id="<?php echo ++$i; ?>">
-                                                        <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
-                                                        <td scope="row" hidden>
-                                                            <input type="hidden" name="submitData[id][]"
-                                                                    value="<?php echo $row['id']; ?>">
-                                                        </td>
-                                                        <td scope="row" hidden>
-                                                            <input type="hidden" name="submitData[header_type][]"
-                                                                    value="<?php echo $row['header_type']; ?>">
-                                                        </td>
-                                                        <td scope="row">
-                                                            <input type="number" name="submitData[amount][]"
-                                                                    value="<?php echo $row['amount']; ?>" size="10" step="0.01">
-                                                        </td>
-                                                        <td scope="row">
-                                                            <label class="mt-2"><span class="helpDesign help_1">1</span></label>
-                                                            <select name="submitData[type][]" class="form-control"
-                                                                    required>
-                                                                <option <?php if ($row['type'] == 0) echo "selected"; ?>
-                                                                        value="0">Significant
-                                                                </option>
-                                                                <option <?php if ($row['type'] == 1) echo "selected"; ?>
-                                                                        value="1">Non-Significant
-                                                                </option>
-                                                            </select>
-                                                        </td>
-                                                        <td scope="row">
-                                                            <label class="mt-2"><span class="helpDesign help_2">2</span></label>
-                                                            <select name="submitData[risk][]" class="form-control"
-                                                                    required>
-                                                                <option <?php if ($row['risk'] == 0) echo "selected"; ?>
-                                                                        value="0">
-                                                                    Low
-                                                                </option>
-                                                                <option <?php if ($row['risk'] == 1) echo "selected"; ?>
-                                                                        value="1">
-                                                                    Moderate
-                                                                </option>
-                                                                <option <?php if ($row['risk'] == 2) echo "selected"; ?>
-                                                                        value="2">
-                                                                    High
-                                                                </option>
-                                                            </select>
-                                                        </td>
-                                                        <td scope="row">
-                                                            <label class="mt-2"><span class="helpDesign help_3">3</span></label>
-                                                            <select name="submitData[import][]" class="form-control"
-                                                                    required>
-                                                                <option <?php if ($row['import'] == 0) echo "selected"; ?>
-                                                                        value="0">No
-                                                                </option>
-                                                                <option <?php if ($row['import'] == 1) echo "selected"; ?>
-                                                                        value="1">Yes
-                                                                </option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
+                                                        <tr id="<?php echo ++$i; ?>">
+                                                            <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
+                                                            <td scope="row" hidden>
+                                                                <input type="hidden" name="submitData[header_type][]"
+                                                                        value="<?php echo $row['header_type']; ?>">
+                                                            </td>
+                                                            <td scope="row" hidden>
+                                                                <input type="hidden" name="submitData[id][]"
+                                                                        value="<?php echo $row['id']; ?>">
+                                                            </td>
+                                                            <td scope="row">
+                                                                <input type="number" name="submitData[amount][]"
+                                                                        value="<?php echo $row['amount']; ?>" size="10" step="0.01">
+                                                            </td>
+                                                            <td scope="row">
+                                                                <label class="mt-2"><span class="helpDesign help_1">1</span></label>
+                                                                <select name="submitData[type][]" class="form-control"
+                                                                        required>
+                                                                    <option <?php if ($row['type'] == 0) echo "selected"; ?>
+                                                                            value="0">Significant
+                                                                    </option>
+                                                                    <option <?php if ($row['type'] == 1) echo "selected"; ?>
+                                                                            value="1">Non-Significant
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td scope="row">
+                                                                <label class="mt-2"><span class="helpDesign help_2">2</span></label>
+                                                                <select name="submitData[risk][]" class="form-control"
+                                                                        required>
+                                                                    <option <?php if ($row['risk'] == 0) echo "selected"; ?>
+                                                                            value="0">
+                                                                        Low
+                                                                    </option>
+                                                                    <option <?php if ($row['risk'] == 1) echo "selected"; ?>
+                                                                            value="1">
+                                                                        Moderate
+                                                                    </option>
+                                                                    <option <?php if ($row['risk'] == 2) echo "selected"; ?>
+                                                                            value="2">
+                                                                        High
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td scope="row">
+                                                                <label class="mt-2"><span class="helpDesign help_3">3</span></label>
+                                                                <select name="submitData[import][]" class="form-control"
+                                                                        required>
+                                                                    <option <?php if ($row['import'] == 0) echo "selected"; ?>
+                                                                            value="0">No
+                                                                    </option>
+                                                                    <option <?php if ($row['import'] == 1) echo "selected"; ?>
+                                                                            value="1">Yes
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
                                                 <?php } ?>
                                             
                                             <?php
@@ -4593,22 +4595,20 @@
             
             $(document).on('click','#validateSubmit', function(e){
                 let assetSum = liabilitySum = 0;
-                for(i in $("#balanceSheetForm > table > tbody > tr")){
+                for(j in $("#balanceSheetForm > table > tbody > tr")){
+                    i = parseInt(j)+1;
                     try {
                         if($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")")){
                             if($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")").attr('class') != 'table-secondary'){
-                                // console.log($("#balanceSheetForm > table > tbody > tr:nth-child("+i+")").attr('class'))
                                 let header_type = $("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(2) > input").val();
                                 if(header_type == '1'){
                                     if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
                                         liabilitySum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
-                                        console.log(liabilitySum)
                                     }
                                 }
                                 else{
                                     if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
                                         assetSum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
-                                        console.log(assetSum)
                                     }
                                 }
                             }
@@ -4621,15 +4621,9 @@
                 if(assetSum != liabilitySum){
                     e.preventDefault()
                     swal({
-                                icon: "error",
-                                text: "Assets and Liabilities are not matching",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>";
-                                }
-                            });
+                        icon: "error",
+                        text: "Assets and Liabilities are not matching",
+                    });
                 }
             })
 
@@ -4805,10 +4799,16 @@
                             var fileDownload = document.createElement("a");
                             document.body.appendChild(fileDownload);
                             fileDownload.href = source;
-                            <?php $draftResult = $con->query("select type_of_audit_report from draft_report where workspace_id = $wid")->fetch_assoc(); ?>
-                            fileDownload.download = 'Draft Report <?php echo $draftResult['type_of_audit_report'] == 1 ? "Qualified":"Unqualified"; ?> .doc';
-                            fileDownload.click();
-                            document.body.removeChild(fileDownload);
+                            <?php $draftResult = $con->query("select type_of_audit_report from draft_report where workspace_id = $wid");
+                                if($draftResult->num_rows > 0){
+                                    $draftResult = $draftResult->fetch_assoc();
+                                    ?>
+                                        fileDownload.download = 'Draft Report <?php echo $draftResult['type_of_audit_report'] == 1 ? "Qualified":"Unqualified"; ?> .doc';
+                                        fileDownload.click();
+                                        document.body.removeChild(fileDownload);
+                                    <?php
+                                }
+                            ?>
                         }
                     }
                 });

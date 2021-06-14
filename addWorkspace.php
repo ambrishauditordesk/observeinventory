@@ -40,6 +40,9 @@
     <script src="js/custom.js"></script>
 
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include 'dbconnection.php';
 session_start();
 
@@ -127,7 +130,7 @@ if ($con->query($query) === true)
             </div>
             <div class="modal-body">Successfully added Workspace</div>
             <div class="modal-footer">
-                <a class="btn btn-primary" href="workspace?cid=<?php echo $clientID?>">OK</a>
+                <a class="btn btn-primary" href="workspace?fid=<?php echo base64_encode(md5($clientID)); ?>&xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID)); ?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>">OK</a>
             </div>
         </div>
     </div>
