@@ -130,25 +130,21 @@ $_SESSION['breadcrumb'] = array();
     <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
-            <?php 
-                if($_SESSION['role'] != 3){
-                    ?>
-                    <li class="nav-item d-flex">
-                        <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
-                        <a class="nav-link d-flex align-items-center" target="_blank" href="diagnosticReport?wid=<?php echo $wid; ?>">
-                            <img class="nav-icon" src="Icons/download.jpg" style="height: 40px; width: 40px;" />&nbsp;&nbsp;
-                            <span>Diagonistic Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item d-flex">
-                        <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
-                        <a class="nav-link d-flex align-items-center" href="admin/clientTeamMembers?sid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
-                        <img class="nav-icon" src="Icons/Group 4.svg"/>&nbsp;&nbsp;
-                        <span>Team Members</span>
-                        </a>
-                    </li>
-            <?php } 
-            ?>
+            
+            <li class="nav-item d-flex">
+                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
+                <a class="nav-link d-flex align-items-center" target="_blank" href="diagnosticReport?wid=<?php echo $wid; ?>">
+                    <img class="nav-icon" src="Icons/download.jpg" style="height: 40px; width: 40px;" />&nbsp;&nbsp;
+                    <span>Diagonistic Report</span>
+                </a>
+            </li>
+            <li class="nav-item d-flex">
+                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
+                <a class="nav-link d-flex align-items-center" href="admin/clientTeamMembers?sid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
+                <img class="nav-icon" src="Icons/Group 4.svg"/>&nbsp;&nbsp;
+                <span>Team Members</span>
+                </a>
+            </li>
             <li class="nav-item d-flex">
             <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_3">3</span></label>
                 <a class="nav-link d-flex align-items-center" href="admin/clientList">
@@ -374,7 +370,7 @@ $_SESSION['breadcrumb'] = array();
                                 <label for="name">Upload Photo</label>
                                 <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
                             </div>
-                        <div> 
+                        </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">

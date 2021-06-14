@@ -78,9 +78,18 @@
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
                         $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
-                        $row = $img_query->fetch_assoc();
+                        if($img_query->num_rows == 1){
+                            $row = $img_query->fetch_assoc();
+                            ?>
+                            <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
+                            <?php
+                        }
+                        else{
+                            ?>
+                            <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
+                            <?php
+                        }                       
                     ?>
-                    <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -446,6 +455,14 @@
                                 <label for="name">Name</label>
                                 <input type="text" id="name2" class="form-control" name="name2" readonly>
                             </div>
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-md-5 d-flex justify-content-center" style="margin-right:178px;">
+                                    <span class="badge badge-primary">All Clients</span>
+                                </div>
+                                <div class="col-md-5 d-flex justify-content-around">
+                                    <span class="badge badge-danger">Allocated Clients</span>
+                                </div><br>
+                            </div><br>
                             <div class="row">
                                 <div class="col-md-5">
                                     <select name="from[]" id="lstview" class="form-control" size="20" multiple>
@@ -547,7 +564,7 @@
                                 <label for="name">Upload Photo</label>
                                 <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
                             </div>
-                        <div> 
+                        </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">

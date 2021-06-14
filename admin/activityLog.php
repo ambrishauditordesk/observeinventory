@@ -204,7 +204,7 @@
                                 <label for="name">Upload Photo</label>
                                 <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
                             </div>
-                        <div> 
+                        </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">

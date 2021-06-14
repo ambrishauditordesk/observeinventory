@@ -216,7 +216,13 @@
                             ?>
                     </a>
                     <a href="#billing" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size">
+                    <?php
+                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1 || $_SESSION['role'] == 4){
+                        ?>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Billing
+                    <?php 
+                    } 
+                    ?>    
                     </a>
                 </div>
             </div>
@@ -258,7 +264,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="location">Firm Leader</label>
-                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>" value="">
+                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>">
                             </div>
                             <div class="form-group">
                                 <label>Multicurrency</label>
@@ -366,11 +372,12 @@
                                         <input type="hidden" id="user_id" name="user_id">
                                         <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
                                         <div class="image_upload">
-                                            <label for="file"><i class="fas fa-2x fa-paperclip"></i></label>
+                                            <label for="file"><i class="far fa-2x fa-images pl-3 pt-1"></i></label>
                                             <input type="file" name="file" id="file" accept=".jpg, .png" />
                                         </div>
                                         <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
                                     </form>
+                                    <div><i class="fas fa-info-circle m-0" style="color:#FFAE42;"></i> For security purposes you are not allowed to send documents over the chat, you can only share SS of the issue you are facing.</div><br>
                                 </div> <!-- end chat -->
                             </div>
                         </div>
@@ -438,11 +445,12 @@
                                             <input type="hidden" id="user_id" name="user_id">
                                             <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
                                             <div class="image_upload">
-                                                <label for="file"><i class="fas fa-2x fa-paperclip"></i></label>
-                                                <input type="file" name="file" id="file" accept=".jpg, .png" />
+                                            <label for="file"><i class="far fa-2x fa-images pl-3 pt-1"></i></label>
+                                            <input type="file" name="file" id="file" accept=".jpg, .png" />
                                             </div>
                                             <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
                                         </form>
+                                        <div><i class="fas fa-info-circle m-0" style="color:#FFAE42;"></i> For security purposes you are not allowed to send documents over the chat, you can only share SS of the issue you are facing.</div><br>
                                     </div> <!-- end chat -->
                                 </div>
                             </div>
@@ -526,7 +534,7 @@
                                     $size = substr ( $size, 0, strpos ( $size, "\t" ) );
                                     pclose ( $io );
                                 ?>
-                                <input type="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
+                                <input type ="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
                             </div>
                             <div class="form-group mb-0">
                                 <label for="fullName">Add Storage space</label><br>
@@ -589,7 +597,7 @@
                                 <label for="name">Upload Photo</label>
                                 <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
                             </div>
-                        <div> 
+                        </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">

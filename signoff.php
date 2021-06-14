@@ -75,12 +75,14 @@
             for($i = 0; $i < sizeof($fileName); $i++){
                 $name = $fileName[$i]['name'];
                 $tmp_name = $fileName[$i]['tmp_name'];
-                if(move_uploaded_file($tmp_name, $path . $name))
+                if(move_uploaded_file($tmp_name, $path . $name)){
+                   
                     // if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file,status,deletedDate) values ('$wid','$prog_id','$uid','$name',0,'')") === TRUE){
                     if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file) values ('$wid','$prog_id','$uid','$name')") === TRUE){
                         $flagFile = 1;
                         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");
                     }
+                }
             }
         }
         if(!empty(trim($_POST['newComment']))){
@@ -91,9 +93,11 @@
             }
         }
 
-        $con->query("delete from assertion where workspace_id = $wid and program_id = $prog_id");
-        foreach ($_POST['assertion'] as $key => $value) {
-            $con->query("insert into assertion(workspace_id, program_id, assertion_value) values('$wid','$prog_id','$value')");
+        if(isset($_POST['assertion']) && !empty($_POST['assertion'])){
+            $con->query("delete from assertion where workspace_id = $wid and program_id = $prog_id");
+            foreach ($_POST['assertion'] as $key => $value) {
+                $con->query("insert into assertion(workspace_id, program_id, assertion_value) values('$wid','$prog_id','$value')");
+            }
         }
     }
     $icon = ($flag || $flagComment || $flagFile) == 0?'error':'success';

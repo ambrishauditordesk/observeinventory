@@ -31,6 +31,9 @@
     if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
         $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
     }
+    if(isset($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
+        $_SESSION['firm_id'] = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID")->fetch_assoc()['id'];
+    }
     $_SESSION['file_location'] = 'uploads/'.$_SESSION['firm_id'].'/'.$_SESSION['client_id'].$name;
 ?>
 <!DOCTYPE html>
@@ -412,7 +415,7 @@
                                 <label for="name">Upload Photo</label>
                                 <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
                             </div>
-                        <div> 
+                        </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">

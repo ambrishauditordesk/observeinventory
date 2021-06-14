@@ -126,7 +126,7 @@
                                 echo "<script>
                                         swal({
                                             icon: 'error',
-                                            text: 'No accounts have been assigned to you!',
+                                            text: 'There is no pending request from your Autditor',
                                         }).then(function(isConfirm) {
                                             if (isConfirm) {
                                                 window.location.href = 'login';

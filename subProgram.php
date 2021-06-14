@@ -109,6 +109,42 @@
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
     </style>
+
+    <!-- Loader Css -->
+    <style>
+        .stop-scrolling {
+            height: 100%;
+            overflow: hidden;
+        }
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.25);
+            z-index: 99999;
+        }
+        .load{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);
+        /*change these sizes to fit into your project*/
+        width:100px;
+        height:100px;
+        }
+        .load hr{border:0;margin:0;width:40%;height:40%;position:absolute;border-radius:50%;animation:spin 2s ease infinite}
+        .load :first-child{background:#19A68C;animation-delay:-1.5s}
+        .load :nth-child(2){background:#F63D3A;animation-delay:-1s}
+        .load :nth-child(3){background:#FDA543;animation-delay:-0.5s}
+        .load :last-child{background:#193B48}
+        @keyframes spin{
+        0%,100%{transform:translate(0)}
+        25%{transform:translate(160%)}
+        50%{transform:translate(160%, 160%)}
+        75%{transform:translate(0, 160%)}
+        }
+    </style>
+
 </head>
 
 <body style="overflow-y: scroll;" oncontextmenu="return false">
@@ -1921,7 +1957,7 @@
                                     <button class="btn btn-outline-primary mb-3 ml-1" href="#" data-toggle="modal" data-target="#addQuestionModal">
                                         <span>Add Question</span>
                                     </button>
-                                    <form id="inquiring_management_form" action="inquiringManagementSubmit" method="post">
+                                    <form id="inquiring_management_form" action="inquiringManagementSubmit" method="post" enctype="multipart/form-data">
                                             <?php 
                                             $count = $i = 0;
                                                 $questionResult = $con->query("select id, inquiring_of_management_questions question, answer_option, answer_textarea from inquiring_of_management_questions_answer where workspace_id = '$wid'");
@@ -1958,20 +1994,40 @@
                                             ?>
                                         <input type="hidden" name="wid" value="<?php echo $wid; ?>">
                                         <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations..."><?php echo $con->query("select textarea from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea']; ?></textarea>
-                                        <input type="submit" id="inquiring_of_management_questions_form" class="btn btn-success" value="Save">
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
+                                            <input type="submit" id="inquiring_of_management_questions_form" class="btn btn-success align-middle" value="Save"> 
+                                        </div><br>
                                     </form>
                                 </div>
-                                <div class="row d-flex justify-content-center">
-                                <?php
-                                $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=258")->fetch_assoc();
-                                if($checkReviewStatus['total']){
-                                    ?>
-                                        <button class="btn btn-info" id="reviewSubmitInquiryManagement">Review Sign-Off</button>
+                                <div class="row d-flex justify-content-center align-items-center p-top">
                                     <?php
-                                }
-                                ?>
-                                    &nbsp;
-                                    <button class="btn btn-success" id="prepareSubmitInquiryManagement">Prepare Sign-Off</button>
+                                    $query = "select * from inquiring_of_management_files where wid='$wid'";
+                                    $result = $con->query($query);
+                                    ?>
+                                        <ul class="custom-list list-bg" style="padding-bottom: 2% !important;">
+                                            <span class="d-flex justify-content-center align-items-center">Uploaded Files</span>
+                                            <?php 
+                                            while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                <li class="custom-list-items custom-list-items-action">
+                                                    <a href="#" class="fileFetch" target="_blank" download id="<?php echo $row['files']; ?>"><?php echo $row['files']; ?></a>
+                                                </li>
+                                                <?php
+                                            } ?>
+                                        </ul>
+                                </div>   
+                                <div class="row d-flex justify-content-center">
+                                    <?php
+                                    $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=258")->fetch_assoc();
+                                    if($checkReviewStatus['total']){
+                                        ?>
+                                            <button class="btn btn-info" id="reviewSubmitInquiryManagement">Review Sign-Off</button>
+                                        <?php
+                                    }
+                                    ?>
+                                        &nbsp;
+                                        <button class="btn btn-success" id="prepareSubmitInquiryManagement">Prepare Sign-Off</button>
                                 </div>
                             </div>
                             <?php
@@ -3808,7 +3864,7 @@
                                 <label for="name">Upload Photo</label>
                                 <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
                             </div>
-                        <div> 
+                        </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
@@ -3818,6 +3874,12 @@
             </div>
         </div>
 
+    </div>
+    
+    <div id="loader">
+        <div class="load">
+            <hr/><hr/><hr/><hr/>
+        </div>
     </div>
 
     <!-- Custom scripts for all pages-->
@@ -3830,6 +3892,7 @@
 
     <script>
         $(document).ready(function () {
+            document.getElementsByTagName("html")[0].style.visibility = "visible";
             //Add row script
             var i = 1;
             var b = i - 1;
@@ -4539,11 +4602,13 @@
                                 if(header_type == '1'){
                                     if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
                                         liabilitySum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
+                                        console.log(liabilitySum)
                                     }
                                 }
                                 else{
                                     if(parseInt($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val())){
                                         assetSum += parseFloat($("#balanceSheetForm > table > tbody > tr:nth-child("+i+") > td:nth-child(4) > input").val(), 10)
+                                        console.log(assetSum)
                                     }
                                 }
                             }
@@ -4553,8 +4618,6 @@
                         
                     }
                 }
-                // console.log(liabilitySum)
-                // console.log(assetSum)
                 if(assetSum != liabilitySum){
                     e.preventDefault()
                     swal({
@@ -6950,5 +7013,15 @@
                 }
             });
         })
+    </script>
+
+    <script>
+        $(document).ajaxStart(function(){
+            $('body').addClass('stop-scrolling');
+            $('#loader').show();
+        }).ajaxSuccess(function() {
+            $('body').removeClass('stop-scrolling');
+            $('#loader').hide();
+        });
     </script>
 </body>

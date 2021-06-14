@@ -18,6 +18,34 @@
 <?php
     $ser = $_SERVER['HTTP_REFERER'];
     $flag = 0;
+
+    //File Upload
+    $filePresent = 0;
+    if(!empty($_FILES['file']['name'])){
+        $filePresent = 1;
+        // File size should be less the 2MB
+        if ($_FILES["file"]["size"] > 2000000) {
+            $error.= "<p>File Size is greater than 2MB.</p><br>";
+            $uploadOk = 0;
+        }
+        if(!empty($_FILES['file']['name'][0])){
+            $fileName = array();
+            $str = explode(".", $_FILES['file']['name']);
+            $new= '';
+            for($j = 0; $j<sizeof($str)-1; $j++){
+                if($new == ''){
+                    $new .= $str[$j];
+                }
+                else{
+                    $new .= ".".$str[$j];
+                }
+            }
+            $name = trim($new." ".$date." .".end($str));
+            $tmp_name = $_FILES['file']['tmp_name'];
+            $path = $_SESSION['upload_file_location'];
+        }
+    }
+
     if(isset($_POST))
     {
         include 'dbconnection.php';
@@ -42,6 +70,13 @@
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Inquiring Managements New entery done')");
         // $con->query("update workspace_log set status='1' where program_id='258' and workspace_id='$wid'");
     }
+           
+    if($filePresent){
+        $con->query("insert into inquiring_of_management_files(wid,files) values('$wid','$name')");
+        move_uploaded_file($tmp_name, $path . $name);
+        $flag = 1;
+    } 
+
     if($flag){
         echo "<script>
             swal({

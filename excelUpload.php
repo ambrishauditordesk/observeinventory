@@ -94,12 +94,12 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         // }
         {
             $total = '';
-            if($cyBegBal[0] == '('){
-                $value = '-'.(filter_var($cyBegBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
+            if(substr($cyBegBal, 0, 1) == '('){
+                $value = (float)'-'.(filter_var($cyBegBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
             else{
-                $value = filter_var($cyBegBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
-                if ($cyBegBal[0] == '-' && strlen($cyBegBal) == 1) {
+                $value = (float)filter_var($cyBegBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if (substr($cyBegBal, 0, 1) == '-' && strlen($cyBegBal) == 1) {
                     $value = 0;
                 }
             }
@@ -203,12 +203,12 @@ foreach($objExcel->getWorksheetIterator() as $worksheet){
         // }
         {
             $total = '';
-            if($cyFinalBal[0] == '('){
-                $value = '-'.(filter_var($cyFinalBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
+            if(substr($cyFinalBal, 0, 1) == '('){
+                $value = (float)'-'.(filter_var($cyFinalBal, FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
             }
             else{
-                $value = filter_var($cyFinalBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
-                if ($cyFinalBal[0] == '-' && strlen($cyFinalBal) == 1) {
+                $value = (float)filter_var($cyFinalBal,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+                if (substr($cyFinalBal, 0, 1) == '-' && strlen($cyFinalBal) == 1) {
                     $value = 0;
                 }
             }

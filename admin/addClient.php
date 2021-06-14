@@ -192,14 +192,14 @@ if($uploadOk) {
                 $successEmailList = $email;
             else
                 $successEmailList .= ','.$email;
-        }else{
+            sleep(1);
+        }
+        else{
             if(empty($unSuccessEmailList))
                 $unSuccessEmailList = $email;
             else
                 $unSuccessEmailList .= ','.$email;
         }
-
-        sleep(2);
     }
     
     echo "<script>

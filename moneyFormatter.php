@@ -1,41 +1,57 @@
 <?php
 function numberToCurrency($number)
 {
-    if(setlocale(LC_MONETARY, 'en_IN'))
-      return money_format('%.0n', $number);
-    else {
-      $explrestunits = "" ;
-      $number = explode('.', $number);
-      $num = $number[0];
-      if(strlen($num)>3){
-          $lastthree = substr($num, strlen($num)-3, strlen($num));
-          $restunits = substr($num, 0, strlen($num)-3); // extracts the last three digits
-          $restunits = (strlen($restunits)%2 == 1)?"0".$restunits:$restunits; // explodes the remaining digits in 2's formats, adds a zero in the beginning to maintain the 2's grouping.
-          $expunit = str_split($restunits, 2);
-          for($i=0; $i<sizeof($expunit); $i++){
-              // creates each of the 2's group and adds a comma to the end
-              if($i==0)
-              {
-                  $explrestunits .= (int)$expunit[$i].","; // if is first value , convert into integer
-              }else{
-                  $explrestunits .= $expunit[$i].",";
-              }
-          }
-          $thecash = $explrestunits.$lastthree;
-      } else {
-          $thecash = $num;
-      }
-      if(!empty($number[1])) {
-      	if(strlen($number[1]) == 1) {
-      		return '₹ ' .$thecash . '.' . $number[1] . '0';
-      	} else if(strlen($number[1]) == 2){
-      		return '₹ ' .$thecash . '.' . $number[1];
-      	} else {
-            return 'cannot handle decimal values more than two digits...';
-        }
-      } else {
-      	return '₹ ' .$thecash.'.00';
-      }
+    $checkMinusVal = trim(explode('-',$number)[0]);
+    $checkMinus = $final = '';
+    $allStr = explode('.',trim($number));
+    if($checkMinusVal == ''){
+        $checkMinus = '-';
+        $allStr = explode('.',explode('-',trim($number))[1]);
     }
+    $str = $allStr[0];
+    $length = strlen($str);
+    $count = 1;
+    $first = 0;
+	$hasMoreNumber = 0;
+    for($i = $length-1; $i >= 0; $i--){   
+        if($count == 3 && $first == 0){
+            $final .= $str[$i];
+            $count = 0;
+            $first = 1;
+            $hasMoreNumber = 1;
+        }
+        elseif($count == 2 && $first == 1){
+            if( ($i - 1) < 0){
+                $final .= $str[$i];
+            }
+            else{
+                $final .= $str[$i].',';
+            }
+            $count = 0;
+        }
+        else{
+        	if($hasMoreNumber == 1){
+              	$final .=',';
+            	$hasMoreNumber = 0;
+            }
+            $final .= $str[$i];
+        } 
+        $count++;
+    }
+    $final = strrev($final);
+    if(array_key_exists("1",$allStr)){
+        $decimalVal = $allStr[1][0];
+        if(!empty($allStr[1][1])){
+            $decimalVal .= $allStr[1][1];
+        }
+        else{
+            $decimalVal .= 0;
+        }
+        if($allStr[1][2] >= 5){
+            $decimalVal++;
+        }
+        $final .= '.'.$decimalVal;
+    }
+    return $checkMinus.'₹'.$final.'/-';
 }
 ?>
