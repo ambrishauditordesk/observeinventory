@@ -4651,7 +4651,7 @@
                         type: "POST",
                         data: {wid: <?php echo $wid; ?>},
                         pages: 2 // number of pages to cache
-                    });
+                    })
                 });
             });
 
