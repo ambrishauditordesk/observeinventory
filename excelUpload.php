@@ -141,7 +141,7 @@ for($i=1;$i<sizeof($rows);$i++){
 }
 
 if($flag){
-    if($cyBegBal == 0 && $cyFinalBal == 0){
+    if($cyBegBalAmount == 0 && $cyFinalBalAmount == 0){
         $trialBalanceResult = $con->query("select count(id) total from trial_balance where workspace_id = '".$wid."'");
         if($trialBalanceResult->fetch_assoc()['total'] > 0){
         // $con->query("UPDATE workspace_log SET import = 1 WHERE workspace_id = '".$wid."' and program_id = 395");
@@ -215,9 +215,9 @@ else{
                         }
                         else{
                             $uploadFailedMsg = '';
-                            if($cyBegBal != 0)
+                            if($cyBegBalAmount != 0)
                                 $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of all CY Begining Balance is not equals ZERO.</p>';
-                            if($cyFinalBal != 0){
+                            if($cyFinalBalAmount != 0){
                                 if(!empty($uploadFailedMsg)){
                                     $uploadFailedMsg .= '<p>&nbsp;&nbsp;Sum of all CY Final Balance is not equals ZERO.</p>';
                                 }
