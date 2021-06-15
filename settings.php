@@ -204,10 +204,10 @@ error_reporting(E_ALL);
         <div class="row gutters-sm">
             <div class="col-md-12 d-none d-md-block">
                 <div class="nav flex-row nav-pills nav-gap-y-1 justify-content-center align-items-center">
-                    <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size active">
+                    <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size active" id="profileTab">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user mr-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Firm Profile
                     </a>
-                    <a href="#account" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size">
+                    <a href="#account" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size" id="accountTab">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings mr-2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                         <?php
                             if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
@@ -218,7 +218,7 @@ error_reporting(E_ALL);
                             }
                             ?>
                     </a>
-                    <a href="#billing" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size">
+                    <a href="#billing" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size" id="billingTab">
                     <?php
                     if($_SESSION['role'] == 1 || $_SESSION['role'] == -1 || $_SESSION['role'] == 4){
                         ?>
@@ -245,7 +245,7 @@ error_reporting(E_ALL);
                         </li>
                     </ul>
                 </div>
-                <div class="card-body tab-content">
+                <div class="card-body tab-content m-0">
                     <div class="tab-pane active" id="profile">
                         <?php 
                             if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
@@ -462,69 +462,116 @@ error_reporting(E_ALL);
                         ?>
                     </div>
                     <div class="tab-pane" id="billing">
-                        <h6>BILLING SETTINGS</h6>
-                        <hr>
-                    <div>
-                        <div class="form-group">
-                            <label for="fullName">Subcription</label>
-                            <form action="#">
-                                <div class="row col-md-12">
-                                    <div class="col-md-4 p-0">
-                                        <input type="number" class="form-control" placeholder="Enter the number of clients">
-                                    </div> &emsp;
-                                    <div class="col-md-2 p-0">
-                                        <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
-                                    </div>
-                                    <div class="col-md-4 mt-1">
-                                        <label><h6>&#8377;1499/Client</h6></label>
+                        <div class="col-md-9">
+                            <h6>BILLING SETTINGS</h6>
+                            <hr>
+                            <div>
+                                <div class="form-group">
+                                    <label for="fullName">Subcription</label>
+                                    <form action="#">
+                                        <div class="row col-md-12">
+                                            <div class="col-md-4 p-0">
+                                                <input type="number" class="form-control" placeholder="Enter the number of clients">
+                                            </div> &emsp;
+                                            <div class="col-md-2 p-0">
+                                                <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                            </div>
+                                            <div class="col-md-4 mt-1">
+                                                <label><h6>&#8377;1499/Client</h6></label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="form-group mb-0 col-md-6 p-0">
+                                    <label for="fullName">Payment History</label>
+                                    <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="">
+                                </div>
+                                <div class="form-group mb-0 col-md-6 p-0">
+                                    <label for="fullName">Firm Storage space</label>
+                                    <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" placeholder="10MB for free customers">
+                                </div>
+                                <div class="form-group mb-0 col-md-6 p-0">
+                                    <label for="fullName">Storage space used</label><br>
+                                    <?php
+                                        $f = 'uploads/'.$_SESSION['firm_id'];
+                                        $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
+                                        $size = fgets ( $io )  ;
+                                        $size = substr ( $size, 0, strpos ( $size, "\t" ) );
+                                        pclose ( $io );
+                                    ?>
+                                    <input type ="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="fullName">Add Storage space</label><br>
+                                    <form action="#">
+                                        <div class="row col-md-12">
+                                            <div class="col-md-4 p-0">
+                                                <select class="form-control" aria-label="Default select example">
+                                                    <option selected>Select Storage</option>
+                                                    <option value="1">1 GB</option>
+                                                    <option value="5">5 GB</option>
+                                                    <option value="10">10 GB</option>
+                                                    <option value="15">15 GB</option>
+                                                    <option value="20">20 GB</option>
+                                                    <option value="25">25 GB</option>
+                                                </select>
+                                            </div> &emsp;
+                                            <div class="col-md-2 p-0">
+                                                <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                            </div>
+                                            <div class="col-md-4 mt-1">
+                                                <label><h6>&#8377;100/GB monthly</h6></label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <!-- CARDS -->
+                            <div id="content" class="toggleContents">
+                                <div class="container pt-4">
+                                    <div class="">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Promotion 1</h5>
+                                                <h6 class="">
+                                                <img src="Icons/Group 1.svg">
+                                                </h6>
+                                                <p class="text-count">
+                                                    
+                                                </p>
+                                                <h6 class="card-subtitle mb-2">High Priority</h6>
+                                            </div>
+                                        </div>
+                                        <div class="card card-margin">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Promotion 2</h5>
+                                                <h6 class="">
+                                                    <img src="Icons/Group 1.svg">
+                                                </h6>
+                                                <p class="text-count">
+                                                    
+                                                </p>
+                                                <h6 class="card-subtitle mb-2">Moderate Priority</h6>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Promotion 3</h5>
+                                                <h6 class="">
+                                                <img src="Icons/Group 1.svg">
+                                                </h6>
+                                                <p class="text-count">
+                                                    
+                                                </p>
+                                                <h6 class="card-subtitle mb-2">Low Priority</h6>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                        <div class="form-group mb-0 col-md-4 p-0">
-                            <label for="fullName">Payment History</label>
-                            <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="">
-                        </div>
-                        <div class="form-group mb-0 col-md-4 p-0">
-                            <label for="fullName">Firm Storage space</label>
-                            <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" placeholder="10MB for free customers">
-                        </div>
-                        <div class="form-group mb-0 col-md-4 p-0">
-                            <label for="fullName">Storage space used</label><br>
-                            <?php
-                                $f = 'uploads/'.$_SESSION['firm_id'];
-                                $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
-                                $size = fgets ( $io )  ;
-                                $size = substr ( $size, 0, strpos ( $size, "\t" ) );
-                                pclose ( $io );
-                            ?>
-                            <input type ="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label for="fullName">Add Storage space</label><br>
-                            <form action="#">
-                                <div class="row col-md-12">
-                                    <div class="col-md-4 p-0">
-                                        <select class="form-control" aria-label="Default select example">
-                                            <option selected>Select Storage</option>
-                                            <option value="1">1 GB</option>
-                                            <option value="5">5 GB</option>
-                                            <option value="10">10 GB</option>
-                                            <option value="15">15 GB</option>
-                                            <option value="20">20 GB</option>
-                                            <option value="25">25 GB</option>
-                                        </select>
-                                    </div> &emsp;
-                                    <div class="col-md-2 p-0">
-                                        <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
-                                    </div>
-                                    <div class="col-md-4 mt-1">
-                                        <label><h6>&#8377;100/GB monthly</h6></label>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -592,8 +639,15 @@ error_reporting(E_ALL);
             window.user_id_to = $(this).attr("id");
         })
 
-
         document.getElementsByTagName("html")[0].style.visibility = "visible";
+
+        $('#billingTab').click(function(e){
+            $('#billing').addClass('d-flex');
+        });
+
+        $('#profileTab, #accountTab').click(function(e){
+            $('#billing').removeClass('d-flex');
+        });
 
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;
         if(darkmode)
@@ -635,7 +689,6 @@ error_reporting(E_ALL);
             }
         });
         $('#live-chat header, .selectedUser, #chatAssistance').on('click', function() {
-            console.log(window.user_id_to)
             getChat();
             $('.chat').slideToggle(300, 'swing');
             $('.chat-message-counter').fadeToggle(300, 'swing');
@@ -701,7 +754,6 @@ error_reporting(E_ALL);
                 },
                 success: function(data){
                     $(".chat-history").empty();
-                    console.log(window.user_id_to)
                     data = JSON.parse(data);
                     var chatHistoryStarting = "<div class='chat-message clearfix'><div class='chat-message-content clearfix'>"
                     var chatHistoryEnding = "</div></div><hr>"
