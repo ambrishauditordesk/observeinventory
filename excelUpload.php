@@ -205,7 +205,7 @@ else{
                 </div>
                 <div class="modal-body">
                     <?php 
-                        if($cyBegBal == 0 && $cyFinalBal == 0){
+                        if($cyBegBalAmount == 0 && $cyFinalBalAmount == 0){
                                 if(!empty($errorList)) 
                                     echo $errorList."."; 
                             ?>
