@@ -1,7 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
     include 'dbconnection.php';
     include 'moneyFormatter.php';
     session_start();
@@ -2109,7 +2110,6 @@ error_reporting(E_ALL);
                                                     </thead>
                                                     <tbody id="accounting_estimates">
                                                     <?php
-                                                    
                                                         $result = $con->query("select * from accounting_estimates where workspace_id=$wid");
                                                         if($result->num_rows){
                                                             while($row=$result->fetch_assoc()){
@@ -2181,66 +2181,66 @@ error_reporting(E_ALL);
                                                         }
                                                     else{
                                                     ?>
-                                                        <tr id="addRowEstimate0">
-                                                            <td>
-                                                                <select name="submitEstimate[type][]" class="form-control" required>
-                                                                    <option value="Quantitative">Quantitative</option>
-                                                                    <option value="Qualitative">Qualitative</option>
-                                                                </select>
-                                                            </td>
-                                                            <td><input name="submitEstimate[name][]" type="text"></td>
-                                                            <td><input name="submitEstimate[account][]" type="text"></td>
-                                                            <td> <input name="submitEstimate[py][]" type="number"> </td>
-                                                            <td> <input name="submitEstimate[cy][]" type="number"> </td>
-                                                            <td>
-                                                            <select name="submitEstimate[c][]" class="form-control"required>
+                                                    <tr id="addRowEstimate0">
+                                                        <td>
+                                                            <select name="submitEstimate[type][]" class="form-control minWidth150" required>
+                                                                <option value="Quantitative">Quantitative</option>
+                                                                <option value="Qualitative">Qualitative</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input name="submitEstimate[name][]" type="text"></td>
+                                                        <td><input name="submitEstimate[account][]" type="text"></td>
+                                                        <td> <input name="submitEstimate[py][]" type="number"> </td>
+                                                        <td> <input name="submitEstimate[cy][]" type="number"> </td>
+                                                        <td>
+                                                            <select name="submitEstimate[c][]" class="form-control minWidth150"required>
                                                                 <option value="Low">Low</option>
                                                                 <option value="Moderate">Moderate</option>
                                                                 <option value="High">High</option>
                                                                 <option value="NA">NA</option>
                                                             </select>
-                                                            </td>
-                                                            <td>
-                                                            <select name="submitEstimate[eo][]" class="form-control"required>
+                                                        </td>
+                                                        <td>
+                                                            <select name="submitEstimate[eo][]" class="form-control minWidth150"required>
                                                                 <option value="Low">Low</option>
                                                                 <option value="Moderate">Moderate</option>
                                                                 <option value="High">High</option>
                                                                 <option value="NA">NA</option>
                                                             </select>
-                                                            </td>
-                                                            <td>
-                                                            <select name="submitEstimate[mv][]" class="form-control"required>
+                                                        </td>
+                                                        <td>
+                                                            <select name="submitEstimate[mv][]" class="form-control minWidth150"required>
                                                                 <option value="Low">Low</option>
                                                                 <option value="Moderate">Moderate</option>
                                                                 <option value="High">High</option>
                                                                 <option value="NA">NA</option>
                                                             </select>
-                                                            </td>
-                                                            <td>
-                                                            <select name="submitEstimate[ro][]" class="form-control"required>
+                                                        </td>
+                                                        <td>
+                                                            <select name="submitEstimate[ro][]" class="form-control minWidth150"required>
                                                                 <option value="Low">Low</option>
                                                                 <option value="Moderate">Moderate</option>
                                                                 <option value="High">High</option>
                                                                 <option value="NA">NA</option>
                                                             </select>
-                                                            </td>
-                                                            <td>
-                                                            <select name="submitEstimate[pd][]" class="form-control"required>
+                                                        </td>
+                                                        <td>
+                                                            <select name="submitEstimate[pd][]" class="form-control minWidth150"required>
                                                                 <option value="Low">Low</option>
                                                                 <option value="Moderate">Moderate</option>
                                                                 <option value="High">High</option>
                                                                 <option value="NA">NA</option>
                                                             </select>
-                                                            </td>
-                                                            <td>
-                                                            <select name="submitData[risk][]" class="form-control"required>
+                                                        </td>
+                                                        <td>
+                                                            <select name="submitData[risk][]" class="form-control minWidth150"required>
                                                                 <option value="Low Risk">Low Risk</option>
                                                                 <option value="Significant Risk">Significant Risk</option>
                                                                 <option value="High Risk">High Risk</option>
                                                                 <option value="NA">NA</option>
                                                             </select>
-                                                            </td>
-                                                        </tr>
+                                                        </td>
+                                                    </tr>
                                                         <tr id="addRowEstimate1"></tr>
                                                     <?php }
                                                     ?>
@@ -2250,7 +2250,13 @@ error_reporting(E_ALL);
                                         </div>
                                         <div class="form-group">
                                             <label for="">Documents Observations</label>
-                                            <textarea name= "comments" class="form-control" rows="3"><?php echo $con->query("select comments from accounting_estimates_comments where workspace_id=$wid")->fetch_assoc()['comments'];?></textarea>
+                                            <textarea name= "comments" class="form-control" rows="3">
+                                                <?php 
+                                                    $documentObserve = $con->query("select comments from accounting_estimates_comments where workspace_id=$wid");
+                                                    if($documentObserve->num_rows > 1)
+                                                        $documentObserve->fetch_assoc()['comments'];                                                                                               
+                                                ?>
+                                            </textarea>
                                         </div>
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
@@ -4635,10 +4641,6 @@ error_reporting(E_ALL);
                     "searching": true,
                     "order": [],
                     "bInfo": false,
-                    "fnRowCallback": function(nRow, aData, iDisplayIndex) {
-                        $("td:first", nRow).html(iDisplayIndex + 1);
-                        return nRow;
-                    },
                     "drawCallback": function(settings) {
                         var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
                         pagination.toggle(this.api().page.info().pages > 1);

@@ -4,7 +4,7 @@
 	$captchaHeight = 60;
 	$captchaWidth = 140;
 	$totalCharacters = 6; 
-	$possibleLetters = '123456789mnbvcxzasdfghjklpoiuytrewwq';
+	$possibleLetters = '123456789mnbvcxzasdfghjkpoiuytrewwq';
 	$captchaFont = 'vendor/monofont.ttf'; 
 	$randomDots = 50;
 	$randomLines = 25;

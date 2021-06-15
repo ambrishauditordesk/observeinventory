@@ -464,111 +464,71 @@ error_reporting(E_ALL);
                     <div class="tab-pane" id="billing">
                         <h6>BILLING SETTINGS</h6>
                         <hr>
-                        <form>
-                            <div class="form-group">
-                                <label for="fullName">Subcription</label>
-                                <section class="pricing py-2 px-2">
-                                    <div class="container">
-                                        <div class="row col-lg-12 justify-content-center">
-                                            <!-- Free Tier -->
-                                            <div class="col-lg-5">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h5 class="text-muted text-uppercase text-center">Free</h5>
-                                                        <h6 class="card-price text-center">&#8377;0<span class="period">/month</span></h6>
-                                                        <hr>
-                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Free</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Plus Tier -->
-                                            <div class="col-lg-5">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h5 class="text-muted text-uppercase text-center">Pro</h5>
-                                                        <h6 class="card-price text-center">&#8377;500<span class="period">/month</span></h6>
-                                                        <hr>
-                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Buy</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <br>
-                                        <div class="row col-lg-12 justify-content-center">
-                                            <!-- Pro Tier -->
-                                            <div class="col-lg-5">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h5 class="text-muted text-uppercase text-center">Go Pro</h5>
-                                                        <h6 class="card-price text-center">&#8377;2500<span class="period">/month</span></h6>
-                                                        <hr>
-                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Buy</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Pro Tier -->
-                                            <div class="col-lg-5">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h5 class="custom text-muted text-uppercase text-center">Custom Pro</h5>
-                                                        <h6 class="card-price text-center">Advanced needs?</h6>
-                                                        <hr>
-                                                        <a href="#" class="btn btn-block btn-primary text-uppercase">Get Quote</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="fullName">Subcription</label>
+                            <form action="#">
+                                <div class="row col-md-12">
+                                    <div class="col-md-4 p-0">
+                                        <input type="number" class="form-control" placeholder="Enter the number of clients">
+                                    </div> &emsp;
+                                    <div class="col-md-2 p-0">
+                                        <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
                                     </div>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="fullName">Payment History</label>
-                                <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="Only for Paid customers blank for free">
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="fullName">Firm Storage space</label>
-                                <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" placeholder="10MB for free customers">
-                            </div>
-                            <div class="form-group mb-0 col-md-4 p-0">
-                                <label for="fullName">Storage space used</label><br>
-                                <?php
-                                    $f = 'uploads/'.$_SESSION['firm_id'];
-                                    $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
-                                    $size = fgets ( $io )  ;
-                                    $size = substr ( $size, 0, strpos ( $size, "\t" ) );
-                                    pclose ( $io );
-                                ?>
-                                <input type ="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="fullName">Add Storage space</label><br>
-                                <form action="#">
-                                    <div class="row col-md-12">
-                                        <div class="col-md-4 p-0">
-                                            <select class="form-control" aria-label="Default select example">
-                                                <option selected>Select Storage</option>
-                                                <option value="1">1 GB</option>
-                                                <option value="5">5 GB</option>
-                                                <option value="10">10 GB</option>
-                                                <option value="15">15 GB</option>
-                                                <option value="20">20 GB</option>
-                                                <option value="25">25 GB</option>
-                                            </select>
-                                        </div> &emsp;
-                                        <div class="col-md-2 p-0">
-                                            <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
-                                        </div>
-                                        <div class="col-md-4 mt-1">
-                                            <label><h4>&#8377;100/GB monthly</h4></label>
-                                        </div>
+                                    <div class="col-md-4 mt-1">
+                                        <label><h6>&#8377;1499/Client</h6></label>
                                     </div>
-                                </form>
-                            </div>
-                        </form>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="form-group mb-0 col-md-4 p-0">
+                            <label for="fullName">Payment History</label>
+                            <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="">
+                        </div>
+                        <div class="form-group mb-0 col-md-4 p-0">
+                            <label for="fullName">Firm Storage space</label>
+                            <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" placeholder="10MB for free customers">
+                        </div>
+                        <div class="form-group mb-0 col-md-4 p-0">
+                            <label for="fullName">Storage space used</label><br>
+                            <?php
+                                $f = 'uploads/'.$_SESSION['firm_id'];
+                                $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
+                                $size = fgets ( $io )  ;
+                                $size = substr ( $size, 0, strpos ( $size, "\t" ) );
+                                pclose ( $io );
+                            ?>
+                            <input type ="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="fullName">Add Storage space</label><br>
+                            <form action="#">
+                                <div class="row col-md-12">
+                                    <div class="col-md-4 p-0">
+                                        <select class="form-control" aria-label="Default select example">
+                                            <option selected>Select Storage</option>
+                                            <option value="1">1 GB</option>
+                                            <option value="5">5 GB</option>
+                                            <option value="10">10 GB</option>
+                                            <option value="15">15 GB</option>
+                                            <option value="20">20 GB</option>
+                                            <option value="25">25 GB</option>
+                                        </select>
+                                    </div> &emsp;
+                                    <div class="col-md-2 p-0">
+                                        <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                    </div>
+                                    <div class="col-md-4 mt-1">
+                                        <label><h6>&#8377;100/GB monthly</h6></label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
-
        
         
         <!-- Footer -->
