@@ -47,7 +47,7 @@ function numberToCurrency($number)
         else{
             $decimalVal .= 0;
         }
-        if($allStr[1][2] >= 5){
+        if(!empty($allStr[1][2]) && $allStr[1][2] >= 5){
             $decimalVal++;
         }
         $final .= '.'.$decimalVal;
