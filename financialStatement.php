@@ -113,7 +113,7 @@
                                 if ($queryrow['hasChild'] == 1) {
                                     ?>
                                         <div class="sub-dash" id="employees" style="margin-top: 1rem !important;">
-                                            <a href="subProgram.php?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
+                                            <a href="subProgram?pid=<?php echo $queryrow['id']; ?>&parent_id=<?php echo $queryrow['parent_id']; ?>&wid=<?php echo $wid; ?>">
                                                 <img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important;"/> &nbsp;
                                                 <?php echo trim($queryrow['program_name']); ?>
                                             </a>
@@ -125,7 +125,7 @@
                     }
                 ?>
                 <div class="sub-dash" style="margin-top: 1rem !important;">
-                    <a href="subProgram.php?pid=245&parent_id=255&wid=<?php echo $wid; ?>"><img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important; transform: rotate(90deg);"/> &nbsp;
+                    <a href="subProgram?pid=245&parent_id=255&wid=<?php echo $wid; ?>"><img class="sidenav-icon" src="Icons/Group 6.svg" style="width:1rem !important; height:1rem !important; transform: rotate(90deg);"/> &nbsp;
                         Back
                     </a>
                 </div>

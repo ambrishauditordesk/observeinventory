@@ -186,7 +186,7 @@ else{
                 <!-- <div class="modal-body"><?php // echo "<strong>New Record List:- </strong>".$updatedData."<hr><hr>"; if(!empty($errorList)) echo $errorList; ?><br><?php // echo "Total Count = $totalCount, Entry Count = $successCount"; ?></div> -->
                 <div class="modal-body"><?php if(!empty($errorList)) echo $errorList; ?><br><?php echo "Total Row Count = $totalCount, Total Entry Count = $successCount"; ?></div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary" href="subProgram.php?uid=<?php echo base64_encode(md5($wid));?>&zid=<?php echo base64_encode(md5(time()));?>&aid=<?php echo base64_encode(md5($wid));?>&pid=<?php echo base64_encode($pid); ?>&parent_id=<?php echo base64_encode($parent_id); ?>&wid=<?php echo base64_encode($wid); ?>&uuid=<?php echo base64_encode(md5(date('Y')));?>&zuid=<?php echo base64_encode(md5(date('m-d-Y')));?>">OK</a>
+                    <a class="btn btn-primary" href="subProgram?uid=<?php echo base64_encode(md5($wid));?>&zid=<?php echo base64_encode(md5(time()));?>&aid=<?php echo base64_encode(md5($wid));?>&pid=<?php echo base64_encode($pid); ?>&parent_id=<?php echo base64_encode($parent_id); ?>&wid=<?php echo base64_encode($wid); ?>&uuid=<?php echo base64_encode(md5(date('Y')));?>&zuid=<?php echo base64_encode(md5(date('m-d-Y')));?>">OK</a>
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@ else{
                     ?>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary" href="subProgram.php?uid=<?php echo base64_encode(md5($wid));?>&zid=<?php echo base64_encode(md5(time()));?>&aid=<?php echo base64_encode(md5($wid));?>&pid=<?php echo base64_encode($pid); ?>&parent_id=<?php echo base64_encode($parent_id); ?>&wid=<?php echo base64_encode($wid); ?>&uuid=<?php echo base64_encode(md5(date('Y')));?>&zuid=<?php echo base64_encode(md5(date('m-d-Y')));?>">OK</a>
+                    <a class="btn btn-primary" href="subProgram?uid=<?php echo base64_encode(md5($wid));?>&zid=<?php echo base64_encode(md5(time()));?>&aid=<?php echo base64_encode(md5($wid));?>&pid=<?php echo base64_encode($pid); ?>&parent_id=<?php echo base64_encode($parent_id); ?>&wid=<?php echo base64_encode($wid); ?>&uuid=<?php echo base64_encode(md5(date('Y')));?>&zuid=<?php echo base64_encode(md5(date('m-d-Y')));?>">OK</a>
                 </div>
             </div>
         </div>

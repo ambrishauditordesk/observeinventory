@@ -53,14 +53,14 @@ foreach($result as $row)
  $sub_array[] = '';
  {
     if($row['aact'] == 1){
-        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;<a href='../workspace.php?gid=".base64_encode(md5(trim($row['aid'])))."&xid=".base64_encode(md5(trim($row['aid'])))."&yid=".base64_encode(md5(trim($row['aid'])))."&zid=".base64_encode(md5(trim($row['aid'])))."&aid=".base64_encode(md5(trim($row['aid'])))."&sid=".base64_encode(md5(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
+        $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;<a href='../workspace?gid=".base64_encode(md5(trim($row['aid'])))."&xid=".base64_encode(md5(trim($row['aid'])))."&yid=".base64_encode(md5(trim($row['aid'])))."&zid=".base64_encode(md5(trim($row['aid'])))."&aid=".base64_encode(md5(trim($row['aid'])))."&sid=".base64_encode(md5(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."'>".$row['aname']."</a>";
     }
     else{
         $sub_array[] = "<label class='mt-2'><span class='helpDesign help_11'>11</span></label>&nbsp;".$row['aname'];
     }
  }
  $sub_array[] = "<label class='mt-2'><span class='helpDesign help_8'>8</span></label>&nbsp;<a href='#' class='icon-hide'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile.svg' style='width: 15% !important;' id='".trim($row['aid'])."'><img class='datatable-icon editClientProfile' src='../Icons/Icon metro-profile-1.svg' style='width: 15% !important;' id='".trim($row['aid'])."'></a> &nbsp;
- <label class='mt-2'><span class='helpDesign help_9'>9</span></label>&nbsp;<a href='clientMember.php?gid=".base64_encode(md5(trim($row['aid'])))."&xid=".base64_encode(md5(trim($row['aid'])))."&yid=".base64_encode(md5(trim($row['aid'])))."&zid=".base64_encode(md5(trim($row['aid'])))."&aid=".base64_encode(md5(trim($row['aid'])))."&sid=".base64_encode(md5(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
+ <label class='mt-2'><span class='helpDesign help_9'>9</span></label>&nbsp;<a href='clientMember?gid=".base64_encode(md5(trim($row['aid'])))."&xid=".base64_encode(md5(trim($row['aid'])))."&yid=".base64_encode(md5(trim($row['aid'])))."&zid=".base64_encode(md5(trim($row['aid'])))."&aid=".base64_encode(md5(trim($row['aid'])))."&sid=".base64_encode(md5(trim($row['aid'])))."&cid=".base64_encode(trim($row['aid']))."' class='icon-hide'><img class='datatable-icon' src='../Icons/Group 4.svg' style='width: 15% !important;'><img class='datatable-icon' src='../Icons/Group 8.svg' style='width: 15% !important;'></a>";
  $sub_array[] = $row['con'];
  $sub_array[] = $row['adate'];
  {

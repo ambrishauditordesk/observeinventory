@@ -90,14 +90,12 @@ $prog_id = $_GET["pid"];
             </tr>
             <?php } ?>
         </tbody>
-    <!-- </table> -->
 
-    <!-- <table hidden class="table table-stripped" id="tb2"> -->
         <thead>
             <tr></tr>
             <tr>
                 <th scope="col">Sl No.</th>
-                <th scope="col">Asset Accounts</th>
+                <th scope="col">Accounts</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Type</th>
                 <th scope="col">Risk</th>
@@ -106,10 +104,26 @@ $prog_id = $_GET["pid"];
         </thead>
         <tbody>
             <?php
-            $query = "select assets_liabilities_check.program_name,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id=$wid order by program._seq";
+            $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id=$wid order by header_type ,_seq asc";
             $result = $con->query($query);
-            $i = 0;
+            $i = $liabilityHeader = $assetHeader = 0;
             while($row = $result->fetch_assoc()){
+                if($row['header_type'] == 0){
+                    if($assetHeader == 0){
+                        $assetHeader = 1;
+                        ?>
+                            <tr><td colspan="6">Asset Accounts</td></tr>
+                        <?php
+                    }
+                }
+                else{
+                    if($liabilityHeader == 0){
+                        $liabilityHeader = 1;
+                        ?>
+                            <tr><td colspan="6">Liability Accounts</td></tr>
+                        <?php
+                    }
+                }
                 ?>
                 <tr>
                     <td><?php echo ++$i; ?></td>
@@ -125,7 +139,7 @@ $prog_id = $_GET["pid"];
                         }
                         ?>
                     </td>
-                    <td><?php echo $row['import']; ?></td>
+                    <td><?php echo $row['import'] == '1'? 'Yes':'No';?></td>
                 </tr>
             <?php
             }

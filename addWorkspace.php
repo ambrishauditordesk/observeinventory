@@ -147,7 +147,7 @@ if ($con->query($query) === true)
             </div>
             <div class="modal-body">Workspace Addition Failed.</div>
             <div class="modal-footer">
-                <a class="btn btn-primary" href="workspace.php">OK</a>
+                <a class="btn btn-primary" href="workspace?fid=<?php echo base64_encode(md5($clientID)); ?>&xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID)); ?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>">OK</a>
             </div>
         </div>
     </div>

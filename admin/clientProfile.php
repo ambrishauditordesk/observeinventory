@@ -149,7 +149,7 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
-                        <a class="nav-link" href="clientMember.php?cid=<?php echo $clientID;?>">
+                        <a class="nav-link" href="clientMember?cid=<?php echo $clientID;?>">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
@@ -232,7 +232,7 @@
                 <?php 
                     $query = "select * from client where id = '$clientID'";
                 ?>
-                    <form action="editClientProfile.php" method="post">
+                    <form action="editClientProfile" method="post">
                     <?php
                         $result = $con->query($query);
                         while($row = $result->fetch_assoc()){

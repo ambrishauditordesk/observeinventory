@@ -261,7 +261,7 @@ $_SESSION['breadcrumb'] = array();
                     <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                 <div class="col-md-12 custom-list" style="flex-direction:row; align-items:center;">
                     <div class="col-md-12">
-                    <a href="subProgram.php?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
+                    <a href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
                         class="custom-list-items"><b><?php echo trim($queryrow['program_name']); ?></b>
                     </a>
                         <?php
@@ -590,7 +590,7 @@ $_SESSION['breadcrumb'] = array();
                                 text: "Thank You for Freezing",
                             }).then(function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = <?php echo "'workspace.php?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;
+                                    window.location.href = <?php echo "'workspace?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;
                                 }
                             });
                         }

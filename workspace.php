@@ -619,7 +619,7 @@ ini_set('display_startup_errors', 1);
                         text: "Workspace unlocked!",
                     }).then(function (isConfirm) {
                         if (isConfirm) {
-                            window.location.href = <?php echo "'workspace.php?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;
+                            window.location.href = <?php echo "'workspace?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;
                         }
                     });
                     }

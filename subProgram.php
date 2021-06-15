@@ -199,7 +199,7 @@
                                 if ($queryrow['hasChild'] == 1) {
                                     ?>
                                         <div class="sub-dash d-flex justify-content-between align-items-center" id="employees" style="margin-top: 1rem !important;">
-                                            <a href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
+                                            <a href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
                                                 <?php echo trim($queryrow['program_name']); ?>
                                             </a>
                                             <?php
@@ -456,7 +456,7 @@
                                     echo "<label><span class='helpDesign help_9'>9</span></label>";   
                                 }
                                 ?>
-                                <li class="breadcrumb-item"><a href="clientDashboard.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">Dashboard</a>
+                                <li class="breadcrumb-item"><a href="clientDashboard?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">Dashboard</a>
                                 </li>
                                 <?php
                                 
@@ -501,7 +501,7 @@
                                             <?php
                                         } else {
                                             ?>
-                                            <li class="breadcrumb-item"><a href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($bread[$i]['pid']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($bread[$i]['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><?php echo $bread[$i]['name']; ?></a>
+                                            <li class="breadcrumb-item"><a href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($bread[$i]['pid']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($bread[$i]['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><?php echo $bread[$i]['name']; ?></a>
                                             </li>
                                             <?php
                                         }
@@ -540,7 +540,7 @@
                                             value="<?php echo $row1['balance_liability']; ?>" readonly>
                                 </div>
                             </div>
-                            <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
+                            <form id="balanceSheetForm" action="accountsSubmit?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr class="table-secondary">
@@ -773,7 +773,7 @@
                             </div><br>
                             <div class="row">    
                                 <div class="tableFixHead">
-                                    <form style="overflow-x:auto;" action="clientAssistSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
+                                    <form style="overflow-x:auto;" action="clientAssistSubmit?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
                                         <div class="row" style="margin: 0 !important;">    
                                             <div>
                                                 <table>
@@ -1002,7 +1002,7 @@
                                             value="<?php echo $row1['pl_expense']; ?>" readonly>
                                 </div>
                             </div>
-                            <form id="balanceSheetForm" action="accountsSubmit.php?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
+                            <form id="balanceSheetForm" action="accountsSubmit?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr class="table-secondary">
@@ -1115,7 +1115,7 @@
                                     </button>
                                 </div>
                             </div><br>
-                            <form action="materialitySubmit.php?&wid=<?php echo $wid; ?>" method="post"
+                            <form action="materialitySubmit?&wid=<?php echo $wid; ?>" method="post"
                                     enctype="multipart/form-data">
                                 <table class="table table-hover" id="tab_logic">
                                     <thead class="text-center">
@@ -1305,7 +1305,7 @@
                                 { ?>
                                     <div class="custom-list">
                                         <label class=' mt-2'><span class='helpDesign help_1'>1</span></label>
-                                        <a href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
+                                        <a href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
                                         class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                     </div> <?php
                                 }
@@ -1340,7 +1340,7 @@
                                         }
                                         ?>
                                         <div class="custom-list">
-                                            <a href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
+                                            <a href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
                                                 class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                                 <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                                         </div> <?php
@@ -1355,7 +1355,7 @@
                                                         <a href="#">
                                                             <?php
                                                                 if($queryrow['id'] == 247 || $queryrow['id'] == 245){ ?>
-                                                                    <a href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">    
+                                                                    <a href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">    
                                                                         <i class="fas fa-external-link-alt"
                                                                             style="color:blue !important;"
                                                                             id="<?php echo $queryrow['id']; ?>">
@@ -2088,7 +2088,7 @@
                             <!-- Estimate Table -->
                             <div class="row" id="export_Estimate_page">    
                                 <div class="tableFixHead">
-                                    <form action="accountingEstimatesSubmit.php?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
+                                    <form action="accountingEstimatesSubmit?&wid=<?php echo $wid; ?>" method="post" enctype="multipart/form-data">
                                         <div class="row" style="margin: 0 !important;">    
                                             <div>
                                                 <table id="addEstimate">
@@ -2311,7 +2311,7 @@
                             <div class="flex-column col-md-10 col-lg-10 col-sm-10 mt-3">
                                 <button id="exportGoingConcern" class="btn bg-violet mb-3 ml-2" onclick = "exportGoingConcern()">Export</button>
                                 <?php $goingConcernDecRadio = $con->query("select * from going_concern where workspace_id = $wid")->fetch_assoc(); ?>
-                                <form action="goingConcernAjax.php" method="post" enctype="multipart/form-data">
+                                <form action="goingConcernAjax" method="post" enctype="multipart/form-data">
                                     <div id="goingConcernDiv" class="form-group col-md-12 col-lg-12 col-sm-12">
                                         <p><strong>Entity name</strong> : <?php echo $clientName = $con->query("select name from workspace inner join client on workspace.client_id = client.id where workspace.id = $wid")->fetch_assoc()['name'];  ?></p>
 
@@ -2590,7 +2590,7 @@
                                                         echo "<label class=' mt-2'><span class='helpDesign help_10'>10</span></label>";
                                                     }
                                                 ?>
-                                                <a href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
+                                                <a href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"
                                                     class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
                                                     <?php
                                                         if($prog_id == 1){
@@ -2617,7 +2617,7 @@
                                                                  } 
                                                                 if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24){ 
                                                                     ?>
-                                                                    <a id="<?php echo $queryrow['id']; ?>" href="subProgram.php?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">    
+                                                                    <a id="<?php echo $queryrow['id']; ?>" href="subProgram?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">    
                                                                         <?php  echo trim($queryrow['program_name']); ?> &nbsp;
                                                                     </a>
                                                                 <?php } 
@@ -3306,7 +3306,7 @@
         <div class="modal fade" id="signoffModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-dialog-centered modal-size">
                 <div class="modal-content">
-                    <form name="signoff" id="trialform" action="signoff.php?wid=<?php echo $wid; ?>" method="POST" target="_blank" enctype="multipart/form-data">
+                    <form name="signoff" id="trialform" action="signoff?wid=<?php echo $wid; ?>" method="POST" target="_blank" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="modal-header" id="programname">
                             </div>
@@ -3669,7 +3669,7 @@
         <div class="modal fade" id="audit_summery_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form name="audit_summery_form" id="audit_summery" method="post" action="auditSummerySubmit.php?wid=<?php echo $wid; ?>">
+                    <form name="audit_summery_form" id="audit_summery" method="post" action="auditSummerySubmit?wid=<?php echo $wid; ?>">
                         <div class="modal-body">
                             <div class="modal-header">
                                 <div class="form-group">
@@ -3767,7 +3767,7 @@
         <div class="modal fade" id="edit_audit_summery_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form name="audit_summery_form" id="edit_audit_summery" method="post" action="editAuditSummerySubmit.php?wid=<?php echo $wid; ?>">
+                    <form name="audit_summery_form" id="edit_audit_summery" method="post" action="editAuditSummerySubmit?wid=<?php echo $wid; ?>">
                         <div class="modal-body">
                             <div class="modal-header">
                                 <div class="form-group">
