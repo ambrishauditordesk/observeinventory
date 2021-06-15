@@ -309,22 +309,25 @@
         
         <ul class="navbar-nav ml-auto">
             <?php
-                if ($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id != '239' && $prog_id != '240' && $prog_id != '247' && $prog_id != '496' && $prog_id != '258' && $prog_id != '8' && $prog_id != '259' && $prog_id != '24') {
+                if ($prog_id != '2' && $prog_id != '20' && $prog_id != '230' && $prog_id != '229' && $prog_id != '12' && $prog_id != '239' && $prog_id != '240' && $prog_id != '247' && $prog_id != '496' && $prog_id != '258' && $prog_id != '8' && $prog_id != '259' && $prog_id != '24' && $prog_id != '245') {
                     if($prog_id == 1 || $prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 247 || $prog_id == 262 || $prog_id == 266 || $prog_id == 19){
                         echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_4'>4</span></label>";
                     } 
                     elseif($prog_id == 245){
                         echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_3'>3</span></label>";
                     }
-                    ?>
-                    <li class="nav-item d-flex">
-                        <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
-                            data-target="#addProgModal">
-                            <img class="nav-icon" src="Icons/plus-circle-1.svg" style="height:35px; width:35px;"/>&nbsp;&nbsp;
-                            <span>Add Programme</span>
-                        </a>
-                    </li>
-                <?php }
+                    if($prog_id != '245'){
+                        ?>
+                            <li class="nav-item d-flex">
+                                <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
+                                    data-target="#addProgModal">
+                                    <img class="nav-icon" src="Icons/plus-circle-1.svg" style="height:35px; width:35px;"/>&nbsp;&nbsp;
+                                    <span>Add Programme</span>
+                                </a>
+                            </li>
+                        <?php
+                    } 
+                }
             ?>
             <?php
                 if($prog_id == '239' || $prog_id == '240'){

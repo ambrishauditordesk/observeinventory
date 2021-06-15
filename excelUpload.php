@@ -56,7 +56,7 @@ $pid = $_POST['pid'];
 
 $uploadFiles = $_FILES['file']['tmp_name'];
 $updatedData = $errorList = $errorMessage = '';
-$flag = $totalCount = $successCount = $errorCount = 0;
+$flag = $totalCount = $successCount = $errorCount = $cyBegBalAmount = $cyFinalBalAmount = 0;
 
 ini_set('memory_limit', '8192M');
 set_time_limit(3600);
@@ -92,7 +92,6 @@ for($i=1;$i<sizeof($rows);$i++){
     $accountType = $rows[$i][4];
     $accountClass = $rows[$i][5];
     $financialStatement = $rows[$i][6];
-    $cyBegBalAmount = $cyFinalBalAmount = $value = 0;
 
     {
         $total = '';
@@ -142,15 +141,27 @@ for($i=1;$i<sizeof($rows);$i++){
 }
 
 if($flag){
-    $trialBalanceResult = $con->query("select count(id) total from trial_balance where workspace_id = '".$wid."'");
-    if($trialBalanceResult->fetch_assoc()['total'] > 0){
-    // $con->query("UPDATE workspace_log SET import = 1 WHERE workspace_id = '".$wid."' and program_id = 395");
+    if($cyBegBal == 0 && $cyFinalBal == 0){
+        $trialBalanceResult = $con->query("select count(id) total from trial_balance where workspace_id = '".$wid."'");
+        if($trialBalanceResult->fetch_assoc()['total'] > 0){
+        // $con->query("UPDATE workspace_log SET import = 1 WHERE workspace_id = '".$wid."' and program_id = 395");
+        }
+        echo "<script>
+            $(document).ready(function() {
+            $('#successModal').modal();
+            });
+            </script>";
     }
-    echo "<script>
+    else{
+        $con->query("delete from trial_balance where workspace_id = $wid");
+        $con->query("delete from workspace_log where workspace_id = $wid and program_id = 395");
+        
+        echo "<script>
         $(document).ready(function() {
-        $('#successModal').modal();
+        $('#unSuccessModal').modal();
         });
         </script>";
+    }
 }
 else{
     echo "<script>
@@ -192,7 +203,32 @@ else{
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body"><?php echo $errorList; ?>.</div>
+                <div class="modal-body">
+                    <?php 
+                        if($cyBegBal == 0 && $cyFinalBal == 0){
+                                if(!empty($errorList)) 
+                                    echo $errorList."."; 
+                            ?>
+                            <br>
+                            <?php 
+                                echo "Total Row Count = $totalCount, Total Entry Count = $successCount"; 
+                        }
+                        else{
+                            $uploadFailedMsg = '';
+                            if($cyBegBal != 0)
+                                $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of all CY Begining Balance is not equals ZERO.</p>';
+                            if($cyFinalBal != 0){
+                                if(!empty($uploadFailedMsg)){
+                                    $uploadFailedMsg .= '<p>&nbsp;&nbsp;Sum of all CY Final Balance is not equals ZERO.</p>';
+                                }
+                                else{
+                                    $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of all CY Final Balance is not equals ZERO.</p>';
+                                }
+                            }
+                            echo "<p>Trial Balance Upload failed as follows:-</p>$uploadFailedMsg<p>Re upload it once you are done with it.</p>";
+                        }
+                    ?>
+                </div>
                 <div class="modal-footer">
                     <a class="btn btn-primary" href="subProgram.php?uid=<?php echo base64_encode(md5($wid));?>&zid=<?php echo base64_encode(md5(time()));?>&aid=<?php echo base64_encode(md5($wid));?>&pid=<?php echo base64_encode($pid); ?>&parent_id=<?php echo base64_encode($parent_id); ?>&wid=<?php echo base64_encode($wid); ?>&uuid=<?php echo base64_encode(md5(date('Y')));?>&zuid=<?php echo base64_encode(md5(date('m-d-Y')));?>">OK</a>
                 </div>
