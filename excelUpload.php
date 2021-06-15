@@ -217,13 +217,13 @@ else{
                         else{
                             $uploadFailedMsg = '';
                             if($cyBegBalAmount != 0)
-                                $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of CY Begining Balance should be ZERO but it is :<b>'.moneyFormatter($cyBegBalAmount).'</b></p>';
+                                $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of CY Begining Balance should be ZERO but it is :<b>'.numberToCurrency($cyBegBalAmount).'</b></p>';
                             if($cyFinalBalAmount != 0){
                                 if(!empty($uploadFailedMsg)){
-                                    $uploadFailedMsg .= '<p>&nbsp;&nbsp;Sum of CY Final Balance should be ZERO but it is :<b>'.moneyFormatter($cyFinalBalAmount).'</b></p>';
+                                    $uploadFailedMsg .= '<p>&nbsp;&nbsp;Sum of CY Final Balance should be ZERO but it is :<b>'.numberToCurrency($cyFinalBalAmount).'</b></p>';
                                 }
                                 else{
-                                    $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of CY Final Balance should be ZERO but it is :<b>'.moneyFormatter($cyFinalBalAmount).'</b></p>';
+                                    $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of CY Final Balance should be ZERO but it is :<b>'.numberToCurrency($cyFinalBalAmount).'</b></p>';
                                 }
                             }
                             echo "<p>Trial Balance Upload failed as follows:-</p>$uploadFailedMsg<p>Re upload it once you are done with it.</p>";
