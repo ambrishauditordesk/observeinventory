@@ -24,11 +24,17 @@
 
     $wid = base64_decode($_GET['wid']);
     if($con->query("select * from workspace where id = $wid and client_id = $clientId")->num_rows == 0){
-        header('Location: login');
+        header('Location: ./');
+    }
+
+    if($con->query("select name from client where id = ".$clientId)->num_rows > 0){
+        $clientName = $con->query("select name from client where id = ".$clientId)->fetch_assoc()['name'];
+    }
+
+    if($con->query("select name from client where id = ".$clientId)->num_rows == 0){
+        header('Location: ./');
     }
     
-    
-    $clientName = $con->query("select name from client where id = ".$clientId)->fetch_assoc()['name'];
     $prog_id = base64_decode($_GET['pid']);
     if(isset($_GET['parent_id']))
         $prog_parentId = base64_decode($_GET['parent_id']);
