@@ -205,6 +205,7 @@ else{
                 </div>
                 <div class="modal-body">
                     <?php 
+                        include 'moneyFormatter.php';
                         if($cyBegBalAmount == 0 && $cyFinalBalAmount == 0){
                                 if(!empty($errorList)) 
                                     echo $errorList."."; 
@@ -216,13 +217,13 @@ else{
                         else{
                             $uploadFailedMsg = '';
                             if($cyBegBalAmount != 0)
-                                $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of all CY Begining Balance is not equals ZERO.</p>';
+                                $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of CY Begining Balance should be ZERO but it is :<b>'.moneyFormatter($cyBegBalAmount).'</b></p>';
                             if($cyFinalBalAmount != 0){
                                 if(!empty($uploadFailedMsg)){
-                                    $uploadFailedMsg .= '<p>&nbsp;&nbsp;Sum of all CY Final Balance is not equals ZERO.</p>';
+                                    $uploadFailedMsg .= '<p>&nbsp;&nbsp;Sum of CY Final Balance should be ZERO but it is :<b>'.moneyFormatter($cyFinalBalAmount).'</b></p>';
                                 }
                                 else{
-                                    $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of all CY Final Balance is not equals ZERO.</p>';
+                                    $uploadFailedMsg = '<p>&nbsp;&nbsp;Sum of CY Final Balance should be ZERO but it is :<b>'.moneyFormatter($cyFinalBalAmount).'</b></p>';
                                 }
                             }
                             echo "<p>Trial Balance Upload failed as follows:-</p>$uploadFailedMsg<p>Re upload it once you are done with it.</p>";
