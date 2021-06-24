@@ -18,16 +18,10 @@
 <?php
     $ser = $_SERVER['HTTP_REFERER'];
     $flag = 0;
-
     //File Upload
     $filePresent = 0;
     if(!empty($_FILES['file']['name'])){
         $filePresent = 1;
-        // File size should be less the 2MB
-        if ($_FILES["file"]["size"] > 2000000) {
-            $error.= "<p>File Size is greater than 2MB.</p><br>";
-            $uploadOk = 0;
-        }
         if(!empty($_FILES['file']['name'][0])){
             $fileName = array();
             $str = explode(".", $_FILES['file']['name']);
@@ -43,9 +37,10 @@
             $name = trim($new." ".$date." .".end($str));
             $tmp_name = $_FILES['file']['tmp_name'];
             $path = $_SESSION['upload_file_location'];
+            $size = ($_FILES['file']['size']/1000);
         }
     }
-
+    
     if(isset($_POST))
     {
         include 'dbconnection.php';
@@ -72,9 +67,20 @@
     }
            
     if($filePresent){
-        $con->query("insert into inquiring_of_management_files(wid,files) values('$wid','$name')");
-        move_uploaded_file($tmp_name, $path . $name);
-        $flag = 1;
+        $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+        if($sizeCheck->num_rows > 0){   
+            $result = $sizeCheck->fetch_assoc();
+            if(($size + $result['storage_used']) < $result['storage']){
+                $updatedSize = $result['storage_used'] + $size;
+                $con->query("insert into inquiring_of_management_files(wid,files) values('$wid','$name')");
+                move_uploaded_file($tmp_name, $path . $name);
+                $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                $flag =1;
+            } 
+            else{
+                $flag = 0;
+            }
+        }
     } 
 
     if($flag){
@@ -93,7 +99,7 @@
         echo "<script>
             swal({
                 icon: 'error',
-                text: 'Error!',
+                text: 'Insufficient Storage kindly contact your Firm Admin',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

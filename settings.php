@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
     include 'dbconnection.php';
+    include "decimal2point.php";
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
@@ -128,7 +129,8 @@ error_reporting(E_ALL);
                     <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="../loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -136,6 +138,8 @@ error_reporting(E_ALL);
                         }   
                         else{
                             ?>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -216,17 +220,32 @@ error_reporting(E_ALL);
                             else{
                                 echo 'Tools';
                             }
-                            ?>
+                        ?>
                     </a>
                     <a href="#billing" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size" id="billingTab">
-                    <?php
-                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1 || $_SESSION['role'] == 4){
-                        ?>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Billing
-                    <?php 
-                    } 
-                    ?>    
+                        <?php
+                            if($_SESSION['role'] == 1 || $_SESSION['role'] == -1 || $_SESSION['role'] == 4){
+                                ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                                <?php 
+                                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                                        echo 'Storage';
+                                    }
+                                    else{
+                                        echo 'Billing';
+                                    }
+                                    ?>
+                                <?php
+                            } 
+                        ?>    
                     </a>
+                    <?php 
+                        if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                    ?>
+                    <a href="#subscription" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded size">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user mr-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Subscription
+                    </a>
+                    <?php } ?>
                 </div>
             </div>
         </div><br><br>
@@ -241,11 +260,14 @@ error_reporting(E_ALL);
                         <a href="#account" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></a>
                         </li>
                         <li class="nav-item">
-                        <a href="#billing" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></a>
+                        <a href="#billing" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="#subscription" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a>
                         </li>
                     </ul>
                 </div>
-                <div class="card-body tab-content m-0">
+                <div class="card-body tab-content" id="addMargin">
                     <div class="tab-pane active" id="profile">
                         <?php 
                             if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
@@ -255,19 +277,19 @@ error_reporting(E_ALL);
                         <form>
                             <div class="form-group">
                                 <label for="fullName">Firm Name</label>
-                                <input type="text" class="form-control" id="fullName" aria-describedby="fullNameHelp" placeholder="Enter your Firm Name" value="<?php echo $_SESSION['firm_details']['firm_name']; ?>">
+                                <input type="text" class="form-control" id="fullName" aria-describedby="fullNameHelp" placeholder="Enter your Firm Name" value="<?php echo $_SESSION['firm_details']['firm_name']; ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="bio">Contact Address</label>
-                                <textarea class="form-control autosize" id="bio" placeholder="Enter contact address" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;"><?php echo $_SESSION['firm_details']['firm_address']; ?></textarea>
+                                <textarea class="form-control autosize" id="bio" placeholder="Enter contact address" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;" readonly><?php echo $_SESSION['firm_details']['firm_address']; ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="url">Firm Email</label>
-                                <input type="text" class="form-control" id="url" placeholder="Enter your email address" value="<?php echo $_SESSION['firm_details']['firm_email']; ?>" value="">
+                                <input type="text" class="form-control" id="url" placeholder="Enter your email address" value="<?php echo $_SESSION['firm_details']['firm_email']; ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="location">Firm Leader</label>
-                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>">
+                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Multicurrency</label>
@@ -342,7 +364,7 @@ error_reporting(E_ALL);
                             <hr>
                             <div class="form-group">
                                 <label class="d-block text-danger">Help Desk Number</label>
-                                <input type="text" class="form-control" id="number" aria-describedby="numberHelp" value="1800-600-5958">
+                                <input type="text" class="form-control" id="number" aria-describedby="numberHelp" value="1800-600-5958" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">Email Us</label>
@@ -350,11 +372,11 @@ error_reporting(E_ALL);
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">24/7 online chat assistance</label>
-                                <input type="text" class="form-control" id="chat" aria-describedby="chatHelp" value="">
+                                <input type="text" class="form-control" id="chat" aria-describedby="chatHelp" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">24/7 Help Desk Number</label>
-                                <input type="text" class="form-control" id="24Number" aria-describedby="24NumberHelp" value="">
+                                <input type="text" class="form-control" id="24Number" aria-describedby="24NumberHelp" value="1800-800-6969" readonly>
                             </div>
                             <!-- <button class="btn btn-danger" type="button">Delete Account</button> -->
                         </form>
@@ -453,7 +475,6 @@ error_reporting(E_ALL);
                                             </div>
                                             <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
                                         </form>
-                                        <div><i class="fas fa-info-circle m-0" style="color:#FFAE42;"></i> For security purposes you are not allowed to send documents over the chat, you can only share SS of the issue you are facing.</div><br>
                                     </div> <!-- end chat -->
                                 </div>
                             </div>
@@ -462,116 +483,203 @@ error_reporting(E_ALL);
                         ?>
                     </div>
                     <div class="tab-pane" id="billing">
-                        <div class="col-md-9">
-                            <h6>BILLING SETTINGS</h6>
-                            <hr>
-                            <div>
-                                <div class="form-group">
-                                    <label for="fullName">Subcription</label>
-                                    <form action="#">
-                                        <div class="row col-md-12">
-                                            <div class="col-md-4 p-0">
-                                                <input type="number" class="form-control" placeholder="Enter the number of clients">
-                                            </div> &emsp;
-                                            <div class="col-md-2 p-0">
-                                                <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
-                                            </div>
-                                            <div class="col-md-4 mt-1">
-                                                <label><h6>&#8377;1499/Client</h6></label>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="form-group mb-0 col-md-6 p-0">
-                                    <label for="fullName">Payment History</label>
-                                    <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="">
-                                </div>
-                                <div class="form-group mb-0 col-md-6 p-0">
-                                    <label for="fullName">Firm Storage space</label>
-                                    <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" placeholder="10MB for free customers">
-                                </div>
-                                <div class="form-group mb-0 col-md-6 p-0">
-                                    <label for="fullName">Storage space used</label><br>
-                                    <?php
-                                        $f = 'uploads/'.$_SESSION['firm_id'];
-                                        $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
-                                        $size = fgets ( $io )  ;
-                                        $size = substr ( $size, 0, strpos ( $size, "\t" ) );
-                                        pclose ( $io );
+                        <?php 
+                            if($_SESSION['role'] != 1 && $_SESSION['role'] != -1){
+                                $firmDetails = $con->query("select * from firm_details where id =".$_SESSION['firm_id']);
+                                if($firmDetails->num_rows > 0){
+                                    while($row = $firmDetails->fetch_assoc()){
                                     ?>
-                                    <input type ="text" class="form-control" id="firm_storage_space_used" aria-describedby="fullNameHelp" value="<?php echo round(($size/1024)).' MB'; ?>" readonly>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <label for="fullName">Add Storage space</label><br>
-                                    <form action="#">
-                                        <div class="row col-md-12">
-                                            <div class="col-md-4 p-0">
-                                                <select class="form-control" aria-label="Default select example">
-                                                    <option selected>Select Storage</option>
-                                                    <option value="1">1 GB</option>
-                                                    <option value="5">5 GB</option>
-                                                    <option value="10">10 GB</option>
-                                                    <option value="15">15 GB</option>
-                                                    <option value="20">20 GB</option>
-                                                    <option value="25">25 GB</option>
-                                                </select>
-                                            </div> &emsp;
-                                            <div class="col-md-2 p-0">
-                                                <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                    <div class="col-md-9">
+                                        <h6>BILLING SETTINGS</h6>
+                                        <hr>
+                                        <div>
+                                            <div class="form-group">
+                                                <label for="fullName">Subcription</label>
+                                                <form action="buySubscription" method="post">
+                                                    <div class="row col-md-12">
+                                                        <div class="col-md-4 p-0">
+                                                            <input type="number" name ="subscription" class="form-control" placeholder="Enter the number of clients" required>
+                                                        </div> &emsp;
+                                                        <div class="col-md-2 p-0">
+                                                            <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                                        </div>
+                                                        <div class="col-md-4 mt-1">
+                                                            <label><h6>&#8377;1499/Client</h6></label>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            <div class="col-md-4 mt-1">
-                                                <label><h6>&#8377;100/GB monthly</h6></label>
+                                            <div class="form-group mb-0 col-md-6 p-0">
+                                                <label for="fullName">Payment History</label>
+                                                <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="Will show up once payment is done" readonly>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <!-- CARDS -->
-                            <div id="content" class="toggleContents">
-                                <div class="container pt-4">
-                                    <div class="">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Promotion 1</h5>
-                                                <h6 class="">
-                                                <img src="Icons/Group 1.svg">
-                                                </h6>
-                                                <p class="text-count">
-                                                    
-                                                </p>
-                                                <h6 class="card-subtitle mb-2">High Priority</h6>
+                                            <div class="form-group mb-0 col-md-6 p-0">
+                                                <label for="fullName">Subscribed Clients</label>
+                                                <input type="text" class="form-control" id="subscribed_clients" aria-describedby="fullNameHelp" value="<?php echo $row['subscribed_workspace']; ?>" readonly>
                                             </div>
-                                        </div>
-                                        <div class="card card-margin">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Promotion 2</h5>
-                                                <h6 class="">
-                                                    <img src="Icons/Group 1.svg">
-                                                </h6>
-                                                <p class="text-count">
-                                                    
-                                                </p>
-                                                <h6 class="card-subtitle mb-2">Moderate Priority</h6>
+                                            <div class="form-group mb-0 col-md-6 p-0">
+                                                <label for="fullName">Clients Available</label>
+                                                <input type="text" class="form-control" id="clients_available" aria-describedby="fullNameHelp" value="<?php echo $row['subscribed_workspace']-$row['used_workspace'];?>" readonly>
                                             </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Promotion 3</h5>
-                                                <h6 class="">
-                                                <img src="Icons/Group 1.svg">
-                                                </h6>
-                                                <p class="text-count">
-                                                    
-                                                </p>
-                                                <h6 class="card-subtitle mb-2">Low Priority</h6>
+                                            <div class="form-group mb-0 col-md-6 p-0">
+                                                <label for="fullName">Firm Storage space</label>
+                                                <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" value = "<?php echo ($row['storage']/1000).' MB'; ?>" readonly>
+                                            </div>
+                                            <div class="form-group mb-0 col-md-6 p-0">
+                                                <label for="fullName">Storage space used</label><br>
+                                                <input type ="text" class="form-control" id="firm_storage_space_used" value="<?php echo strlen(($row['storage_used'])) <= 3 ? decimal2point((float)($row['storage_used'])).' KB':decimal2point((float)($row['storage_used']/1000)).' MB'?>" readonly>
+                                            </div>
+                                            <div class="form-group mb-0">
+                                                <label for="fullName">Add Storage space</label><br>
+                                                <form action="#">
+                                                    <div class="row col-md-12">
+                                                        <div class="col-md-4 p-0">
+                                                            <select class="form-control" aria-label="Default select example">
+                                                                <option selected>Select Storage</option>
+                                                                <option value="1">1 GB</option>
+                                                                <option value="5">5 GB</option>
+                                                                <option value="10">10 GB</option>
+                                                                <option value="15">15 GB</option>
+                                                                <option value="20">20 GB</option>
+                                                                <option value="25">25 GB</option>
+                                                            </select>
+                                                        </div> &emsp;
+                                                        <div class="col-md-2 p-0">
+                                                            <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                                        </div>
+                                                        <div class="col-md-4 mt-1">
+                                                            <label><h6>&#8377;100/GB monthly</h6></label>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-3">
+                                        <!-- CARDS -->
+                                        <div id="content" class="toggleContents">
+                                            <div class="container pt-4">
+                                                <div class="">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Promotion 1</h5>
+                                                            <h6 class="">
+                                                            <img src="Icons/Group 1.svg">
+                                                            </h6>
+                                                            <p class="text-count">
+                                                                
+                                                            </p>
+                                                            <h6 class="card-subtitle mb-2">High Priority</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card card-margin">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Promotion 2</h5>
+                                                            <h6 class="">
+                                                                <img src="Icons/Group 1.svg">
+                                                            </h6>
+                                                            <p class="text-count">
+                                                                
+                                                            </p>
+                                                            <h6 class="card-subtitle mb-2">Moderate Priority</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Promotion 3</h5>
+                                                            <h6 class="">
+                                                            <img src="Icons/Group 1.svg">
+                                                            </h6>
+                                                            <p class="text-count">
+                                                                
+                                                            </p>
+                                                            <h6 class="card-subtitle mb-2">Low Priority</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        <?php 
+                                    } 
+                                }
+                            }
+                        else
+                        {
+                        ?>
+                        <table class="table">
+                            <thead>
+                                <th>Firm Name</th>
+                                <th>Storage Bought</th>
+                                <th>Storage Used</th>
+                                <th>Storage Available</th>
+                            </thead>
+                            <tbody>  
+                                <?php
+                                    $result = $con->query("SELECT * from firm_details");
+                                    if($result->num_rows){
+                                        while($row = $result->fetch_assoc()){
+                                            $storage = decimal2point((float)($row['storage']/1000));
+                                            $storage_used = decimal2point((float)($row['storage_used']/1000));
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $row['firm_name']; ?></td>
+                                                <td><?php echo $storage.' MB';?></td>
+                                                <td><?php echo $storage_used.' MB';?></td>
+                                                <td><?php echo ($storage-$storage_used).' MB';?></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    }
+                                    else{
+                                        ?>
+                                        <tr>
+                                            <td colspan="4">No Firm Available</td>
+                                        </tr>
+                                    <?php
+                                    }
+                                ?>
+                            </tbody>
+                        </table>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="tab-pane" id="subscription">
+                        <form>
+                            <div class="row">
+                                <table class="table">
+                                    <thead>
+                                        <th>Firm Name</th>
+                                        <th>Subscribed Workspace</th>
+                                        <th>Used Workspace</th>
+                                    </thead>
+                                    <tbody>  
+                                        <?php
+                                            $result = $con->query("SELECT * from firm_details");
+                                            if($result->num_rows){
+                                                while($row = $result->fetch_assoc()){
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $row['firm_name']; ?></td>
+                                                        <td><?php echo $row['subscribed_workspace'];?></td>
+                                                        <td><?php echo $row['used_workspace'];?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            else{
+                                                ?>
+                                                <tr>
+                                                    <td colspan="4">No Firm Available</td>
+                                                </tr>
+                                            <?php
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -643,10 +751,12 @@ error_reporting(E_ALL);
 
         $('#billingTab').click(function(e){
             $('#billing').addClass('d-flex');
+            $('#addMargin').addClass('m-0');
         });
 
         $('#profileTab, #accountTab').click(function(e){
             $('#billing').removeClass('d-flex');
+            $('#addMargin').removeClass('m-0');
         });
 
         let darkmode = <?php echo $_SESSION['darkmode']; ?>;

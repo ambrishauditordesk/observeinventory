@@ -50,11 +50,6 @@
         //var_dump($_FILES);
         if(!empty($_FILES['file']['name'])){
             $filePresent = 1;
-            // File size should be less the 2MB
-            if ($_FILES["file"]["size"] > 2000000) {
-                $error.= "<p>File Size is greater than 2MB.</p><br>";
-                $uploadOk = 0;
-            }
             if(!empty($_FILES['file']['name'][0])){
                 $fileName = array();
                 $str = explode(".", $_FILES['file']['name']);
@@ -72,6 +67,7 @@
                 // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
                 $tmp_name = $_FILES['file']['tmp_name'];
                 $path = $_SESSION['upload_file_location'];
+                $size = ($_FILES['file']['size']/1000);
             }
         }
         
@@ -108,11 +104,19 @@
 
             if($filePresent){
                 // $con->query("insert into insignificant_files(fname,workspace_id,pid,status,deletedDate) values ('$name','$wid','$pid','0','')");
-                $con->query("insert into insignificant_files(fname,workspace_id,pid) values ('$name','$wid','$pid')");
-                if(!move_uploaded_file($tmp_name, $path . $name)){
-                    $flag = 0;
-                    // File write permission is not given in the server.
-                    $error.= "<p>File was not uploaded but record created. Contact Admin ASAP.</p>";
+                $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+                if($sizeCheck->num_rows > 0){
+                    $result = $sizeCheck->fetch_assoc();
+                    if(($size + $result['storage_used']) < $result['storage']){
+                        $updatedSize = $result['storage_used'] + $size;
+                        $con->query("insert into insignificant_files(fname,workspace_id,pid) values ('$name','$wid','$pid')");
+                        move_uploaded_file($tmp_name, $path . $name);
+                        $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                        $flag = 1;
+                    }
+                    else{
+                        $flag = 0;
+                    }
                 }
             }
         }
@@ -133,7 +137,7 @@
         echo "<script>
                 swal({
                     icon: 'error',
-                    text: 'Error!',
+                    text: 'Insufficient Storage kindly contact your Firm Admin!',
                 }).then(function(isConfirm) {
                     if (isConfirm) {
                         window.location.href = '$ser';

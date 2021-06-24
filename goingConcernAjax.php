@@ -35,8 +35,6 @@
     }
     if($_POST['status'] == 1){
 
-        $uploadOk = 1;
-
         $prog_id = trim($_POST['pid']);
         $wid = trim($_POST['wid']);
 
@@ -94,11 +92,6 @@
         if(!empty($_FILES['file']['name'])){
             $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
             $filePresent = 1;
-            // File size should be less the 2MB
-            if ($_FILES["file"]["size"] > 2000000) {
-                $error.= "<p>File Size is greater than 2MB.</p><br>";
-                $uploadOk = 0;
-            }
             if(!empty($_FILES['file']['name'][0])){
                 $fileName = array();
                 $str = explode(".", $_FILES['file']['name']);
@@ -116,16 +109,24 @@
                 // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
                 $tmp_name = $_FILES['file']['tmp_name'];
                 $path = $_SESSION['upload_file_location'];
-                if(move_uploaded_file($tmp_name, $path . $name)){
-                    // File write permission is not given in the server.
-                    $con->query("insert into going_concern_files(workspace_id,fname) values ('$wid', '$name')");
-                }
-                else{
-                    $uploadOk = 0;
+                $size = ($_FILES['file']['size']/1000);
+
+                $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+                if($sizeCheck->num_rows > 0){   
+                    $result = $sizeCheck->fetch_assoc();
+                    if(($size + $result['storage_used']) < $result['storage']){
+                        $updatedSize = $result['storage_used'] + $size;
+                        $con->query("insert into going_concern_files(workspace_id,fname) values ('$wid', '$name')");
+                        move_uploaded_file($tmp_name, $path . $name);
+                        $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                        $flag =1;
+                    } 
+                    else{
+                        $flag = 0;
+                    }
                 }
             }
         }
-        $flag = $uploadOk == 1 ? 1 : 0;
 
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
         $email = $_SESSION['email'];
@@ -148,7 +149,7 @@
         echo "<script>
             swal({
                 icon: 'error',
-                text: 'Error!',
+                text: 'Insufficient Storage kindly contact your Firm Admin!',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

@@ -67,6 +67,7 @@ foreach($result as $row)
 }
 function get_all_data($con)
 {
+ $cid = $_POST['cid'];
  $query = "SELECT COUNT(user.id) AS total FROM `user` inner join user_client_log on user.id=user_client_log.user_id where user.client_id = '$cid' or user_client_log.client_id = '$cid'";
  $statement = $con->query($query)->fetch_assoc()["total"];
  return $statement;

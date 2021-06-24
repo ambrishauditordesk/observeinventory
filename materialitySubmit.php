@@ -64,11 +64,6 @@
         //var_dump($_FILES);
         if(!empty($_FILES['file']['name'])){
             $filePresent = 1;
-            // File size should be less the 2MB
-            if ($_FILES["file"]["size"] > 2000000) {
-                $error.= "<p>File Size is greater than 2MB.</p><br>";
-                $uploadOk = 0;
-            }
             if(!empty($_FILES['file']['name'][0])){
                 $fileName = array();
                 $str = explode(".", $_FILES['file']['name']);
@@ -86,66 +81,74 @@
                 // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
                 $tmp_name = $_FILES['file']['tmp_name'];
                 $path = $_SESSION['upload_file_location'];
+                $size = ($_FILES['file']['size']/1000);
             }
         }
 
-        if($uploadOk)
+        foreach ($_POST['materialityData']['sLow'] as $data) {
+            $sLow[] = $data;
+        }
+        foreach ($_POST['materialityData']['sHigh'] as $data) {
+            $sHigh[] = $data;
+        }
+        foreach ($_POST['materialityData']['cLow'] as $data) {
+            $cLow[] = $data;
+        }
+        foreach ($_POST['materialityData']['amount'] as $data) {
+            $amount[] = $data;
+        }
+        foreach ($_POST['materialityData']['id'] as $data) {
+            $id[] = $data;
+        }
+        $j = sizeof($sLow);
+        $flag = 0;
+
+        $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+        $email = $_SESSION['email'];
+
+        for ($i = 0; $i < $j; $i++) 
         {
-            foreach ($_POST['materialityData']['sLow'] as $data) {
-                $sLow[] = $data;
-            }
-            foreach ($_POST['materialityData']['sHigh'] as $data) {
-                $sHigh[] = $data;
-            }
-            foreach ($_POST['materialityData']['cLow'] as $data) {
-                $cLow[] = $data;
-            }
-            foreach ($_POST['materialityData']['amount'] as $data) {
-                $amount[] = $data;
-            }
-            foreach ($_POST['materialityData']['id'] as $data) {
-                $id[] = $data;
-            }
-            $j = sizeof($sLow);
-            $flag = 0;
-
-            $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
-            $email = $_SESSION['email'];
-
-            for ($i = 0; $i < $j; $i++) 
+            if($con->query("update materiality set amount = '$amount[$i]', standard_low='$sLow[$i]', standard_high='$sHigh[$i]', custom='$cLow[$i]' where workspace_id='$wid' and id = '$id[$i]'") === TRUE)
             {
-                if($con->query("update materiality set amount = '$amount[$i]', standard_low='$sLow[$i]', standard_high='$sHigh[$i]', custom='$cLow[$i]' where workspace_id='$wid' and id = '$id[$i]'") === TRUE)
-                {
-                    $flag=1;
-                    $pname = $con->query("select name from materiality where id = '$id[$i]' and workspace_id='$wid'")->fetch_assoc()['program_name'];
-                    $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploaded for $pname ,Materiality.')");
-                }
-                else
-                {
-                    $flag=0;
-                }
-                echo "<br>";
+                $flag=1;
+                $pname = $con->query("select name from materiality where id = '$id[$i]' and workspace_id='$wid'")->fetch_assoc()['program_name'];
+                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploaded for $pname ,Materiality.')");
             }
+            else
+            {
+                $flag=0;
+            }
+            echo "<br>";
+        }
 
-            if($filePresent){
-                // $con->query("insert into materiality_files(fname,submat_id,workspace_id,status,deletedDate) values ('$name','$submat_id','$wid','0','')");
-                $con->query("insert into materiality_files(fname,submat_id,workspace_id) values ('$name','$submat_id','$wid')");
-                $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
-                $email = $_SESSION['email'];
-                if(move_uploaded_file($tmp_name, $path . $name) == true){
+        if($filePresent){
+            // $con->query("insert into materiality_files(fname,submat_id,workspace_id,status,deletedDate) values ('$name','$submat_id','$wid','0','')");
+            $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+            if($sizeCheck->num_rows > 0){   
+                $result = $sizeCheck->fetch_assoc();
+                if(($size + $result['storage_used']) < $result['storage']){
+                    $updatedSize = $result['storage_used'] + $size;
+                    $con->query("insert into materiality_files(fname,submat_id,workspace_id) values ('$name','$submat_id','$wid')");
+                    $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
+                    $email = $_SESSION['email'];
+                    move_uploaded_file($tmp_name, $path . $name);
+                    $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
                     $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploaded for Materiality.')");
+                    $flag = 1;
                 }
                 else{
                     // File write permission is not given in the server.
                     $error.= "<p>File was not uploaded but record created. Contact Admin ASAP.</p>";
                     $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploading failed for Materiality.')");
+                    $flag = 0;
                 }
             }
-            $con->query("UPDATE sub_materiality SET comments = '$comment',balance_asset='$aScope',balance_liability='$lScope',pl_income='$pliScope',pl_expense= '$pleScope' WHERE workspace_id=$wid");
         }
     }
 
-    if($flag || $prepareFlag || $reviewFlag || $filePresent){
+    $con->query("UPDATE sub_materiality SET comments = '$comment',balance_asset='$aScope',balance_liability='$lScope',pl_income='$pliScope',pl_expense= '$pleScope' WHERE workspace_id=$wid");
+
+    if($flag || $prepareFlag || $reviewFlag){
         echo "<script>
             swal({
                 icon: 'success',
@@ -161,7 +164,7 @@
         echo "<script>
             swal({
                 icon: 'error',
-                text: 'Error!',
+                text: 'Insufficient Storage kindly contact your Firm Admin!',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

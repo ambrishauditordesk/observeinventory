@@ -23,7 +23,6 @@
     $wid = $_GET['wid'];
     $ser = $_SERVER['HTTP_REFERER'];
     $success = 0;
-    $error = '';
     // foreach ($_FILES['file'] as $data) {
     //     $fn[] = $data;
     // }
@@ -66,11 +65,6 @@
         {
             if(!empty($_FILES['file']['name'][$id[$i]])){
                 for($x = 0; $x < sizeof($_FILES['file']['name'][$id[$i]]); $x++){
-                    // File size should be less the 2MB
-                    if ($_FILES['file']['size'][$id[$i]][$x] > 2000000) {
-                        $error .= "<p>File Size is greater than 2MB.</p><br>";
-                        $uploadOk = 0;
-                    }
                     $str = explode('.',$_FILES['file']['name'][$id[$i]][$x]);
                     $new= '';
                     for($j = 0; $j<sizeof($str)-1; $j++){
@@ -85,11 +79,23 @@
                     // $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
                     $tmp_name = $_FILES['file']['tmp_name'][$id[$i]][$x];
                     $path = $_SESSION['upload_file_location'];
+                    $size = ($_FILES['file']['size']/1000);
+                    
                     if($uploadOk){
-                        if(move_uploaded_file($tmp_name, $path.$name)){
-                            $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");
-                            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','File uploaded $name')");
-                            $success = 1;
+                        $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+                        if($sizeCheck->num_rows > 0){   
+                            $result = $sizeCheck->fetch_assoc();
+                            if(($size + $result['storage_used']) < $result['storage']){
+                                $updatedSize = $result['storage_used'] + $size;
+                                $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");
+                                move_uploaded_file($tmp_name, $path.$name);
+                                $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','File uploaded $name')");
+                                $success = 1;
+                            } 
+                            else{
+                                $success = 0;
+                            }
                         }
                     }
                 }
@@ -99,7 +105,7 @@
                 $con->query("update accounts_log set description = '$description[$i]', client_contact_id='$client[$i]', request='$request[$i]',date='$date[$i]' where id = '$id[$i]'");
             }
         }
-        if($success && $error == ''){
+        if($success){
             echo "<script>
                     swal({
                         icon: 'success',
@@ -115,7 +121,7 @@
             echo "<script>
                     swal({
                         icon: 'error',
-                        text: '".$error."',
+                        text: 'Insufficient Storage kindly contact your Firm Admin!',
                     }).then(function(isConfirm) {
                         if (isConfirm) {
                             window.location.href = '$ser';

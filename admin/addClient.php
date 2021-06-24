@@ -189,16 +189,16 @@ if($uploadOk) {
          
         if(customMailer($email[$i],$msg,$sub)){
             if(empty($successEmailList))
-                $successEmailList = $email;
+                $successEmailList = $email[$i];
             else
-                $successEmailList .= ','.$email;
+                $successEmailList .= ','.$email[$i];
             sleep(1);
         }
         else{
             if(empty($unSuccessEmailList))
-                $unSuccessEmailList = $email;
+                $unSuccessEmailList = $email[$i];
             else
-                $unSuccessEmailList .= ','.$email;
+                $unSuccessEmailList .= ','.$email[$i];
         }
     }
     

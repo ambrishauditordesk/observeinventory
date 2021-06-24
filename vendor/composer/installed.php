@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9ce2a20746e43937aa730e50f936795ae6166776',
+        'reference' => '4b94511017716e5c3914f77230adac7a111c7c57',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9ce2a20746e43937aa730e50f936795ae6166776',
+            'reference' => '4b94511017716e5c3914f77230adac7a111c7c57',
             'dev_requirement' => false,
         ),
         'ezyang/htmlpurifier' => array(
@@ -62,6 +62,15 @@
             'install_path' => __DIR__ . '/../myclabs/php-enum',
             'aliases' => array(),
             'reference' => '46cf3d8498b095bd33727b13fd5707263af99421',
+            'dev_requirement' => false,
+        ),
+        'nadirhamid/docx-to-html' => array(
+            'pretty_version' => 'v0.0.1',
+            'version' => '0.0.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nadirhamid/docx-to-html',
+            'aliases' => array(),
+            'reference' => '0ccb7a1130d6afc9bd5b541f8404ab37e3fa0069',
             'dev_requirement' => false,
         ),
         'phpoffice/phpspreadsheet' => array(

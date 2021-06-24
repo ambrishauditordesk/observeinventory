@@ -144,7 +144,6 @@ ini_set('display_startup_errors', 1);
                         <?php 
                             if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                             ?>
-                                <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                                 <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>

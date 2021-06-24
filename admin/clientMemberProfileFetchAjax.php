@@ -64,6 +64,7 @@ foreach($result as $row)
 }
 function get_all_data($con)
 {
+ $cid = $_POST['cid'];
  $query = "SELECT COUNT(id) AS total FROM `user` where client_id = '$cid'";
  $statement = $con->query($query)->fetch_assoc()["total"];
  return $statement;

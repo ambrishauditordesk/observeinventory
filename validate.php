@@ -95,7 +95,7 @@
                 if($usersrow['active'] == 1){
                     if($usersrow['first_logged_status'] == 1){
                         $resetCode = bin2hex(random_bytes(50));
-                        $con->query("update user set reset_code = '$resetCode', first_logged_status = 0 where id = ".$usersrow['id']);
+                        $con->query("update user set reset_code = '$resetCode' where id = ".$usersrow['id']);
                         header('Location: reset?code='.$resetCode.'&email='.$email);
                     }
                     else{

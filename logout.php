@@ -3,8 +3,7 @@ include 'dbconnection.php';
     session_start();
     if(isset($_SESSION["email"])) {
         $userId = $_SESSION['id'];
-        $clientId = $_SESSION['client_id'];
-        
+                
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
         $email = $_SESSION['email'];
         // $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','User Logged Out successfully.')");

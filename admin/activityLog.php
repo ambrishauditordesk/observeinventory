@@ -8,6 +8,10 @@
         header('Location: ../login');
     }
     $wid = $_SESSION['workspace_id'];
+    if(!isset($_SESSION['workspace_id']) && empty($_SESSION['workspace_id'])){
+        header('location: ./');
+    }
+    $clientName = 1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,8 +82,7 @@
                             ?>
                             <i class="fas fa-user-circle fa-2x" aria-hidden="true"></i>
                             <?php
-                        }
-                        
+                        }   
                     ?>
                 </span>
                 <a class="nav-link d-flex align-items-center" href="#" id="userDropdown"
@@ -90,7 +93,7 @@
                     </span>
                 </a>
                 <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" style="font-size: small;">
                     <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
@@ -99,9 +102,7 @@
                         <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="loginLog"><i class="fas fa-sign-in-alt"></i>Login Log</a>
                             <a class="dropdown-item" href="../deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
-                            <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -109,7 +110,6 @@
                         }   
                         else{
                             ?>
-                            <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="../deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>

@@ -187,7 +187,6 @@ $_SESSION['breadcrumb'] = array();
                     <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-sign-in-alt"></i>Login Log</a>
                             <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>

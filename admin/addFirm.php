@@ -23,7 +23,7 @@ $add = trim($_POST['firmAdd']);
 $email = trim($_POST['firmEmail']);
 $ser = $_SERVER['HTTP_REFERER'];
 
-if ($con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_email`) VALUES ('$name','$add','$email')")== TRUE){
+if ($con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_email`,'storage') VALUES ('$name','$add','$email','10000')")== TRUE){
     echo "<script>
             swal({
                 icon: 'success',

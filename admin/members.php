@@ -101,14 +101,12 @@
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <?php 
-                        if($_SESSION['role'] == '-1'){
+                        if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="loginLog"><i class="fas fa-list"></i>Login Log</a>
                             <a class="dropdown-item" href="activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
                         <?php
                         }   
                         else{
@@ -116,7 +114,7 @@
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
                             <?php
                         }
                     ?>
@@ -567,7 +565,7 @@
                         </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                            <input class="btn btn-primary" type="submit" value="Update">
                         </div>
                     </form>
                 </div>
@@ -993,8 +991,7 @@
         var name = $("#name").val();
         var email = $("#email").val();
         var password = $("#password").val();
-        var role = $("#role").val();
-        
+        var role = $("#role").val();        
         
         $.ajax({
             url: "addMember.php",

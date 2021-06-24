@@ -5,6 +5,7 @@
 
     include 'dbconnection.php';
     include 'moneyFormatter.php';
+    include 'decimal2point.php';
     session_start();
 
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
@@ -395,22 +396,23 @@
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <?php 
-                        if($_SESSION['role'] == '-1'){
+                       if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-list"></i>Login Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
                         <?php
                         }   
                         else{
                             ?>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - ABC</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name -<?php echo $_SESSION['firm_details']['firm_name']; ?></a>
                             <?php
                         }
                     ?>
@@ -817,22 +819,22 @@
                                                                         <input type="hidden" name="account[id][]"
                                                                             value="<?php echo $query1['id']; ?>">
                                                                     </td>
-                                                                    <td><textarea rows="3" class="form-control mb-3" <?php if($_SESSION['external'] == 1) echo "readonly"; ?> name="account[des][]"><?php echo $row['description']; ?></textarea></td>
+                                                                    <td><textarea rows="3" class="form-control mb-3 minWidth250" <?php if($_SESSION['external'] == 1) echo "readonly"; ?> name="account[des][]"><?php echo $row['description']; ?></textarea></td>
                                                                     <?php 
                                                                         if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                                         ?>
                                                                     <td>
-                                                                            <select class="form-control" name="account[client][]" required>
-                                                                                
-                                                                                <option>Select Person</option>
-                                                                                <?php 
-                                                                                    foreach($result1 as $key => $value){
-                                                                                ?>
-                                                                                <option value="<?php echo $value[0]; ?>" <?php if($query1['client_contact_id'] == $value[0]) {echo "Selected";} ?>> 
-                                                                                <?php echo $value[1]; ?>
-                                                                                </option>
-                                                                                <?php } ?>
-                                                                            </select>
+                                                                        <select class="form-control" name="account[client][]" required>
+                                                                            
+                                                                            <option>Select Person</option>
+                                                                            <?php 
+                                                                                foreach($result1 as $key => $value){
+                                                                            ?>
+                                                                            <option value="<?php echo $value[0]; ?>" <?php if($query1['client_contact_id'] == $value[0]) {echo "Selected";} ?>> 
+                                                                            <?php echo $value[1]; ?>
+                                                                            </option>
+                                                                            <?php } ?>
+                                                                        </select>
                                                                     </td>
                                                                         <?php } ?>
                                                                     <?php
@@ -845,12 +847,12 @@
                                                                     }
                                                                     ?>
                                                                     <td>
-                                                                            <?php 
+                                                                        <?php 
                                                                             $count = 1;
                                                                             $documentResult = $con->query("select documents from accounts_log_docs where accounts_log_id =".$query1['id']);
                                                                             while($documentResultRow = $documentResult->fetch_assoc())
                                                                                 echo "<label style='white-space:nowrap;'>".$count++.":- <a  href='#' class='fileFetch' target='_blank' id='".$documentResultRow['documents']."'>".$documentResultRow['documents']."</a></label><br>";
-                                                                            ?> 
+                                                                        ?> 
                                                                     </td>
                                                                     <td><input class="form-control" <?php if(isset($_SESSION['external']) && $_SESSION['external'] == 1) echo "readonly"; ?> type="text" size="10" name="account[request][]"
                                                                             value="<?php echo $row['request']; ?>"></td>
@@ -1945,6 +1947,7 @@
                             <?php
                         }
                         elseif($prog_id == 258){
+                            var_dump($_SESSION['firm_id']);
                             ?>
                             <div class="flex-column col-md-10 col-lg-10 col-sm-10 mt-3">
                                 <div class="form-group col-md-12 col-lg-12 col-sm-12">    
@@ -1980,7 +1983,7 @@
                                                         <input type="hidden" name="answer[<?php echo $count; ?>][0]" value="<?php echo $questionRow['id']; ?>">
                                                         <label for=""><?php echo $i.') '.$questionRow['question']; ?></label>
                                                         <div class="d-flex">
-                                                            <select name="answer[<?php echo $count; ?>][1]" class="form-control" required>
+                                                            <select name="answer[<?php echo $count; ?>][1]" class="form-control">
                                                                 <option value="">Choose a option</option>
                                                                 <option value="YES" <?php if($questionRow['answer_option'] == 'YES') echo "selected"; ?>>YES</option>
                                                                 <option value="NO" <?php if($questionRow['answer_option'] == 'NO') echo "selected"; ?>>NO</option>
@@ -2005,7 +2008,10 @@
                                                 }
                                             ?>
                                         <input type="hidden" name="wid" value="<?php echo $wid; ?>">
-                                        <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations..."><?php echo $con->query("select textarea from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea']; ?></textarea>
+                                        <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations...">
+                                            <?php echo $con->query("select count(textarea) total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['total'] == 1 ? $con->query("select textarea total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea'] : ''; ?>
+                                        </textarea>
+
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
                                             <input type="submit" id="inquiring_of_management_questions_form" class="btn btn-success align-middle" value="Save"> 
@@ -2310,7 +2316,10 @@
                             ?>
                             <div class="flex-column col-md-10 col-lg-10 col-sm-10 mt-3">
                                 <button id="exportGoingConcern" class="btn bg-violet mb-3 ml-2" onclick = "exportGoingConcern()">Export</button>
-                                <?php $goingConcernDecRadio = $con->query("select * from going_concern where workspace_id = $wid")->fetch_assoc(); ?>
+                                <?php 
+                                    $goingConcernDecRadio = $con->query("select * from going_concern where workspace_id = $wid")->num_rows;
+                                    $goingConcernDecRadio = $goingConcernDecRadio >= 1 ? $goingConcernDecRadio->fetch_assoc(): '0';                                
+                                ?>
                                 <form action="goingConcernAjax" method="post" enctype="multipart/form-data">
                                     <div id="goingConcernDiv" class="form-group col-md-12 col-lg-12 col-sm-12">
                                         <p><strong>Entity name</strong> : <?php echo $clientName = $con->query("select name from workspace inner join client on workspace.client_id = client.id where workspace.id = $wid")->fetch_assoc()['name'];  ?></p>
@@ -3339,7 +3348,7 @@
                                         <div class="form-group">
                                             <label for="files">Upload Documents</label>
                                             <div class="form-group">
-                                                <input class="btn btn-upload" type="file" name="file[]" id="uploadedFile" multiple accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf">
+                                                <input class="btn btn-upload" type="file" name="file[]" id="uploadedFile" multiple accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf, .xls, .xlxs">
                                             </div>
                                         </div>
                                         <div class="form-group"><label for="exfiles">Uploaded Files</label>

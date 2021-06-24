@@ -3,6 +3,7 @@
  ini_set('display_startup_errors', 1);
  error_reporting(E_ALL);
     include '../dbconnection.php';
+    include '../decimal2point.php';
     session_start();
     
     if (isset($_SESSION['workspace_id']) && !empty($_SESSION['workspace_id'])){
@@ -126,7 +127,7 @@
                     </span>
                 </a>
                 <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" style="font-size:small;">
                     <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
@@ -229,7 +230,7 @@
                         <div class="">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Total Assigned</h5>
+                                    <h6 class="card-title">Total Assigned</h6>
                                     <h6 class="">
                                     <img src="../Icons/Group 3.svg">
                                     </h6>
@@ -251,7 +252,7 @@
                             </div>
                             <div class="card card-margin">
                                 <div class="card-body">
-                                    <h5 class="card-title">In Progress</h5>
+                                    <h6 class="card-title">In Progress</h6>
                                     <h6 class="">
                                         <img src="../Icons/Group 2.svg">
                                     </h6>
@@ -272,7 +273,7 @@
                             </div>
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title success">Completed</h5>
+                                    <h6 class="card-title success">Completed</h6>
                                     <h6 class="">
                                     <img src="../Icons/Group 1.svg">
                                     </h6>
@@ -291,6 +292,26 @@
                                     <h6 class="card-subtitle mb-2">Audits</h6>
                                 </div>
                             </div>
+                            <?php
+                                if($_SESSION['role'] != -1 && $_SESSION['role'] != 1){
+                            ?>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-warning">Storage Left</h6>
+                                        <i class="fas fa-3x fa-info-circle m-0" style="color:#FFAE42;"></i><br>
+                                        <p class="text-count">
+                                            <?php 
+                                                $storage = $con->query("select * from firm_details where id=".$_SESSION['firm_id'])->fetch_assoc();
+                                                $storage_left = decimal2point(($storage['storage'] - $storage['storage_used'])/1000);
+                                                echo $storage_left;
+                                            ?>
+                                        </p>
+                                        <h6 class="card-subtitle mb-2">&emsp;MB</h6>
+                                    </div>
+                                </div>
+                            <?php
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -781,8 +802,6 @@
 
     $(document).ready(function() {
 
-        document.getElementsByTagName("html")[0].style.visibility = "visible";
-
         get_data();
 
         $("#helpDescription > div > div > .close").click(function(e){
@@ -1031,7 +1050,10 @@
                 $("#help_11").show();
                 $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
             }
+        
         });
+
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
 
         var i = 1;
         b = i - 1;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9c18aadb3aa5484e7463b9bde822559",
+    "content-hash": "3fdd03bd51b76edc345f90af879a69eb",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -359,6 +359,44 @@
                 }
             ],
             "time": "2021-02-15T16:11:48+00:00"
+        },
+        {
+            "name": "nadirhamid/docx-to-html",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nadirhamid/Docx-to-HTML.git",
+                "reference": "0ccb7a1130d6afc9bd5b541f8404ab37e3fa0069"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nadirhamid/Docx-to-HTML/zipball/0ccb7a1130d6afc9bd5b541f8404ab37e3fa0069",
+                "reference": "0ccb7a1130d6afc9bd5b541f8404ab37e3fa0069",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "source/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "composer integration of xylude/Docx-to-HTML",
+            "homepage": "https://github.com/nadirhamid/Docx-to-HTML",
+            "keywords": [
+                "docx",
+                "html"
+            ],
+            "support": {
+                "source": "https://github.com/nadirhamid/Docx-to-HTML/tree/v0.0.1"
+            },
+            "time": "2017-11-07T20:50:43+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",

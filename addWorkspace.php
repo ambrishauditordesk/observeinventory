@@ -49,10 +49,25 @@ session_start();
 $from = trim($_POST['from']);
 $to = trim($_POST['to']);
 $clientID = trim($_POST['clientID']);
-
 $query = "insert into workspace(client_id,datefrom,dateto) values('$clientID','$from','$to')";
+$flag = 0;
 
-if ($con->query($query) === true) 
+$subscription = $con->query("select subscribed_workspace,used_workspace from firm_details where id =".$_SESSION['firm_id'])->fetch_assoc();
+
+if($subscription['subscribed_workspace'] > $subscription['used_workspace']){
+    $con->query($query);
+    $flag = 1;
+    $con->query("update firm_details set used_workspace = used_workspace+1 where id =".$_SESSION['firm_id']);
+}
+else{
+    echo "<script>
+        $(document).ready(function() {
+            $('#unsuccessModal').modal();
+        });
+    </script>";
+}
+
+if ($flag) 
 {
     $wid = $con->insert_id;
     $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
@@ -145,9 +160,32 @@ if ($con->query($query) === true)
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Workspace Addition Failed.</div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" href="workspace?fid=<?php echo base64_encode(md5($clientID)); ?>&xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID)); ?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>">OK</a>
+            <div class="modal-body">
+                <?php
+                    if($_SESSION['role'] != 4){
+                ?>
+                    Workspace Addition Failed! Kindly contact your Firm Admin.
+                <?php 
+                } else {
+                    ?>  
+                    Workspace Addition Failed! Kindly buy more WORKSPACE.
+                <?php 
+                }
+                ?>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <?php
+                    if($_SESSION['role'] != 4){
+                ?>
+                    <a class="btn btn-primary" href="workspace?fid=<?php echo base64_encode(md5($clientID)); ?>&xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID)); ?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>">OK</a>
+                <?php 
+                } else {
+                    ?> 
+                    <a class="btn btn-success" href="settings">BUY MORE!</a>
+                    <a class="btn btn-primary" href="workspace?fid=<?php echo base64_encode(md5($clientID)); ?>&xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID)); ?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>">OK</a>
+                <?php 
+                }
+            ?> 
             </div>
         </div>
     </div>

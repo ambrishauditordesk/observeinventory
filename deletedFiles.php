@@ -4,10 +4,14 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
     }
-    if($_SERVER['role'] == 5){
+    if($_SESSION['role'] == 5){
       header("Location: login");
     }
    $wid = $_SESSION['workspace_id'];
+   if(!isset($_SESSION['workspace_id']) && empty($_SESSION['workspace_id'])){
+       header('location: ./');
+   }
+   $clientName = 1;
 
     if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
         $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
@@ -122,7 +126,7 @@
                     </span>
                 </a>
                 <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" style="font-size: small";>
                     <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
@@ -131,8 +135,6 @@
                         <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="admin/loginLog"><i class="fas fa-sign-in-alt"></i>Login Log</a>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
@@ -142,7 +144,6 @@
                         else{
                             ?>
                             <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -250,129 +251,6 @@
             </div>
         </div>
 
-        <!-- <center><h3>Accounting Estimates Deleted Files</h3></center>
-        <div class="col-md-12">
-            <div class="d-flex col-md-12">
-               <table class="table table-striped">
-                  <thead>
-                     <tr>
-                        <th>SL</th>
-                        <th>File Name</th>
-                        <th>Deleted Date</th>
-                        <th>Action</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                  <?php
-                     $i = 1;
-                     $result = $con->query("SELECT * FROM accounting_estimates_files where status = 1 and workspace_id = $wid");
-                     if($result->num_rows < 1){
-                        ?>
-                        <tr>
-                           <td colspan="4">No record found</td>
-                        </tr>
-                        <?php
-                    }
-                    else{
-                        while($row = $result->fetch_assoc()){
-                            ?>
-                            <tr>
-                            <td><?php echo $i++; ?></td>
-                            <td><?php echo $row['file_name']; ?></td>
-                            <td><?php echo $row['deletedDate']; ?></td>
-                            <td><a href="#" class="recoverFileAccountingEstimates" id="<?php echo $row['id']; ?>">Recover File</a></td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                  ?>
-                  </tbody>
-               </table>
-            </div>
-        </div>
-
-        <center><h3>Insignificant Accounts Deleted Files</h3></center>
-        <div class="col-md-12">
-            <div class="d-flex col-md-12">
-               <table class="table table-striped">
-                  <thead>
-                     <tr>
-                        <th>SL</th>
-                        <th>File Name</th>
-                        <th>Deleted Date</th>
-                        <th>Action</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                  <?php
-                     $i = 1;
-                     $result = $con->query("SELECT * FROM insignificant_files where status = 1 and workspace_id = $wid");
-                     if($result->num_rows < 1){
-                        ?>
-                        <tr>
-                           <td colspan="4">No record found</td>
-                        </tr>
-                        <?php
-                    }
-                    else{
-                        while($row = $result->fetch_assoc()){
-                        ?>
-                        <tr>
-                            <td><?php echo $i++; ?></td>
-                            <td><?php echo $row['fname']; ?></td>
-                            <td><?php echo $row['deletedDate']; ?></td>
-                            <td><a href="#" class="recoverFileInsignificant" id="<?php echo $row['id']; ?>">Recover File</a></td>
-                        </tr>
-                        <?php
-                        }
-                    }
-                  ?>
-                  </tbody>
-               </table>
-            </div>
-        </div>
-
-        <center><h3>Materiality Deleted Files</h3></center>
-        <div class="col-md-12">
-            <div class="d-flex col-md-12">
-               <table class="table table-striped">
-                  <thead>
-                     <tr>
-                        <th>SL</th>
-                        <th>File Name</th>
-                        <th>Deleted Date</th>
-                        <th>Action</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                  <?php
-                     $i = 1;
-                     $result = $con->query("SELECT * FROM materiality_files where status = 1 and workspace_id = $wid");
-                     if($result->num_rows < 1){
-                         ?>
-                         <tr>
-                            <td colspan="4">No record found</td>
-                         </tr>
-                         <?php
-                     }
-                     else{
-                        while($row = $result->fetch_assoc()){
-                            ?>
-                            <tr>
-                               <td><?php echo $i++; ?></td>
-                               <td><?php echo $row['fname']; ?></td>
-                               <td><?php echo $row['deletedDate']; ?></td>
-                               <td><a href="#" class="recoverFileMateriality" id="<?php echo $row['id']; ?>">Recover File</a></td>
-                            </tr>
-                            <?php
-                         }
-                     }
-                  ?>
-                  </tbody>
-               </table>
-            </div>
-        </div> -->
-        
         <!-- Footer -->
         <footer class="sticky-footer">
             <div class="container my-auto">

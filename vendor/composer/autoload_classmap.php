@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Docx_reader\\Docx_reader' => $vendorDir . '/nadirhamid/docx-to-html/source/docx_reader.php',
 );

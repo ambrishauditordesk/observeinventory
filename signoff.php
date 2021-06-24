@@ -25,6 +25,7 @@
     }
 
     $flag = $flagComment = $flagFile = 0;
+    $singoffText = $commentText = $fileText = '';
     $wid = $_GET['wid'];
     $prog_id = $_POST['prog_id'];
     $sign = $_SESSION['signoff'];
@@ -41,6 +42,10 @@
             $flag = 1;
             $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Review Sign Off done for program:- $pname ')");
         }
+        $singoffText = "Review Signoff failed, kindly contact your Firm Admin!";
+        if($singoffText){
+            $singoffText = "Review Signoff Successfull";
+        }
     }
     if(isset($_POST['prepareSubmit']))
     {
@@ -50,12 +55,17 @@
             $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Prepare Sign Off done for program:- $pname ')");
             $flag = 1;
         }
+        $singoffText = "Prepare Signoff failed, kindly contact your Firm Admin!";
+        if($singoffText){
+            $singoffText = "Prepare Signoff Successfull";
+        }
     }
     if(isset($_POST['done']))
     {
         //File Upload
         if(!empty($_FILES['file']['name'][0])){
             $fileName = array();
+            $totalFileSize = 0;
             for($i = 0; $i < count($_FILES['file']['name']); $i++){
                 $str = explode(".", $_FILES['file']['name'][$i]);
                 $new= '';
@@ -69,27 +79,45 @@
                 }
                 $fileName[$i]['name'] = trim($new." ".$date." .".end($str));
                 $fileName[$i]['tmp_name'] = $_FILES['file']['tmp_name'][$i];
+                $fileName[$i]['size'] = $_FILES['file']['size'][$i];
+                $totalFileSize += ((float)$_FILES['file']['size'][$i])/1000;
             }
-            //move
-            $path = $_SESSION['upload_file_location'];
-            for($i = 0; $i < sizeof($fileName); $i++){
-                $name = $fileName[$i]['name'];
-                $tmp_name = $fileName[$i]['tmp_name'];
-                if(move_uploaded_file($tmp_name, $path . $name)){
-                   
-                    // if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file,status,deletedDate) values ('$wid','$prog_id','$uid','$name',0,'')") === TRUE){
-                    if($con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file) values ('$wid','$prog_id','$uid','$name')") === TRUE){
-                        $flagFile = 1;
-                        $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");
+
+            $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+            if($sizeCheck->num_rows > 0){   
+                $result = $sizeCheck->fetch_assoc();
+                $fileText = "Insufficient Storage kindly contact your Firm Admin!";
+                if(($totalFileSize + $result['storage_used']) < $result['storage']){
+                    $updatedSize = $result['storage_used'] + $totalFileSize;
+                    //move
+                    $path = $_SESSION['upload_file_location'];
+                    for($i = 0; $i < sizeof($fileName); $i++){
+                        $name = $fileName[$i]['name'];
+                        $tmp_name = $fileName[$i]['tmp_name'];
+                        if(move_uploaded_file($tmp_name, $path . $name)){
+                            $con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file,status,deletedDate) values ('$wid','$prog_id','$uid','$name','0','$date')");
+                            $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                            $flagFile = 1;
+                            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");   
+                        }
+                    }
+                    $fileText = "File uploading faileed kindly, contact your Firm Admin!";
+                    if($flagFile){
+                        $fileText = "File Uploaded Succesfully";
                     }
                 }
-            }
+            }       
         }
+        
         if(!empty(trim($_POST['newComment']))){
             $comment = $_SESSION['name'].": ".trim($_POST['newComment']);
             if($con->query("insert into signoff_comments_log(workspace_id,prog_id,user_id,comments,comments_date) values ('$wid','$prog_id','$uid','$comment','$date')") === TRUE){
                 $flagComment = 1;
                 $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New Comment:- $comment')");
+            }
+            $commentText = "Comment addition failed kindly, contact your Firm Admin!";
+            if($flagComment){
+                $commentText = "Comment Added succesfully";
             }
         }
 
@@ -100,8 +128,21 @@
             }
         }
     }
+
+    $text = 'No Updates!';
+
+    if($singoffText != '')
+        $text = $singoffText;
+    if($commentText != '')
+        $text = $commentText;
+    if($fileText != ''){
+        if($commentText != '')
+            $text .= ','. $fileText;
+        else
+            $text = $fileText;
+    }
+
     $icon = ($flag || $flagComment || $flagFile) == 0?'error':'success';
-    $text = $icon == 'error'?'Error':'Updated!';
     echo "<script>
         swal({
             icon: '".$icon."',

@@ -7,7 +7,7 @@ $id = trim($_POST['id']);
 $pass = md5(trim($_POST['pass']));
 $data = 0;
 if($con->query("select id from user where id = $id and reset_code != '' ")->num_rows == 1){
-   if($con->query("update user set password = '$pass', reset_code = '' where id = $id")){
+   if($con->query("update user set password = '$pass', reset_code = '', first_logged_status = 0 where id = $id")){
       $data = 1;
       $user = $con->query("select email, name from user where id = $id")->fetch_assoc();
       $name = $user['name'];

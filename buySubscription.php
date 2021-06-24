@@ -32,70 +32,21 @@
 </head>
 
 <body>
+
 <?php
-include '../dbconnection.php';
+
+include 'dbconnection.php';
 session_start();
-if(isset($_POST)){
 
+$firm_id = $_SESSION['firm_id'];
+$subs = trim($_POST['subscription']);
 $ser = $_SERVER['HTTP_REFERER'];
+$previous_subs = $con->query("select subscribed_workspace from firm_details where id =".$_SESSION['firm_id'])->fetch_assoc()['subscribed_workspace'];
 
-$addedById = trim($_POST['id']);
+$query = $con->query("update firm_details set subscribed_workspace = ($previous_subs + $subs) where id = $firm_id");
 
-// Getting the CST Time
-$addedByDate = trim($_POST['date']);
 
-$uploadOk = 1;
-
-// Name
-$name = trim($_POST['clientname']);
-
-//Nickname
-$nickName = trim($_POST['nickname']);
-
-//Date
-$date = trim($_POST['dob']);
-
-//Constitution
-$const = trim($_POST['constitution']);
-
-//Industry
-$industry = trim($_POST['industry']);
-
-//Address
-$add = trim($_POST['add']);
-
-//City
-$city = trim($_POST['city']);
-
-//State
-$state = trim($_POST['state']);
-
-//Pincode
-$pin = trim($_POST['pincode']);
-
-//Country
-$country = trim($_POST['country']);
-
-//PAN
-$pan = trim($_POST['pan']);
-
-//GST
-$gst = trim($_POST['gst']);
-
-//TAN
-$tan = trim($_POST['tan']);
-
-//CIN
-$cin = trim($_POST['cin']);
-
-$clientID = trim($_POST['cid']);
-
-$active = trim($_POST['active']);
-
-if($uploadOk){
-
-    $con->query("update client set active='$active',added_by_id='$addedById',added_by_date='$addedByDate',name='$name',nickname='$nickName',incorp_date='$date',const_id='$const',industry_id='$industry',address='$add',city='$city',state='$state',pincode='$pin',country='$country',pan='$pan',gst='$gst',tan='$tan',cin='$cin' where id='$clientID'");
-
+if($query){
     echo "<script>
             swal({
                 icon: 'success',
@@ -119,26 +70,7 @@ if($uploadOk){
             });
         </script>";
     }
-    ?>
-    <script>
-        
-        $(document).ready(function(){
-            document.getElementsByTagName("html")[0].style.visibility = "visible";
-        })
 
-        let darkmode = <?php echo $_SESSION['darkmode']; ?>;
-        if(darkmode)
-        {
-            document.documentElement.classList.toggle('dark-mode');
-            
-        }
-        else if(!darkmode){
-            document.documentElement.classList.remove('dark-mode');
-        }
-    </script>
-<?php 
-}
-else{
-    header('location:../');
-}
 ?>
+</body>
+</html>
