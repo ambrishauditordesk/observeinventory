@@ -301,9 +301,15 @@
                                         <i class="fas fa-3x fa-info-circle m-0" style="color:#FFAE42;"></i><br>
                                         <p class="text-count">
                                             <?php 
-                                                $storage = $con->query("select * from firm_details where id=".$_SESSION['firm_id'])->fetch_assoc();
-                                                $storage_left = decimal2point(($storage['storage'] - $storage['storage_used'])/1000);
-                                                echo $storage_left;
+                                                $storage = $con->query("select * from firm_details where id=".$_SESSION['firm_id']);
+                                                if($storage->num_rows > 0){
+                                                    $storage->fetch_assoc();
+                                                    $storage_left = decimal2point(($storage['storage'] - $storage['storage_used'])/1000);
+                                                    echo $storage_left;
+                                                }
+                                                else{
+                                                    echo 10 .' MB';
+                                                }
                                             ?>
                                         </p>
                                         <h6 class="card-subtitle mb-2">&emsp;MB</h6>
