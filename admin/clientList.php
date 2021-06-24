@@ -303,12 +303,12 @@
                                             <?php 
                                                 $storage = $con->query("select * from firm_details where id=".$_SESSION['firm_id']);
                                                 if($storage->num_rows > 0){
-                                                    $storage->fetch_assoc();
-                                                    $storage_left = decimal2point(($storage['storage'] - $storage['storage_used'])/1000);
+                                                    $storage_fetch = $storage->fetch_assoc();
+                                                    $storage_left = decimal2point(($storage_fetch['storage'] - $storage_fetch['storage_used'])/1000);
                                                     echo $storage_left;
                                                 }
                                                 else{
-                                                    echo 10 .' MB';
+                                                    echo 10;
                                                 }
                                             ?>
                                         </p>
