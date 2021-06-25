@@ -1947,7 +1947,6 @@
                             <?php
                         }
                         elseif($prog_id == 258){
-                            var_dump($_SESSION['firm_id']);
                             ?>
                             <div class="flex-column col-md-10 col-lg-10 col-sm-10 mt-3">
                                 <div class="form-group col-md-12 col-lg-12 col-sm-12">    
@@ -2009,7 +2008,7 @@
                                             ?>
                                         <input type="hidden" name="wid" value="<?php echo $wid; ?>">
                                         <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations...">
-                                            <?php echo $con->query("select count(textarea) total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['total'] == 1 ? $con->query("select textarea total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea'] : ''; ?>
+                                            <?php echo $con->query("select count(textarea) total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['total'] == 1 ? $con->query("select textarea from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea'] : ''; ?>
                                         </textarea>
 
                                         <div class="row d-flex justify-content-center align-items-center">
@@ -2429,7 +2428,7 @@
                                             <span>Add Procedure</span>
                                         </button>
                                         <p>Document additional considerations as needed:</p>
-                                        <textarea name="desc_a" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_a']; ?></textarea>
+                                        <textarea name="desc_a" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio != 0 ? $goingConcernDecRadio['desc_a'] : '' ; ?></textarea>
                                         <br>
                                         <p><h3>Part B: Execute &amp; Conclude</h3></p>
                                         <p>Procedures to evaluate the entity’s ability to continue as a going concern</p>
@@ -2519,24 +2518,29 @@
                                             <span>Add Procedure</span>
                                         </button>
                                         <p>Document additional considerations as needed:</p>
-                                        <textarea name="desc_b" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_b']; ?></textarea>
+                                        <textarea name="desc_b" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio != 0 ? $goingConcernDecRadio['desc_b'] : '' ; ?></textarea>
                                         <br>
                                         <p><b>Conclusion</b></p>
-                                        <p><b><i><?php echo $goingConcernDecRadio['conclusion_text'] == '' ? 'We did not give consideration to modification of our auditor’s report': $goingConcernDecRadio['conclusion_text'] ; ?></i></b><i class="fas fa-edit editConclusion" style="color:blue !important; cursor: pointer;" id="<?php echo $goingConcernDecRadio['id']; ?>" ></i></p>
+                                        <p><b><i><?php echo $goingConcernDecRadio == '0' ? 'We did not give consideration to modification of our auditor’s report': $goingConcernDecRadio['conclusion_text'] ;?></i></b><i class="fas fa-edit editConclusion" style="color:blue !important; cursor: pointer;" id="<?php echo $goingConcernDecRadio != 0 ? $goingConcernDecRadio['id'] : '0'; ?>" ></i></p>
                                         <p>Choose anyone from the options given below:</p>
                                         <?php
                                         $conclusionNumber = 0;
                                             $conclusionResult = $con->query("select * from going_concern_conclusion where workspace_id = $wid");
                                             while($conclusionRow = $conclusionResult->fetch_assoc()){
                                                 ?>
-                                                <input type="radio" id="<?php echo $conclusionRow['id']; ?>" name="conclusion" value="<?php echo $conclusionNumber; ?>" <?php if($goingConcernDecRadio['going_concern_radio'] == $conclusionNumber) echo 'checked'; ?> >
+                                                <input type="radio" id="<?php echo $conclusionRow['id']; ?>" name="conclusion" value="<?php echo $conclusionNumber; ?>" 
+                                                <?php 
+                                                    if($goingConcernDecRadio != 0)
+                                                        if($goingConcernDecRadio['going_concern_radio'] == $conclusionNumber) 
+                                                            echo 'checked';
+                                                ?> >
                                                 <label for="<?php echo $conclusionNumber++; ?>"><?php echo $conclusionRow['going_concern_conclusion_data']; ?>&nbsp;<i class="fas fa-edit editTextarea" style="color:blue !important; cursor: pointer;" id="<?php echo $conclusionRow['id']; ?>" ></i></label><br>
                                                 <?php
                                             }
                                         ?>
                                         <br>
                                         <p>Document additional considerations as needed:</p>
-                                        <textarea name="desc_c" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio['desc_c']; ?></textarea>
+                                        <textarea name="desc_c" class="form-control mb-3" cols="30" rows="5"><?php echo $goingConcernDecRadio != 0 ? $goingConcernDecRadio['desc_c'] : '' ; ?></textarea>
                                     </div>
                                     <input type="hidden" name="wid" value="<?php echo $wid; ?>">
                                     <input type="hidden" name="pid" value="<?php echo $prog_id; ?>">

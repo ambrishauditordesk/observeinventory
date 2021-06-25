@@ -63,7 +63,7 @@ if($subscription['subscribed_workspace'] > $subscription['used_workspace']){
     $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
     $query2= "insert into materiality(name,prog_id,workspace_id) SELECT name,prog_id,'$wid' workspace_id from materiality where def_prog='1'";
     $query3= "insert into sub_materiality(workspace_id) values ('$wid')";
-    $con->query("update firm_details set used_workspace = used_workspace+1 where id =".$_SESSION['firm_id']);
+$con->query("update firm_details set used_workspace = used_workspace+1 where id =".$_SESSION['firm_id']);       
 
 
     $res1=$con->query($query1);
@@ -102,17 +102,18 @@ if($subscription['subscribed_workspace'] > $subscription['used_workspace']){
         }
 
         $clientName = $con->query("select added_by_id, added_by_date, name from client where id = $clientID")->fetch_assoc();
-        
+        $name = str_replace(' ', '', $clientName['name']);
+
         if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
             $firmId = $con->query("select firm_details.id id from user inner join user_client_log on user_client_log.user_id = user.id inner join firm_user_log on user.id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id where user_client_log.client_id = $clientID and user.accessLevel = 4")->fetch_assoc()['id'];
-            shell_exec('mkdir -p uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
-            shell_exec('sudo chown -R root:root uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
-            shell_exec('sudo chmod -R 777 uploads/'.$firmId.'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('mkdir -p uploads/'.$firmId.'/'.escapeshellarg($clientID).$name.'/'.$wid.'/');
+            shell_exec('sudo chown -R root:root uploads/'.$firmId.'/'.escapeshellarg($clientID).$name.'/'.$wid.'/');
+            shell_exec('sudo chmod -R 777 uploads/'.$firmId.'/'.escapeshellarg($clientID).$name.'/'.$wid.'/');
         }
         else{
-            shell_exec('mkdir -p uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
-            shell_exec('sudo chown -R root:root uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
-            shell_exec('sudo chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$clientName['name'].'/'.$wid.'/');
+            shell_exec('mkdir -p uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$name.'/'.$wid.'/');
+            shell_exec('sudo chown -R root:root uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$name.'/'.$wid.'/');
+            shell_exec('sudo chmod -R 777 uploads/'.$_SESSION['firm_id'].'/'.escapeshellarg($clientID).$name.'/'.$wid.'/');
         }
 
         echo "<script>

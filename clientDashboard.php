@@ -28,7 +28,9 @@ if($con->query("select * from workspace where id = $wid and client_id = $clientI
     header('Location: login');
 }
 $_SESSION['workspace_id'] = $wid;
-$_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['workspace_id'].'/';   
+
+if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] > 1 )
+    $_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['workspace_id'].'/';   
 
 
 $folderStatus = $con->query("select * from client_temp_folder where workspace_id = $wid");
