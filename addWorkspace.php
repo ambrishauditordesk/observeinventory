@@ -43,6 +43,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 include 'dbconnection.php';
 session_start();
 
@@ -57,22 +58,12 @@ $subscription = $con->query("select subscribed_workspace,used_workspace from fir
 if($subscription['subscribed_workspace'] > $subscription['used_workspace']){
     $con->query($query);
     $flag = 1;
-    $con->query("update firm_details set used_workspace = used_workspace+1 where id =".$_SESSION['firm_id']);
-}
-else{
-    echo "<script>
-        $(document).ready(function() {
-            $('#unsuccessModal').modal();
-        });
-    </script>";
-}
 
-if ($flag) 
-{
     $wid = $con->insert_id;
     $query1 = "insert into workspace_log(workspace_id,program_id) select '$wid' as workspace_id, id from program where def_prog=1";
-    $query2="insert into materiality(name,prog_id,workspace_id) SELECT name,prog_id,'$wid' workspace_id from materiality where def_prog='1'";
-    $query3="insert into sub_materiality(workspace_id) values ('$wid')";
+    $query2= "insert into materiality(name,prog_id,workspace_id) SELECT name,prog_id,'$wid' workspace_id from materiality where def_prog='1'";
+    $query3= "insert into sub_materiality(workspace_id) values ('$wid')";
+    $con->query("update firm_details set used_workspace = used_workspace+1 where id =".$_SESSION['firm_id']);
 
 
     $res1=$con->query($query1);
@@ -131,6 +122,13 @@ if ($flag)
     </script>";
     }
 } 
+else{
+    echo "<script>
+        $(document).ready(function() {
+            $('#unsuccessModal').modal();
+        });
+    </script>";
+}
 ?>
 
 <!--Success Modal-->
