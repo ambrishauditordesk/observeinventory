@@ -6,6 +6,19 @@ include 'dbconnection.php';
 include 'getProgramStatus.php';
 
 session_start();
+
+if (isset($_SESSION['external']) && !empty($_SESSION['external']) && $_SESSION['external'] == 1){
+    $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$_SESSION['id'])->num_rows;
+    if($checkAccess){
+        $clientName = 1;
+        $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($_SESSION['external_client_id']);
+        header('Location: workspace?vid='.$location);
+    }
+    else{
+        header("Location: logout");
+    }
+}
+
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
     header("Location: ./");
 }
@@ -28,9 +41,7 @@ if($con->query("select * from workspace where id = $wid and client_id = $clientI
     header('Location: login');
 }
 $_SESSION['workspace_id'] = $wid;
-
-if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] > 1 )
-    $_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['workspace_id'].'/';   
+$_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['workspace_id'].'/';   
 
 
 $folderStatus = $con->query("select * from client_temp_folder where workspace_id = $wid");

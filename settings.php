@@ -5,6 +5,19 @@ error_reporting(E_ALL);
     include 'dbconnection.php';
     include "decimal2point.php";
     session_start();
+
+    if (isset($_SESSION['external']) && !empty($_SESSION['external']) && $_SESSION['external'] == 1){
+        $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$_SESSION['id'])->num_rows;
+        if($checkAccess){
+            $clientName = 1;
+            $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($_SESSION['external_client_id']);
+            header('Location: workspace?vid='.$location);
+        }
+        else{
+            header("Location: logout");
+        }
+    }
+
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
     }
@@ -289,7 +302,7 @@ error_reporting(E_ALL);
                             </div>
                             <div class="form-group">
                                 <label for="location">Firm Leader</label>
-                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>" readonly>
+                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.firm_id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Multicurrency</label>

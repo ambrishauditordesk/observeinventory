@@ -16,6 +16,7 @@
     <?php
     include 'dbconnection.php';
     session_start();
+    
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
@@ -103,13 +104,11 @@
         $j = sizeof($account);
         $flag = 0;
         
-        $count = 0;
-
         for ($i = 0; $i < $j; $i++) 
         {
-            if($con->query("INSERT INTO accounting_estimates(workspace_id,type, nameEstimate, account, py, cy, c, eo, mv, ro, pd, risk) VALUES ('$wid','$type[$count]','$nameEstimate[$count]','$account[$count]','$py[$count]','$cy[$count]','$c[$count]','$eo[$count]','$mv[$count]','$ro[$count]','$pd[$count]','$risk[$count]')") == TRUE)
+            
+            if($con->query("INSERT INTO accounting_estimates(workspace_id,type, nameEstimate, account, py, cy, c, eo, mv, ro, pd, risk) VALUES ('$wid','$type[$i]','$nameEstimate[$i]','$account[$i]','$py[$i]','$cy[$i]','$c[$i]','$eo[$i]','$mv[$i]','$ro[$i]','$pd[$i]','$risk[$i]')") == TRUE)
             {
-                $count++;
                 $flag = 1;
             }
         } 

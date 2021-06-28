@@ -111,7 +111,7 @@
             if($con->query("update materiality set amount = '$amount[$i]', standard_low='$sLow[$i]', standard_high='$sHigh[$i]', custom='$cLow[$i]' where workspace_id='$wid' and id = '$id[$i]'") === TRUE)
             {
                 $flag=1;
-                $pname = $con->query("select name from materiality where id = '$id[$i]' and workspace_id='$wid'")->fetch_assoc()['program_name'];
+                $pname = $con->query("select name from materiality where id = '$id[$i]' and workspace_id='$wid'")->fetch_assoc()['name'];
                 $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploaded for $pname ,Materiality.')");
             }
             else

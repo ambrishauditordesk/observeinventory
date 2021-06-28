@@ -20,7 +20,9 @@
         header("Location: ../login");
     }
     $description = $client = $request = $date = $id = $fn = array();
+    $fileDate = date("now");
     $wid = $_GET['wid'];
+    $email = $_SESSION['email'];
     $ser = $_SERVER['HTTP_REFERER'];
     $success = 0;
     // foreach ($_FILES['file'] as $data) {
@@ -75,11 +77,17 @@
                             $new .= ".".$str[$j];
                         }
                     }
-                    $name = trim($new." ".$date." .".end($str));
+                    $name = trim($new." ".$fileDate." .".end($str));
                     // $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
                     $tmp_name = $_FILES['file']['tmp_name'][$id[$i]][$x];
-                    $path = $_SESSION['upload_file_location'];
-                    $size = ($_FILES['file']['size']/1000);
+                    $uploadLocation = $con->query("SELECT CONCAT(firm_details.id, '/', client.id, client.name, '/',workspace.id) uploadLocation from workspace inner join client on workspace.client_id = client.id inner join user_client_log on client.id = user_client_log.client_id inner join firm_user_log on user_client_log.user_id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id where workspace.id = $wid group by firm_details.id")->fetch_assoc()['uploadLocation'];
+                    $uploadLocation = explode(' ',$uploadLocation);
+                    $path = 'uploads/';
+                    for($s=0;$s<sizeof($uploadLocation);$s++){
+                        $path .= $uploadLocation[$s];
+                    }
+                    $path .= '/';
+                    $size = (float)($_FILES['file']['size'][$id[$i]][$x])/1000;
                     
                     if($uploadOk){
                         $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
@@ -90,7 +98,7 @@
                                 $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");
                                 move_uploaded_file($tmp_name, $path.$name);
                                 $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
-                                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','File uploaded $name')");
+                                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$fileDate','File uploaded $name')");
                                 $success = 1;
                             } 
                             else{

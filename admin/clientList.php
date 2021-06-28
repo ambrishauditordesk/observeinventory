@@ -5,7 +5,19 @@
     include '../dbconnection.php';
     include '../decimal2point.php';
     session_start();
-    
+
+    if (isset($_SESSION['external']) && !empty($_SESSION['external']) && $_SESSION['external'] == 1){
+        $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$_SESSION['id'])->num_rows;
+        if($checkAccess){
+            $clientName = 1;
+            $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($_SESSION['external_client_id']);
+            header('Location: ../workspace?vid='.$location);
+        }
+        else{
+            header("Location: ../logout");
+        }
+    }
+
     if (isset($_SESSION['workspace_id']) && !empty($_SESSION['workspace_id'])){
         unset($_SESSION['workspace_id']);
     }

@@ -284,6 +284,7 @@
                             echo "<span class='helpDesign help_7'>7</span>";
                         }
                         elseif($prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 247 || $prog_id == 262 || $prog_id == 266 || $prog_id == 19){
+                           if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
                             echo "<span class='helpDesign help_9'>9</span>";
                         }
                         elseif($prog_id == 12 || $prog_id == 2){
@@ -363,9 +364,12 @@
                         echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_6'>6</span></label>";
                     }
                     elseif($prog_id == 1 || $prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 247 || $prog_id == 262 || $prog_id == 266 || $prog_id == 19){
+                        if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
+                            {
                         ?>
                         <label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_5'>5</span></label>
                         <?php
+                            }
                     }
                 ?>
                 
@@ -404,6 +408,13 @@
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
                         <?php
+                        }
+                        elseif($_SESSION['role'] == 5){
+                            ?>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-briefcase hue" style="color:blue;"></i>Firm Name - <?php echo $_SESSION['firm_details']['firm_name']; ?></a>
+                        <?php 
                         }   
                         else{
                             ?>
@@ -889,7 +900,14 @@
                                                 <hr>
                                                 <?php } ?>
                                         <div class="row d-flex justify-content-center p-bottom">
-                                            <label class="mt-2"><span class="helpDesign help_3">3</span></label>
+                                            <?php
+                                                if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
+                                                {
+                                            ?>
+                                                <label class="mt-2"><span class="helpDesign help_3">3</span></label>
+                                            <?php 
+                                                } 
+                                            ?>
                                             <input type="submit" class="btn btn-success align-middle" value="Save"> &nbsp;
                                             <?php 
                                             if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
@@ -2180,7 +2198,7 @@
                                                                     </select>
                                                                     </td>
                                                                     <td>
-                                                                    <select name="submitData[risk][]" class="form-control minWidth150"required>
+                                                                    <select name="submitEstimate[risk][]" class="form-control minWidth150"required>
                                                                         <option value="Low Risk" <?php if($row['risk'] == "Low Risk") echo "selected"; ?>>Low Risk</option>
                                                                         <option value="Significant Risk" <?php if($row['risk'] == "Significant Risk") echo "selected"; ?>>Significant Risk</option>
                                                                         <option value="High Risk" <?php if($row['risk'] == "High Risk") echo "selected"; ?>>High Risk</option>
@@ -2247,7 +2265,7 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <select name="submitData[risk][]" class="form-control minWidth150"required>
+                                                            <select name="submitEstimate[risk][]" class="form-control minWidth150"required>
                                                                 <option value="Low Risk">Low Risk</option>
                                                                 <option value="Significant Risk">Significant Risk</option>
                                                                 <option value="High Risk">High Risk</option>
@@ -2719,6 +2737,7 @@
                                                             echo "<label class='float-right'><span class='helpDesign help_9'>9</span></label>";
                                                         }
                                                     } else { ?>
+                                                        <span class="text-muted pl-2"><?php echo trim($queryrow['program_name']); ?> &nbsp;</span>
                                                         <a href="#" id="<?php echo $queryrow['id']; ?>"
                                                             class="buttonActive">
                                                             <img class="float-right" src="Icons/Icon feather-plus.svg" />
@@ -2738,395 +2757,398 @@
                 </div>
                 
                 <?php
-                
-                if($prog_id == 1 || $prog_id == 2 || $prog_id == 12 || $prog_id == 19 || $prog_id == 230 || $prog_id == 239 || $prog_id == 240 || $prog_id == 245 || $prog_id == 247 || $prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 262 || $prog_id == 266){
-                ?>
-                <div id = "helpDescriptionTop" class="d-flex justify-content-center">
-                    <div id="helpDescription" class="col-md-11">
-                        <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
-                            <div class="card-body">
-                                <button type="button" class="close" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            <?php
-                                if($prog_id == 1){
-                                    ?>
-                                    <div id="help_1">
-                                        <p>1. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. Work Programs – All the work programs are workstep folders that can be used to include multiple individual steps.</p>
-                                        <p>All Workporgrams. You can use “Add program” icon on the top right corner to add more programs to  Pillar like Planning,Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
-                                        <p><b>An audit program once created cannot be deleted.</b></p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Work steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step.</p>
-                                        <p>All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. Add program:<p> 
-                                        <p><b>Add a Programs:</b></p>
-                                        <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
-                                        <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
-                                        <p><b>Add a Step:</b></p>
-                                        <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
-                                        <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_9">
-                                        <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
-                                        <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
-                                    </div>
+                if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
+                {
+                    if($prog_id == 1 || $prog_id == 2 || $prog_id == 12 || $prog_id == 19 || $prog_id == 230 || $prog_id == 239 || $prog_id == 240 || $prog_id == 245 || $prog_id == 247 || $prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 262 || $prog_id == 266){
+                    ?>
+                        <div id = "helpDescriptionTop" class="d-flex justify-content-center">
+                            <div id="helpDescription" class="col-md-11">
+                                <div class="card" style="border: 4px solid rgb(134, 189, 255, 0.65) !important;box-shadow: 0px 0px 20px 1px rgba(0,0,0,0.5);">
+                                    <div class="card-body">
+                                        <button type="button" class="close" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?php
-                                }
-                                elseif($prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 266 || $prog_id == 19){
-                                    ?>
-                                    <div id="help_1">
-                                        <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. Red icons indicate that there is no saved data within this work steps and no sign offs have been done yet. Once a user signs off the step the icons disappear.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
-                                        <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. Add program:<p> 
-                                        <p><b>Add a Programs:</b></p>
-                                        <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
-                                        <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
-                                        <p><b>Add a Step:</b></p>
-                                        <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
-                                        <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_9">
-                                        <p>9. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <?php
-                                }
-                                elseif($prog_id == 245){
-                                    ?>
-                                    <div id="help_1">
-                                        <p>1. If you wish to upload a new trial balance and overwrite the information on existing trial balance you can use upload excel feature. You would have to follow the same instruction as you would have while upload the first trial balance.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. You can download the instruction template later on for future upload using download template feature.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Add program:<p> 
-                                        <p><b>Add a Programs:</b></p>
-                                        <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
-                                        <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
-                                        <p><b>Add a Step:</b></p>
-                                        <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
-                                        <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <?php
-                                }
-                                elseif($prog_id == 247){
-                                    ?>
-                                        <div id="help_1">
-                                        <p> 1. Click on “ADD Request” icon Select the Account from the drop down for which you would like to add a request.</p>
-                                        <p>If you do not find the appropriate account listed in the drop down use “Others” and click Done.</p>
-                                        <p>This will add a new request line in the schedule. You can now add Request description for the client and assign it to a particular client contact and add Requested date by which you would expect the client to respond.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. Use EXPORT button on the rightft hand side corner of the request list to download the client assistance schedule in excel.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Save:Once you have added your client requests click save at the bottom of the page.</p>
-                                        <p>Clicking save will only save the client list for your reference and no notification will be sent to the client.</p>
-                                        <p>If you wish to notify the client, you can use Send request button and this will send an automated email to the client contacts notifying them with auditor request.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. Send Request: Once you click on send request a notification email will be sent to all client contacts containing information about yor new requested items.</p> 
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_9">
-                                        <p>9. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <?php
-                                }
-                                elseif($prog_id == 12){
-                                    ?>
-                                    <div id="help_1">
-                                        <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4.  You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.<p> 
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <?php
-                                }
-                                elseif($prog_id == 230){
-                                    ?>
-                                    <div id="help_1">
-                                        <p> 1. Every workspace comes with a list of materiality basis that you can chose from.</p>
-                                        <p>You can add your own material basis by using “ADD NEW” icon on center top section of the page.</p>
-                                        <p>You can update materiality based on your firm guidance and add rational for using particular bases.</p>
-                                        <p>You can also allocate materiality to Balance sheet assets  and liabilities and Profit and loss Income and expenses.</p>
-                                        <p>You can also added your own calculation to the workstep. Click on Save to ensure all changes are saved within the workspace.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. You can remove any preexisting materially basis or basis created during the engagement not used can be simply removed during this feature.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. You can add your rational for choosing materially basis based on your firm guidance in this section.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. If you have different materiality or testing threshold basis for assets, liabilities, income and expenses , those can be entered in these sections.<p> 
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. You can upload your own calculation or any relevant files to this work step</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_9">
-                                        <p>9. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_10">
-                                        <p>10. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
+                                        if($prog_id == 1){
+                                            ?>
+                                            <div id="help_1">
+                                                <p>1. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Work Programs – All the work programs are workstep folders that can be used to include multiple individual steps.</p>
+                                                <p>All Workporgrams. You can use “Add program” icon on the top right corner to add more programs to  Pillar like Planning,Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                                <p><b>An audit program once created cannot be deleted.</b></p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Work steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step.</p>
+                                                <p>All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. Add program:<p> 
+                                                <p><b>Add a Programs:</b></p>
+                                                <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
+                                                <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
+                                                <p><b>Add a Step:</b></p>
+                                                <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
+                                                <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_9">
+                                                <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
+                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                            </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 266 || $prog_id == 19){
+                                            ?>
+                                            <div id="help_1">
+                                                <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Red icons indicate that there is no saved data within this work steps and no sign offs have been done yet. Once a user signs off the step the icons disappear.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
+                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. Add program:<p> 
+                                                <p><b>Add a Programs:</b></p>
+                                                <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
+                                                <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
+                                                <p><b>Add a Step:</b></p>
+                                                <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
+                                                <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_9">
+                                                <p>9. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 245){
+                                            ?>
+                                            <div id="help_1">
+                                                <p>1. If you wish to upload a new trial balance and overwrite the information on existing trial balance you can use upload excel feature. You would have to follow the same instruction as you would have while upload the first trial balance.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. You can download the instruction template later on for future upload using download template feature.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Add program:<p> 
+                                                <p><b>Add a Programs:</b></p>
+                                                <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
+                                                <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
+                                                <p><b>Add a Step:</b></p>
+                                                <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
+                                                <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 247){
+                                            ?>
+                                                <div id="help_1">
+                                                <p> 1. Click on “ADD Request” icon Select the Account from the drop down for which you would like to add a request.</p>
+                                                <p>If you do not find the appropriate account listed in the drop down use “Others” and click Done.</p>
+                                                <p>This will add a new request line in the schedule. You can now add Request description for the client and assign it to a particular client contact and add Requested date by which you would expect the client to respond.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Use EXPORT button on the rightft hand side corner of the request list to download the client assistance schedule in excel.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Save:Once you have added your client requests click save at the bottom of the page.</p>
+                                                <p>Clicking save will only save the client list for your reference and no notification will be sent to the client.</p>
+                                                <p>If you wish to notify the client, you can use Send request button and this will send an automated email to the client contacts notifying them with auditor request.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. Send Request: Once you click on send request a notification email will be sent to all client contacts containing information about yor new requested items.</p> 
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_9">
+                                                <p>9. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 12){
+                                            ?>
+                                            <div id="help_1">
+                                                <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4.  You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.<p> 
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 230){
+                                            ?>
+                                            <div id="help_1">
+                                                <p> 1. Every workspace comes with a list of materiality basis that you can chose from.</p>
+                                                <p>You can add your own material basis by using “ADD NEW” icon on center top section of the page.</p>
+                                                <p>You can update materiality based on your firm guidance and add rational for using particular bases.</p>
+                                                <p>You can also allocate materiality to Balance sheet assets  and liabilities and Profit and loss Income and expenses.</p>
+                                                <p>You can also added your own calculation to the workstep. Click on Save to ensure all changes are saved within the workspace.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. You can remove any preexisting materially basis or basis created during the engagement not used can be simply removed during this feature.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. You can add your rational for choosing materially basis based on your firm guidance in this section.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. If you have different materiality or testing threshold basis for assets, liabilities, income and expenses , those can be entered in these sections.<p> 
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. You can upload your own calculation or any relevant files to this work step</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_9">
+                                                <p>9. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_10">
+                                                <p>10. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
 
-                                    <?php
-                                }
-                                elseif($prog_id == 239 || $prog_id == 240){
-                                    ?>
-                                    <div id="help_1">
-                                        <p> 1. Check your firm’s guidance on how to identify significance account and update significant account to your workspace.Once you are in the identify significant accounts screen balance sheet or profit and loss you can now updated amounts based on trial balance and select account type “Significant” and “non-Significant” from the drop down.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. Check your firm’s guidance on how to identify significance account and update significant account to your workspace. Once you are in the identify significant accounts screen balance sheet or profit and loss you can now updated amounts based on trial balance and set risk level of the account to high, medium and low from the risk dropdown section.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Check your firm’s guidance on how to identify significance account and update significant account to your workspace.Once you are in the identify significant accounts screen balance sheet or profit and loss you can now updated amounts based on trial balance and Based on account type and risk level you can decide to import audit work steps in performance step accordingly. </p>
-                                        <p>Your workspace package comes with a prelisted suggestive program for few significant accounts. You can import these audit programs while you are under Identify significant accounts screen. Impot feature is listed within both Balance sheet and Profit and loss sections. Refer to the Import column on the right side of the table and you can choose “Yes” or “No” from the drop-down menu. After you have made your selection for “YES” or “No” each account you can click Save and your Programs will be added within the performance section of the audit workspace. </p>
-                                        <p>Prelisted suggestive programs are a suggestive methodology, and you can opt to not import them also. If you selected “No” for any account in the impot column those accounts will not appear in the performance section of the audit workspace. </p>
-                                        <p>Prelisted suggestive audit programs are only available for selective account, and you may have to add your own steps for each account listed or not listed in the accounts table.</p>
-                                        <p><b>How to remove Prelisted suggestive audit program for Significant accounts.</b></p>
-                                        <p>Under Identify significant accounts screen use Impot feature listed within both Balance sheet and Profit and loss sections. Refer to the Import column on the right side of the table and you can choose “NO” from the drop-down menu for the accounts you do not want to import prelisted audit work steps. After you have made your selection for “No” you can click Save and the prelisted suggestive audit programs will be removed from Performance section of the workspace. </p>
-                                        <p>Currently prelisted suggestive audit programs are available for below accounts. </p>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Balance Sheet</th>
-                                                    <th>Profit & Loss</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Cash and Bank</td>
-                                                    <td>Income/Sales</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Accounts Receivable</td>
-                                                    <td>Cost of goods Sold</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Prepaid Expenses</td>
-                                                    <td>Selling and General Expenses</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Inventory</td>
-                                                    <td>Interest Expenses</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Fixed Assets</td>
-                                                    <td>Legal Expenses</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Accounts Payable</td>
-                                                    <td>Payroll Expenses</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Payroll Expenses</td>
-                                                    <td>Depreciation and Amortization</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Debt and Borrowing </td>
-                                                    <td>Taxes</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. The scopes for balance sheet account will be automatically updated based on your materiality screen information.<p> 
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. You can export significant account list and information from this worksetp into excel using the export button.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. You can add Balance sheet accounts to your workspace from Balance sheet tab found within Identify significant accounts screen. Once you are within the Balance sheet section you an find “Add Account” option on the top right corner of the page. After clicking on the “Add Account” button you can put in account name that you wish to add and type of account Asset or liability and click save. Now your new Balance sheet account has been added.</p>
-                                        <p>Please note assets less liabilities should equal zero or assets should be equal to liabilities to save the workdone in the screen.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_9">
-                                        <p>9. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_10">
-                                        <p>10. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_11">
-                                        <p>11. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 239 || $prog_id == 240){
+                                            ?>
+                                            <div id="help_1">
+                                                <p> 1. Check your firm’s guidance on how to identify significance account and update significant account to your workspace.Once you are in the identify significant accounts screen balance sheet or profit and loss you can now updated amounts based on trial balance and select account type “Significant” and “non-Significant” from the drop down.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Check your firm’s guidance on how to identify significance account and update significant account to your workspace. Once you are in the identify significant accounts screen balance sheet or profit and loss you can now updated amounts based on trial balance and set risk level of the account to high, medium and low from the risk dropdown section.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Check your firm’s guidance on how to identify significance account and update significant account to your workspace.Once you are in the identify significant accounts screen balance sheet or profit and loss you can now updated amounts based on trial balance and Based on account type and risk level you can decide to import audit work steps in performance step accordingly. </p>
+                                                <p>Your workspace package comes with a prelisted suggestive program for few significant accounts. You can import these audit programs while you are under Identify significant accounts screen. Impot feature is listed within both Balance sheet and Profit and loss sections. Refer to the Import column on the right side of the table and you can choose “Yes” or “No” from the drop-down menu. After you have made your selection for “YES” or “No” each account you can click Save and your Programs will be added within the performance section of the audit workspace. </p>
+                                                <p>Prelisted suggestive programs are a suggestive methodology, and you can opt to not import them also. If you selected “No” for any account in the impot column those accounts will not appear in the performance section of the audit workspace. </p>
+                                                <p>Prelisted suggestive audit programs are only available for selective account, and you may have to add your own steps for each account listed or not listed in the accounts table.</p>
+                                                <p><b>How to remove Prelisted suggestive audit program for Significant accounts.</b></p>
+                                                <p>Under Identify significant accounts screen use Impot feature listed within both Balance sheet and Profit and loss sections. Refer to the Import column on the right side of the table and you can choose “NO” from the drop-down menu for the accounts you do not want to import prelisted audit work steps. After you have made your selection for “No” you can click Save and the prelisted suggestive audit programs will be removed from Performance section of the workspace. </p>
+                                                <p>Currently prelisted suggestive audit programs are available for below accounts. </p>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Balance Sheet</th>
+                                                            <th>Profit & Loss</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Cash and Bank</td>
+                                                            <td>Income/Sales</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Accounts Receivable</td>
+                                                            <td>Cost of goods Sold</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Prepaid Expenses</td>
+                                                            <td>Selling and General Expenses</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Inventory</td>
+                                                            <td>Interest Expenses</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Fixed Assets</td>
+                                                            <td>Legal Expenses</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Accounts Payable</td>
+                                                            <td>Payroll Expenses</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Payroll Expenses</td>
+                                                            <td>Depreciation and Amortization</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Debt and Borrowing </td>
+                                                            <td>Taxes</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. The scopes for balance sheet account will be automatically updated based on your materiality screen information.<p> 
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. You can export significant account list and information from this worksetp into excel using the export button.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. You can add Balance sheet accounts to your workspace from Balance sheet tab found within Identify significant accounts screen. Once you are within the Balance sheet section you an find “Add Account” option on the top right corner of the page. After clicking on the “Add Account” button you can put in account name that you wish to add and type of account Asset or liability and click save. Now your new Balance sheet account has been added.</p>
+                                                <p>Please note assets less liabilities should equal zero or assets should be equal to liabilities to save the workdone in the screen.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_9">
+                                                <p>9. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_10">
+                                                <p>10. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_11">
+                                                <p>11. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
 
-                                    <?php
-                                }
-                                elseif($prog_id == 262){
+                                            <?php
+                                        }
+                                        elseif($prog_id == 262){
+                                            ?>
+                                            <div id="help_1">
+                                                <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Red icons indicate that there is no saved data within this work steps and no sign offs have been done yet. Once a user signs off the step the icons disappear.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
+                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                            </div>
+                                            <div id="help_4">
+                                            <p>4. Add program:<p> 
+                                                <p><b>Add a Programs:</b></p>
+                                                <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
+                                                <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
+                                                <p><b>Add a Step:</b></p>
+                                                <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
+                                                <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
+                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_7">
+                                                <p>7. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                            </div>
+                                            <div id="help_8">
+                                                <p>8. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                            </div>
+                                            <div id="help_9">
+                                                <p>9. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <div id="help_10">
+                                                <p>10. Work Programs – All the work programs are workstep folders that can be used to include multiple individual steps. All Workporgrams. You can use “Add program” icon on the top right corner to add more programs to  Pillar like Planning,Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                                <p><b>An audit program once created cannot be deleted.</b></p>
+                                            </div>
+                                            <?php
+                                        }
+                                        elseif($prog_id == 2){
+                                            ?>
+                                            <div id="help_1">
+                                                <p> 1. List of accounts are automictically updated based on the information provided in Identify significant account screen. If you wish add any account to the list please add the account in “Identify significant account screen” under “Materiality and identify significant risk and accounts ” and select “YES” in the import. Any account marked as “No” in the import section will not appear in the account list.</p>
+                                            </div>
+                                            <div id="help_2">
+                                                <p>2. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                            </div>
+                                            <div id="help_3">
+                                                <p>3. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                            </div>
+                                            <div id="help_4">
+                                                <p>4. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.<p> 
+                                            </div>
+                                            <div id="help_5">
+                                                <p>5. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p> 
+                                            </div>
+                                            <div id="help_6">
+                                                <p>6. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                            </div>
+                                            <?php
+                                        }
+                                        
                                     ?>
-                                    <div id="help_1">
-                                        <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                        <i id="left-arrow" class="fas fa-arrow-left"></i>
+                                        <i id="right-arrow" class="fas fa-arrow-right"></i>
                                     </div>
-                                    <div id="help_2">
-                                        <p>2. Red icons indicate that there is no saved data within this work steps and no sign offs have been done yet. Once a user signs off the step the icons disappear.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
-                                        <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
-                                    </div>
-                                    <div id="help_4">
-                                    <p>4. Add program:<p> 
-                                        <p><b>Add a Programs:</b></p>
-                                        <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
-                                        <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
-                                        <p><b>Add a Step:</b></p>
-                                        <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
-                                        <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                        <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_7">
-                                        <p>7. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
-                                    </div>
-                                    <div id="help_8">
-                                        <p>8. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                    </div>
-                                    <div id="help_9">
-                                        <p>9. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <div id="help_10">
-                                        <p>10. Work Programs – All the work programs are workstep folders that can be used to include multiple individual steps. All Workporgrams. You can use “Add program” icon on the top right corner to add more programs to  Pillar like Planning,Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
-                                        <p><b>An audit program once created cannot be deleted.</b></p>
-                                    </div>
-                                    <?php
-                                }
-                                elseif($prog_id == 2){
-                                    ?>
-                                    <div id="help_1">
-                                        <p> 1. List of accounts are automictically updated based on the information provided in Identify significant account screen. If you wish add any account to the list please add the account in “Identify significant account screen” under “Materiality and identify significant risk and accounts ” and select “YES” in the import. Any account marked as “No” in the import section will not appear in the account list.</p>
-                                    </div>
-                                    <div id="help_2">
-                                        <p>2. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
-                                    </div>
-                                    <div id="help_3">
-                                        <p>3. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
-                                    </div>
-                                    <div id="help_4">
-                                        <p>4. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.<p> 
-                                    </div>
-                                    <div id="help_5">
-                                        <p>5. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p> 
-                                    </div>
-                                    <div id="help_6">
-                                        <p>6. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                                    </div>
-                                    <?php
-                                }
-                                
-                            ?>
-                                <i id="left-arrow" class="fas fa-arrow-left"></i>
-                                <i id="right-arrow" class="fas fa-arrow-right"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <?php
+                    <?php
+                    }
                 }
                 ?>
+
                 <!-- Footer -->
                 <footer class="sticky-footer">
                     <div class="container my-auto">
@@ -3137,6 +3159,10 @@
                     </div>
                 </footer>
             </div>
+        <?php 
+            if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
+            {
+        ?>
         <!--Add Programme Modal -->
         <div class="modal fade" id="addProgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -3609,7 +3635,7 @@
                             <div class="form-group">
                                 <label for="name">Question Name</label>
                                 <input type="hidden" name="inquiringManagementId" id="inquiringManagementId">
-                                <textarea class="form-control" name="name" id="inquiringManagement_name" cols="30" rows="5" required></textarea>
+                                <input type="text" class="form-control" name="name" id="inquiringManagement_name" required>
                             </div>
                         </div>
                         <div class="modal-footer d-flex align-items-center justify-content-center">
@@ -3874,7 +3900,9 @@
                 </div>
             </div>
         </div>
-
+    <?php 
+        }
+    ?>
         <!-- Profile Photo Modal -->
         <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-size" role="document">
@@ -3919,7 +3947,10 @@
     <script src="js/sb-admin-2.min.js"></script>
     <script src="js/custom.js"></script>
     
-
+    <?php
+        if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
+        { 
+    ?>
     <script>
         $(document).ready(function () {
             document.getElementsByTagName("html")[0].style.visibility = "visible";
@@ -3979,7 +4010,7 @@
                 // $('#addEstimate').append('<tr id="addRowEstimate' + (x + 1) + '"></tr>');
                 // x++;
                 $("#accounting_estimates").append(
-                    '<tr>'+'<td>'+'<select name="submitEstimate[type][]" class="form-control" required>'+'        <option value="Quantitative">Quantitative</option>'+'        <option value="Qualitative">Qualitative</option>'+'    </select>'+'</td>'+'<td><input name="submitEstimate[name][]" type="text"></td>'+'<td><input name="submitEstimate[account][]" type="text"></td>'+'<td> <input name="submitEstimate[py][]" type="number"> </td>'+'<td> <input name="submitEstimate[cy][]" type="number"> </td>'+'<td>'+'<select name="submitEstimate[c][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[eo][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[mv][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[ro][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[pd][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitData[risk][]" class="form-control"required>'+'    <option value="Low Risk">Low Risk</option>'+'    <option value="Significant Risk">Significant Risk</option>'+'    <option value="High Risk">High Risk</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'</tr>'
+                    '<tr>'+'<td>'+'<select name="submitEstimate[type][]" class="form-control" required>'+'        <option value="Quantitative">Quantitative</option>'+'        <option value="Qualitative">Qualitative</option>'+'    </select>'+'</td>'+'<td><input name="submitEstimate[name][]" type="text"></td>'+'<td><input name="submitEstimate[account][]" type="text"></td>'+'<td> <input name="submitEstimate[py][]" type="number"> </td>'+'<td> <input name="submitEstimate[cy][]" type="number"> </td>'+'<td>'+'<select name="submitEstimate[c][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[eo][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[mv][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[ro][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[pd][]" class="form-control"required>'+'    <option value="Low">Low</option>'+'    <option value="Moderate">Moderate</option>'+'    <option value="High">High</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'<td>'+'<select name="submitEstimate[risk][]" class="form-control"required>'+'    <option value="Low Risk">Low Risk</option>'+'    <option value="Significant Risk">Significant Risk</option>'+'    <option value="High Risk">High Risk</option>'+'    <option value="NA">NA</option>'+'</select>'+'</td>'+'</tr>'
                 )
             });
 
@@ -5316,9 +5347,8 @@
                     id: id
                 },
                 success: function(response){
-                    $("#editInquiringManagementModal #inquiringManagement_name").html(response);
+                    $("#editInquiringManagementModal #inquiringManagement_name").val(response);
                     $("#editInquiringManagementModal #inquiringManagementId").val(id)
-                    new FroalaEditor('#inquiringManagement_name')
                     $("#editInquiringManagementModal").modal('show')
                 }
             });
@@ -7004,6 +7034,9 @@
         
                     });
     </script>
+    <?php
+        }
+    ?>
 
     <!-- File fetch for temp -->
     <script>

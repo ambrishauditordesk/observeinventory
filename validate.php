@@ -106,6 +106,7 @@
                         $_SESSION['role'] = $usersrow['accessLevel'];
                         $_SESSION['reg_date'] = $usersrow['reg_date'];
                         $_SESSION['signoff'] = $usersrow['signoff_init'];
+                        $_SESSION['designation'] = $usersrow['designation'];
                         $_SESSION['darkmode'] = $usersrow['darkmode'];
                         $_SESSION['external'] = 0;
                         $_SESSION['logged_in_date'] = $dateTime;
@@ -114,6 +115,7 @@
                         if($usersrow['client_id'] != ''){
                             $_SESSION['external'] = 1;
                             $_SESSION['external_client_id'] = $usersrow['client_id'];
+                            $_SESSION['firm_details'] = $con->query("SELECT firm_details.* from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user_client_log.user_id = user.id WHERE user.accessLevel = 4 and user_client_log.client_id =".$usersrow['client_id'])->fetch_assoc();
                             $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$usersrow['id'])->num_rows;
                             if($checkAccess){
                                 $location =  base64_encode(md5($clientName)).'&gid='. base64_encode(md5($clientName)).'&fid='. base64_encode(md5($clientName)).'&eid='.base64_encode(md5($clientName)).'&cid='.base64_encode($usersrow['client_id']);
@@ -125,8 +127,8 @@
                                 session_destroy();
                                 echo "<script>
                                         swal({
-                                            icon: 'error',
-                                            text: 'There is no pending request from your Autditor',
+                                            icon: 'warning',
+                                            text: 'Currently,there is no pending request from your Auditor',
                                         }).then(function(isConfirm) {
                                             if (isConfirm) {
                                                 window.location.href = 'login';
