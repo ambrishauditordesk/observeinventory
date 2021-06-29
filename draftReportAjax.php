@@ -18,7 +18,6 @@ if($status == 0){
     $emphasis_of_matters = trim($_POST['emphasis_of_matters']);
     $other_matter = trim($_POST['other_matter']);
     if($con->query("INSERT INTO draft_report(workspace_id, type_of_audit_report, audit_report, emphasis_of_matter, other_matter) VALUES ('$wid','$type_report_audit_report','$audit_report_data','$emphasis_of_matters','$other_matter')") === TRUE){
-        $con->query("update workspace_log set status='1' where program_id = 496 and workspace_id='$wid'");
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Draft Report Created.')");
         $reponse = 1;
     }
@@ -43,7 +42,6 @@ else{
     // Review Submit
     if($con->query("insert into signoff_review_log(workspace_id,prog_id,user_id,review_signoff_date) values ('$wid','496','$uid','$date')") === TRUE)
     {
-        $con->query("update workspace_log set status='1' where program_id='496' and workspace_id='$wid'");
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Review Sign Off done for program:- $pname ')");
         $reponse = 1;
     }

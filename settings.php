@@ -302,7 +302,15 @@ error_reporting(E_ALL);
                             </div>
                             <div class="form-group">
                                 <label for="location">Firm Leader</label>
-                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php echo $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.firm_id=".$_SESSION['firm_id']." and accessLevel = 4")->fetch_assoc()['name'];?>" readonly>
+                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="
+                                    <?php
+                                        $firm_leader = $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.firm_id=".$_SESSION['firm_id']." and accessLevel = 4");
+                                        if($firm_leader->num_rows > 0){
+                                            $firm_lead = $firm_leader->fetch_assoc()['name'];
+                                            echo trim($firm_lead);
+                                        }
+                                    ?>
+                                " readonly>
                             </div>
                             <div class="form-group">
                                 <label>Multicurrency</label>

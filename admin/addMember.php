@@ -3,6 +3,7 @@
     {
         include '../dbconnection.php';
         include '../customMailer.php';
+        include '../checkDuplicateEmail.php';
         session_start();
 
         $name = trim($_POST['name']);
@@ -31,57 +32,61 @@
                 $signOff .='1';
             }
         }
-        $regDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");
-        $res= $con->query("insert into user(name,email,password,accessLevel,active,reg_date,signoff_init,reset_code,img) values('$name', '$email', '$pass', '$role', '1', '$regDate', '$signOff','','')");
-        $user_id = $con->insert_id;
-        
-        $roleName = $con->query("select role_name from role where id = $role")->fetch_assoc()['role_name'];
-        
-        $sub = "You have been registered as a ".$roleName;
-        if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-            $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+        $checkMail = checkDuplicateEmail($email);
+        if($checkMail){
+            $regDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");
+            $res= $con->query("insert into user(name,email,password,accessLevel,active,reg_date,signoff_init,reset_code,img) values('$name', '$email', '$pass', '$role', '1', '$regDate', '$signOff','','')");
+            $user_id = $con->insert_id;
+            $roleName = $con->query("select role_name from role where id = $role")->fetch_assoc()['role_name'];
+            $sub = "You have been registered as a ".$roleName;
+            if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
+                $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+            }
+            elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
+                $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
+            }
+            elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
+                $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+            }
+            $msg = "<div>
+            <div>Hello ".$name.",</div>
+            <br />
+            <div>You have been registered as a ".$roleName." to join Digital audit workspace. Use your user
+            id and temporary password to login to the workspace and reset the password.</div>
+            <br />
+            <div>Your email id: ".$email."</div>
+            <div>Your temporary password: ".$tempPass."</div>
+            <br/>
+            <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
+            <br />
+            <br />
+            <div><b>This is a system generated email, please do not reply to this email.</b></div>
+            <br />
+            <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
+            <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
+            <div>contact the Help desk or your firm administrator.</div>
+            <br />
+            <div>Thank you.</div>
+            <br />
+            <div>The Auditedg Team</div>
+            </div>";
+            if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                $firm_id = trim($_POST['firm_id']);
+            }
+            else{
+                $firm_id = $_SESSION['firm_id'];
+            }
+            $result = $con->query("insert into firm_user_log(firm_id,user_id) values('$firm_id','$user_id')");
+            if($result && customMailer($email,$msg,$sub))
+            {
+                echo 1;
+            }
+            else
+            {
+                echo 0;
+            }
         }
-        elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-            $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-        }
-        elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-            $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-        }
-
-        $msg = "<div>
-         <div>Hello ".$name.",</div>
-         <br />
-         <div>You have been registered as a ".$roleName." to join Digital audit workspace. Use your user
-         id and temporary password to login to the workspace and reset the password.</div>
-         <br />
-         <div>Your email id: ".$email."</div>
-         <div>Your temporary password: ".$tempPass."</div>
-         <br/>
-         <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
-         <br />
-         <br />
-         <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
-         <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
-         <div>contact the Help desk or your firm administrator.</div>
-         <br />
-         <div>Thank you.</div>
-         <br />
-         <div>The Auditedg Team</div>
-         </div>";
-
-        if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
-            $firm_id = trim($_POST['firm_id']);
-        }
-        else{
-            $firm_id = $_SESSION['firm_id'];
-        }
-        $result = $con->query("insert into firm_user_log(firm_id,user_id) values('$firm_id','$user_id')");
-        if($result && customMailer($email,$msg,$sub))
-        {
-            echo 1;
-        }
-        else
-        {
+        if(!$checkMail){
             echo 0;
         }
     }

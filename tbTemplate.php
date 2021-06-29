@@ -4,8 +4,8 @@ session_start();
 if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
     header("Location: index");
 }
-if(isset($_GET['wid']) && !empty($_GET['wid'])){
-    $wid = trim($_GET['wid']);
+if(isset($_SESSION['workspace_id']) && !empty($_SESSION['workspace_id'])){
+    $wid = trim($_SESSION['workspace_id']);
 }
 ?>
 <!DOCTYPE html>

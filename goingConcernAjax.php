@@ -22,6 +22,7 @@
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
     }
+
     $flag = 0;
     if($_POST['status'] == 0){
         $name = trim($_POST['name']);
@@ -38,7 +39,8 @@
         $prog_id = trim($_POST['pid']);
         $wid = trim($_POST['wid']);
 
-        $conclusion = trim($_POST['conclusion']);
+        if(isset($_POST['conclusion']) && !empty($_POST['conclusion']))
+            $conclusion = trim($_POST['conclusion']);
         
         $descA = trim($_POST['desc_a']);
         $descB = trim($_POST['desc_b']);
@@ -62,7 +64,7 @@
             $con->query("INSERT INTO going_concern_name_title_date(workspace_id, name, title, date, part) VALUES('$wid','$name','$title','$date','B')");
         }
         
-        $conclusionTextResult = $con->query("select conclusion_text from going_concern where id = $id");
+        $conclusionTextResult = $con->query("select conclusion_text from going_concern where workspace_id = $wid");
         if($conclusionTextResult->num_rows){
             $conclusionText = $conclusionTextResult->fetch_assoc()['conclusion_text'];
         }
@@ -73,16 +75,21 @@
         $con->query("DELETE FROM going_concern where workspace_id = $wid");
         $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c, conclusion_text) VALUES('$wid','$conclusion','$descA','$descB','$descC','$conclusionText')");
 
-        for($i = 0; $i<sizeof($_POST['freeTextA']); $i++){
-            $id = trim($_POST['freeTextA'][$i][0]);
-            $text = trim($_POST['freeTextA'][$i][1]);
-            $con->query("UPDATE going_concern_procedures SET free_text = '$text' where id = $id");
-        }
+        if(isset($_POST['freeTextA']) && !empty($_POST['freeTextA'])){
 
-        for($i = 0; $i<sizeof($_POST['freeTextB']); $i++){
-            $id = trim($_POST['freeTextB'][$i][0]);
-            $text = trim($_POST['freeTextB'][$i][1]);
-            $con->query("UPDATE going_concern_procedures SET free_text = '$text' where id = $id");
+            for($i = 0; $i<sizeof($_POST['freeTextA']); $i++){
+                $id = trim($_POST['freeTextA'][$i][0]);
+                $text = trim($_POST['freeTextA'][$i][1]);
+                $con->query("UPDATE going_concern_procedures SET free_text = '$text' where id = $id");
+            }
+        }   
+
+        if(isset($_POST['freeTextB']) && !empty($_POST['freeTextB'])){
+            for($i = 0; $i<sizeof($_POST['freeTextB']); $i++){
+                $id = trim($_POST['freeTextB'][$i][0]);
+                $text = trim($_POST['freeTextB'][$i][1]);
+                $con->query("UPDATE going_concern_procedures SET free_text = '$text' where id = $id");
+            }
         }
         // $con->query("update workspace_log set status='1' where program_id='$prog_id' and workspace_id='$wid'");
         //File Upload

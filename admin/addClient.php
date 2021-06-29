@@ -30,6 +30,7 @@
 <?php
 include '../dbconnection.php';
 include '../customMailer.php';
+include '../checkDuplicateEmail.php';
 session_start();
 
 $cname = array();
@@ -159,46 +160,57 @@ if($uploadOk) {
         $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
      }
 
-    for($i=0;$i<$count;$i++){
-        $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','5','1','$desig[$i]','','')");
-        $uid = $con->insert_id;
-        $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
-        
-
-         $msg = "<div>
-         <div>Hello ".$cname[$i].",</div>
-         <br />
-         <div>You have been added as a Client member to join Digital audit workspace by your auditor. Use your user
-         id to login to the client request list you have been allocated to. You can uploaded documents and reply
-         to auditors request using the below details.</div>
-         <br />
-         <div>Your email id: ".$email[$i]."</div>
-         <div>Your temporary password: ".$tempPass[$i]."</div>
-         <br/>
-         <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
-         <br />
-         <br />
-         <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
-         <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
-         <div>contact the Help desk or your firm administrator.</div>
-         <br />
-         <div>Thank you.</div>
-         <br />
-         <div>The Auditedg Team</div>
-         </div>";
-         
-        if(customMailer($email[$i],$msg,$sub)){
-            if(empty($successEmailList))
-                $successEmailList = $email[$i];
-            else
-                $successEmailList .= ','.$email[$i];
-            sleep(1);
+     for($i=0;$i<$count;$i++){
+        $checkDuplicateEmail = checkDuplicateEmail($email);
+        if(!$checkMail){
+            echo "<script>
+                $(document).ready(function() {
+                    document.getElementsByTagName('html')[0].style.visibility = 'visible';
+                    $('#unsuccessModal').modal();
+                });
+            </script>";
+            break;
         }
-        else{
-            if(empty($unSuccessEmailList))
-                $unSuccessEmailList = $email[$i];
-            else
-                $unSuccessEmailList .= ','.$email[$i];
+        if($checkDuplicateEmail){
+            $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','5','1','$desig[$i]','','')");
+            $uid = $con->insert_id;
+            $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
+            $msg = "<div>
+            <div>Hello ".$cname[$i].",</div>
+            <br />
+            <div>You have been added as a Client member to join Digital audit workspace by your auditor. Use your user
+            id to login to the client request list you have been allocated to. You can uploaded documents and reply
+            to auditors request using the below details.</div>
+            <br />
+            <div>Your email id: ".$email[$i]."</div>
+            <div>Your temporary password: ".$tempPass[$i]."</div>
+            <br/>
+            <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
+            <br />
+            <br />
+            <div><b>This is a system generated email, please do not reply to this email.</b></div>
+            <br />
+            <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
+            <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
+            <div>contact the Help desk or your firm administrator.</div>
+            <br />
+            <div>Thank you.</div>
+            <br />
+            <div>The Auditedg Team</div>
+            </div>";
+            if(customMailer($email[$i],$msg,$sub)){
+                if(empty($successEmailList))
+                    $successEmailList = $email[$i];
+                else
+                    $successEmailList .= ','.$email[$i];
+                sleep(1);
+            }
+            else{
+                if(empty($unSuccessEmailList))
+                    $unSuccessEmailList = $email[$i];
+                else
+                    $unSuccessEmailList .= ','.$email[$i];
+            }
         }
     }
     

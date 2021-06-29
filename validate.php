@@ -76,6 +76,7 @@
             header('Location: ./');
         }
         $location = json_decode(file_get_contents("https://geolocation-db.com/json/"),true);
+        $clientName = 1;
         $ip = $location['IPv4'];
         $json = json_decode(file_get_contents("http://ipinfo.io/$ip/geo"), true);
         $browser = $_SERVER['HTTP_USER_AGENT'];

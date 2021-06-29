@@ -47,6 +47,8 @@
             <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
             <br />
             <br />
+            <div><b>This is a system generated email, please do not reply to this email.</b></div>
+            <br />
             <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
             <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
             <div>contact the Help desk or your firm administrator.</div>
@@ -55,7 +57,7 @@
             <br />
             <div>The Auditedg Team</div>
             </div>";
-
+            
             $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
             if($res && customMailer($email,$msg,$sub))
             {

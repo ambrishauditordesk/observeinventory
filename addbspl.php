@@ -4,6 +4,7 @@
         include 'dbconnection.php';
         session_start();
         $prog_id = trim($_POST['prog_id']);
+
         $wid = trim($_POST['wid']);
         $name = trim($_POST['bspl_name']);
         $bspl_header_type = trim($_POST['bspl_header_type']);
