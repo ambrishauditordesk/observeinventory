@@ -541,7 +541,7 @@
                 cid: <?php echo $clientId; ?>
             },
             success: function(response) {
-                if (response) {
+                if (response == 1) {
                     swal({
                         icon: "success",
                         text: name + " Added",

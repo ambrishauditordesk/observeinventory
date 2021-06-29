@@ -162,7 +162,7 @@ if($uploadOk) {
 
      for($i=0;$i<$count;$i++){
         $checkDuplicateEmail = checkDuplicateEmail($email);
-        if(!$checkMail){
+        if(!$checkDuplicateEmail){
             echo "<script>
                 $(document).ready(function() {
                     document.getElementsByTagName('html')[0].style.visibility = 'visible';
@@ -279,7 +279,7 @@ else{
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Client Addition Failed.</div>
+            <div class="modal-body">Client Addition Failed! Emails Already Exists </div>
             <div class="modal-footer">
                 <a class="btn btn-primary" href="clientList">OK</a>
             </div>

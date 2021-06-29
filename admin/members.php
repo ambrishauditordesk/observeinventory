@@ -1028,7 +1028,8 @@
                 ?>
             },
             success: function(response) {
-                if (response) {
+                console.log(response);
+                if (response == 1) {
                     swal({
                         icon: "success",
                         text: name + " Added",
