@@ -142,8 +142,6 @@ error_reporting(E_ALL);
                     <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
-                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -151,8 +149,6 @@ error_reporting(E_ALL);
                         }   
                         else{
                             ?>
-                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -302,15 +298,7 @@ error_reporting(E_ALL);
                             </div>
                             <div class="form-group">
                                 <label for="location">Firm Leader</label>
-                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="
-                                    <?php
-                                        $firm_leader = $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.firm_id=".$_SESSION['firm_id']." and accessLevel = 4");
-                                        if($firm_leader->num_rows > 0){
-                                            $firm_lead = $firm_leader->fetch_assoc()['name'];
-                                            echo trim($firm_lead);
-                                        }
-                                    ?>
-                                " readonly>
+                                <input type="text" class="form-control" id="location" placeholder="Enter your Firm Leader" value="<?php $firm_leader = $con->query("SELECT name FROM user inner join firm_user_log on user.id=firm_user_log.user_id where firm_user_log.firm_id=".$_SESSION['firm_id']." and accessLevel = 4"); if($firm_leader->num_rows > 0){ $firm_lead = $firm_leader->fetch_assoc()['name']; echo (trim($firm_lead)); } ?>" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Multicurrency</label>

@@ -2030,9 +2030,7 @@
                                                 }
                                             ?>
                                         <input type="hidden" name="wid" value="<?php echo $wid; ?>">
-                                        <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations...">
-                                            <?php echo $con->query("select count(textarea) total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['total'] == 1 ? $con->query("select textarea from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea'] : ''; ?>
-                                        </textarea>
+                                        <textarea class="form-control mb-3" name="textarea" id="" cols="30" rows="5" placeholder="Any Other Observations..."><?php echo $con->query("select count(textarea) total from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['total'] == 1 ? trim($con->query("select textarea from inquiring_of_management_questions_textarea where workspace_id = $wid")->fetch_assoc()['textarea']) : ''; ?></textarea>
 
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
@@ -4040,6 +4038,8 @@
                     })
                 }
             });
+
+            $("#editor > div.fr-wrapper > div:nth-child(1) > a").css("display","none");
             
             $(document).on('click', '#editsubmit_misstatements',function(e){
                 let sumMisstatements = 0;
@@ -5285,7 +5285,7 @@
                 success: function(response){
                     $("#editProcedureModal #procedure_name").html(response);
                     $("#editProcedureModal #prodecureId").val(id)
-                    new FroalaEditor('#procedure_name')
+                    new FroalaEditor('#procedure_name',{attribution:false,autofocus:true})
                     $("#editProcedureModal").modal('show')
                 }
             });
@@ -5376,7 +5376,7 @@
                 success: function(response){
                     $("#editTextareaModal #textarea_name").html(response);
                     $("#editTextareaModal #id").val(id);
-                    new FroalaEditor('#textarea_name')
+                    new FroalaEditor('#textarea_name',{attribution:false,autofocus:true})
                     $("#editTextareaModal").modal('show')
                 }
             });

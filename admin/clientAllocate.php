@@ -38,7 +38,7 @@ if(isset($_POST))
                 foreach($newClients as $id){
                     if(!in_array($id, $oldClients)){
                         $con->query("insert into user_client_log(client_id,user_id) values('$id','$uid')");
-                        $clientName = $con->query("select name from client where id = $uid")->fetch_assoc()['name'];
+                        $clientName = $con->query("select name from client where id = $id")->fetch_assoc()['name'];
                         $clientNameList .= $clientNameList == ''? $clientName:', '.$clientName;
                         $mailSend = 1;
                         $data['status'] = true;
