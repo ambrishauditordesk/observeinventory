@@ -818,6 +818,19 @@
         else if(!darkmode){
             document.documentElement.classList.remove('dark-mode');
         }
+
+        $("#addClientForm").submit(function(event){
+            let firm = $("#firm_id").val();
+            if(firm.length == ''){
+                event.preventDefault();
+                swal({
+                    icon: "error",
+                    text: "Select Firm!",
+                }).then(function(isConfirm) {
+                    $('#firm_id').focus();
+                });
+            }
+        });
     });
 
     $(document).on('click', '.editMember', function() {
@@ -1005,50 +1018,93 @@
         var password = $("#password").val();
         var role = $("#role").val();        
         
-        $.ajax({
-            url: "addMember.php",
-            type: "POST",
-            data: {
-                name: name,
-                email: email,
-                password: password,
-                <?php
-                    if($_SESSION['role'] == -1 || $_SESSION['role'] == 1){
-                        ?>
-                            role: role,
-                            firm_id: $("#firm_id").val()
-                        <?php
-                    }
-                    else{
-                        ?>
-                            role: role
-                        <?php
-                    }
+        <?php
+            if(isset($_SESSION['role']) && !empty($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
                 ?>
-            },
-            success: function(response) {
-                console.log(response);
-                if (response == 1) {
-                    swal({
-                        icon: "success",
-                        text: name + " Added",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                } else {
+                let firm = $("#firm_id").val();
+                if(firm == ''){
+                    e.preventDefault();
                     swal({
                         icon: "error",
-                        text: "Already Exists!",
+                        text: "Select Firm!",
                     }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
+                        $('#firm_id').focus();
+                    });
+                }
+                else{
+                    $.ajax({
+                        url: "addMember.php",
+                        type: "POST",
+                        data: {
+                            name: name,
+                            email: email,
+                            password: password,
+                            role:role,
+                            firm_id:$('#firm_id').val()
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if (response == 1) {
+                                swal({
+                                    icon: "success",
+                                    text: name + " Added",
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                swal({
+                                    icon: "error",
+                                    text: "Already Exists!",
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            }
                         }
                     });
                 }
+                <?php
             }
-        });
+            else{
+                ?>
+                 $.ajax({
+                    url: "addMember.php",
+                    type: "POST",
+                    data: {
+                        name: name,
+                        email: email,
+                        password: password,
+                        role:role
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        if (response == 1) {
+                            swal({
+                                icon: "success",
+                                text: name + " Added",
+                            }).then(function(isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            swal({
+                                icon: "error",
+                                text: "Already Exists!",
+                            }).then(function(isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                });
+                <?php
+            }
+        ?>
     });
     </script>
 </body>

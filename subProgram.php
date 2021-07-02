@@ -2285,13 +2285,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="">Documents Observations</label>
-                                            <textarea name= "comments" class="form-control" rows="3">
-                                                <?php 
-                                                    $documentObserve = $con->query("select comments from accounting_estimates_comments where workspace_id=$wid");
-                                                    if($documentObserve->num_rows > 1)
-                                                        $documentObserve->fetch_assoc()['comments'];                                                                                               
-                                                ?>
-                                            </textarea>
+                                            <textarea name= "comments" class="form-control" rows="3"><?php $documentObserve = $con->query("select comments from accounting_estimates_comments where workspace_id=$wid"); if($documentObserve->num_rows > 1) $documentObserve->fetch_assoc()['comments'];?></textarea>
                                         </div>
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
@@ -2594,7 +2588,9 @@
                                         <i class="fas fa-info-circle" style="color:orange !important;"></i>
                                         <strong>Click the save button to save respective files/data before signing off</strong>
                                     </div>
-                                    <button id="goingConcernSubmit" class="btn btn-success">Save</button>
+                                    <div class="text-center">
+                                        <button id="goingConcernSubmit" class="btn btn-success ">Save</button>
+                                    </div> <br>
                                 </form>
                                 <div class="row d-flex justify-content-center">
                                     <?php
@@ -4635,7 +4631,7 @@
                         if (response) {
                             swal({
                                 icon: "success",
-                                text: question_name + " Added",
+                                text: "Successfully Added",
                             }).then(function (isConfirm) {
                                 if (isConfirm) {
                                     location.reload();
@@ -5202,7 +5198,7 @@
                     if (response) {
                         swal({
                             icon: "success",
-                            text: procedure_name + " Added",
+                            text: "Successfully Added",
                         }).then(function (isConfirm) {
                             if (isConfirm) {
                                 location.reload();
@@ -5238,7 +5234,7 @@
                     if (response) {
                         swal({
                             icon: "success",
-                            text: procedure_name + " Added",
+                            text: "Successfully Added",
                         }).then(function (isConfirm) {
                             if (isConfirm) {
                                 location.reload();

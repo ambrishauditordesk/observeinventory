@@ -362,8 +362,8 @@
                                 ?>
                                 <div class="form-group ">
                                     <label for="country">Firm </label>
-                                    <select class="form-control" name="firm_id" required>
-                                        <option>Select a Firm !</option>
+                                    <select class="form-control" name="firm_id" id = "firm_id" required>
+                                        <option value="">Select a Firm!</option>
                                             <?php
                                                 $consQuery = $con->query("select id,firm_name from firm_details");
                                                 while ($consResult = $consQuery->fetch_assoc()) {
@@ -404,11 +404,11 @@
                             <div class="form-group ">
                                 <label for="country">Industry</label>
                                 <select class="form-control" name="industry" required>
-                                    <option>Select Industry !</option>
+                                    <option>Select Industry!</option>
                                     <?php
-                                                    $indusQuery = $con->query("select * from industry");
-                                                    while ($indusResult = $indusQuery->fetch_assoc()) {
-                                                ?>
+                                        $indusQuery = $con->query("select * from industry");
+                                        while ($indusResult = $indusQuery->fetch_assoc()) {
+                                    ?>
                                     <option value="<?php echo $indusResult['id']; ?>">
                                         <?php echo $indusResult['industry']; ?></option>
                                     <?php
@@ -1097,6 +1097,25 @@
         else if(!darkmode){
             document.documentElement.classList.remove('dark-mode');
         }
+
+        <?php
+            if(isset($_SESSION['role']) && !empty($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
+                ?>
+                    $("#addClientForm").submit(function(event){
+                        let firm = $("#firm_id").val();
+                        if(firm.length == ''){
+                            event.preventDefault();
+                            swal({
+                                icon: "error",
+                                text: "Select Firm!",
+                            }).then(function(isConfirm) {
+                                $('#firm_id').focus();
+                            });
+                        }
+                    });
+                <?php 
+            }
+        ?>
     });
 
     let panRegex = /[A-Z]{5}\d{4}[A-Z]{1}/;
