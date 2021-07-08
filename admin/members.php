@@ -266,8 +266,7 @@
                                                 <th scope="col">Sl</th>
                                                 <th scope="col">Name</th>
                                                 <?php
-                                                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
-                                                        ?>
+                                                    if(isset($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1) ){                                                        ?>
                                                             <th scope="col">Firm Name</th>
                                                         <?php                       
                                                     }
@@ -278,11 +277,18 @@
                                                 <th scope="col">Registration Date</th>
                                                 <th scope="col">SignOff Initials</th>
                                                 <?php
-                                                    if($_SESSION['role'] != 3 && $_SESSION['role'] != 5){
-                                                ?>
-                                                <th scope="col">Edit</th>
-                                                <th scope="col">Client</th>
-                                                <?php
+                                                    if(isset($_SESSION['role']) && $_SESSION['role'] != 3 && $_SESSION['role'] != 5){
+                                                    ?>
+                                                        <th scope="col">Edit</th>
+                                                        <?php 
+                                                            if(isset($_SESSION['role']) && $_SESSION['role'] != 1)
+                                                            {
+                                                                ?>
+                                                                    <th scope="col">Client</th>
+                                                                <?php
+                                                            }
+                                                        ?>
+                                                    <?php
                                                     }
                                                 ?>
                                             </tr>
@@ -296,7 +302,7 @@
             </div>
         </div>
         <?php
-            if($_SESSION['role'] != 3 && $_SESSION['role'] != 5){
+            if(isset($_SESSION['role']) && ($_SESSION['role'] != 3 && $_SESSION['role'] != 5)){
         ?>
 
         <!-- Register a Member Form -->
@@ -873,19 +879,24 @@
             },
             "columnDefs": [
                 <?php
-                    if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                    if(isset($_SESSION['role']) && $_SESSION['role'] == -1){
                 ?>
                     { orderable: false, targets: -10 },
                     { orderable: false, targets: -2 },
                     { orderable: false, targets: -1 }
-                
                 <?php
                     }
-                    elseif($_SESSION['role'] == 4 || $_SESSION['role'] == 2){
+                    elseif(isset($_SESSION['role']) && ( $_SESSION['role'] == 4 || $_SESSION['role'] == 2) ){
                         ?>
-                { orderable: false, targets: -9 },
-                { orderable: false, targets: -2 },
-                { orderable: false, targets: -1 }
+                            { orderable: false, targets: -9 },
+                            { orderable: false, targets: -2 },
+                            { orderable: false, targets: -1 }
+                        <?php
+                    }
+                    elseif(isset($_SESSION['role']) && $_SESSION['role'] == 1){
+                        ?>
+                            { orderable: false, targets: -9 },
+                            { orderable: false, targets: -1 }
                         <?php
                     }
                     else {
@@ -894,7 +905,6 @@
                         <?php
                     }
                     ?>
-
             ],
             "ajax": {
                 url: "memberFetchAjax.php",

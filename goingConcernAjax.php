@@ -24,6 +24,8 @@
     }
 
     $flag = 0;
+    $responseText = 'Nothing to Updated';
+    $responseFile = '';
     if($_POST['status'] == 0){
         $name = trim($_POST['name']);
         $part_name = trim($_POST['part_name']);
@@ -31,11 +33,13 @@
         $con->query("INSERT INTO going_concern_procedures(workspace_id, procedure_data, free_text, part) VALUES('$wid','$name','','$part_name')");
         $flag = 1;
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
-        $email = $_SESSION['email'];
+        if(isset($_SESSION['email']) && !empty($_SESSION['email']))
+            $email = $_SESSION['email'];
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Going Concen New Entry done.')");
+        $responseText = 'Updated';
     }
     if($_POST['status'] == 1){
-
+        $flag = 1;
         $prog_id = trim($_POST['pid']);
         $wid = trim($_POST['wid']);
 
@@ -54,6 +58,7 @@
             $title = trim($_POST["going_concern_name_title_date_a"][$i][1]);
             $date = trim($_POST["going_concern_name_title_date_a"][$i][2]);
             $con->query("INSERT INTO going_concern_name_title_date(workspace_id, name, title, date, part) VALUES('$wid','$name','$title','$date','A')");
+            $responseText = 'Updated';
         }
 
         // Inserting into Part B Going Concern
@@ -62,14 +67,13 @@
             $title = trim($_POST["going_concern_name_title_date_b"][$i][1]);
             $date = trim($_POST["going_concern_name_title_date_b"][$i][2]);
             $con->query("INSERT INTO going_concern_name_title_date(workspace_id, name, title, date, part) VALUES('$wid','$name','$title','$date','B')");
+            $responseText = 'Updated';
         }
         
         $conclusionTextResult = $con->query("select conclusion_text from going_concern where workspace_id = $wid");
+        $conclusionText = "We did not give consideration to modification of our auditor’s report";
         if($conclusionTextResult->num_rows){
             $conclusionText = $conclusionTextResult->fetch_assoc()['conclusion_text'];
-        }
-        else{
-            $conclusionText = "We did not give consideration to modification of our auditor’s report";
         }
 
         $con->query("DELETE FROM going_concern where workspace_id = $wid");
@@ -127,9 +131,11 @@
                         move_uploaded_file($tmp_name, $path . $name);
                         $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
                         $flag =1;
+                        $responseText = 'Updated';
                     } 
                     else{
                         $flag = 0;
+                        $responseFile = 'Insufficient Storage kindly contact your Firm Admin!';
                     }
                 }
             }
@@ -144,7 +150,7 @@
         echo "<script>
             swal({
                 icon: 'success',
-                text: 'Updated!',
+                text: '".$responseText."',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';
@@ -156,7 +162,7 @@
         echo "<script>
             swal({
                 icon: 'error',
-                text: 'Insufficient Storage kindly contact your Firm Admin!',
+                text: '".$responseText."',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

@@ -17,6 +17,10 @@ if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
         }
     }
 }
+
+else{
+    header("Location: login");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

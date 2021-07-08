@@ -200,8 +200,8 @@ $_SESSION['breadcrumb'] = array();
                     <?php 
                         if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
-                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt hue"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list hue"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -209,8 +209,8 @@ $_SESSION['breadcrumb'] = array();
                         }   
                         else{
                             ?>
-                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list hue"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt hue"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -309,11 +309,22 @@ $_SESSION['breadcrumb'] = array();
             <?php
             $status = $con->query("select status from workspace_log where workspace_id=$wid and program_id=248")->fetch_assoc()['status'];
             if($status){
-                ?>
-                <div class="col-md-12 d-flex justify-content-center">
-                    <button id="freeze" type="button" class="btn btn-lg btn-custom d-flex align-items-center"><img class="nav-icon" src="Icons/pause-circle.svg"/> &nbsp; Freeze Workspace</button>
-                </div>
-            <?php
+                $deleteLogCount = $con->query("SELECT count(id) total from signoff_files_log where status = 1 and workspace_id = $wid")->fetch_assoc()['total'];
+                if($deleteLogCount == 0){
+                    ?>
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <button id="freeze" type="button" class="btn btn-lg btn-custom d-flex align-items-center"><img class="nav-icon" src="Icons/pause-circle.svg"/> &nbsp; Freeze Workspace</button>
+                        </div>
+                    <?php
+                }
+                else{
+                    ?> 
+                        <center><h6>To <b>Freeze Workspace</b> all deleted files need to be either deleted permanently or it must be recovered from <b><a href="deletedFiles">Deleted File Log</a></b>.</h6></center>
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <button type="button" class="btn btn-lg btn-custom d-flex align-items-center"><img class="nav-icon" src="Icons/pause-circle.svg"/> &nbsp; Freeze Workspace</button>
+                        </div>
+                    <?php
+                }
             }
             ?>
         </div>

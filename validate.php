@@ -20,7 +20,7 @@
 <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 </head>
-<body style="background-image: url('Icons/bgwall.jpg');" oncontextmenu="return false">
+<body oncontextmenu="return false">
 <!-- bootstrap js -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

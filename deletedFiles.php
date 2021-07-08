@@ -222,8 +222,9 @@
         </div><br>
 
         <!-- Body -->
-        <center><h4>Deleted files are here for 15 days, beyond 15 days files will be auto deleted.</h4></center>
-        <center><h3>Sign Off Deleted Files</h3></center>
+        <center><h4><b>Below are all deleted files</b></h4>
+        
+        <center><h4><i class="fas fa-exclamation-triangle" style="color: red;"></i>To <b>Freeze Workspace</b> all deleted files need to be either deleted permanently or it must be recovered. <i class="fas fa-exclamation-triangle" style="color: red;"></i></h4></center>
         <div class="col-md-12">
             <div class="d-flex col-md-12">
                <table class="table table-striped">
@@ -253,7 +254,7 @@
                             <td><?php echo $i++; ?></td>
                             <td><?php echo $row['file']; ?></td>
                             <td><?php echo $row['deletedDate']; ?></td>
-                            <td><a href="#" class="recoverFileSignOff" id="<?php echo $row['id']; ?>">Recover File</a></td>
+                            <td><a href="#" class="recoverFileSignOff" id="<?php echo $row['id']; ?>"><i class="fas fa-fw fa-redo"></i></a><a href="#" class="deleteFileSignOff" id="<?php echo $row['id']; ?>"><i class="fas fa-fw fa-trash"></i></a></td>
                         </tr>
                         <?php
                         }
@@ -303,7 +304,7 @@
         $(document).on('click', '.recoverFileSignOff', function () {
             let id = $(this).attr("id");
             $.ajax({
-                url: "recoverFileAjax.php",
+                url: "recoverDeleteFileAjax.php",
                 type: "POST",
                 data: {
                     id: id,
@@ -324,17 +325,17 @@
             });
         });
 
-        $(document).on('click', '.recoverFileAccountingEstimates', function () {
+        $(document).on('click', '.deleteFileSignOff', function () {
             let id = $(this).attr("id");
             $.ajax({
-                url: "recoverFileAjax.php",
+                url: "recoverDeleteFileAjax.php",
                 type: "POST",
                 data: {
                     id: id,
-                    type: '2'
+                    type: '0'
                 },
                 success: function(data){
-                    let responseText = data == 1?'File is recovered':'File is not recovered'
+                    let responseText = data == 1?'File is deleted permanently':'File is not deleted'
                     data = data == 1?'success':'error'
                     swal({
                         icon: data,
@@ -348,53 +349,77 @@
             });
         });
 
-        $(document).on('click', '.recoverFileInsignificant', function () {
-            let id = $(this).attr("id");
-            $.ajax({
-                url: "recoverFileAjax.php",
-                type: "POST",
-                data: {
-                    id: id,
-                    type: '3'
-                },
-                success: function(data){
-                    let responseText = data == 1?'File is recovered':'File is not recovered'
-                    data = data == 1?'success':'error'
-                    swal({
-                        icon: data,
-                        text: responseText,
-                    }).then(function (isConfirm) {
-                        if (isConfirm) {
-                        window.location.reload();
-                        }
-                    });
-                }
-            });
-        });
+        // $(document).on('click', '.recoverFileAccountingEstimates', function () {
+        //     let id = $(this).attr("id");
+        //     $.ajax({
+        //         url: "recoverFileAjax.php",
+        //         type: "POST",
+        //         data: {
+        //             id: id,
+        //             type: '2'
+        //         },
+        //         success: function(data){
+        //             let responseText = data == 1?'File is recovered':'File is not recovered'
+        //             data = data == 1?'success':'error'
+        //             swal({
+        //                 icon: data,
+        //                 text: responseText,
+        //             }).then(function (isConfirm) {
+        //                 if (isConfirm) {
+        //                 window.location.reload();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
 
-        $(document).on('click', '.recoverFileMateriality', function () {
-            let id = $(this).attr("id");
-            $.ajax({
-                url: "recoverFileAjax.php",
-                type: "POST",
-                data: {
-                    id: id,
-                    type: '4'
-                },
-                success: function(data){
-                    let responseText = data == 1?'File is recovered':'File is not recovered'
-                    data = data == 1?'success':'error'
-                    swal({
-                        icon: data,
-                        text: responseText,
-                    }).then(function (isConfirm) {
-                        if (isConfirm) {
-                        window.location.reload();
-                        }
-                    });
-                }
-            });
-        });
+        // $(document).on('click', '.recoverFileInsignificant', function () {
+        //     let id = $(this).attr("id");
+        //     $.ajax({
+        //         url: "recoverFileAjax.php",
+        //         type: "POST",
+        //         data: {
+        //             id: id,
+        //             type: '3'
+        //         },
+        //         success: function(data){
+        //             let responseText = data == 1?'File is recovered':'File is not recovered'
+        //             data = data == 1?'success':'error'
+        //             swal({
+        //                 icon: data,
+        //                 text: responseText,
+        //             }).then(function (isConfirm) {
+        //                 if (isConfirm) {
+        //                 window.location.reload();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
+
+        // $(document).on('click', '.recoverFileMateriality', function () {
+        //     let id = $(this).attr("id");
+        //     $.ajax({
+        //         url: "recoverFileAjax.php",
+        //         type: "POST",
+        //         data: {
+        //             id: id,
+        //             type: '4'
+        //         },
+        //         success: function(data){
+        //             let responseText = data == 1?'File is recovered':'File is not recovered'
+        //             data = data == 1?'success':'error'
+        //             swal({
+        //                 icon: data,
+        //                 text: responseText,
+        //             }).then(function (isConfirm) {
+        //                 if (isConfirm) {
+        //                 window.location.reload();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
     });
     </script>
 </body>

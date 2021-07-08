@@ -26,7 +26,7 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 
 </head>
-<body style="background-image: url('Icons/bgwall.jpg');" oncontextmenu="return false">
+<body oncontextmenu="return false">
 <div class="login-reg-panel">
 		<div class="login-info-box">
 			<h2>Remember Password??</h2><br>

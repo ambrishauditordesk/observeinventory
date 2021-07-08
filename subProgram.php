@@ -407,8 +407,8 @@
                     <?php 
                        if($_SESSION['role'] == '-1' || $_SESSION['role'] == '1'){
                         ?>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
-                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt hue"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list hue"></i>Activity Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -423,8 +423,8 @@
                         }   
                         else{
                             ?>
-                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list"></i>Activity Log</a>
-                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt"></i>Deleted File Log</a>
+                            <a class="dropdown-item" href="admin/activityLog"><i class="fas fa-list hue"></i>Activity Log</a>
+                            <a class="dropdown-item" href="deletedFiles"><i class="fas fa-trash-alt hue"></i>Deleted File Log</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-user-tie hue" style="color:blue;"></i><?php echo $_SESSION['name']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-signature hue" style="color:blue;"></i><?php echo $_SESSION['signoff']; ?></a>
                             <a class="dropdown-item" href="#"><i class="fas fa-at hue" style="color:blue;"></i><?php echo $_SESSION['email']; ?></a>
@@ -1539,7 +1539,7 @@
                                     <strong>Click the Save Changes button to save respective data before exporting into Doc</strong>
                                 </div>
                                 <div id="editor">
-                                    <div class="fr-view">
+                                    <div class="fr-view" id="DraftReportHtml">
                                         <?php
                                             echo $auditReportResult->fetch_assoc()['audit_report'];
                                         ?>
@@ -1608,7 +1608,7 @@
                                     </div>
                                     <?php $clientName = $con->query("select name from workspace inner join client on workspace.client_id = client.id where workspace.id = $wid")->fetch_assoc()['name'];  ?>
                                     <div id="editor">    
-                                        <div class="fr-view">
+                                        <div class="fr-view" id="DraftReportHtml">
                                             <div id="unqualified_opinion">
                                                     <p dir="ltr" style="line-height: 1.295; margin-top: 0pt; margin-bottom: 8pt;"><span style="font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(255, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-variant-east-asian: normal; font-variant-position: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;">TO THE MEMBERS OF <?php echo $clientName; ?></span></p>
 
@@ -3250,7 +3250,7 @@
         <div class="modal fade" id="addExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-size" role="document">
                 <div class="modal-content">
-                    <form action="excelUpload" enctype="multipart/form-data" method="post">
+                    <form id="trialBalanceForm">
                         <div class="modal-body">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Upload Excel Form<h5>
@@ -3271,6 +3271,26 @@
                             <input class="btn btn-primary" type="submit" value="Upload">
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trial Balance Response Modal -->
+        <div class="modal fade" id="trialBalanceResponseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Hey <?php echo $_SESSION['name']; ?> !</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="trialBalanceResponseText"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-primary" href="subProgram?uid=<?php echo base64_encode(md5($wid));?>&zid=<?php echo base64_encode(md5(time()));?>&aid=<?php echo base64_encode(md5($wid));?>&pid=<?php echo base64_encode($prog_id); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&wid=<?php echo base64_encode($wid); ?>&uuid=<?php echo base64_encode(md5(date('Y')));?>&zuid=<?php echo base64_encode(md5(date('m-d-Y')));?>">OK</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3410,29 +3430,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Error Modal -->
-        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Files or Comment Both Can't be empty
-                            <h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="name">Files or Comment Both Can't be empty</label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" type="button" data-dismiss="modal">Ok</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -4330,8 +4327,8 @@
                 if(newComment == '' && fileCount == ''){
                     e.preventDefault();
                     swal({
-                        icon: 'error',
-                        text: "Files or Comment Both Can't be empty",
+                        icon: 'Success',
+                        text: "No changes to be updated!",
                     });
                 }
             });
@@ -4841,27 +4838,33 @@
                     },
                     success: function (response) {
                         if(response){
-                            var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-                            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-                            "xmlns='http://www.w3.org/TR/REC-html40'>" +
-                            "<head><meta charset='utf-8'></head><body>";
-                            var footer = "</body></html>";
-                            audit_report_data = audit_report_data == null ? $(".fr-view>").html() : audit_report_data;
-                            var sourceHTML = header + audit_report_data + footer;
-                            var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-                            var fileDownload = document.createElement("a");
-                            document.body.appendChild(fileDownload);
-                            fileDownload.href = source;
+                            // Creating a MS Doc file
+                            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+                            var postHtml = "</body></html>";
+                            var element = document.getElementById('DraftReportHtml').innerHTML;
+                            var html = preHtml+element+postHtml;
+                            var blob = new Blob(['\ufeff', html], {
+                                type: 'application/msword'
+                            });
+                            var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
                             <?php $draftResult = $con->query("select type_of_audit_report from draft_report where workspace_id = $wid");
                                 if($draftResult->num_rows > 0){
                                     $draftResult = $draftResult->fetch_assoc();
                                     ?>
-                                        fileDownload.download = 'Draft Report <?php echo $draftResult['type_of_audit_report'] == 1 ? "Qualified":"Unqualified"; ?> .doc';
-                                        fileDownload.click();
-                                        document.body.removeChild(fileDownload);
+                                        filename = 'Draft Report <?php echo $draftResult['type_of_audit_report'] == 1 ? "Qualified":"Unqualified"; ?> .doc';
                                     <?php
                                 }
                             ?>
+                            var downloadLink = document.createElement("a");
+                            document.body.appendChild(downloadLink);
+                            if(navigator.msSaveOrOpenBlob ){
+                                navigator.msSaveOrOpenBlob(blob, filename);
+                            }else{
+                                downloadLink.href = url;
+                                downloadLink.download = filename;   
+                                downloadLink.click();
+                            }
+                            document.body.removeChild(downloadLink);
                         }
                     }
                 });
@@ -5126,41 +5129,32 @@
                 }
                 else{
                     $('label[for="'+ $(this).val() +'"]').css("font-weight","bold");
-                    let data = $('label[for="'+ $(this).val() +'"]').html();
+                    data = $('label[for="'+ $(this).val() +'"]').html();
                     $('label[for="'+ $(this).val() +'"]').html('[ OPTION SELECTED ]'+ data + '[ OPTION SELECTED ]');
                 }
             });
 
-            
-            var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-            "xmlns='http://www.w3.org/TR/REC-html40'>" +
-            "<head><meta charset='utf-8'></head><body>";
-            var footer = "</body></html>";
-            let goingConcernDiv = $("#goingConcernDiv").html();
-            var sourceHTML = header + goingConcernDiv + footer;
-            var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-            var fileDownload = document.createElement("a");
-            document.body.appendChild(fileDownload);
-            fileDownload.href = source;
-            fileDownload.download = 'Going Concern.doc';
-            fileDownload.click();
-            document.body.removeChild(fileDownload);
+            // Creating a MS Doc file
+            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+            var postHtml = "</body></html>";
+            var html = preHtml+document.getElementById("goingConcernDiv").innerHTML+postHtml;
+            var blob = new Blob(['\ufeff', html], {
+                type: 'application/msword'
+            });
+            var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+            filename = 'Going Concern.doc';
+            var downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+            if(navigator.msSaveOrOpenBlob ){
+                navigator.msSaveOrOpenBlob(blob, filename);
+            }
+            else{
+                downloadLink.href = url;
+                downloadLink.download = filename;   
+                downloadLink.click();
+            }
+            document.body.removeChild(downloadLink);
 
-
-            // $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").attr("display","block")
-            
-            // $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").hide();
-            // $('#goingConcernDiv').find('input[type=text]').each(function() {
-            //     $(this).replaceWith("<span class='inputLabel'>" + this.value + "</span>");
-            // });
-            // $('#goingConcernDiv').find('input[type=radio]').each(function() {
-            //     if($(this).attr('checked') == null){
-            //         $('label[for="'+ $(this).val() +'"]').hide();
-            //         $(this).hide()
-            //     }
-            // });
-            // $("#goingConcernDiv").wordExport();
             $('#goingConcernDiv').find('.inputLabel').each(function() {
                 $(this).replaceWith("<input type='text' class='form-group' value='" + $(this).html() + "'/>");
             });
@@ -5641,6 +5635,26 @@
                             window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
                         }
                     });
+                }
+            });
+        });
+
+        $("#trialBalanceForm").submit(function(e){
+            e.preventDefault();
+            let form = $('#trialBalanceForm')[0];
+            let data = new FormData(form);
+            $.ajax({
+                url: "excelUploadAjax.php",
+                enctype: 'multipart/form-data',
+                type: "POST",
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: data,
+                success: function(response){
+                    $("#addExcelModal").modal("hide");
+                    $("#trialBalanceResponseText").html(response);
+                    $("#trialBalanceResponseModal").modal("show");
                 }
             });
         });
