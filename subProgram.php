@@ -1444,85 +1444,198 @@
                         }
                         elseif($prog_id == 395){
                             ?>
-                            <style>
-                                td:nth-child(4),td:nth-child(5) {
-                                    font-weight: bold !important;
-                                }
-                                td:nth-child(2) {
-                                    font-weight: normal !important;
-                                }
-                            </style>
-                            <?php
-                            $accountTypeResult = $con->query("SELECT account_type from trial_balance where workspace_id='".$wid."' group by account_type");
-                            ?>
-                            <br>
-                            <table class="table" style="width:100%; text-align: left">
-                                <thead>
-                                    <th>Financial Statement</th>
-                                    <th>CY Final Balance</th>
-                                    <th>CY Begining Balance</th>
-                                    <th>Variance ($)</th>
-                                    <th>Variance (%)</th>
-                                </thead>
-                                <tbody>
-                            <?php
-                            while($accountTypeRow = $accountTypeResult->fetch_assoc()){
-                                ?>
-                                <tr>
-                                    <td colspan=5 style="text-align: left">
-                                        <b>
-                                            <h3><?php echo $accountTypeRow['account_type']; ?></h3>
-                                        </b>
-                                    </td>
-                                </tr>
-                                <?php
-                                $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
-                                while($accountClassRow = $accountClassResult->fetch_assoc()){
-                                    $cyFinalBalTotal = $cyBegBalTotal = 0;
-                                    ?>
-                                    <tr>
-                                        <td colspan=5 style="text-align: left">
-                                            <h4><?php echo $accountClassRow['account_class']; ?></h4>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
-                                    while($financialStatementRow = $financialStatementResult->fetch_assoc()){
-                                        $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
-                                        $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
-                                        ?>
-                                        <tr>
-                                            <td style="text-align: left"><?php echo $financialStatementRow['financial_statement'];?></td>
-                                            <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']);?></td>
-                                            <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_beg_bal']);?></td>
-                                            <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal']);?></td>
-                                            <td style="text-align: left">
-                                            <?php
-                                                $diffPercentage = 0.00;
-                                                if($financialStatementRow['cy_beg_bal'] != 0)
-                                                    $diffPercentage = number_format((float)(($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal'])/$financialStatementRow['cy_beg_bal'])*100, 2, '.', '');
-                                                echo $diffPercentage.'%';
-                                            ?>
-                                            </td>
-                                        </tr>
-                                        <?php
+                                <style>
+                                    td:nth-child(4),td:nth-child(5) {
+                                        font-weight: bold !important;
                                     }
-                                    ?>
-                                        <tr>
-                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total <?php echo $accountClassRow['account_class']; ?></h5></td>
-                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyFinalBalTotal); ?></h5></td>
-                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyBegBalTotal); ?></h5></td>
-                                            <td colspan=2></td>
-                                        </tr>
-                                    <?php
-                                }
-                                ?>
-                                <tr><td colspan=5>&nbsp;</td></tr>
-                                <?php
-                            }
-                            ?>
-                                </tbody>
-                            </table>
+                                    td:nth-child(2) {
+                                        font-weight: normal !important;
+                                    }
+                                    .card{
+                                        border: 1px solid #e3e6f0 !important;
+                                    }
+                                </style>
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
+                                <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a>
+                                <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="unauditedBalanceSheetHeadingOne">
+                                            <center>
+                                                <h2 class="mb-0">
+                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedBalanceSheet" aria-expanded="true" aria-controls="unauditedBalanceSheet"><b>Unaudited Balance Sheet</b></button>
+                                                </h2>
+                                            </center>
+                                        </div> 
+                                        <div id="unauditedBalanceSheet" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne" data-parent="#unauditedBalanceSheetAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
+                                            <?php
+                                                $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type not like '%Expense%' and account_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                            ?>
+                                            <br>
+                                            <?php
+                                                $i = 0;
+                                                while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                                    ++$i;
+                                                    ?>
+                                                        <br>
+                                                        <div class="accordion" id="unauditedBalanceSheetAccordionExample<?php echo $i; ?>">
+                                                            <div class="card">
+                                                                <div class="card-header" id="unauditedBalanceSheetHeadingOne<?php echo $i; ?>">
+                                                                    <h2 class="mb-0">
+                                                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classBS<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classBS<?php echo $i; ?>"><b><?php echo $accountTypeRow['account_type']; ?></b></button>
+                                                                    </h2>
+                                                                </div>  
+                                                                <div id="account_classBS<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne<?php echo $i; ?>" data-parent="#unauditedBalanceSheetAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                                    <?php
+                                                                        $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
+                                                                        while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                                                            $cyFinalBalTotal = $cyBegBalTotal = 0;
+                                                                            ?>
+                                                                                <br>
+                                                                                <h4><?php echo $accountClassRow['account_class']; ?></h4>
+                                                                                <table class="table" style="width:100%; text-align: left">
+                                                                                    <thead>
+                                                                                        <th>Financial Statement</th>
+                                                                                        <th>CY Final Balance</th>
+                                                                                        <th>CY Begining Balance</th>
+                                                                                        <th>Variance ($)</th>
+                                                                                        <th>Variance (%)</th>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                            <?php
+                                                                                $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+                                                                                $clientID = time();
+                                                                                while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                                                                    $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
+                                                                                    $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+                                                                                    ?>
+                                                                                    <tr>
+                                                                                        <td style="text-align: left"><a target ="_blank" href="pivotTable?xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID));?>&wid=<?php echo base64_encode($wid);?>&account=<?php echo base64_encode($financialStatementRow['financial_statement']);?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>"><?php echo $financialStatementRow['financial_statement'];?></a></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']);?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_beg_bal']);?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal']);?></td>
+                                                                                        <td style="text-align: left">
+                                                                                        <?php
+                                                                                            $diffPercentage = 0.00;
+                                                                                            if($financialStatementRow['cy_beg_bal'] != 0)
+                                                                                                $diffPercentage = number_format((float)(($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal'])/$financialStatementRow['cy_beg_bal'])*100, 2, '.', '');
+                                                                                            echo $diffPercentage.'%';
+                                                                                        ?>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <?php
+                                                                                }
+                                                                            ?> 
+                                                                                        <tr colspan="5"><td></td></tr>
+                                                                                        <tr>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total <?php echo $accountClassRow['account_class']; ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyFinalBalTotal); ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyBegBalTotal); ?></h5></td>
+                                                                                            <td colspan=2></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="accordion" id="unauditedProfitLossAccordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="unauditedProfitLossHeadingOne">
+                                            <center>
+                                                <h2 class="mb-0">
+                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedProfitLoss" aria-expanded="true" aria-controls="unauditedProfitLoss"><b>Unaudited Profit and Loss</b></button>
+                                                </h2>
+                                            </center>
+                                        </div> 
+                                        <div id="unauditedProfitLoss" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne" data-parent="#unauditedProfitLossAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
+                                            <?php
+                                                $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                            ?>
+                                            
+                                            <?php
+                                                $i = 0;
+                                                while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                                    ++$i;
+                                                    ?>
+                                                        <br>
+                                                        <div class="accordion" id="unauditedProfitLossAccordionExample<?php echo $i; ?>">
+                                                            <div class="card">
+                                                                <div class="card-header" id="unauditedProfitLossHeadingOne<?php echo $i; ?>">
+                                                                    <h2 class="mb-0">
+                                                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classPL<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classPL<?php echo $i; ?>"><b><?php echo $accountTypeRow['account_type']; ?></b></button>
+                                                                    </h2>
+                                                                </div>  
+                                                                <div id="account_classPL<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne<?php echo $i; ?>" data-parent="#unauditedProfitLossAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                                    <?php
+                                                                        $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
+                                                                        while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                                                            $cyFinalBalTotal = $cyBegBalTotal = 0;
+                                                                            ?>
+                                                                                <br>
+                                                                                <h4><?php echo $accountClassRow['account_class']; ?></h4>
+                                                                                <table class="table" style="width:100%; text-align: left">
+                                                                                    <thead>
+                                                                                        <th>Financial Statement</th>
+                                                                                        <th>CY Final Balance</th>
+                                                                                        <th>CY Begining Balance</th>
+                                                                                        <th>Variance ($)</th>
+                                                                                        <th>Variance (%)</th>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                            <?php
+                                                                                $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+                                                                                while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                                                                    $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
+                                                                                    $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+                                                                                    ?>
+                                                                                    <tr>
+                                                                                        <td style="text-align: left"><?php echo $financialStatementRow['financial_statement'];?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']);?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_beg_bal']);?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal']);?></td>
+                                                                                        <td style="text-align: left">
+                                                                                        <?php
+                                                                                            $diffPercentage = 0.00;
+                                                                                            if($financialStatementRow['cy_beg_bal'] != 0)
+                                                                                                $diffPercentage = number_format((float)(($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal'])/$financialStatementRow['cy_beg_bal'])*100, 2, '.', '');
+                                                                                            echo $diffPercentage.'%';
+                                                                                        ?>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <?php
+                                                                                }
+                                                                            ?> 
+                                                                                        <tr colspan="5"><td></td></tr>
+                                                                                        <tr>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total <?php echo $accountClassRow['account_class']; ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyFinalBalTotal); ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($cyBegBalTotal); ?></h5></td>
+                                                                                            <td colspan=2></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php
                         } 
                         elseif($prog_id == 496){
@@ -2158,8 +2271,8 @@
                                                                     </td>
                                                                     <td><input name="submitEstimate[name][]" type="text" value="<?php echo $row['nameEstimate']; ?>"></td>
                                                                     <td><input name="submitEstimate[account][]" type="text" value="<?php echo $row['account']; ?>"></td>
-                                                                    <td><input name="submitEstimate[py][]" type="number" value="<?php echo $row['py']; ?>"> </td>
-                                                                    <td><input name="submitEstimate[cy][]" type="number" value="<?php echo $row['cy']; ?>"> </td>
+                                                                    <td><input name="submitEstimate[py][]" type="text" value="<?php echo numberToCurrency(trim($row['py'])); ?>"></td>
+                                                                    <td><input name="submitEstimate[cy][]" type="text" value="<?php echo numberToCurrency(trim($row['cy'])); ?>"></td>
                                                                     <td>
                                                                     <select name="submitEstimate[c][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['c'] == "Low") echo "selected"; ?>>Low</option>
@@ -3896,6 +4009,64 @@
                 </div>
             </div>
         </div>
+
+        <!-- Change Financial Statement Sequence Modal-->
+        <div class="modal fade" id="financialStatementChangeSequenceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <form id="financialStatementChangeSequenceForm">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Change Sequence Ordering</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div><br>
+                            <div class="form-group">
+                                <center><label for="adjust_number">Unaudited Balance Sheet</label></center>
+                                <?php
+                                    $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type not like '%Expense%' and account_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                    if($accountTypeResult->num_rows > 0){
+                                        $maxCount = $accountTypeResult->num_rows;
+                                        while($row = $accountTypeResult->fetch_assoc()){
+                                            ?>
+                                                <div class="form-group d-flex justify-content-around align-items-center">
+                                                    <div class="col-md-6" style="text-align: center"><label><?php echo $row['account_type']; ?></label></div>
+                                                    <div class="col-md-6" style="text-align: center"><input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqNumberBS[]" id="accountTypeSeqNumberBS[]" value="<?php echo $row['accountTypeSeqNumber']; ?>"></div>
+                                                    <input type="hidden" name="accountTypeSequenceNameBS[]" id="accountTypeSequenceNameBS[]" value="<?php echo $row['account_type']; ?>">
+                                                </div>
+                                            <?php
+                                        }
+                                    }
+                                ?>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <center><label for="adjust_number">Unaudited Profit and Loss</label></center>
+                                <?php
+                                    $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                    if($accountTypeResult->num_rows > 0){
+                                        $maxCount = $accountTypeResult->num_rows;
+                                        while($row = $accountTypeResult->fetch_assoc()){
+                                            ?>
+                                                <div class="form-group d-flex justify-content-around align-items-center">
+                                                    <div class="col-md-6" style="text-align: center"><label><?php echo $row['account_type']; ?></label></div>
+                                                    <div class="col-md-6" style="text-align: center"><input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqNumberPL[]" id="accountTypeSeqNumberPL[]" value="<?php echo $row['accountTypeSeqNumber']; ?>"></div>
+                                                    <input type="hidden" name="accountTypeSequenceNamePL[]" id="accountTypeSequenceNamePL[]" value="<?php echo $row['account_type']; ?>">
+                                                </div>
+                                            <?php
+                                        }
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <input class="btn btn-primary" type="submit" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     <?php 
         }
     ?>
@@ -4327,7 +4498,7 @@
                 if(newComment == '' && fileCount == ''){
                     e.preventDefault();
                     swal({
-                        icon: 'Success',
+                        icon: 'success',
                         text: "No changes to be updated!",
                     });
                 }
@@ -5655,6 +5826,36 @@
                     $("#addExcelModal").modal("hide");
                     $("#trialBalanceResponseText").html(response);
                     $("#trialBalanceResponseModal").modal("show");
+                }
+            });
+        });
+        
+        $(document).on('click','#financialStatementPdf', function(e){
+            
+        });
+
+        $('#financialStatementChangeSequenceForm').submit(function(e){
+            e.preventDefault();
+            let form = $('#financialStatementChangeSequenceForm')[0];
+            let data = new FormData(form);
+            $.ajax({
+                url: 'updateAccountTypeSequenceAjax.php',
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: data,
+                success: function(response){
+                    $("#financialStatementChangeSequenceModal").modal("hide");
+                    response = JSON.parse(response);
+                    swal({
+                        icon: response['status'] == 1? 'success':'error',
+                        text: response['text'],
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
                 }
             });
         });

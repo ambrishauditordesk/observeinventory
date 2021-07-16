@@ -52,7 +52,6 @@ function numberToCurrency($number)
         }
         $final .= '.'.$decimalVal;
     }
-    $symbol = "&#8377;";
-    return $checkMinus.$symbol.$final.'/-';
+    return $checkMinus.$final.'/-';
 }
 ?>

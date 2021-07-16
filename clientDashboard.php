@@ -156,7 +156,7 @@ $_SESSION['breadcrumb'] = array();
             </li>
             <li class="nav-item d-flex">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
-                <a class="nav-link d-flex align-items-center" href="admin/clientTeamMembers?sid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
+                <a class="nav-link d-flex align-items-center" href="admin/workspaceMembers?sid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
                 <img class="nav-icon" src="Icons/Group 4.svg"/>&nbsp;&nbsp;
                 <span>Team Members</span>
                 </a>
@@ -253,9 +253,9 @@ $_SESSION['breadcrumb'] = array();
                         $querys += $totalCount;
                         $querys1 += $statusCount;
 
-                        $per = number_format((float)0, 2, '.', '');
+                        $per = round(number_format((float)0, 2, '.', ''));
                         if($querys1 != 0){
-                            $per = number_format((float)($querys1/$querys)*100, 2, '.', '');
+                            $per = round(number_format((float)($querys1/$querys)*100, 2, '.', ''));
                         }
                     ?>
                     <span class="color-block"><?php echo $per."%"; ?></span>
@@ -290,9 +290,9 @@ $_SESSION['breadcrumb'] = array();
 
                             $data = getProgramStatus($queryrow['id'],$wid);
                         
-                        $per = number_format((float)0, 2, '.', '');
+                        $per = round(number_format((float)0, 2, '.', ''));
                         if($querys != 0){
-                            $per = number_format((float)($data['statusCount']/$data['totalCount'])*100, 2, '.', '');
+                            $per = round(number_format((float)($data['statusCount']/$data['totalCount'])*100, 2, '.', ''));
                         }
                     ?>
                     <span class="completion <?php echo $color; ?>"><?php echo $per."%"; ?></span>

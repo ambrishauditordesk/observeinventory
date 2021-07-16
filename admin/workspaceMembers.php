@@ -188,7 +188,7 @@
                         <!-- <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div> -->
                     <!-- </div> -->
                     <div class="col-md-12 text-center font-2 getContent" href="#">
-                        <h3><?php echo strtoupper($clientName . " - CLIENT TEAM MEMBERS"); ?></h3>
+                        <h3><?php echo strtoupper($clientName . " - WORKSPACE MEMBERS"); ?></h3>
                     </div>
                 </div>
             </div>
@@ -512,7 +512,7 @@
                 { orderable: false, targets: -1 }
             ],
             "ajax": {
-                url: "clientTeamMemberProfileFetchAjax.php",
+                url: "workspaceMemberProfileFetchAjax.php",
                 type: "POST",
                 data: {
                     cid: <?php echo $clientId ?>

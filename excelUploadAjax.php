@@ -57,6 +57,7 @@ $pid = $_POST['pid'];
 $uploadFiles = $_FILES['file']['tmp_name'];
 $updatedData = $errorList = $errorMessage = '';
 $flag = $totalCount = $successCount = $errorCount = $cyBegBalAmount = $cyFinalBalAmount = 0;
+$accountTypeSeqNumber = 1;
 
 ini_set('memory_limit', '16384M');
 set_time_limit(0);
@@ -102,8 +103,8 @@ for($i = 1; $i < $totalCount; $i++){
 
 
     // Inserting the data into database
-    $insertQuery = "INSERT INTO `trial_balance`(`workspace_id`,`account_number`, `account_name`, `cy_beg_bal`, `cy_interim_bal`, `cy_activity`, `cy_end_bal`, `client_adjustment`, `audit_adjustment`, `cy_final_bal`, `account_type`, `account_class`, `financial_statement`) 
-    VALUES ('$wid','$accountNumber','$accountName','$cyBegBal','','','','','','$cyFinalBal','$accountType','$accountClass','$financialStatement')";
+    $insertQuery = "INSERT INTO `trial_balance`(`workspace_id`,`account_number`, `account_name`, `cy_beg_bal`, `cy_interim_bal`, `cy_activity`, `cy_end_bal`, `client_adjustment`, `audit_adjustment`, `cy_final_bal`, `account_type`, `account_class`, `financial_statement`,`accountTypeSeqNumber`) 
+    VALUES ('$wid','$accountNumber','$accountName','$cyBegBal','','','','','','$cyFinalBal','$accountType','$accountClass','$financialStatement','0')";
 
     if($con->query($insertQuery) === TRUE){
         $updatedData.= '<strong>Record created:- </strong><br>Recorded created <br> Row No:- '.$i."<br>";
@@ -129,6 +130,21 @@ if($flag){
         if(!empty($errorList))
             $data = $errorList;
         $data = "Total Row Count = $totalCount, Total Entry Count = $successCount"; 
+        $resultBalanceSheet = $con->query("SELECT account_type from trial_balance where workspace_id='$wid' and ( account_type not like '%Expense%' and account_type not like '%Revenue%' ) group by account_type");
+        if($resultBalanceSheet->num_rows > 0){
+            while($row = $resultBalanceSheet->fetch_assoc()){
+                $con->query("UPDATE trial_balance set accountTypeSeqNumber = '".$accountTypeSeqNumber++."' where account_type = '".$row['account_type']."' and workspace_id = '$wid'");
+            }
+        }
+
+        $accountTypeSeqNumber = 1;
+
+        $resultProfitLoss = $con->query("SELECT account_type from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) group by account_type");
+        if($resultProfitLoss->num_rows > 0){
+            while($row = $resultProfitLoss->fetch_assoc()){
+                $con->query("UPDATE trial_balance set accountTypeSeqNumber = '".$accountTypeSeqNumber++."' where account_type = '".$row['account_type']."' and workspace_id = '$wid'");
+            }
+        }
     }
     else{
         $con->query("delete from trial_balance where workspace_id = $wid");

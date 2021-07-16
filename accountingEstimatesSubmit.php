@@ -71,10 +71,12 @@
             }
         if(isset($_POST['submitEstimate']['py']))
             foreach ($_POST['submitEstimate']['py'] as $data) {
+                $data = (float) filter_var( $data, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
                 $py[] = $data;
             }  
         if(isset($_POST['submitEstimate']['cy']))
             foreach ($_POST['submitEstimate']['cy'] as $data) {
+                $data = (float) filter_var( $data, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
                 $cy[] = $data;
             } 
         if(isset($_POST['submitEstimate']['c']))
