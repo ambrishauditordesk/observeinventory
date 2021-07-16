@@ -1599,7 +1599,7 @@
                                                                                     $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
                                                                                     ?>
                                                                                     <tr>
-                                                                                        <td style="text-align: left"><?php echo $financialStatementRow['financial_statement'];?></td>
+                                                                                        <td style="text-align: left"><a target ="_blank" href="pivotTable?xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID));?>&wid=<?php echo base64_encode($wid);?>&account=<?php echo base64_encode($financialStatementRow['financial_statement']);?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>"><?php echo $financialStatementRow['financial_statement'];?></a></td>
                                                                                         <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']);?></td>
                                                                                         <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_beg_bal']);?></td>
                                                                                         <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['cy_final_bal']-$financialStatementRow['cy_beg_bal']);?></td>
