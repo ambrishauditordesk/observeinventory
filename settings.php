@@ -167,8 +167,8 @@ error_reporting(E_ALL);
         <div class="side-header">
             <!-- <div style="border-bottom:1px solid;"> -->
             <div>
-                <img class="sidenav-icon" src="Icons/Group -1.svg"/> &nbsp;
-                Audit Edg
+                <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp;
+               
             </div>
         </div>
         <div class="side-footer">
@@ -532,7 +532,7 @@ error_reporting(E_ALL);
                                             </div>
                                             <div class="form-group mb-0 col-md-6 p-0">
                                                 <label for="fullName">Firm Storage space</label>
-                                                <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" value = "<?php echo ($row['storage']/1000).' MB'; ?>" readonly>
+                                                <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" value = "<?php echo ($row['storage']/1000000).' GB'; ?>" readonly>
                                             </div>
                                             <div class="form-group mb-0 col-md-6 p-0">
                                                 <label for="fullName">Storage space used</label><br>
@@ -540,21 +540,21 @@ error_reporting(E_ALL);
                                             </div>
                                             <div class="form-group mb-0">
                                                 <label for="fullName">Add Storage space</label><br>
-                                                <form action="#">
+                                                <form action="buyStorage" method="post">
                                                     <div class="row col-md-12">
                                                         <div class="col-md-4 p-0">
-                                                            <select class="form-control" aria-label="Default select example">
+                                                            <select class="form-control" name="firmStorage" aria-label="Default select example">
                                                                 <option selected>Select Storage</option>
-                                                                <option value="1">1 GB</option>
-                                                                <option value="5">5 GB</option>
-                                                                <option value="10">10 GB</option>
-                                                                <option value="15">15 GB</option>
-                                                                <option value="20">20 GB</option>
-                                                                <option value="25">25 GB</option>
+                                                                <option value="1000000">1 GB</option>
+                                                                <option value="5000000">5 GB</option>
+                                                                <option value="10000000">10 GB</option>
+                                                                <option value="15000000">15 GB</option>
+                                                                <option value="20000000">20 GB</option>
+                                                                <option value="25000000">25 GB</option>
                                                             </select>
                                                         </div> &emsp;
                                                         <div class="col-md-2 p-0">
-                                                            <input type="button" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                                            <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
                                                         </div>
                                                         <div class="col-md-4 mt-1">
                                                             <label><h6>&#8377;100/GB monthly</h6></label>

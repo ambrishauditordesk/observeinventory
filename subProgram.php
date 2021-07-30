@@ -171,8 +171,8 @@
                     else 
                         echo "workspace?qid=".base64_encode(md5(time()))."&gid=".base64_encode(md5(time()))."&fid=".base64_encode(md5(time()))."&eid=".base64_encode(md5(time()))."&pid=".base64_encode(md5(time()))."&cid=".base64_encode($clientId)."&bid=".base64_encode(md5(time()))."&aid=".base64_encode(md5(time()))."&parent_id=".base64_encode(md5(time()))."&zid=".base64_encode(md5(time()))."&yid=".base64_encode(md5(time()))."&wid=".base64_encode($wid)."&xid=".base64_encode(md5(time()));
                     ?>">
-                    <img class="sidenav-icon" src="Icons/Group -1.svg"/> &nbsp;
-                    Audit Edg
+                    <!-- <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp; -->
+                    <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp;
                 </a>
             </div>
         </div>
@@ -335,19 +335,6 @@
                         <?php
                     } 
                 }
-            ?>
-            <?php
-                if($prog_id == '239' || $prog_id == '240'){
-            ?>
-                <li class="nav-item d-flex">
-                <label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_6'>6</span></label>
-                    <a class="nav-link d-flex align-items-center" href="#" data-toggle="modal"
-                        data-target="#addbsplModal">
-                        <img class="nav-icon" src="Icons/Group 5.svg"/>&nbsp;&nbsp;
-                        <span>Add Account</span>
-                    </a>
-                </li>
-            <?php } 
             ?>
             <!-- Dropdown -->
             <li class="nav-item d-flex" style="background-color: rgba(232,240,255,1); border-radius: 15px; padding: 8px !important;">
@@ -536,181 +523,118 @@
                     <div class="col-md-12">
                         <?php
                         if ($prog_id == 239){
-                            // $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=33 and workspace_log.workspace_id='$wid' order by _seq,id asc";
-                            $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id='$wid' order by _seq,id asc";
-                            $row1 = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                            $scopes = ($con->query("select balance_asset, balance_liability from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                             ?>
-                             <div class="col-md-12 text-center p-top">
-                                    <label class="mt-2"><span class="helpDesign help_5">5</span></label>
-                                    <a target="_blank" href="exportAccounts?wid=<?php echo $wid; ?>&pid=239"><button class="btn bg-violet">Export</button></a>
-                            </div> <hr>
-                            <div class="form-row p-top">
-                                <div class="form-group col-md-6">
-                                    <label for="input1">Balance Assets Scope</label>
-                                    <label class="mt-2"><span class="helpDesign help_4">4</span></label>
-                                    <input type="text" class="form-control" name="aScope"
-                                            value="<?php echo $row1['balance_asset']; ?>" readonly>
+                            <!-- Top Part -->
+                            <div>
+                                <div class="col-md-12 text-center p-top">
+                                        <label class="mt-2"><span class="helpDesign help_5">5</span></label>
+                                        <a target="_blank" href="exportAccounts?wid=<?php echo $wid; ?>&pid=239"><button class="btn bg-violet">Export</button></a>
+                                </div> 
+                                <hr>
+                                <div class="form-row p-top">
+                                    <div class="form-group col-md-6">
+                                        <label for="input1">Balance Assets Scope</label>
+                                        <label class="mt-2"><span class="helpDesign help_4">4</span></label>
+                                        <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $scopes['balance_asset']; ?>" readonly>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="input2">Balance Liability Scope</label>
+                                        <label class="mt-2"><span class="helpDesign help_4">4</span></label>
+                                        <input type="text" class="form-control" name="lScope"
+                                                value="<?php echo $scopes['balance_liability']; ?>" readonly>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="input2">Balance Liability Scope</label>
-                                    <label class="mt-2"><span class="helpDesign help_4">4</span></label>
-                                    <input type="text" class="form-control" name="lScope"
-                                            value="<?php echo $row1['balance_liability']; ?>" readonly>
-                                </div>
+                            
                             </div>
-                            <form id="balanceSheetForm" action="accountsSubmit?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
-                                <table class="table table-hover">
-                                    <thead>
-                                    <tr class="table-secondary">
-                                        <th scope="col">Asset Accounts</th>
-                                        <th scope="col" hidden>Id</th>
-                                        <th scope="col" hidden></th>
-                                        <th scope="col">Amount</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Risk</th>
-                                        <th scope="col">Import</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                        $result = $con->query($query);
-                                        $i = 0;
-                                        while ($row = $result->fetch_assoc()) {
-                                            // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
-                                            //     $balanceSheet0 = 1;
-                                            // }
-                                            ?>
-                                            
-                                            <?php
-                                                if ($row['header_type'] == 0) { ?>
-                                                    <tr id="<?php echo ++$i; ?>">
-                                                        <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
+
+                            <form id="balanceSheetForm" action="accountsSubmit" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="wid" value="<?php echo $wid;?>">
+                                <input type="hidden" name="pid" value="<?php echo $prog_id; ?>">
+                                <?php
+                                    $queryBS = $con->query("SELECT distinct accounts_type,accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                    $i = 0;
+                                    while($rowQueryBS = $queryBS->fetch_assoc()){
+                                    ?>
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr class="table-secondary">
+                                                    <th scope="col" hidden>Id</th>
+                                                    <th scope="col"><?php echo $rowQueryBS['accounts_type']; ?> Accounts</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">Risk</th>
+                                                    <th scope="col">Map Accounts</th>
+                                                    <th scope="col">Import</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $queryAccount = $con->query("select * from tb_performance_map where workspace_id=$wid and accounts_type='".$rowQueryBS['accounts_type']."'");
+                                                    while ($rowQuery = $queryAccount->fetch_assoc()) {
+                                                ?>
+                                                    <tr>
                                                         <td scope="row" hidden>
-                                                            <input type="hidden" name="submitData[header_type][]"
-                                                                    value="<?php echo $row['header_type']; ?>">
+                                                            <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                         </td>
-                                                        <td scope="row" hidden>
-                                                            <input type="hidden" name="submitData[id][]"
-                                                                    value="<?php echo $row['id']; ?>">
+                                                        <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $rowQuery['accounts_name']; ?></td>
+                                                        <td scope="row">
+                                                            <input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
                                                         </td>
                                                         <td scope="row">
-                                                            <input type="number" name="submitData[amount][]"
-                                                                    value="<?php echo $row['amount']; ?>" size="10" step="0.01">
-                                                        </td>
-                                                        <td scope="row">
-                                                            <label class="mt-2"><span class="helpDesign help_1">1</span></label>
-                                                            <select name="submitData[type][]" class="form-control"
+                                                            <!-- <label class="mt-2"><span class="helpDesign help_1">1</span></label> -->
+                                                            <select name="submitData[<?php echo $i;?>][2]" class="form-control"
                                                                     required>
-                                                                <option <?php if ($row['type'] == 0) echo "selected"; ?>
+                                                                <option <?php if ($rowQuery['type'] == 0) echo "selected"; ?>
                                                                         value="0">Significant
                                                                 </option>
-                                                                <option <?php if ($row['type'] == 1) echo "selected"; ?>
+                                                                <option <?php if ($rowQuery['type'] == 1) echo "selected"; ?>
                                                                         value="1">Non-Significant
                                                                 </option>
                                                             </select>
                                                         </td>
                                                         <td scope="row">
-                                                            <label class="mt-2"><span class="helpDesign help_2">2</span></label>
-                                                            <select name="submitData[risk][]" class="form-control"required>
-                                                                <option <?php if ($row['risk'] == 0) echo "selected"; ?> value="0">Low</option>
-                                                                <option <?php if ($row['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
-                                                                <option <?php if ($row['risk'] == 2) echo "selected"; ?> value="2">High
+                                                            <!-- <label class="mt-2"><span class="helpDesign help_2">2</span></label> -->
+                                                            <select name="submitData[<?php echo $i;?>][3]" class="form-control"required>
+                                                                <option <?php if ($rowQuery['risk'] == 0) echo "selected"; ?> value="0">Low</option>
+                                                                <option <?php if ($rowQuery['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
+                                                                <option <?php if ($rowQuery['risk'] == 2) echo "selected"; ?> value="2">High
                                                                 </option>
                                                             </select>
                                                         </td>
                                                         <td scope="row">
-                                                            <label class="mt-2"><span class="helpDesign help_3">3</span></label>
-                                                            <select name="submitData[import][]" class="form-control"
-                                                                    required>
-                                                                <option <?php if ($row['import'] == 0) echo "selected"; ?> value="0">No</option>
-                                                                <option <?php if ($row['import'] == 1) echo "selected"; ?> value="1">Yes</option>
+                                                            <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                            <select class="form-control" name="submitData[<?php echo $i;?>][4]" required>
+                                                                <option value="-1" <?php if($rowQuery['mapped_program_id'] == -1) echo "selected"; ?>>Select Account</option>
+                                                                <?php
+                                                                    $accountMap = $con->query("SELECT * FROM `program` WHERE parent_id = 2");
+                                                                    while ($accountMapResult = $accountMap->fetch_assoc()) {
+                                                                ?>
+                                                                <option value="<?php echo $accountMapResult['id']; ?>" <?php if($rowQuery['mapped_program_id'] == $accountMapResult['id']) echo "selected"; ?>>
+                                                                    <?php echo $accountMapResult['program_name']; ?></option>
+                                                                <?php
+                                                                }
+                                                                ?>
+                                                                <option value="0" <?php if($rowQuery['mapped_program_id'] == 0) echo "selected"; ?>>Others</option>
+                                                            </select>
+                                                        </td>
+                                                        <td scope="row">
+                                                            <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                            <select name="submitData[<?php echo $i++;?>][5]" class="form-control" required>
+                                                                <option <?php if ($rowQuery['import'] == 0) echo "selected"; ?> value="0">No</option>
+                                                                <option <?php if ($rowQuery['import'] == 1) echo "selected"; ?> value="1">Yes</option>
                                                             </select>
                                                         </td>
                                                     </tr>
-                                                <?php } 
-                                                }
+                                                <?php 
+                                                    }
                                                 ?>
-                                                    <tr class="table-secondary">
-                                                        <th scope="col">Liability Accounts</th>
-                                                        <th scope="col" hidden>Id</th>
-                                                        <th scope="col" hidden></th>
-                                                        <th scope="col">Amount</th>
-                                                        <th scope="col">Type</th>
-                                                        <th scope="col">Risk</th>
-                                                        <th scope="col">Import</th>
-                                                    </tr>
-                                                    <?php
-                                                    $result = $con->query($query);
-                                                while ($row = $result->fetch_assoc()) {
-                                                    // if($row['amount'] != '' || $row['type'] != '' || $row['risk'] != '' || $row['import'] != ''){
-                                                    //     $balanceSheet1 = 1;
-                                                    // }
-                                                    if ($row['header_type'] == 1) {
-                                                        ?>
-                                                        <tr id="<?php echo ++$i; ?>">
-                                                            <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
-                                                            <td scope="row" hidden>
-                                                                <input type="hidden" name="submitData[header_type][]"
-                                                                        value="<?php echo $row['header_type']; ?>">
-                                                            </td>
-                                                            <td scope="row" hidden>
-                                                                <input type="hidden" name="submitData[id][]"
-                                                                        value="<?php echo $row['id']; ?>">
-                                                            </td>
-                                                            <td scope="row">
-                                                                <input type="number" name="submitData[amount][]"
-                                                                        value="<?php echo $row['amount']; ?>" size="10" step="0.01">
-                                                            </td>
-                                                            <td scope="row">
-                                                                <label class="mt-2"><span class="helpDesign help_1">1</span></label>
-                                                                <select name="submitData[type][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['type'] == 0) echo "selected"; ?>
-                                                                            value="0">Significant
-                                                                    </option>
-                                                                    <option <?php if ($row['type'] == 1) echo "selected"; ?>
-                                                                            value="1">Non-Significant
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <label class="mt-2"><span class="helpDesign help_2">2</span></label>
-                                                                <select name="submitData[risk][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['risk'] == 0) echo "selected"; ?>
-                                                                            value="0">
-                                                                        Low
-                                                                    </option>
-                                                                    <option <?php if ($row['risk'] == 1) echo "selected"; ?>
-                                                                            value="1">
-                                                                        Moderate
-                                                                    </option>
-                                                                    <option <?php if ($row['risk'] == 2) echo "selected"; ?>
-                                                                            value="2">
-                                                                        High
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td scope="row">
-                                                                <label class="mt-2"><span class="helpDesign help_3">3</span></label>
-                                                                <select name="submitData[import][]" class="form-control"
-                                                                        required>
-                                                                    <option <?php if ($row['import'] == 0) echo "selected"; ?>
-                                                                            value="0">No
-                                                                    </option>
-                                                                    <option <?php if ($row['import'] == 1) echo "selected"; ?>
-                                                                            value="1">Yes
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                <?php } ?>
-                                            
-                                            <?php
-                                        }
-                                    ?>
-                                    </tbody>
-                                </table>
+                                            </tbody>
+                                        </table>
+                                    <?php 
+                                    }
+                                ?>
                                 <div class="row d-flex justify-content-center align-items-center">
                                     <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
                                 </div>
@@ -749,22 +673,7 @@
                                     <input type="submit" id="validateSubmit" class="btn btn-success align-middle" value="Save Details"> 
                                 </div>
                             </form>
-                            <div class="row d-flex justify-content-center">
-                            <?php
-                                // $reviewSignoff = $con->query("select count(signoff_review_log.id) total from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
-                                // if($reviewSignoff['total']){
-                                ?>
-                                <!-- <button class="btn btn-outline-success fetchReview" id="239">Review Sign Off Log</button>&nbsp; -->
-                                <?php
-                                // }
-                                // $prepareSignoff = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=239")->fetch_assoc();
-                                // if($prepareSignoff['total']){
-                                ?>
-                                <!-- <button class="btn btn-outline-success fetchPrepare" id="239">Prepare Sign Off Log</button> -->
-                                <?php
-                                // }
-                                ?>
-                            </div>
+
                             <?php
                         } 
                         elseif ($prog_id == 247){
@@ -1006,101 +915,117 @@
                             }
                         }
                         elseif ($prog_id == 240) {
-                            $query = "select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid' and _seq >= 10 order by _seq,id asc";
-                            $row1 = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
+                            $rowScopes = ($con->query("select pl_income, pl_expense from sub_materiality where workspace_id = '$wid'"))->fetch_assoc();
                             ?>
-                            <div class="col-md-12 text-center p-top">
-                                    <label class="mt-2"><span class="helpDesign help_5">5</span></label>
-                                    <a target="_blank" href="exportAccounts?wid=<?php echo $wid; ?>&pid=240"><button class="btn bg-violet">Export</button></a>
-                            </div> <hr>
-                            <div class="form-row p-top">
-                                <div class="form-group col-md-6">
-                                    <label for="input1">PL- Income Scope</label>
-                                    <label class="mt-2"><span class="helpDesign help_4">4</span></label>
-                                    <input type="text" class="form-control" name="aScope"
-                                            value="<?php echo $row1['pl_income']; ?>" readonly>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="input2">PL- Expense Scope</label>
-                                    <label class="mt-2"><span class="helpDesign help_4">4</span></label>
-                                    <input type="text" class="form-control" name="lScope"
-                                            value="<?php echo $row1['pl_expense']; ?>" readonly>
+                            <!-- Top Part -->
+                            <div>
+                                <div class="col-md-12 text-center p-top">
+                                        <label class="mt-2"><span class="helpDesign help_5">5</span></label>
+                                        <a target="_blank" href="exportAccounts?wid=<?php echo $wid; ?>&pid=240"><button class="btn bg-violet">Export</button></a>
+                                </div> <hr>
+                                <div class="form-row p-top">
+                                    <div class="form-group col-md-6">
+                                        <label for="input1">PL- Income Scope</label>
+                                        <label class="mt-2"><span class="helpDesign help_4">4</span></label>
+                                        <input type="text" class="form-control" name="aScope"
+                                                value="<?php echo $rowScopes['pl_income']; ?>" readonly>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="input2">PL- Expense Scope</label>
+                                        <label class="mt-2"><span class="helpDesign help_4">4</span></label>
+                                        <input type="text" class="form-control" name="lScope"
+                                                value="<?php echo $rowScopes['pl_expense']; ?>" readonly>
+                                    </div>
                                 </div>
                             </div>
-                            <form id="balanceSheetForm" action="accountsSubmit?&wid=<?php echo $wid; ?>&pid=<?php echo $prog_id; ?>" method="post" enctype="multipart/form-data">
-                                <table class="table table-hover">
-                                    <thead>
-                                    <tr class="table-secondary">
-                                        <th scope="col">Asset Accounts</th>
-                                        <th scope="col" hidden>Id</th>
-                                        <th scope="col">Amount</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Risk</th>
-                                        <th scope="col">Import</th>
-                                    </tr>
-                                    </thead>
-                                    <?php
-                                        $result = $con->query($query);
-                                        $i = 0;
-                                        while ($row = $result->fetch_assoc()) {
-                                            ?>
-                                            <tbody>
-                                            <tr>
-                                                <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $row['program_name']; ?></td>
-                                                <td scope="row" hidden>
-                                                    <input type="hidden" name="submitData[id][]"
-                                                            value="<?php echo $row['id']; ?>">
-                                                </td>
-                                                <td scope="row">
-                                                    <input type="text" name="submitData[amount][]"
-                                                            value="<?php echo $row['amount']; ?>" size="10">
-                                                </td>
-                                                <td scope="row">
-                                                    <label class="mt-2"><span class="helpDesign help_1">1</span></label>
-                                                    <select name="submitData[type][]" class="form-control" required>
-                                                        <option <?php if ($row['type'] == 0) echo "selected"; ?>
-                                                                value="0">Significant
-                                                        </option>
-                                                        <option <?php if ($row['type'] == 1) echo "selected"; ?>
-                                                                value="1">Non-Significant
-                                                        </option>
-                                                    </select>
-                                                </td>
-                                                <td scope="row">
-                                                    <label class="mt-2"><span class="helpDesign help_2">2</span></label>
-                                                    <select name="submitData[risk][]" class="form-control" required>
-                                                        <option <?php if ($row['risk'] == 0) echo "selected"; ?>
-                                                                value="0">
-                                                            Low
-                                                        </option>
-                                                        <option <?php if ($row['risk'] == 1) echo "selected"; ?>
-                                                                value="1">
-                                                            Moderate
-                                                        </option>
-                                                        <option <?php if ($row['risk'] == 2) echo "selected"; ?>
-                                                                value="2">
-                                                            High
-                                                        </option>
-                                                    </select>
-                                                </td>
-                                                <td scope="row">
-                                                    <label class="mt-2"><span class="helpDesign help_3">3</span></label>
-                                                    <select name="submitData[import][]" class="form-control"
-                                                            required>
-                                                        <option <?php if ($row['import'] == 0) echo "selected"; ?>
-                                                                value="0">No
-                                                        </option>
-                                                        <option <?php if ($row['import'] == 1) echo "selected"; ?>
-                                                                value="1">Yes
-                                                        </option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                            <?php
-                                        }
+
+
+                            <form id="balanceSheetForm" action="accountsSubmit" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="wid" value="<?php echo $wid;?>">
+                                <input type="hidden" name="pid" value="<?php echo $prog_id; ?>">
+                                <?php
+                                    $queryPL = $con->query("SELECT distinct accounts_type,accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                    $i = 0;
+                                    while($rowQueryPL = $queryPL->fetch_assoc()){
                                     ?>
-                                </table>
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr class="table-secondary">
+                                                    <th scope="col" hidden>Id</th>
+                                                    <th scope="col"><?php echo $rowQueryPL['accounts_type']; ?> Accounts</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">Risk</th>
+                                                    <th scope="col">Map Accounts</th>
+                                                    <th scope="col">Import</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    $queryAccount = $con->query("select * from tb_performance_map where workspace_id=$wid and accounts_type='".$rowQueryPL['accounts_type']."'");
+                                                    while ($rowQuery = $queryAccount->fetch_assoc()) {
+                                                ?>
+                                                        <tr>
+                                                            <td scope="row" hidden>
+                                                                <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
+                                                            </td>
+                                                            <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $rowQuery['accounts_name']; ?></td>
+                                                            <td scope="row">
+                                                                <input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
+                                                            </td>
+                                                            <td scope="row">
+                                                                <!-- <label class="mt-2"><span class="helpDesign help_1">1</span></label> -->
+                                                                <select name="submitData[<?php echo $i;?>][2]" class="form-control"
+                                                                        required>
+                                                                    <option <?php if ($rowQuery['type'] == 0) echo "selected"; ?>
+                                                                            value="0">Significant
+                                                                    </option>
+                                                                    <option <?php if ($rowQuery['type'] == 1) echo "selected"; ?>
+                                                                            value="1">Non-Significant
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td scope="row">
+                                                                <!-- <label class="mt-2"><span class="helpDesign help_2">2</span></label> -->
+                                                                <select name="submitData[<?php echo $i;?>][3]" class="form-control"required>
+                                                                    <option <?php if ($rowQuery['risk'] == 0) echo "selected"; ?> value="0">Low</option>
+                                                                    <option <?php if ($rowQuery['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
+                                                                    <option <?php if ($rowQuery['risk'] == 2) echo "selected"; ?> value="2">High
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td scope="row">
+                                                                <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                                <select class="form-control" name="submitData[<?php echo $i;?>][4]" required>
+                                                                    <option value = "-1" <?php if($rowQuery['mapped_program_id'] == -1) echo "selected"; ?>>Select Account</option>
+                                                                    <?php
+                                                                        $accountMap = $con->query("SELECT * FROM `program` WHERE parent_id = 2");
+                                                                        while ($accountMapResult = $accountMap->fetch_assoc()) {
+                                                                    ?>
+                                                                    <option value="<?php echo $accountMapResult['id']; ?>" <?php if($rowQuery['mapped_program_id'] == $accountMapResult['id']) echo "selected"; ?>>
+                                                                        <?php echo $accountMapResult['program_name']; ?></option>
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                    <option value="0" <?php if($rowQuery['mapped_program_id'] == 0) echo "selected"; ?>>Others</option>
+                                                                </select>
+                                                            </td>
+                                                            <td scope="row">
+                                                                <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                                <select name="submitData[<?php echo $i++;?>][5]" class="form-control" required>
+                                                                    <option <?php if ($rowQuery['import'] == 0) echo "selected"; ?> value="0">No</option>
+                                                                    <option <?php if ($rowQuery['import'] == 1) echo "selected"; ?> value="1">Yes</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                            </tbody>
+                                        </table>
+                                    <?php
+                                    }
+                                    ?>
                                 <div class="row d-flex justify-content-center align-items-center">
                                     <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">
                                 </div>
@@ -1458,6 +1383,8 @@
                                 <br>
                                 <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
                                 <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a>
+                                <a id="financialStatementWord" target="_blanc" href="financialStatementWord"><button class="btn btn-outline-primary">Export to Word</button></a>
+                                <a id="financialStatementExcel" target="_blanc" href="financialStatementExcel"><button class="btn btn-outline-primary">Export to Excel</button></a>
                                 <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
                                     <div class="card">
                                         <div class="card-header" id="unauditedBalanceSheetHeadingOne">
@@ -2720,6 +2647,394 @@
                             </div>
                             <?php
                         }
+                        elseif($prog_id == 525){
+                            ?>
+                                <style>
+                                    td:nth-child(4),td:nth-child(5) {
+                                        font-weight: bold !important;
+                                    }
+                                    td:nth-child(2) {
+                                        font-weight: normal !important;
+                                    }
+                                    .card{
+                                        border: 1px solid #e3e6f0 !important;
+                                    }
+                                </style>
+                                <br>
+                                <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
+                                <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a>
+                                <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="unauditedBalanceSheetHeadingOne">
+                                            <center>
+                                                <h2 class="mb-0">
+                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedBalanceSheet" aria-expanded="true" aria-controls="unauditedBalanceSheet"><b>Unaudited Balance Sheet</b></button>
+                                                </h2>
+                                            </center>
+                                        </div> 
+                                        <div id="unauditedBalanceSheet" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne" data-parent="#unauditedBalanceSheetAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
+                                            <?php
+                                                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                            ?>
+                                            <br>
+                                            <?php
+                                                $i = 0;
+                                                while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                                    ++$i;
+                                                    ?>
+                                                        <br>
+                                                        <div class="accordion" id="unauditedBalanceSheetAccordionExample<?php echo $i; ?>">
+                                                            <div class="card">
+                                                                <div class="card-header" id="unauditedBalanceSheetHeadingOne<?php echo $i; ?>">
+                                                                    <h2 class="mb-0">
+                                                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classBS<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classBS<?php echo $i; ?>"><b><?php echo $accountTypeRow['accounts_type']; ?></b></button>
+                                                                    </h2>
+                                                                </div>  
+                                                                <div id="account_classBS<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne<?php echo $i; ?>" data-parent="#unauditedBalanceSheetAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                                    <?php
+                                                                        $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
+                                                                        while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                                                            $unauditedTotal = $auditedTotal = $adjustmentTotal =  0;
+                                                                            ?>
+                                                                                <br>
+                                                                                <h4><?php echo $accountClassRow['accounts_class']; ?></h4>
+                                                                                <table class="table" style="width:100%; text-align: left">
+                                                                                    <thead>
+                                                                                        <th>Financial Statement</th>
+                                                                                        <th>Unaudited</th>
+                                                                                        <th>Adjustments</th>
+                                                                                        <th>Audited</th>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                            <?php
+                                                                                $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
+                                                                                $clientID = time();
+                                                                                while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                                                                    $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                                                                                    $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                                                                                    $unauditedTotal += $financialStatementRow['unaudited'];
+                                                                                    $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                                                                                    $adjustmentTotal += $adjustment;
+                                                                                    ?>
+                                                                                    <tr>
+                                                                                        <td style="text-align: left"><?php echo $financialStatementRow['accounts_name'];?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['unaudited']);?></td>
+                                                                                        <td style="text-align: left"><a href="subProgram?did=<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode(24); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time()));?>"><?php echo numberToCurrency($adjustment);?></a></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['unaudited']+ $adjustment);?></td>
+                                                                                    </tr>
+                                                                                    <?php
+                                                                                }
+                                                                            ?> 
+                                                                                        <tr colspan="5"><td></td></tr>
+                                                                                        <tr>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total</h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($unauditedTotal); ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($adjustmentTotal); ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($auditedTotal); ?></h5></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="accordion" id="unauditedProfitLossAccordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="unauditedProfitLossHeadingOne">
+                                            <center>
+                                                <h2 class="mb-0">
+                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedProfitLoss" aria-expanded="true" aria-controls="unauditedProfitLoss"><b>Unaudited Profit and Loss</b></button>
+                                                </h2>
+                                            </center>
+                                        </div> 
+                                        <div id="unauditedProfitLoss" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne" data-parent="#unauditedProfitLossAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
+                                            <?php
+                                                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                            ?>
+                                            
+                                            <?php
+                                                $i = 0;
+                                                while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                                    ++$i;
+                                                    ?>
+                                                        <br>
+                                                        <div class="accordion" id="unauditedBalanceSheetAccordionExample<?php echo $i; ?>">
+                                                            <div class="card">
+                                                                <div class="card-header" id="unauditedBalanceSheetHeadingOne<?php echo $i; ?>">
+                                                                    <h2 class="mb-0">
+                                                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classBS<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classBS<?php echo $i; ?>"><b><?php echo $accountTypeRow['accounts_type']; ?></b></button>
+                                                                    </h2>
+                                                                </div>  
+                                                                <div id="account_classBS<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne<?php echo $i; ?>" data-parent="#unauditedBalanceSheetAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                                    <?php
+                                                                        $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
+                                                                        while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                                                            $unauditedTotal = $auditedTotal = $adjustmentTotal = 0;
+                                                                            ?>
+                                                                                <br>
+                                                                                <h4><?php echo $accountClassRow['accounts_class']; ?></h4>
+                                                                                <table class="table" style="width:100%; text-align: left">
+                                                                                    <thead>
+                                                                                        <th>Financial Statement</th>
+                                                                                        <th>Unaudited</th>
+                                                                                        <th>Adjustments</th>
+                                                                                        <th>Audited</th>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                            <?php
+                                                                                $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
+                                                                                $clientID = time();
+                                                                                while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                                                                    $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                                                                                    $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                                                                                    $unauditedTotal += $financialStatementRow['unaudited'];
+                                                                                    $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                                                                                    $adjustmentTotal += $adjustment;
+                                                                                    ?>
+                                                                                    <tr>
+                                                                                        <td style="text-align: left"><?php echo $financialStatementRow['accounts_name'];?></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['unaudited']);?></td>
+                                                                                        <td style="text-align: left"><a href="subProgram?did=<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode(24); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time()));?>"><?php echo numberToCurrency($adjustment);?></a></td>
+                                                                                        <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['unaudited']+ $adjustment);?></td>
+                                                                                    </tr>
+                                                                                    <?php
+                                                                                }
+                                                                            ?> 
+                                                                                        <tr colspan="5"><td></td></tr>
+                                                                                        <tr>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total</h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($unauditedTotal); ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($adjustmentTotal); ?></h5></td>
+                                                                                            <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($auditedTotal); ?></h5></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php
+                        }
+                        elseif($prog_id == 526){
+                            ?>
+                            <style>
+                                td:nth-child(4),td:nth-child(5) {
+                                    font-weight: bold !important;
+                                }
+                                td:nth-child(2) {
+                                    font-weight: normal !important;
+                                }
+                                .card{
+                                    border: 1px solid #e3e6f0 !important;
+                                }
+                            </style>
+                            <br>
+                            <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
+                            <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a>
+                            <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
+                                <div class="card">
+                                    <div class="card-header" id="unauditedBalanceSheetHeadingOne">
+                                        <center>
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedBalanceSheet" aria-expanded="true" aria-controls="unauditedBalanceSheet"><b>Unaudited Balance Sheet</b></button>
+                                            </h2>
+                                        </center>
+                                    </div> 
+                                    <div id="unauditedBalanceSheet" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne" data-parent="#unauditedBalanceSheetAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
+                                        <?php
+                                            $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                        ?>
+                                        <br>
+                                        <?php
+                                            $i = 0;
+                                            while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                                ++$i;
+                                                ?>
+                                                    <br>
+                                                    <div class="accordion" id="unauditedBalanceSheetAccordionExample<?php echo $i; ?>">
+                                                        <div class="card">
+                                                            <div class="card-header" id="unauditedBalanceSheetHeadingOne<?php echo $i; ?>">
+                                                                <h2 class="mb-0">
+                                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classBS<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classBS<?php echo $i; ?>"><b><?php echo $accountTypeRow['accounts_type']; ?></b></button>
+                                                                </h2>
+                                                            </div>  
+                                                            <div id="account_classBS<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne<?php echo $i; ?>" data-parent="#unauditedBalanceSheetAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                                <?php
+                                                                    $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
+                                                                    while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                                                        $begBalTotal = $auditedTotal = $adjustmentTotal =  0;
+                                                                        ?>
+                                                                            <br>
+                                                                            <h4><?php echo $accountClassRow['accounts_class']; ?></h4>
+                                                                            <table class="table" style="width:100%; text-align: left">
+                                                                                <thead>
+                                                                                    <th>Financial Statement</th>
+                                                                                    <th>CY Final Balance</th>
+                                                                                    <th>CY Beginning Balance</th>
+                                                                                    <th>Variance(&#8377;)</th>
+                                                                                    <th>Variance(%)</th>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                        <?php
+                                                                            $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited, sum(tb_performance_map.beg_amount) beg_bal from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
+                                                                            $clientID = time();
+                                                                            while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                                                                $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                                                                                $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                                                                                $audited = $financialStatementRow['unaudited']+$adjustment;
+                                                                                $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                                                                                $begBalTotal += $financialStatementRow['beg_bal'];
+                                                                                ?>
+                                                                                <tr>
+                                                                                    <td style="text-align: left"><?php echo $financialStatementRow['accounts_name'];?></td>
+                                                                                    <td style="text-align: left"><?php echo numberToCurrency($audited);?></td>
+                                                                                    <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['beg_bal']);?></td>
+                                                                                    <td style="text-align: left"><?php echo numberToCurrency($audited - $financialStatementRow['beg_bal']);?></td>
+                                                                                    <td>
+                                                                                    <?php
+                                                                                        $diffPercentage = 0.00;
+                                                                                        if($financialStatementRow['beg_bal'] != 0)
+                                                                                            $diffPercentage = number_format((float)(($audited-$financialStatementRow['beg_bal'])/$financialStatementRow['beg_bal'])*100, 2, '.', '');
+                                                                                        echo $diffPercentage.'%';
+                                                                                    ?>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <?php
+                                                                            }
+                                                                        ?> 
+                                                                                    <tr colspan="5"><td></td></tr>
+                                                                                    <tr>
+                                                                                        <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total</h5></td>
+                                                                                        <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($auditedTotal); ?></h5></td>
+                                                                                        <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($begBalTotal); ?></h5></td>
+                                                                                        <td colspan = "2"></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        <?php
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="accordion" id="unauditedProfitLossAccordionExample">
+                                <div class="card">
+                                    <div class="card-header" id="unauditedProfitLossHeadingOne">
+                                        <center>
+                                            <h2 class="mb-0">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedProfitLoss" aria-expanded="true" aria-controls="unauditedProfitLoss"><b>Unaudited Profit and Loss</b></button>
+                                            </h2>
+                                        </center>
+                                    </div> 
+                                    <div id="unauditedProfitLoss" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne" data-parent="#unauditedProfitLossAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
+                                    <?php
+                                            $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                        ?>
+                                        <br>
+                                        <?php
+                                            $i = 0;
+                                            while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                                                ++$i;
+                                                ?>
+                                                    <br>
+                                                    <div class="accordion" id="unauditedBalanceSheetAccordionExample<?php echo $i; ?>">
+                                                        <div class="card">
+                                                            <div class="card-header" id="unauditedBalanceSheetHeadingOne<?php echo $i; ?>">
+                                                                <h2 class="mb-0">
+                                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classBS<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classBS<?php echo $i; ?>"><b><?php echo $accountTypeRow['accounts_type']; ?></b></button>
+                                                                </h2>
+                                                            </div>  
+                                                            <div id="account_classBS<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne<?php echo $i; ?>" data-parent="#unauditedBalanceSheetAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                                <?php
+                                                                    $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
+                                                                    while($accountClassRow = $accountClassResult->fetch_assoc()){
+                                                                        $begBalTotal = $auditedTotal = $adjustmentTotal =  0;
+                                                                        ?>
+                                                                            <br>
+                                                                            <h4><?php echo $accountClassRow['accounts_class']; ?></h4>
+                                                                            <table class="table" style="width:100%; text-align: left">
+                                                                                <thead>
+                                                                                    <th>Financial Statement</th>
+                                                                                    <th>CY Final Balance</th>
+                                                                                    <th>CY Beginning Balance</th>
+                                                                                    <th>Variance(&#8377;)</th>
+                                                                                    <th>Variance(%)</th>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                        <?php
+                                                                            $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited, sum(tb_performance_map.beg_amount) beg_bal from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
+                                                                            $clientID = time();
+                                                                            while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                                                                                $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                                                                                $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                                                                                $audited = $financialStatementRow['unaudited']+$adjustment;
+                                                                                $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                                                                                $begBalTotal += $financialStatementRow['beg_bal'];
+                                                                                ?>
+                                                                                <tr>
+                                                                                    <td style="text-align: left"><?php echo $financialStatementRow['accounts_name'];?></td>
+                                                                                    <td style="text-align: left"><?php echo numberToCurrency($audited);?></td>
+                                                                                    <td style="text-align: left"><?php echo numberToCurrency($financialStatementRow['beg_bal']);?></td>
+                                                                                    <td style="text-align: left"><?php echo numberToCurrency($audited - $financialStatementRow['beg_bal']);?></td>
+                                                                                    <td>
+                                                                                    <?php
+                                                                                        $diffPercentage = 0.00;
+                                                                                        if($financialStatementRow['beg_bal'] != 0)
+                                                                                            $diffPercentage = number_format((float)(($audited-$financialStatementRow['beg_bal'])/$financialStatementRow['beg_bal'])*100, 2, '.', '');
+                                                                                        echo $diffPercentage.'%';
+                                                                                    ?>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <?php
+                                                                            }
+                                                                        ?> 
+                                                                                    <tr colspan="5"><td></td></tr>
+                                                                                    <tr>
+                                                                                        <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total</h5></td>
+                                                                                        <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($auditedTotal); ?></h5></td>
+                                                                                        <td style="text-align: left"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($begBalTotal); ?></h5></td>
+                                                                                        <td colspan = "2"></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        <?php
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php 
+                        }
                         else{
                             $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
                             $exquery = $con->query($query);
@@ -2749,7 +3064,7 @@
                                                     if ($queryrow['active']) { ?>
                                                         <a href="#">
                                                             <?php
-                                                                if($queryrow['id'] == 395){
+                                                                if($queryrow['id'] == 395 || $queryrow['id'] == 525 || $queryrow['id'] == 526){
                                                                     $trialBalanceResult = $con->query("select count(id) total from trial_balance where workspace_id = '".$wid."'");
                                                                     if($trialBalanceResult->fetch_assoc()['total'] == 0){
                                                                         $con->query("UPDATE workspace_log SET import = 0 WHERE workspace_id = '".$wid."' and program_id = 395");
@@ -2758,7 +3073,7 @@
                                                                 if($prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 262 || $prog_id == 266 || $prog_id == 19){
                                                                     echo "<label class=' mt-2'><span class='helpDesign help_1'>1</span></label>";
                                                                  } 
-                                                                if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24){ 
+                                                                if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24 || $queryrow['id'] == 525 || $queryrow['id'] == 526){ 
                                                                     ?>
                                                                     <a id="<?php echo $queryrow['id']; ?>" href="subProgram?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>">    
                                                                         <?php  echo trim($queryrow['program_name']); ?> &nbsp;
@@ -3873,11 +4188,11 @@
                                                                 <select class="form-control" name="misstatements_account[]" id="misstatements_account" required>
                                                                     <option>Select Account !</option>
                                                                         <?php
-                                                                            $accQuery = $con->query("select program.id id, program.program_name, workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id=2 and workspace_log.workspace_id='$wid'");
+                                                                            $accQuery = $con->query("select * from tb_performance_map where workspace_id='$wid'");
                                                                             while ($accResult = $accQuery->fetch_assoc()) {
                                                                         ?>
-                                                                            <option value="<?php echo $accResult['program_name']; ?>">
-                                                                                <?php echo $accResult['program_name']; ?>
+                                                                            <option value="<?php echo $accResult['accounts_name']; ?>">
+                                                                                <?php echo $accResult['accounts_name']; ?>
                                                                             </option>
                                                                         <?php
                                                                             }
@@ -4028,12 +4343,15 @@
                                     $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type not like '%Expense%' and account_type not like '%Revenue%' ) order by accountTypeSeqNumber");
                                     if($accountTypeResult->num_rows > 0){
                                         $maxCount = $accountTypeResult->num_rows;
+                                        $i = 0;
                                         while($row = $accountTypeResult->fetch_assoc()){
                                             ?>
                                                 <div class="form-group d-flex justify-content-around align-items-center">
                                                     <div class="col-md-6" style="text-align: center"><label><?php echo $row['account_type']; ?></label></div>
-                                                    <div class="col-md-6" style="text-align: center"><input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqNumberBS[]" id="accountTypeSeqNumberBS[]" value="<?php echo $row['accountTypeSeqNumber']; ?>"></div>
-                                                    <input type="hidden" name="accountTypeSequenceNameBS[]" id="accountTypeSequenceNameBS[]" value="<?php echo $row['account_type']; ?>">
+                                                    <div class="col-md-6" style="text-align: center">
+                                                        <input type="hidden" name="accountTypeSeqBS[<?php echo $i; ?>][0]" id="accountTypeSeqBS[<?php echo $i; ?>][0]" value="<?php echo $row['account_type']; ?>">
+                                                        <input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqBS[<?php echo $i; ?>][1]" id="accountTypeSeqBS[<?php echo $i++; ?>][1]" value="<?php echo $row['accountTypeSeqNumber']; ?>">
+                                                    </div>
                                                 </div>
                                             <?php
                                         }
@@ -5828,10 +6146,6 @@
                     $("#trialBalanceResponseModal").modal("show");
                 }
             });
-        });
-        
-        $(document).on('click','#financialStatementPdf', function(e){
-            
         });
 
         $('#financialStatementChangeSequenceForm').submit(function(e){

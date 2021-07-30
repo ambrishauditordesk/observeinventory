@@ -242,7 +242,7 @@ else{
                 </button>
             </div>
             <div class="modal-body">
-                Successfully added <?php echo $_POST['clientname']; ?>.<a href="clientList">Click Me!</a>
+                Successfully added <?php echo $name; ?>.<a href="clientList">Click Me!</a>
                 <p>
                     <?php
                         if(!empty($successEmailList)){

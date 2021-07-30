@@ -1,5 +1,6 @@
 <?php
 include 'dbconnection.php';
+include 'moneyFormatter.php';
 session_start();
 
 $account = base64_decode($_GET['account']);
@@ -105,8 +106,8 @@ $wid = base64_decode($_GET['wid']);
             <div class="side-header">
                 <!-- <div style="border-bottom:1px solid;"> -->
                 <div>
-                    <img class="sidenav-icon" src="Icons/Group -1.svg"/> &nbsp;
-                    Audit Edg
+                    <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp;
+                   
                 </div>
             </div>
             <div class="side-footer">
@@ -172,35 +173,55 @@ $wid = base64_decode($_GET['wid']);
                                     <th scope="col shadow-remove">Account Name</th>
                                     <th scope="col shadow-remove">CY Begining Balance</th>
                                     <th scope="col shadow-remove">CY Final Balance</th>
-                                    <th scope="col shadow-remove">Account Type</th>
-                                    <th scope="col shadow-remove">Account Class</th>
+                                    <th scope="col shadow-remove">Variance(&#8377;)</th>
+                                    <th scope="col shadow-remove">Variance(%)</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php
-                                $result = $con->query("SELECT * FROM trial_balance WHERE financial_statement = '$account' and workspace_id = $wid");
-                                if($result->num_rows < 1){
+                                $totalCyBegBal = 0;
+                                $totalCyFinalBal = 0;
+                                $result = $con->query("SELECT account_number, account_name, cy_beg_bal,cy_final_bal FROM trial_balance WHERE financial_statement = '$account' and workspace_id = $wid");
+                                if($result->num_rows == 0){
                                     ?>
-                                    <tr>
-                                    <td colspan="7">No record found</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="7">No record found</td>
+                                        </tr>
                                     <?php
                                 }
                                 else{
                                     while($row = $result->fetch_assoc()){
+                                        $cyBegBal = numberToCurrency($row['cy_beg_bal']);
+                                        $cyFinalBal = numberToCurrency($row['cy_final_bal']);
+                                        $totalCyBegBal += $row['cy_beg_bal'];
+                                        $totalCyFinalBal += $row['cy_final_bal'];
                                     ?>
                                     <tr>
                                         <td><?php echo $row['account_number']; ?></td>
-                                        <td><?php echo $row['account_name']; ?></td>
-                                        <td><?php echo $row['cy_beg_bal']; ?></td>
-                                        <td><?php echo $row['cy_final_bal']; ?></td>
-                                        <td><?php echo $row['account_type']; ?></td>
-                                        <td><?php echo $row['account_class']; ?></td>
+                                        <td style="text-align: left"><?php echo $row['account_name']; ?></td>
+                                        <td><?php echo $cyBegBal; ?></td>
+                                        <td><?php echo $cyFinalBal; ?></td>
+                                        <td><?php echo numberToCurrency($row['cy_final_bal'] - $row['cy_beg_bal']); ?></td>
+                                        <td>
+                                            <?php
+                                                $diffPercentage = 0.00;
+                                                if($row['cy_beg_bal'] != 0)
+                                                    $diffPercentage = number_format((float)(($row['cy_final_bal']-$row['cy_beg_bal'])/$row['cy_beg_bal'])*100, 2, '.', '');
+                                                echo $diffPercentage.'%';
+                                            ?>
+                                        </td>
                                     </tr>
                                     <?php
                                     }
                                 }
                             ?>
+                                <tr colspan="4"><td></td></tr>
+                                    <tr>
+                                        <td colspan="1"></td>
+                                        <td style="text-align: center"><h5 style="border-bottom: 1px solid;border-top: 1px solid;">Total</h5></td>
+                                        <td style="text-align: center"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($totalCyBegBal); ?></h5></td>
+                                        <td style="text-align: center"><h5 style="border-bottom: 1px solid;border-top: 1px solid;"><?php echo numberToCurrency($totalCyFinalBal); ?></h5></td>
+                                    </tr>
                             </tbody>
                         </table>
                     </div>

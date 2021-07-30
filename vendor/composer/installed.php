@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '4b94511017716e5c3914f77230adac7a111c7c57',
+        'reference' => '3188523e84d1b31b3a29bff9f9ae28df2100731a',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '4b94511017716e5c3914f77230adac7a111c7c57',
+            'reference' => '3188523e84d1b31b3a29bff9f9ae28df2100731a',
             'dev_requirement' => false,
         ),
         'ezyang/htmlpurifier' => array(
@@ -26,6 +26,24 @@
             'install_path' => __DIR__ . '/../ezyang/htmlpurifier',
             'aliases' => array(),
             'reference' => '08e27c97e4c6ed02f37c5b2b20488046c8d90d75',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-escaper' => array(
+            'pretty_version' => '2.8.0',
+            'version' => '2.8.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-escaper',
+            'aliases' => array(),
+            'reference' => '2d6dce99668b413610e9544183fa10392437f542',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-zendframework-bridge' => array(
+            'pretty_version' => '1.3.0',
+            'version' => '1.3.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-zendframework-bridge',
+            'aliases' => array(),
+            'reference' => '13af2502d9bb6f7d33be2de4b51fb68c6cdb476e',
             'dev_requirement' => false,
         ),
         'maennchen/zipstream-php' => array(
@@ -82,6 +100,15 @@
             'reference' => '418cd304e8e6b417ea79c3b29126a25dc4b1170c',
             'dev_requirement' => false,
         ),
+        'phpoffice/phpword' => array(
+            'pretty_version' => '0.18.2',
+            'version' => '0.18.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpoffice/phpword',
+            'aliases' => array(),
+            'reference' => 'aca10785cf68dc95d7f6fac4fe854979fef3f8db',
+            'dev_requirement' => false,
+        ),
         'psr/http-client' => array(
             'pretty_version' => '1.0.1',
             'version' => '1.0.1.0',
@@ -126,6 +153,12 @@
             'aliases' => array(),
             'reference' => '2df51500adbaebdc4c38dea4c89a2e131c45c8a1',
             'dev_requirement' => false,
+        ),
+        'zendframework/zend-escaper' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '^2.6.1',
+            ),
         ),
     ),
 );

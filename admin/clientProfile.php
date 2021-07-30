@@ -108,8 +108,8 @@
     <!-- SideBar -->
     <div class="sidenav">
         <div class="side-header">
-            <img class="sidenav-icon" src="../Icons/Group -1.svg"/> &nbsp;
-            Audit Edg
+            <img class="sidenav-icon" src="../Icons/Group-1.png"/> &nbsp;
+           
         </div>
 
         <div class="side-body">
