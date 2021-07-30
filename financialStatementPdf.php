@@ -30,7 +30,7 @@
          else{
             $this->Cell(80,10,$con->query("SELECT concat('Profit and Loss as on ', dateto) workspaceDate from workspace where client_id = $clientId")->fetch_assoc()['workspaceDate'],0,1,'C');
          }
-         $columnNames = [' ','Particulars', 'As on '.$con->query("SELECT dateto from workspace where id = $wid")->fetch_assoc()['dateto'], 'As on'.$con->query("SELECT datefrom from workspace where id = $wid")->fetch_assoc()['datefrom']];
+         $columnNames = [' ','Particulars', 'As on '.$con->query("SELECT dateto from workspace where id = $wid")->fetch_assoc()['dateto'], 'As on '.$con->query("SELECT datefrom from workspace where id = $wid")->fetch_assoc()['datefrom']];
          //column width
          $colWidth = array(15, 85, 45, 45);
          $this->Ln(2.5);
@@ -72,110 +72,8 @@
          $this->Cell(30);
          $this->Cell(30,12, "______________________" ,0,0);//right
       }
-
-      var $B=0;
-      var $I=0;
-      var $U=0;
-      var $HREF='';
-      var $ALIGN='';
-  
-      function WriteHTML($html){
-          //HTML parser
-          $html=str_replace("\n",' ',$html);
-          $a=preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
-          foreach($a as $i=>$e)
-          {
-              if($i%2==0)
-              {
-                  //Text
-                  if($this->HREF)
-                      $this->PutLink($this->HREF,$e);
-                  elseif($this->ALIGN=='center')
-                      $this->Cell(0,5,$e,0,1,'C');
-                  else
-                      $this->Write(5,$e);
-              }
-              else
-              {
-                  //Tag
-                  if($e[0]=='/')
-                      $this->CloseTag(strtoupper(substr($e,1)));
-                  else
-                  {
-                      //Extract properties
-                      $a2=explode(' ',$e);
-                      $tag=strtoupper(array_shift($a2));
-                      $prop=array();
-                      foreach($a2 as $v)
-                      {
-                          if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
-                              $prop[strtoupper($a3[1])]=$a3[2];
-                      }
-                      $this->OpenTag($tag,$prop);
-                  }
-              }
-          }
-      }
-  
-      function OpenTag($tag,$prop){
-          //Opening tag
-          if($tag=='B' || $tag=='I' || $tag=='U')
-              $this->SetStyle($tag,true);
-          if($tag=='A')
-              $this->HREF=$prop['HREF'];
-          if($tag=='BR')
-              $this->Ln(5);
-          if($tag=='P')
-              $this->ALIGN=$prop['ALIGN'];
-          if($tag=='HR')
-          {
-              if( !empty($prop['WIDTH']) )
-                  $Width = $prop['WIDTH'];
-              else
-                  $Width = $this->w - $this->lMargin-$this->rMargin;
-              $this->Ln(2);
-              $x = $this->GetX();
-              $y = $this->GetY();
-              $this->SetLineWidth(0.4);
-              $this->Line($x,$y,$x+$Width,$y);
-              $this->SetLineWidth(0.2);
-              $this->Ln(2);
-          }
-      }
-  
-      function CloseTag($tag){
-          //Closing tag
-          if($tag=='B' || $tag=='I' || $tag=='U')
-              $this->SetStyle($tag,false);
-          if($tag=='A')
-              $this->HREF='';
-          if($tag=='P')
-              $this->ALIGN='';
-      }
-  
-      function SetStyle($tag,$enable){
-          //Modify style and select corresponding font
-          $this->$tag+=($enable ? 1 : -1);
-          $style='';
-          foreach(array('B','I','U') as $s)
-              if($this->$s>0)
-                  $style.=$s;
-          $this->SetFont('',$style);
-      }
-  
-      function PutLink($URL,$txt){
-          //Put a hyperlink
-          $this->SetTextColor(0,0,255);
-          $this->SetStyle('U',true);
-          $this->Write(5,$txt,$URL);
-          $this->SetStyle('U',false);
-          $this->SetTextColor(0);
-      }
    }
 
-   function countLenght($text){
-      return strlen($text);
-   }
    session_start();
 
    $wid = $_SESSION['workspace_id'];
@@ -194,133 +92,163 @@
    $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type not like '%Expense%' and account_type not like '%Revenue%' ) order by accountTypeSeqNumber");
    $typeCounter = 'A';
 
-   while($accountTypeRow = $accountTypeResult->fetch_assoc()){
-      $cyBegBalTotal = $cyFinalBalTotal = 0;
-      
-      $pdf->SetFont('Arial','B',10);
-      $pdf->Cell($colWidth[0],6,'('.$typeCounter++.')', "RL",0,'C');
-      $pdf->Cell($colWidth[1],6,strtoupper($accountTypeRow['account_type']),'R',0,'L');
-      $pdf->Cell($colWidth[2],6,' ','R',0,'R');
-      $pdf->Cell($colWidth[3],6,' ','R',0,'R');
-      $pdf->Ln(6);
+    while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+        $cyBegBalTotal = $cyFinalBalTotal = 0;
+        
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($colWidth[0],6,'('.$typeCounter++.')', "RL",0,'C');
+        $pdf->Cell($colWidth[1],6,strtoupper($accountTypeRow['account_type']),'R',0,'L');
+        $pdf->Cell($colWidth[2],6,' ','R',0,'R');
+        $pdf->Cell($colWidth[3],6,' ','R',0,'R');
+        $pdf->Ln(6);
 
-      $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
-      $accountClassCounter = 1;
-      while($accountClassRow = $accountClassResult->fetch_assoc()){
-         $pdf->SetFont('Arial','B',10);
-         $pdf->Cell($colWidth[0],6,$accountClassCounter++, "RL",0,'C');
-         $pdf->Cell($colWidth[1],6,strtoupper($accountClassRow['account_class']),"R",0,'L');
-         $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
-         $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
-         $pdf->Ln(6);
-
-         $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
-         $financialStatementCounter = 'a';
-         $pdf->SetFont('Arial','',10);
-         while($financialStatementRow = $financialStatementResult->fetch_assoc()){
-            if ($pdf->GetY() > 220) {
-               $pdf->Cell(array_sum($colWidth),0,'','T');
-               $pdf->Ln(0);
-               $pdf->AddPage();
-            }
-            $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
-            $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+        $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
+        $accountClassCounter = 1;
+        while($accountClassRow = $accountClassResult->fetch_assoc()){
+            $pdf->SetFont('Arial','B',10);
             
-            $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
-            $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'],"R",0,'L');
-            $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['cy_final_bal']),"R",0,'R');
-            $pdf->Cell($colWidth[3],6, numberToCurrency($financialStatementRow['cy_beg_bal']),"R",0,'R');
-            $pdf->Ln(6);
-         }
-         
-      }
-      $pdf->Cell(array_sum($colWidth),0,'','T');
-      $pdf->Ln(0);
-      $pdf->SetFont('Arial','B',10);
-      $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
-      $pdf->Cell($colWidth[1],6,'Total',"R",0,'C');
-      $pdf->Cell($colWidth[2],6, numberToCurrency($cyFinalBalTotal),"R",0,'R');
-      $pdf->Cell($colWidth[3],6, numberToCurrency($cyBegBalTotal),"R",0,'R');
-      $pdf->Ln(6);
-      
-      $pdf->Cell(array_sum($colWidth),0,'','T');
-      $pdf->Ln(0);
-   }
-   $type = 'PL';
-   $pdf->AddPage();
-   
-   $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) order by accountTypeSeqNumber");
-   $typeCounter = 'A';
-
-   while($accountTypeRow = $accountTypeResult->fetch_assoc()){
-      $cyBegBalTotal = $cyFinalBalTotal = 0;
-      
-      $pdf->SetFont('Arial','B',10);
-      $pdf->Cell($colWidth[0],6,'('.$typeCounter++.')', "RL",0,'C');
-      $pdf->Cell($colWidth[1],6,strtoupper($accountTypeRow['account_type']),'R',0,'L');
-      $pdf->Cell($colWidth[2],6,' ','R',0,'R');
-      $pdf->Cell($colWidth[3],6,' ','R',0,'R');
-      $pdf->Ln(6);
-
-      $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
-      $accountClassCounter = 1;
-      while($accountClassRow = $accountClassResult->fetch_assoc()){
-         $pdf->SetFont('Arial','B',10);
-         $pdf->Cell($colWidth[0],6,$accountClassCounter++, "RL",0,'C');
-         $pdf->Cell($colWidth[1],6,strtoupper($accountClassRow['account_class']),"R",0,'L');
-         // $length = countLenght($accountClassRow['account_class']);
-         // if($length <= 38){
-         //    $pdf->Cell($colWidth[1],6,strtoupper($accountClassRow['account_class']),"R",0,'L');   
-         // }
-         // else{
-         //    $pdf->Cell($colWidth[1],6,strtoupper($accountClassRow['account_class']),"R",0,'L');
-         //    $newName = explode(' ', strtoupper($accountClassRow['account_class']));
-         //    $printName = '';
-         //    for($j = 0; $j < sizeof($newName); $j++){
-         //       if(strlen($printName) <= 32){
-         //          $printName .= $newName[$j];
-         //       }
-         //    }
-         // }
-         $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
-         $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
-         $pdf->Ln(6);
-
-         $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
-         $financialStatementCounter = 'a';
-         $pdf->SetFont('Arial','',10);
-         while($financialStatementRow = $financialStatementResult->fetch_assoc()){
-            if ($pdf->GetY() > 220) {
-               $pdf->Cell(array_sum($colWidth),0,'','T');
-               $pdf->Ln(0);
-               $pdf->AddPage();
-            }
-            $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
-            $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+            $wordsArray = explode(' ',$accountClassRow['account_class']);
+            $wordsCount = sizeof($wordsArray);
+            $newWord = '';
+            $firstLine = 1;
             
-            $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
-            $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'],"R",0,'L');
-            $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['cy_final_bal']),"R",0,'R');
-            $pdf->Cell($colWidth[3],6, numberToCurrency($financialStatementRow['cy_beg_bal']),"R",0,'R');
+            $pdf->Cell($colWidth[0],6,$accountClassCounter++, "RL",0,'C');
+            for($lines = 0; $lines < $wordsCount; $lines++){
+                if( (strlen($newWord) + strlen($wordsArray[$lines]) + 1) <= 38 ){
+                    $newWord .= $wordsArray[$lines].' ';
+                }
+                else{
+                    $firstLine = 0;
+                    $pdf->Cell($colWidth[1],6,strtoupper($newWord),"R",0,'L');
+                    $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
+                    $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
+                    $pdf->Ln(6);
+                    $newWord = $wordsArray[$lines];
+                }
+            }
+            if(strlen($newWord) <= 38 && !$firstLine){
+                $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
+            }
+            $pdf->Cell($colWidth[1],6,strtoupper($newWord),"R",0,'L');
+            $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
+            $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
             $pdf->Ln(6);
-         }
-         
-      }
-      $pdf->Cell(array_sum($colWidth),0,'','T');
-      $pdf->Ln(0);
-      $pdf->SetFont('Arial','B',10);
-      $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
-      $pdf->Cell($colWidth[1],6,'Total',"R",0,'C');
-      $pdf->Cell($colWidth[2],6, numberToCurrency($cyFinalBalTotal),"R",0,'R');
-      $pdf->Cell($colWidth[3],6, numberToCurrency($cyBegBalTotal),"R",0,'R');
-      $pdf->Ln(6);
-      
-      $pdf->Cell(array_sum($colWidth),0,'','T');
-      $pdf->Ln(0);
-   }
 
-   $pdf->Ln(0);
-   // $pdf->Output('Unaudited-Financial-Statement.pdf', 'D');
-   $pdf->Output();
-   $pdf->AliasNbPages();
+
+            $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+            $financialStatementCounter = 'a';
+            $pdf->SetFont('Arial','',10);
+            while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                if ($pdf->GetY() > 220) {
+                    $pdf->Cell(array_sum($colWidth),0,'','T');
+                    $pdf->Ln(0);
+                    $pdf->AddPage();
+                }
+                $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
+                $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+                
+                $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
+                $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'],"R",0,'L');
+                $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['cy_final_bal']),"R",0,'R');
+                $pdf->Cell($colWidth[3],6, numberToCurrency($financialStatementRow['cy_beg_bal']),"R",0,'R');
+                $pdf->Ln(6);
+            }
+        }
+        $pdf->Cell(array_sum($colWidth),0,'','T');
+        $pdf->Ln(0);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
+        $pdf->Cell($colWidth[1],6,'Total',"R",0,'C');
+        $pdf->Cell($colWidth[2],6, numberToCurrency($cyFinalBalTotal),"R",0,'R');
+        $pdf->Cell($colWidth[3],6, numberToCurrency($cyBegBalTotal),"R",0,'R');
+        $pdf->Ln(6);
+        
+        $pdf->Cell(array_sum($colWidth),0,'','T');
+        $pdf->Ln(0);
+    }
+    $type = 'PL';
+    $pdf->AddPage();
+    
+    $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) order by accountTypeSeqNumber");
+    $typeCounter = 'A';
+
+    while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+        $cyBegBalTotal = $cyFinalBalTotal = 0;
+      
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($colWidth[0],6,'('.$typeCounter++.')', "RL",0,'C');
+        $pdf->Cell($colWidth[1],6,strtoupper($accountTypeRow['account_type']),'R',0,'L');
+        $pdf->Cell($colWidth[2],6,' ','R',0,'R');
+        $pdf->Cell($colWidth[3],6,' ','R',0,'R');
+        $pdf->Ln(6);
+
+        $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
+        $accountClassCounter = 1;
+        while($accountClassRow = $accountClassResult->fetch_assoc()){
+            $pdf->SetFont('Arial','B',10);
+            
+            $wordsArray = explode(' ',$accountClassRow['account_class']);
+            $wordsCount = sizeof($wordsArray);
+            $newWord = '';
+            $firstLine = 1;
+            
+            $pdf->Cell($colWidth[0],6,$accountClassCounter++, "RL",0,'C');
+            for($lines = 0; $lines < $wordsCount; $lines++){
+                if( (strlen($newWord) + strlen($wordsArray[$lines]) + 1) <= 38 ){
+                    $newWord .= $wordsArray[$lines].' ';
+                }
+                else{
+                    $firstLine = 0;
+                    $pdf->Cell($colWidth[1],6,strtoupper($newWord),"R",0,'L');
+                    $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
+                    $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
+                    $pdf->Ln(6);
+                    $newWord = $wordsArray[$lines];
+                }
+            }
+            if(strlen($newWord) <= 38 && !$firstLine){
+                $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
+            }
+            $pdf->Cell($colWidth[1],6,strtoupper($newWord),"R",0,'L');
+            $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
+            $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
+            $pdf->Ln(6);
+
+
+            $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+            $financialStatementCounter = 'a';
+            $pdf->SetFont('Arial','',10);
+            while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                if ($pdf->GetY() > 220) {
+                    $pdf->Cell(array_sum($colWidth),0,'','T');
+                    $pdf->Ln(0);
+                    $pdf->AddPage();
+                }
+                $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
+                $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
+                
+                $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
+                $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'],"R",0,'L');
+                $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['cy_final_bal']),"R",0,'R');
+                $pdf->Cell($colWidth[3],6, numberToCurrency($financialStatementRow['cy_beg_bal']),"R",0,'R');
+                $pdf->Ln(6);
+            }
+        }
+        $pdf->Cell(array_sum($colWidth),0,'','T');
+        $pdf->Ln(0);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
+        $pdf->Cell($colWidth[1],6,'Total',"R",0,'C');
+        $pdf->Cell($colWidth[2],6, numberToCurrency($cyFinalBalTotal),"R",0,'R');
+        $pdf->Cell($colWidth[3],6, numberToCurrency($cyBegBalTotal),"R",0,'R');
+        $pdf->Ln(6);
+        
+        $pdf->Cell(array_sum($colWidth),0,'','T');
+        $pdf->Ln(0);
+    }
+
+    $pdf->Ln(0);
+    // $pdf->Output('Unaudited-Financial-Statement.pdf', 'D');
+    $pdf->Output();
+    $pdf->AliasNbPages();
 ?>
