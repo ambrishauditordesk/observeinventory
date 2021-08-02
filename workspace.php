@@ -46,7 +46,7 @@ ini_set('display_startup_errors', 1);
     if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] > 1 ){
         $firm_id = $con->query("select firm_details.id id from firm_details inner join firm_user_log on firm_details.id = firm_user_log.firm_id inner join user on firm_user_log.user_id = user.id inner join user_client_log on user.id = user_client_log.user_id where user.accessLevel = 4 and user_client_log.client_id = $clientID");
         if($firm_id->num_rows > 0){
-            $_SESSION['firm_id'] - $firm_id->fetch_assoc()['id'];
+            $_SESSION['firm_id'] = $firm_id->fetch_assoc()['id'];
             $hasFirmId = true;
         }
     }

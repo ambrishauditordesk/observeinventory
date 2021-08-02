@@ -49,10 +49,12 @@ $uploadOk = 1;
 
 // Name
 $name = '';
+$error = '';
+
 if (!empty($_POST['clientname']) && isset($_POST['clientname'])) {
     $name = trim($_POST['clientname']);
     if($con->query("select * from client where name = '$name'")->num_rows != 0){
-        $error.= "<p><strong>".$name."</strong> is already present.</p><br>";
+        $error .= "<p><strong>".$name."</strong> is already present.</p><br>";
         $uploadOk = 0;
     }
 }
@@ -130,6 +132,7 @@ foreach (($_POST['designation']) as $designation) {
     $desig[$i++] = trim($designation);
 }
 $count = $i;
+$successEmailList = $unSuccessEmailList = '';
 
 if($uploadOk) {
     $con->query("insert into client(active,added_by_id,added_by_date,name,nickname,incorp_date,const_id,industry_id,address,city,state,pincode,country,pan,gst,tan,cin)
@@ -148,7 +151,6 @@ if($uploadOk) {
         shell_exec('sudo chown -R root:root ../uploads/'.$firm_id.'/'.$cid.$name.'/');
         shell_exec('sudo chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
     }
-    $successEmailList = $unSuccessEmailList = '';
     $sub = "You have been added as a Client member";
     if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
         $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
@@ -161,7 +163,7 @@ if($uploadOk) {
      }
 
      for($i=0;$i<$count;$i++){
-        $checkDuplicateEmail = checkDuplicateEmail($email);
+        $checkDuplicateEmail = checkDuplicateEmail($email[$i]);
         if(!$checkDuplicateEmail){
             echo "<script>
                 $(document).ready(function() {

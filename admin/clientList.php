@@ -117,7 +117,7 @@
                 <span class="nav-icon d-flex align-items-center" style="padding: 0 0 0 10px !important;">
                     <?php
                         $img_query = $con->query("SELECT * FROM user WHERE id = ".$_SESSION['id']." and img != ''");
-                        if($img_query->num_rows == 1){
+                        if($img_query->num_rows > 0){
                             $row = $img_query->fetch_assoc();
                             ?>
                             <img class = "profilePhoto" src="../images/<?php echo $row['img']; ?>">

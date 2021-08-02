@@ -4348,10 +4348,10 @@
                                             ?>
                                                 <div class="form-group d-flex justify-content-around align-items-center">
                                                     <div class="col-md-6" style="text-align: center"><label><?php echo $row['account_type']; ?></label></div>
-                                                    <div class="col-md-6" style="text-align: center">
-                                                        <input type="hidden" name="accountTypeSeqBS[<?php echo $i; ?>][0]" id="accountTypeSeqBS[<?php echo $i; ?>][0]" value="<?php echo $row['account_type']; ?>">
-                                                        <input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqBS[<?php echo $i; ?>][1]" id="accountTypeSeqBS[<?php echo $i++; ?>][1]" value="<?php echo $row['accountTypeSeqNumber']; ?>">
-                                                    </div>
+                                                        <div class="col-md-6" style="text-align: center">
+                                                            <input type="hidden" name="accountTypeSeqBS[<?php echo $i; ?>][0]" id="accountTypeSeqBS[<?php echo $i; ?>][0]" value="<?php echo $row['account_type']; ?>">
+                                                            <input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqBS[<?php echo $i; ?>][1]" id="accountTypeSeqBS[<?php echo $i++; ?>][1]" value="<?php echo $row['accountTypeSeqNumber']; ?>">
+                                                        </div>
                                                 </div>
                                             <?php
                                         }
@@ -4365,12 +4365,15 @@
                                     $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) order by accountTypeSeqNumber");
                                     if($accountTypeResult->num_rows > 0){
                                         $maxCount = $accountTypeResult->num_rows;
+                                        $i = 0;
                                         while($row = $accountTypeResult->fetch_assoc()){
                                             ?>
                                                 <div class="form-group d-flex justify-content-around align-items-center">
                                                     <div class="col-md-6" style="text-align: center"><label><?php echo $row['account_type']; ?></label></div>
-                                                    <div class="col-md-6" style="text-align: center"><input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqNumberPL[]" id="accountTypeSeqNumberPL[]" value="<?php echo $row['accountTypeSeqNumber']; ?>"></div>
-                                                    <input type="hidden" name="accountTypeSequenceNamePL[]" id="accountTypeSequenceNamePL[]" value="<?php echo $row['account_type']; ?>">
+                                                    <div class="col-md-6" style="text-align: center">
+                                                        <input type="hidden" name="accountTypeSeqPL[<?php echo $i; ?>][0]" id="accountTypeSeqPL[<?php echo $i; ?>][0]" value="<?php echo $row['account_type']; ?>">
+                                                        <input class="form_group w-50 p-2 d-flex" type="number" min="1" max="<?php echo $maxCount;?>" step="1" name="accountTypeSeqPL[<?php echo $i; ?>][1]" id="accountTypeSeqPL[<?php echo $i++; ?>][1]" value="<?php echo $row['accountTypeSeqNumber']; ?>">
+                                                    </div>
                                                 </div>
                                             <?php
                                         }

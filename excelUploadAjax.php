@@ -142,7 +142,7 @@ if($flag){
                 $con->query("UPDATE trial_balance set accountTypeSeqNumber = '".$accountTypeSeqNumber++."' where account_type = '".$row['account_type']."' and workspace_id = '$wid'");
             }
         }
-        $query1 = "insert into tb_performance_map(workspace_id,accounts_name,accounts_type,accounts_class,amount,beg_amount ,accountTypeSeqNumber) select '$wid' as workspace_id,financial_statement as accounts_name,account_type as accounts_type,account_class as accounts_class, round(sum(cy_final_bal),2), round(sum(cy_beg_bal),2) ,accountTypeSeqNumber from trial_balance where workspace_id=$wid GROUP BY financial_statement";
+        $con->query("insert into tb_performance_map(workspace_id,accounts_name,accounts_type,accounts_class,amount,beg_amount ,accountTypeSeqNumber) select '$wid' as workspace_id,financial_statement as accounts_name,account_type as accounts_type,account_class as accounts_class, round(sum(cy_final_bal),2), round(sum(cy_beg_bal),2) ,accountTypeSeqNumber from trial_balance where workspace_id=$wid GROUP BY financial_statement");
     }
     else{
         $con->query("delete from trial_balance where workspace_id = $wid");

@@ -22,8 +22,9 @@
             $signOff .= $signOffArray[0][1];
         }
         $signOff = strtoupper($signOff);
-        $signOffInit = $con->query("SELECT signoff_init FROM `user` where signoff_init like '$signOff%' order by id desc limit 1")->fetch_assoc()['signoff_init'];
-        if($signOffInit != ''){
+        $signOffInit = $con->query("SELECT signoff_init FROM `user` where signoff_init like '$signOff%' order by id desc limit 1");
+        if($signOffInit->num_rows > 0){
+            $signOffInit = $signOffInit->fetch_assoc()['signoff_init'];
             $signOffInit = substr($signOffInit,-1);
             if(is_numeric($signOffInit)){
                 $signOff .=(++$signOffInit);
