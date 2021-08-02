@@ -61,7 +61,11 @@ if (!empty($_POST['clientname']) && isset($_POST['clientname'])) {
 
 if($_SESSION['role'] == -1 || $_SESSION['role'] == 1){
     $firm_id = trim($_POST['firm_id']);
-    $firmLeaderId = $con->query("SELECT user.id id FROM user inner join firm_user_log on firm_user_log.user_id = user.id where firm_user_log.firm_id = $firm_id and user.accessLevel = 4")->fetch_assoc()['id'];
+    $firmLeaderId = 0;
+    $leaderId = $con->query("SELECT user.id id FROM user inner join firm_user_log on firm_user_log.user_id = user.id where firm_user_log.firm_id = $firm_id and user.accessLevel = 4");
+    if($leaderId->num_rows > 0 ){
+        $firmLeaderId = $leaderId->fetch_assoc()['id'];
+    }
 }
 
 //Nickname
@@ -146,82 +150,93 @@ if($uploadOk) {
         shell_exec('sudo chmod -R 777 ../uploads/'.$_SESSION['firm_id'].'/'.$cid.$name.'/');
     }
     else{
-        $con->query("insert into user_client_log(user_id,client_id) values('$firmLeaderId','$cid')");
-        shell_exec('mkdir -p ../uploads/'.$firm_id.'/'.$cid.$name.'/');
-        shell_exec('sudo chown -R root:root ../uploads/'.$firm_id.'/'.$cid.$name.'/');
-        shell_exec('sudo chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+        if($firmLeaderId > 0 ){
+            $con->query("insert into user_client_log(user_id,client_id) values('$firmLeaderId','$cid')");
+            shell_exec('mkdir -p ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+            shell_exec('sudo chown -R root:root ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+            shell_exec('sudo chmod -R 777 ../uploads/'.$firm_id.'/'.$cid.$name.'/');
+        }
     }
-    $sub = "You have been added as a Client member";
-    if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-     }
-     elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-     }
-     elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-     }
+    if($_SESSION['role'] > 1 || (($_SESSION['role'] == 1 || $_SESSION['role'] == -1) && $firmLeaderId > 0)) {
+        $sub = "You have been added as a Client member";
+        if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
+            $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+        }
+        elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
+            $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
+        }
+        elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
+            $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+        }
 
-     for($i=0;$i<$count;$i++){
-        $checkDuplicateEmail = checkDuplicateEmail($email[$i]);
-        if(!$checkDuplicateEmail){
-            echo "<script>
+        for($i=0;$i<$count;$i++){
+            $checkDuplicateEmail = checkDuplicateEmail($email[$i]);
+            if(!$checkDuplicateEmail){
+                echo "<script>
+                    $(document).ready(function() {
+                        document.getElementsByTagName('html')[0].style.visibility = 'visible';
+                        $('#unsuccessModal').modal();
+                    });
+                </script>";
+                break;
+            }
+            if($checkDuplicateEmail){
+                $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','5','1','$desig[$i]','','')");
+                $uid = $con->insert_id;
+                $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
+                $msg = "<div>
+                <div>Hello ".$cname[$i].",</div>
+                <br />
+                <div>You have been added as a Client member to join Digital audit workspace by your auditor. Use your user
+                id to login to the client request list you have been allocated to. You can uploaded documents and reply
+                to auditors request using the below details.</div>
+                <br />
+                <div>Your email id: ".$email[$i]."</div>
+                <div>Your temporary password: ".$tempPass[$i]."</div>
+                <br/>
+                <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
+                <br />
+                <br />
+                <div><b>This is a system generated email, please do not reply to this email.</b></div>
+                <br />
+                <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
+                <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
+                <div>contact the Help desk or your firm administrator.</div>
+                <br />
+                <div>Thank you.</div>
+                <br />
+                <div>The Auditedg Team</div>
+                </div>";
+                if(customMailer($email[$i],$msg,$sub)){
+                    if(empty($successEmailList))
+                        $successEmailList = $email[$i];
+                    else
+                        $successEmailList .= ','.$email[$i];
+                    sleep(1);
+                }
+                else{
+                    if(empty($unSuccessEmailList))
+                        $unSuccessEmailList = $email[$i];
+                    else
+                        $unSuccessEmailList .= ','.$email[$i];
+                }
+            }
+        }
+        echo "<script>
                 $(document).ready(function() {
                     document.getElementsByTagName('html')[0].style.visibility = 'visible';
-                    $('#unsuccessModal').modal();
+                    $('#successModal').modal();
                 });
-            </script>";
-            break;
-        }
-        if($checkDuplicateEmail){
-            $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','5','1','$desig[$i]','','')");
-            $uid = $con->insert_id;
-            $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
-            $msg = "<div>
-            <div>Hello ".$cname[$i].",</div>
-            <br />
-            <div>You have been added as a Client member to join Digital audit workspace by your auditor. Use your user
-            id to login to the client request list you have been allocated to. You can uploaded documents and reply
-            to auditors request using the below details.</div>
-            <br />
-            <div>Your email id: ".$email[$i]."</div>
-            <div>Your temporary password: ".$tempPass[$i]."</div>
-            <br/>
-            <a href='".$loginLink."'><button style=' background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor:pointer;'>Login</button></a>
-            <br />
-            <br />
-            <div><b>This is a system generated email, please do not reply to this email.</b></div>
-            <br />
-            <div>Note:- For security purposes, please do not share this email with anyone as it contains your account</div>
-            <div>information. If you have login problems or questions, or you are having problems with this email, please</div>
-            <div>contact the Help desk or your firm administrator.</div>
-            <br />
-            <div>Thank you.</div>
-            <br />
-            <div>The Auditedg Team</div>
-            </div>";
-            if(customMailer($email[$i],$msg,$sub)){
-                if(empty($successEmailList))
-                    $successEmailList = $email[$i];
-                else
-                    $successEmailList .= ','.$email[$i];
-                sleep(1);
-            }
-            else{
-                if(empty($unSuccessEmailList))
-                    $unSuccessEmailList = $email[$i];
-                else
-                    $unSuccessEmailList .= ','.$email[$i];
-            }
-        }
+            </script>"; 
     }
-    
-    echo "<script>
+    else{
+        echo "<script>
             $(document).ready(function() {
                 document.getElementsByTagName('html')[0].style.visibility = 'visible';
-                $('#successModal').modal();
+                $('#unsuccessLeaderModal').modal();
             });
-        </script>"; 
+        </script>";
+    }
 }
 else{
     echo "<script>
@@ -289,4 +304,20 @@ else{
     </div>
 </div> 
 
+<!--Unsuccess Modal-->
+<div class="modal fade" id="unsuccessLeaderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Client Addition Failed! No Firm Admin available for the selected Firm.</div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="clientList">OK</a>
+            </div>
+        </div>
+    </div>
+</div> 
 

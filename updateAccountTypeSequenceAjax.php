@@ -26,7 +26,7 @@
       for($i = 0; $i < sizeof($_POST['accountTypeSeqBS']); $i++){
          if($con->query("SELECT accountTypeSeqNumber from trial_balance where workspace_id = $wid and account_type = '".$_POST['accountTypeSeqBS'][$i][0]."' limit 1")->fetch_assoc()['accountTypeSeqNumber'] != $_POST['accountTypeSeqBS'][$i][1]){
             $con->query("UPDATE trial_balance set accountTypeSeqNumber ='".$_POST['accountTypeSeqBS'][$i][1]."' where workspace_id = $wid and account_type = '".$_POST['accountTypeSeqBS'][$i][0]."'");
-            $con->query("UPDATE tb_performance_map set accountTypeSeqNumber ='".$_POST['accountTypeSeqNumberBS'][$i]."' where workspace_id = $wid and accounts_type = '".$_POST['accountTypeSequenceNameBS'][$i]."'");
+            $con->query("UPDATE tb_performance_map set accountTypeSeqNumber ='".$_POST['accountTypeSeqBS'][$i][1]."' where workspace_id = $wid and accounts_type = '".$_POST['accountTypeSeqBS'][$i][0]."'");
             $data['status'] = 1;
             $data['text'] = 'Updated';
          }
@@ -34,7 +34,7 @@
       for($i = 0; $i < sizeof($_POST['accountTypeSeqPL']); $i++){
          if($con->query("SELECT accountTypeSeqNumber from trial_balance where workspace_id = $wid and account_type = '".$_POST['accountTypeSeqPL'][$i][0]."' limit 1")->fetch_assoc()['accountTypeSeqNumber'] != $_POST['accountTypeSeqPL'][$i][1]){
             $con->query("UPDATE trial_balance set accountTypeSeqNumber ='".$_POST['accountTypeSeqPL'][$i][1]."' where workspace_id = $wid and account_type = '".$_POST['accountTypeSeqPL'][$i][0]."'");
-            $con->query("UPDATE tb_performance_map set accountTypeSeqNumber ='".$_POST['accountTypeSeqNumberPL'][$i]."' where workspace_id = $wid and accounts_type = '".$_POST['accountTypeSequenceNamePL'][$i]."'");
+            $con->query("UPDATE tb_performance_map set accountTypeSeqNumber ='".$_POST['accountTypeSeqPL'][$i][1]."' where workspace_id = $wid and accounts_type = '".$_POST['accountTypeSeqPL'][$i][0]."'");
             $data['status'] = 1;
             $data['text'] = 'Updated';
          }

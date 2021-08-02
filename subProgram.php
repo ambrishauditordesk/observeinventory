@@ -578,12 +578,15 @@
                                                         <td scope="row" hidden>
                                                             <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                         </td>
-                                                        <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $rowQuery['accounts_name']; ?></td>
+                                                        <td scope="row" class="mt-4" style="height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align:left;">
+                                                            <?php echo $rowQuery['accounts_name']; ?>
+                                                        </td>
                                                         <td scope="row">
+                                                            <label class="mt-2"></label>
                                                             <input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
                                                         </td>
                                                         <td scope="row">
-                                                            <!-- <label class="mt-2"><span class="helpDesign help_1">1</span></label> -->
+                                                            <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                                                             <select name="submitData[<?php echo $i;?>][2]" class="form-control"
                                                                     required>
                                                                 <option <?php if ($rowQuery['type'] == 0) echo "selected"; ?>
@@ -595,7 +598,7 @@
                                                             </select>
                                                         </td>
                                                         <td scope="row">
-                                                            <!-- <label class="mt-2"><span class="helpDesign help_2">2</span></label> -->
+                                                            <label class="mt-2"><span class="helpDesign help_2">2</span></label>
                                                             <select name="submitData[<?php echo $i;?>][3]" class="form-control"required>
                                                                 <option <?php if ($rowQuery['risk'] == 0) echo "selected"; ?> value="0">Low</option>
                                                                 <option <?php if ($rowQuery['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
@@ -604,7 +607,7 @@
                                                             </select>
                                                         </td>
                                                         <td scope="row">
-                                                            <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                            <label class="mt-2"><span class="helpDesign help_3">3</span></label>
                                                             <select class="form-control" name="submitData[<?php echo $i;?>][4]" required>
                                                                 <option value="-1" <?php if($rowQuery['mapped_program_id'] == -1) echo "selected"; ?>>Select Account</option>
                                                                 <?php
@@ -620,7 +623,7 @@
                                                             </select>
                                                         </td>
                                                         <td scope="row">
-                                                            <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                            <label class="mt-2"><span class="helpDesign help_3">3</span></label>
                                                             <select name="submitData[<?php echo $i++;?>][5]" class="form-control" required>
                                                                 <option <?php if ($rowQuery['import'] == 0) echo "selected"; ?> value="0">No</option>
                                                                 <option <?php if ($rowQuery['import'] == 1) echo "selected"; ?> value="1">Yes</option>
@@ -969,12 +972,13 @@
                                                             <td scope="row" hidden>
                                                                 <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                             </td>
-                                                            <td scope="row" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $rowQuery['accounts_name']; ?></td>
+                                                            <td scope="row" class="mt-4" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $rowQuery['accounts_name']; ?></td>
                                                             <td scope="row">
+                                                                <label class="mt-2"></label>
                                                                 <input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
                                                             </td>
                                                             <td scope="row">
-                                                                <!-- <label class="mt-2"><span class="helpDesign help_1">1</span></label> -->
+                                                                <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                                                                 <select name="submitData[<?php echo $i;?>][2]" class="form-control"
                                                                         required>
                                                                     <option <?php if ($rowQuery['type'] == 0) echo "selected"; ?>
@@ -986,7 +990,7 @@
                                                                 </select>
                                                             </td>
                                                             <td scope="row">
-                                                                <!-- <label class="mt-2"><span class="helpDesign help_2">2</span></label> -->
+                                                                <label class="mt-2"><span class="helpDesign help_2">2</span></label>
                                                                 <select name="submitData[<?php echo $i;?>][3]" class="form-control"required>
                                                                     <option <?php if ($rowQuery['risk'] == 0) echo "selected"; ?> value="0">Low</option>
                                                                     <option <?php if ($rowQuery['risk'] == 1) echo "selected"; ?> value="1">Moderate</option>
@@ -995,7 +999,7 @@
                                                                 </select>
                                                             </td>
                                                             <td scope="row">
-                                                                <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                                <label class="mt-2"><span class="helpDesign help_3">3</span></label>
                                                                 <select class="form-control" name="submitData[<?php echo $i;?>][4]" required>
                                                                     <option value = "-1" <?php if($rowQuery['mapped_program_id'] == -1) echo "selected"; ?>>Select Account</option>
                                                                     <?php
@@ -1011,7 +1015,7 @@
                                                                 </select>
                                                             </td>
                                                             <td scope="row">
-                                                                <!-- <label class="mt-2"><span class="helpDesign help_3">3</span></label> -->
+                                                                <label class="mt-2"><span class="helpDesign help_3">3</span></label>
                                                                 <select name="submitData[<?php echo $i++;?>][5]" class="form-control" required>
                                                                     <option <?php if ($rowQuery['import'] == 0) echo "selected"; ?> value="0">No</option>
                                                                     <option <?php if ($rowQuery['import'] == 1) echo "selected"; ?> value="1">Yes</option>
@@ -2961,14 +2965,14 @@
                                                 ++$i;
                                                 ?>
                                                     <br>
-                                                    <div class="accordion" id="unauditedBalanceSheetAccordionExample<?php echo $i; ?>">
+                                                    <div class="accordion" id="unauditedProfitLossAccordionExample<?php echo $i; ?>">
                                                         <div class="card">
-                                                            <div class="card-header" id="unauditedBalanceSheetHeadingOne<?php echo $i; ?>">
+                                                            <div class="card-header" id="unauditedProfitLossHeadingOne<?php echo $i; ?>">
                                                                 <h2 class="mb-0">
-                                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classBS<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classBS<?php echo $i; ?>"><b><?php echo $accountTypeRow['accounts_type']; ?></b></button>
+                                                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#account_classPL<?php echo $i; ?>" aria-expanded="true" aria-controls="account_classPL<?php echo $i; ?>"><b><?php echo $accountTypeRow['accounts_type']; ?></b></button>
                                                                 </h2>
                                                             </div>  
-                                                            <div id="account_classBS<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne<?php echo $i; ?>" data-parent="#unauditedBalanceSheetAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
+                                                            <div id="account_classPL<?php echo $i; ?>" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne<?php echo $i; ?>" data-parent="#unauditedProfitLossAccordionExample<?php echo $i; ?>" style="margin-left: 2.5rem;">
                                                                 <?php
                                                                     $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
                                                                     while($accountClassRow = $accountClassResult->fetch_assoc()){
