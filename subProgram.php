@@ -825,7 +825,7 @@
                                         <?php 
                                             if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                 ?>
-                                                <div class="col-md-12">
+                                                <div class="col-md-12 row d-flex justify-content-center">
                                                     <i class="fas fa-info-circle" style="color:orange !important;"></i>
                                                     <strong>Click save button to save respective changes before clicking send request.</strong>
                                                 </div>
@@ -4860,7 +4860,7 @@
                             }
                         }
                         else{
-                            text = 'Email sending was unsuccessful for '+obj.unsuccessEmailList+' email id\'s';
+                            text = 'Kindly save before sending invitation.';
                         }
                         swal({
                             icon: obj.status == 1 ? 'success':'error',
