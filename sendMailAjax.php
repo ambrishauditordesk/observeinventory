@@ -4,15 +4,16 @@
 
     session_start();
     $subject = "You have been invited for the documents upload";
+    $loginLink = '';
 
-    if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+    if($_SERVER['HTTP_HOST'] == 'http://localhost'){
+        $loginLink = $_SERVER['HTTP_HOST'].'/AuditSoft/login';
     }
-    elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
+    elseif($_SERVER['HTTP_HOST'] == 'http://atlats.in'){
+        $loginLink = $_SERVER['HTTP_HOST'].'/audit/login';
     }
-    elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
+    elseif($_SERVER['HTTP_HOST'] == 'http://yourfirmaudit.com'){
+        $loginLink = $_SERVER['HTTP_HOST'].'/AuditSoft/login';
     }
 
     $wid = $_POST['wid'];

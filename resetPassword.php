@@ -63,14 +63,14 @@
          $resetCode = bin2hex(random_bytes(50));
          $con->query("update user set reset_code = '$resetCode' where id = $id");
          
-         if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-            $resetLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/reset?code='.$resetCode.'&email='.$email;
+         if($_SERVER['HTTP_HOST'] == 'http://localhost'){
+            $resetLink = $_SERVER['HTTP_HOST'].'/AuditSoft/reset?code='.$resetCode.'&email='.$email;
          }
-         elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-            $resetLink = $_SERVER['HTTP_ORIGIN'].'/audit/reset?code='.$resetCode.'&email='.$email;
+         elseif($_SERVER['HTTP_HOST'] == 'http://atlats.in'){
+            $resetLink = $_SERVER['HTTP_HOST'].'/audit/reset?code='.$resetCode.'&email='.$email;
          }
-         elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-            $resetLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/reset?code='.$resetCode.'&email='.$email;
+         elseif($_SERVER['HTTP_HOST'] == 'http://yourfirmaudit.com'){
+            $resetLink = $_SERVER['HTTP_HOST'].'/AuditSoft/reset?code='.$resetCode.'&email='.$email;
          }
 
          $msg = "<div>
