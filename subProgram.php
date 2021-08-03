@@ -709,6 +709,13 @@
                                                 <table>
                                                     <thead class="text-center">
                                                     <tr>
+                                                    <?php 
+                                                        if($_SESSION['external'] != 1){
+                                                        ?>
+                                                        <th scope="col">Status</th>
+                                                        <?php
+                                                        } 
+                                                        ?>
                                                         <th scope="col">Account Name</th>
                                                         <th scope="col" hidden>Id</th>
                                                         <th scope="col" class="col-md-1">Description</th>
@@ -730,7 +737,6 @@
                                                         <?php 
                                                         if($_SESSION['external'] != 1){
                                                         ?>
-                                                        <th scope="col">Status</th>
                                                         <th scope="col">Action</th>
                                                         <?php
                                                         }
@@ -743,6 +749,26 @@
                                                                 $query1 = $con->query("select id,client_contact_id,mail_send from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
                                                                 ?>
                                                                 <tr>
+                                                                    <?php
+                                                                        if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
+                                                                    ?>
+                                                                    <td>
+                                                                        <?php
+                                                                            if($row['mail_send'] == 1){
+                                                                                ?>
+                                                                                <span class="badge badge-success">Saved & Sent</span>
+                                                                            <?php
+                                                                            }
+                                                                            else{
+                                                                                ?>
+                                                                                <span class="badge badge-primary">Saved</span>
+                                                                            <?php    
+                                                                            }
+                                                                        ?>
+                                                                    </td>
+                                                                    <?php 
+                                                                    }
+                                                                    ?>
                                                                     <td><label><?php echo $row['account']; ?></label></td>
                                                                     <td scope="row" hidden>
                                                                         <input type="hidden" name="account[id][]"
@@ -791,20 +817,6 @@
                                                                     <?php 
                                                                     if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                                         ?>
-                                                                    <td>
-                                                                        <?php
-                                                                            if($row['mail_send'] == 1){
-                                                                                ?>
-                                                                                <span class="badge badge-success">Saved & Sent</span>
-                                                                            <?php
-                                                                            }
-                                                                            else{
-                                                                                ?>
-                                                                                <span class="badge badge-primary">Saved</span>
-                                                                            <?php    
-                                                                            }
-                                                                        ?>
-                                                                    </td>
                                                                     <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteAcc">
                                                                             <i class="fas fa-times-circle"
                                                                             style="color:red !important;"></i>
