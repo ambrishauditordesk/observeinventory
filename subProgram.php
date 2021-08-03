@@ -730,6 +730,7 @@
                                                         <?php 
                                                         if($_SESSION['external'] != 1){
                                                         ?>
+                                                        <th scope="col">Status</th>
                                                         <th scope="col">Action</th>
                                                         <?php
                                                         }
@@ -739,7 +740,7 @@
                                                     <tbody id="abody">
                                                         <?php
                                                             while ($row = $result->fetch_assoc()) {
-                                                                $query1 = $con->query("select id,client_contact_id from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
+                                                                $query1 = $con->query("select id,client_contact_id,mail_send from accounts_log where workspace_id = '$wid' and id = '".$row['id']."'")->fetch_assoc();
                                                                 ?>
                                                                 <tr>
                                                                     <td><label><?php echo $row['account']; ?></label></td>
@@ -790,6 +791,20 @@
                                                                     <?php 
                                                                     if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                                         ?>
+                                                                    <td>
+                                                                        <?php
+                                                                            if($row['mail_send'] == 1){
+                                                                                ?>
+                                                                                <span class="badge badge-success">Saved & Sent</span>
+                                                                            <?php
+                                                                            }
+                                                                            else{
+                                                                                ?>
+                                                                                <span class="badge badge-primary">Saved</span>
+                                                                            <?php    
+                                                                            }
+                                                                        ?>
+                                                                    </td>
                                                                     <td><a href="#" id="<?php echo $row['id']; ?>" class="deleteAcc">
                                                                             <i class="fas fa-times-circle"
                                                                             style="color:red !important;"></i>

@@ -6,27 +6,29 @@
     $subject = "You have been invited for the documents upload";
     $loginLink = '';
 
-    if($_SERVER['HTTP_HOST'] == 'http://localhost'){
-        $loginLink = $_SERVER['HTTP_HOST'].'/AuditSoft/login';
+    if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
+        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
     }
-    elseif($_SERVER['HTTP_HOST'] == 'http://atlats.in'){
-        $loginLink = $_SERVER['HTTP_HOST'].'/audit/login';
+    elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
+        $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
     }
-    elseif($_SERVER['HTTP_HOST'] == 'http://yourfirmaudit.com'){
-        $loginLink = $_SERVER['HTTP_HOST'].'/AuditSoft/login';
+    elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
+        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
     }
 
     $wid = $_POST['wid'];
     $data = [];
-    $result = $con->query("select user.email email, user.name name from user inner join accounts_log on accounts_log.client_contact_id=user.id where mail_send=0 and workspace_id=".$wid)->fetch_all();
+    $result = $con->query("select user.email email, user.name name, accounts_log.id aid from user inner join accounts_log on accounts_log.client_contact_id=user.id where mail_send=0 and workspace_id=".$wid)->fetch_all();
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
     $userEmail = $_SESSION['email'];
 
     $successEmailList = $unsuccessEmailList = '';
     $status = 0;
+    $msg = '';
     foreach($result as $key => $value){
         $email = $value[0];
         $name = $value[1];
+        $aid = $value[2];
         $msg = "<div>
          <div>Hello ".$name.",</div>
          <br />
@@ -55,6 +57,7 @@
                 $successEmailList = $email;
             else
                 $successEmailList .= ','.$email;
+            $con->query("update accounts_log set mail_send = 1 where id = $aid");
         }
         else{
             if(empty($unsuccessEmailList))
@@ -65,7 +68,7 @@
         
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid','$userEmail','$date','Email send successfully to $email for document upload.')");
         
-        sleep(2);
+        sleep(1);
     }
     $data['status'] = $status;
     $data['successEmailList'] = $successEmailList;
