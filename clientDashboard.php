@@ -84,7 +84,7 @@ $_SESSION['breadcrumb'] = array();
     <meta name="author" content="">
 
     <!-- Custom Fav icon -->
-    <!-- <link rel="icon" href="img/atllogo.png" type="image/gif" sizes="16x16"> -->
+    <link rel="icon" href="Icons/fav.png" type="image/gif" sizes="16x16">
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -95,9 +95,175 @@ $_SESSION['breadcrumb'] = array();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/1.0.1/LineIcons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600&amp;display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <link href="css/uiux.css" rel="stylesheet" type="text/css">
+    <style>
+        /* html {
+        	font-size: 14px;
+        }
+        body {
+            background: #f6f9fc;
+            font-family: "Open Sans", sans-serif;
+            color: #525f7f;
+        } */
+        h2 {
+            margin: 5%;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 100;
+        }
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            width: 50vw;
+            margin: 5% auto;
+            margin-left: 29%;
+        }
+        .timeline__event {
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            margin: 20px 0;
+            border-radius: 8px;
+            height: 60px;
+        }
+        .timeline__event__title {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #9251ac;
+            letter-spacing: 1.5px;
+        }
+        .timeline__event__content {
+            padding: 20px;
+        }
+        .timeline__event__date {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .timeline__event__icon {
+            background: #4eb92b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-basis: 40%;
+            font-size: 2rem;
+            color: #66FF66;
+            padding: 20px;
+        }
+        .first {
+            position: absolute;
+            top: 50%;
+            left: -70px;
+            font-size: 2.5rem;
+            transform: translateY(-50%);
+        }
+        .second {
+            position: absolute;
+            top: 50%;
+            left: -70px;
+            font-size: 2.5rem;
+            transform: translateY(-50%);
+        }
+        .third {
+            position: absolute;
+            top: 50%;
+            left: -79px;
+            font-size: 2.5rem;
+            transform: translateY(-50%);
+        }
+        .fourth {
+            position: absolute;
+            top: 50%;
+            left: -75px;
+            font-size: 2.5rem;
+            transform: translateY(-50%);
+        }
+        .fifth {
+            position: absolute;
+            top: 50%;
+            left: -80px;
+            font-size: 2.5rem;
+            transform: translateY(-50%);
+        }
+        .sixth {
+            position: absolute;
+            top: 50%;
+            left: -73px;
+            font-size: 2.5rem;
+            transform: translateY(-50%);
+        }
+        .timeline__event__description {
+            flex-basis: 60%;
+        }
+        .timeline__event:after {
+            content: "";
+            width: 2px;
+            height: 100%;
+            background: #66FF66;
+            position: absolute;
+            top: 52%;
+            left: -3.5rem;
+            z-index: -1;
+        }
+        .timeline__event:before {
+            content: "";
+            width: 5rem;
+            height: 5rem;
+            position: absolute;
+            background: #4eb92b;
+            border-radius: 100%;
+            left: -6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 2px solid #66FF66;
+        }
+        .timeline__event--type2:before {
+            background: #254eda;
+            border-color: #50BFE6;
+        }
+        .timeline__event--type2:after {
+            background: #50BFE6;
+        }
+        .timeline__event--type2 .timeline__event__icon {
+            background: #254eda;
+            color: #50BFE6;
+        }
+        .timeline__event:last-child:after {
+            content: none;
+        }
+        .workflowLink{
+            font-size:15px !important;
+            color: #fff;
+        }
+        .workflowLink:hover{
+            font-size:20px !important;
+            color:#fff !important;
+        }
+        .workflowModalContent{
+            background-color: transparent !important;
+            border: 1px solid #fff !important;
+        }
+        .workflowModalHeader{
+            background-color:#fff !important;
+        }
+        @media (max-width: 786px) {
+            .timeline__event {
+                flex-direction: column;
+            }
+            .timeline__event__icon {
+                border-radius: 4px 4px 0 0;
+            }
+        }
+        
+    </style>
 
 </head>
 
@@ -118,6 +284,11 @@ $_SESSION['breadcrumb'] = array();
                 <div class="dash">
                     <a href="workspace?<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode($clientId); ?>&cid=<?php echo base64_encode($clientId); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Workspace
+                    </a>
+                </div>
+                <div class="dash" style="margin-top: 1rem !important;">
+                    <a href="#" data-toggle="modal" data-target="#workflowModal"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
+                    Workflow
                     </a>
                 </div>
             </div>
@@ -376,6 +547,72 @@ $_SESSION['breadcrumb'] = array();
                 </div>
             </div>
         </footer>
+
+        <!-- Workflow Modal -->
+        <div class="modal fade" id="workflowModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content workflowModalContent">
+                    <div class="modal-header workflowModalHeader">
+                        <h5 class="modal-title" id="exampleModalLabel">Workflow</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="timeline">
+                            <div class="timeline__event  animated fadeInUp timeline__event--type1">
+                                <div class="timeline__event__icon ">
+                                    <i class="far fa-file-excel first"></i>
+                                    <div class="timeline__event__date">
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(245); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(1); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Trial Balance</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline__event animated fadeInUp delay-1s timeline__event--type2">
+                                <div class="timeline__event__icon">
+                                    <i class="far fa-copy second"></i>
+                                    <div class="timeline__event__date">
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(395); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(1); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Unaudited Financial Statement</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline__event animated fadeInUp delay-2s timeline__event--type3">
+                                <div class="timeline__event__icon">
+                                    <i class="fas fa-desktop third"></i>
+                                    <div class="timeline__event__date">
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(2); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(0); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Performance</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline__event animated fadeInUp delay-3s timeline__event--type2">
+                                <div class="timeline__event__icon">
+                                    <i class="far fa-times-circle fourth"></i>
+                                    <div class="timeline__event__date">
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(24); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Summery of Misstatements</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline__event animated fadeInUp delay-4s timeline__event--type5">
+                                <div class="timeline__event__icon">
+                                    <i class="far fa-file-alt sixth"></i>
+                                    <div class="timeline__event__date">
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(525); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Audited vs Unaudited</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline__event animated fadeInUp delay-5s  timeline__event--type2">
+                                <div class="timeline__event__icon">
+                                    <i class="fas fa-copy sixth"></i>
+                                    <div class="timeline__event__date">
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(526); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Audited Financial Statement</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Profile Photo Modal -->
         <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

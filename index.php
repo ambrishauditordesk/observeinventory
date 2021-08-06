@@ -30,7 +30,7 @@ else{
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Audit-Edg</title>
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <link rel="icon" href="img/atllogo.png" type="image/gif" sizes="16x16">
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->

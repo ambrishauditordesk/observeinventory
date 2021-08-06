@@ -159,16 +159,7 @@ if($uploadOk) {
     }
     if($_SESSION['role'] > 1 || (($_SESSION['role'] == 1 || $_SESSION['role'] == -1) && $firmLeaderId > 0)) {
         $sub = "You have been added as a Client member";
-        $loginLink = '';    
-        if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-            $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-        }
-        elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-            $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-        }
-        elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-            $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-        }
+        $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
 
         for($i=0;$i<$count;$i++){
             $checkDuplicateEmail = checkDuplicateEmail($email[$i]);
@@ -206,7 +197,7 @@ if($uploadOk) {
                 <br />
                 <div>Thank you.</div>
                 <br />
-                <div>The Auditedg Team</div>
+                <div>Auditor's Desk Team</div>
                 </div>";
                 if(customMailer($email[$i],$msg,$sub)){
                     if(empty($successEmailList))

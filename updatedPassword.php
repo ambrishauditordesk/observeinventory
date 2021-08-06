@@ -12,15 +12,8 @@ if($con->query("select id from user where id = $id and reset_code != '' ")->num_
       $user = $con->query("select email, name from user where id = $id")->fetch_assoc();
       $name = $user['name'];
       $email = $user['email'];
-      if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-         $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-      }
-      elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-         $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-      }
-      elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-         $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-      }
+      $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+
       $msg = "<div>
          <div>Hello ".$name.",</div>
          <br />
@@ -38,7 +31,7 @@ if($con->query("select id from user where id = $id and reset_code != '' ")->num_
          <br />
          <div>Thank you.</div>
          <br />
-         <div>The Auditedg Team</div>
+         <div>Auditor's Desk Team</div>
          </div>";
       customMailer($email,$msg,'Password Reset was successfull');
    }

@@ -40,15 +40,8 @@
             $user_id = $con->insert_id;
             $roleName = $con->query("select role_name from role where id = $role")->fetch_assoc()['role_name'];
             $sub = "You have been registered as a ".$roleName;
-            if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-                $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-            }
-            elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-                $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-            }
-            elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-                $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-            }
+            $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+
             $msg = "<div>
             <div>Hello ".$name.",</div>
             <br />
@@ -69,7 +62,7 @@
             <br />
             <div>Thank you.</div>
             <br />
-            <div>The Auditedg Team</div>
+            <div>Auditor's Desk Team</div>
             </div>";
             if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
                 $firm_id = trim($_POST['firm_id']);

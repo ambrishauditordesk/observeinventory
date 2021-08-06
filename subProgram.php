@@ -654,7 +654,7 @@
                                                     $subMateriality = 1;
                                                 }
                                                 ?>
-                                                <li class="custom-list-items custom-list-items-action"><a href="#" class="fileFetch" download target="_blank" id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                                <li class="custom-list-items custom-list-items-action"><a href="#" class="fileEditDownload" download target="_blank" id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
                                                 </li>
                                                 <?php
                                             } ?>
@@ -806,7 +806,7 @@
                                                                             $count = 1;
                                                                             $documentResult = $con->query("select documents from accounts_log_docs where accounts_log_id =".$query1['id']);
                                                                             while($documentResultRow = $documentResult->fetch_assoc())
-                                                                                echo "<label style='white-space:nowrap;'>".$count++.":- <a  href='#' class='fileFetch' target='_blank' id='".$documentResultRow['documents']."'>".$documentResultRow['documents']."</a></label><br>";
+                                                                                echo "<label style='white-space:nowrap;'>".$count++.":- <a  href='#' class='fileEditDownload' target='_blank' id='".$documentResultRow['documents']."'>".$documentResultRow['documents']."</a></label><br>";
                                                                         ?> 
                                                                     </td>
                                                                     <td><input class="form-control" <?php if(isset($_SESSION['external']) && $_SESSION['external'] == 1) echo "readonly"; ?> type="text" size="10" name="account[request][]"
@@ -999,11 +999,8 @@
                                                             <td scope="row" hidden>
                                                                 <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                             </td>
-                                                            <td scope="row" class="mt-4" style="height: 4rem !important; display: flex; align-items: center; justify-content: center"><?php echo $rowQuery['accounts_name']; ?></td>
-                                                            <td scope="row">
-                                                                <label class="mt-2"></label>
-                                                                <input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
-                                                            </td>
+                                                            <td scope="row" class="mt-4" style="height: 4rem !important; display: flex; align-items: center; justify-content: start;"><?php echo $rowQuery['accounts_name']; ?></td>
+                                                            <td scope="row"><input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01"></td>
                                                             <td scope="row">
                                                                 <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                                                                 <select name="submitData[<?php echo $i;?>][2]" class="form-control"
@@ -1027,7 +1024,7 @@
                                                             </td>
                                                             <td scope="row">
                                                                 <label class="mt-2"><span class="helpDesign help_3">3</span></label>
-                                                                <select class="form-control" name="submitData[<?php echo $i;?>][4]" required>
+                                                                <select class="form-control" style="min-width: 100px !important;" name="submitData[<?php echo $i;?>][4]" required>
                                                                     <option value = "-1" <?php if($rowQuery['mapped_program_id'] == -1) echo "selected"; ?>>Select Account</option>
                                                                     <?php
                                                                         $accountMap = $con->query("SELECT * FROM `program` WHERE parent_id = 2");
@@ -1073,7 +1070,7 @@
                                                 $subMateriality = 1;
                                             }
                                             ?>
-                                            <li class="custom-list-items custom-list-items-action"><a href="#" class="fileFetch" download target="_blank" id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                            <li class="custom-list-items custom-list-items-action"><a href="#" class="fileEditDownload" download target="_blank" id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
                                             </li>
                                             <?php
                                         } ?>
@@ -1227,7 +1224,7 @@
                                             }
                                             ?>
                                             <li class="custom-list-items custom-list-items-action">
-                                                <a href="#" class="fileFetch" target="_blank" download id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                                <a href="#" class="fileEditDownload" target="_blank" download id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
                                             </li>
                                             <?php
                                         } ?>
@@ -2120,7 +2117,7 @@
                                             while ($row = $result->fetch_assoc()) {
                                                 ?>
                                                 <li class="custom-list-items custom-list-items-action">
-                                                    <a href="#" class="fileFetch" target="_blank" download id="<?php echo $row['files']; ?>"><?php echo $row['files']; ?></a>
+                                                    <a href="#" class="fileEditDownload" target="_blank" download id="<?php echo $row['files']; ?>"><?php echo $row['files']; ?></a>
                                                 </li>
                                                 <?php
                                             } ?>
@@ -2386,7 +2383,7 @@
                                             while ($row = $result->fetch_assoc()) {
                                                 ?>
                                                 <li class="custom-list-items custom-list-items-action">
-                                                    <a href="#" class="fileFetch" target="_blank" download id="<?php echo $row['file_name']; ?>"><?php echo $row['file_name']; ?></a>
+                                                    <a href="#" class="fileEditDownload" target="_blank" download id="<?php echo $row['file_name']; ?>"><?php echo $row['file_name']; ?></a>
                                                 </li>
                                                 <?php
                                             } ?>
@@ -2647,7 +2644,7 @@
                                             while ($row = $result->fetch_assoc()) {
                                                 ?>
                                                 <li class="custom-list-items custom-list-items-action">
-                                                    <a href="#" class="fileFetch" target="_blank" download id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
+                                                    <a href="#" class="fileEditDownload" target="_blank" download id="<?php echo $row['fname']; ?>"><?php echo $row['fname']; ?></a>
                                                 </li>
                                                 <?php
                                             } ?>
@@ -2693,7 +2690,8 @@
                                 </style>
                                 <br>
                                 <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
-                                <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a>
+                                <!-- <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a> -->
+                                <a id="financialStatementExcel" target="_blanc" href="bridgeExcel"><button class="btn btn-outline-primary">Export to Excel</button></a>
                                 <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
                                     <div class="card">
                                         <div class="card-header" id="unauditedBalanceSheetHeadingOne">
@@ -2878,13 +2876,14 @@
                             </style>
                             <br>
                             <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
-                            <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a>
+                            <!-- <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a> -->
+                            <a id="financialStatementExcel" target="_blanc" href="auditedFinancialExcel"><button class="btn btn-outline-primary">Export to Excel</button></a>
                             <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
                                 <div class="card">
                                     <div class="card-header" id="unauditedBalanceSheetHeadingOne">
                                         <center>
                                             <h2 class="mb-0">
-                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedBalanceSheet" aria-expanded="true" aria-controls="unauditedBalanceSheet"><b>Unaudited Balance Sheet</b></button>
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedBalanceSheet" aria-expanded="true" aria-controls="unauditedBalanceSheet"><b>Audited Balance Sheet</b></button>
                                             </h2>
                                         </center>
                                     </div> 
@@ -2977,12 +2976,12 @@
                                     <div class="card-header" id="unauditedProfitLossHeadingOne">
                                         <center>
                                             <h2 class="mb-0">
-                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedProfitLoss" aria-expanded="true" aria-controls="unauditedProfitLoss"><b>Unaudited Profit and Loss</b></button>
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#unauditedProfitLoss" aria-expanded="true" aria-controls="unauditedProfitLoss"><b>Audited Profit and Loss</b></button>
                                             </h2>
                                         </center>
                                     </div> 
                                     <div id="unauditedProfitLoss" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne" data-parent="#unauditedProfitLossAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
-                                    <?php
+                                        <?php
                                             $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
                                         ?>
                                         <br>
@@ -3881,9 +3880,9 @@
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                     <input name="reviewSubmit" class="btn btn-info" type="submit" id="reviewSubmit"
                                             value="Review Sign-Off">
-                                    <input name="prepareSubmit" class="btn btn-success" type="submit"
+                                    <input name="prepareSubmit" class="btn btn-primary" type="submit"
                                             id="prepareSubmit" value="Prepare Sign-Off">
-                                    <input name="done" class="btn btn-primary" type="submit" id="done"
+                                    <input name="done" class="btn btn-success" type="submit" id="done"
                                             value="Save">
                                 </div>
                             </div>
@@ -4447,6 +4446,32 @@
                             <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Show Edit Download Modal -->
+        <div class="modal fade" id="showEditDownloadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-size" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Choose a activity.</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-around align-items-center">
+                            <div>
+                                <div id="hasEditButtonText"></div>
+                                <div id="hasEditButton"></div>
+                            </div>
+                            <div id="fileDownloadButton"></div>
+                        </div>
+                    </div> 
+                    <div class="modal-footer justify-content-center">
+                        <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -5055,7 +5080,7 @@
 
                         obj.file.forEach(function (value) {
                             $('#signoffModal #filenames').append(
-                                '<li class="custom-list-items custom-list-items-action" id="' +value[0] + '"><a href="#" class="fileFetch" download target="_blank" id="'+value[1]+'">' +value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
+                                '<li class="custom-list-items custom-list-items-action" id="' +value[0] + '"><a href="#" class="fileEditDownload" id="'+value[1]+'">' +value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
                         });
                         if (obj.comment.length != 0) {
                             $('#signoffModal #comments').empty().append('<thead><tr><th>Comments</th><th>Action</th></tr></thead><tbody>');
@@ -5109,7 +5134,7 @@
 
                         obj.file.forEach(function (value) {
                             $('#signoffModal #filenames').append(
-                                '<li class="custom-list-items custom-list-items-action" id="' + value[0] + '"><a href="#" class="fileFetch" download target="_blank" id="'+value[1]+'">' +value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
+                                '<li class="custom-list-items custom-list-items-action" id="' + value[0] + '"><a href="#" class="fileEditDownload" id="'+value[1]+'">' +value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
                         });
                         if (obj.comment.length != 0) {
                             $('#signoffModal #comments').empty().append('<thead><tr><th>Comments</th><th>Action</th></tr></thead><tbody>');
@@ -7637,6 +7662,44 @@
                 }
             });
         })
+    </script>
+
+    <script>
+        var filename;
+        $(document).on('click', '.fileEditDownload', function(e){
+            e.preventDefault();
+            fileName = $(this).attr('id');
+            filename = fileName;
+            $.ajax({
+                url: 'checkBeforeShowingEditButtonAjax.php',
+                type: 'POST',
+                data: {
+                    wid:'<?php echo base64_encode($wid); ?>',
+                    cid:'<?php echo base64_encode($clientId); ?>',
+                    file : fileName
+                },
+                success: function(data){
+                    if(data == 1){
+                        url = "qid=<?php echo base64_encode(md5($clientId)); ?>&zid=<?php echo base64_encode(md5($clientId+1)); ?>&qqid=<?php echo base64_encode(md5($clientId+2)); ?>&sid=<?php echo base64_encode(md5($clientId+3)); ?>&mid=<?php echo base64_encode(md5($clientId+4)); ?>&wid=<?php echo base64_encode($wid) ; ?>&cid=<?php echo base64_encode($clientId); ?>&file=" + fileName + "&pid=<?php echo base64_encode(md5($clientId+5)); ?>&location=<?php echo base64_encode($_SESSION['upload_file_location']); ?>&lid=<?php echo base64_encode(md5($clientId+6)); ?>&tid=<?php echo base64_encode(md5($clientId+7)); ?>"
+                        $("#hasEditButtonText").empty();
+                        // $("#hasEditButton").empty().append("<a class='editButtonClicked' href='editFile?" + url + "' target = '_blanc'><button class='btn btn-outline-primary'>Edit File</button></a>");
+                        $("#hasEditButton").empty().append('<h5>Live Editing coming soon!</h5>');
+                    }
+                    else{
+                        $("#hasEditButton").empty();
+                        $("#hasEditButtonText").empty().append('<h5>Someone is editing please be patient.</h5>');
+                    }
+                    $("#fileDownloadButton").empty().append("<a href='#' class='fileFetch' id='" + fileName + "' target = '_blanc' download><button class ='btn btn-outline-success'>Download File</button></a>")
+                    $("#showEditDownloadModal").modal('show');
+                }
+            });
+        });
+
+        $(document).on('click', '.editButtonClicked', function(e){
+            e.preventDefault();
+            $("#showEditDownloadModal").modal('hide');
+            window.open("http://localhost/AuditSoft/editExcelLive/excel?file="+filename);
+        });
     </script>
 
     <script>

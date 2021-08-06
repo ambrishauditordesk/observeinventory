@@ -4,17 +4,7 @@
 
     session_start();
     $subject = "You have been invited for the documents upload";
-    $loginLink = '';
-
-    if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-    }
-    elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-    }
-    elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-        $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-    }
+    $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
 
     $wid = $_POST['wid'];
     $data = [];
@@ -48,7 +38,7 @@
          <br />
          <div>Thank you.</div>
          <br />
-         <div>The Auditedg Team</div>
+         <div>Auditor's Desk Team</div>
          </div>";
 
         if(customMailer($email,$msg,$subject)){

@@ -22,7 +22,7 @@ $prog_id = $_GET["pid"];
     <meta name="author" content="">
 
     <!-- Custom Fav icon -->
-    <!-- <link rel="icon" href="img/atllogo.png" type="image/gif" sizes="16x16"> -->
+    <link rel="icon" href="img/atllogo.png" type="image/gif" sizes="16x16">
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

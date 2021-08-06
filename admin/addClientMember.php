@@ -24,15 +24,7 @@
             $uid= $con->insert_id;
         
             $sub = "You have been registered as a Client member";
-            if($_SERVER['HTTP_ORIGIN'] == 'http://localhost'){
-                $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-            }
-            elseif($_SERVER['HTTP_ORIGIN'] == 'http://atlats.in'){
-                $loginLink = $_SERVER['HTTP_ORIGIN'].'/audit/login';
-            }
-            elseif($_SERVER['HTTP_ORIGIN'] == 'http://yourfirmaudit.com'){
-                $loginLink = $_SERVER['HTTP_ORIGIN'].'/AuditSoft/login';
-            }
+            $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
 
             $msg = "<div>
             <div>Hello ".$name.",</div>
@@ -55,7 +47,7 @@
             <br />
             <div>Thank you.</div>
             <br />
-            <div>The Auditedg Team</div>
+            <div>Auditor's Desk Team</div>
             </div>";
             
             $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
