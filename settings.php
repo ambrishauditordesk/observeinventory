@@ -498,52 +498,53 @@ error_reporting(E_ALL);
                                 if($firmDetails->num_rows > 0){
                                     while($row = $firmDetails->fetch_assoc()){
                                     ?>
-                                    <div class="col-md-9">
+                                    <div class="container">
                                         <h6>BILLING SETTINGS</h6>
                                         <hr>
-                                        <div>
-                                            <div class="form-group">
-                                                <label for="fullName">Subcription</label>
-                                                <form action="buySubscription" method="post">
-                                                    <div class="row col-md-12">
-                                                        <div class="col-md-4 p-0">
-                                                            <input type="number" name ="subscription" class="form-control" placeholder="Enter the number of clients" required>
-                                                        </div> &emsp;
-                                                        <div class="col-md-2 p-0">
-                                                            <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="fullName">Subcription</label>
+                                                    <form  id = "subsForm" action="payments/dataFrom" method="post">
+                                                        <div class="p-0">
+                                                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                                            <input type="hidden" name="name" value="<?php echo $row['firm_name']; ?>">
+                                                            <input type="hidden" name="address" value="<?php echo $row['firm_address']; ?>">
+                                                            <input type="hidden" name="email" value="<?php echo $row['firm_email']; ?>">
+                                                            <input type="hidden" id ="amount" name="amount">
+                                                            <input type="hidden" name="amountCheck" value="1">
+                                                            <input type="number" id="noOfWorkspace" name ="subscription" class="form-control" placeholder="Enter the number of clients" required>
                                                         </div>
-                                                        <div class="col-md-4 mt-1">
+                                                        <div class="mt-1">
                                                             <label><h6>&#8377;1499/Client</h6></label>
                                                         </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="form-group mb-0 col-md-6 p-0">
-                                                <label for="fullName">Payment History</label>
-                                                <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="Will show up once payment is done" readonly>
-                                            </div>
-                                            <div class="form-group mb-0 col-md-6 p-0">
-                                                <label for="fullName">Subscribed Clients</label>
-                                                <input type="text" class="form-control" id="subscribed_clients" aria-describedby="fullNameHelp" value="<?php echo $row['subscribed_workspace']; ?>" readonly>
-                                            </div>
-                                            <div class="form-group mb-0 col-md-6 p-0">
-                                                <label for="fullName">Clients Available</label>
-                                                <input type="text" class="form-control" id="clients_available" aria-describedby="fullNameHelp" value="<?php echo $row['subscribed_workspace']-$row['used_workspace'];?>" readonly>
-                                            </div>
-                                            <div class="form-group mb-0 col-md-6 p-0">
-                                                <label for="fullName">Firm Storage space</label>
-                                                <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" value = "<?php echo ($row['storage']/1000000).' GB'; ?>" readonly>
-                                            </div>
-                                            <div class="form-group mb-0 col-md-6 p-0">
-                                                <label for="fullName">Storage space used</label><br>
-                                                <input type ="text" class="form-control" id="firm_storage_space_used" value="<?php echo strlen(($row['storage_used'])) <= 3 ? decimal2point((float)($row['storage_used'])).' KB':decimal2point((float)($row['storage_used']/1000)).' MB'?>" readonly>
-                                            </div>
-                                            <div class="form-group mb-0">
-                                                <label for="fullName">Add Storage space</label><br>
-                                                <form action="buyStorage" method="post">
-                                                    <div class="row col-md-12">
                                                         <div class="col-md-4 p-0">
-                                                            <select class="form-control" name="firmStorage" aria-label="Default select example">
+                                                            <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                                        </div>
+                                                       
+                                                    </form>
+                                                </div>
+                                                <div class="form-group mb-0 p-0">
+                                                    <label for="fullName">Subscribed Clients</label>
+                                                    <input type="text" class="form-control" id="subscribed_clients" aria-describedby="fullNameHelp" value="<?php echo $row['subscribed_workspace']; ?>" readonly>
+                                                </div>
+                                                <div class="form-group mb-0 p-0">
+                                                    <label for="fullName">Clients Available</label>
+                                                    <input type="text" class="form-control" id="clients_available" aria-describedby="fullNameHelp" value="<?php echo $row['subscribed_workspace']-$row['used_workspace'];?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group mb-0">
+                                                    <label for="fullName">Add Storage space</label><br>
+                                                    <form id="storageForm" action="payments/dataFrom" method="post">
+                                                        <div class="p-0">
+                                                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                                            <input type="hidden" name="name" value="<?php echo $row['firm_name']; ?>">
+                                                            <input type="hidden" name="address" value="<?php echo $row['firm_address']; ?>">
+                                                            <input type="hidden" name="email" value="<?php echo $row['firm_email']; ?>">
+                                                            <input type="hidden" id ="storageAmount" name="storageAmount">
+                                                            <input type="hidden" name="amountCheck" value="2">
+                                                            <select class="form-control" id="storage" name="firmStorage" aria-label="Default select example">
                                                                 <option selected>Select Storage</option>
                                                                 <option value="1000000">1 GB</option>
                                                                 <option value="5000000">5 GB</option>
@@ -552,21 +553,33 @@ error_reporting(E_ALL);
                                                                 <option value="20000000">20 GB</option>
                                                                 <option value="25000000">25 GB</option>
                                                             </select>
-                                                        </div> &emsp;
-                                                        <div class="col-md-2 p-0">
-                                                            <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
                                                         </div>
-                                                        <div class="col-md-4 mt-1">
+                                                        <div class="mt-1">
                                                             <label><h6>&#8377;100/GB monthly</h6></label>
                                                         </div>
-                                                    </div>
-                                                </form>
+                                                        <div class="col-md-4 p-0">
+                                                            <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
+                                                        </div>
+                                                    </form>
+                                                </div><br>
+                                                <div class="form-group mb-0 p-0">
+                                                    <label for="fullName">Firm Storage space</label>
+                                                    <input type="text" class="form-control" id="firm_storage_space" aria-describedby="fullNameHelp" value = "<?php echo ($row['storage']/1000000).' GB'; ?>" readonly>
+                                                </div>
+                                                <div class="form-group mb-0 p-0">
+                                                    <label for="fullName">Storage space used</label><br>
+                                                    <input type ="text" class="form-control" id="firm_storage_space_used" value="<?php echo strlen(($row['storage_used'])) <= 3 ? decimal2point((float)($row['storage_used'])).' KB':decimal2point((float)($row['storage_used']/1000)).' MB'?>" readonly>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="form-group mb-0 p-0">
+                                            <label for="fullName">Payment History</label>
+                                            <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="Will show up once payment is done" readonly>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <!-- <div class="col-md-3"> -->
                                         <!-- CARDS -->
-                                        <div id="content" class="toggleContents">
+                                        <!-- <div id="content" class="toggleContents">
                                             <div class="container pt-4">
                                                 <div class="">
                                                     <div class="card">
@@ -607,8 +620,8 @@ error_reporting(E_ALL);
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </div> -->
+                                    <!-- </div> -->
                         <?php 
                                     } 
                                 }
@@ -779,7 +792,17 @@ error_reporting(E_ALL);
             $("#customSwitch1").removeAttr('checked');
         }
 
+        $('#subsForm').submit(function(){
+            let workspace = $('#noOfWorkspace').val();
+            amount = workspace * 1499;
+            $('#amount').val(amount);
+        })
 
+        $('#storageForm').submit(function(){
+            let storage = $('#storage').val();
+            storageAmount = ((storage/1000000) * 100)
+            $('#storageAmount').val(storageAmount);
+        })
 
         $("#customSwitch1").click(function(){
             var id = <?php echo $_SESSION['id']; ?>;
