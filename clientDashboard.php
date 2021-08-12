@@ -288,7 +288,7 @@ $_SESSION['breadcrumb'] = array();
                 </div>
                 <div class="dash" style="margin-top: 1rem !important;">
                     <a href="#" data-toggle="modal" data-target="#workflowModal"><img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                    Workflow
+                    Quicklinks
                     </a>
                 </div>
             </div>
@@ -588,7 +588,7 @@ $_SESSION['breadcrumb'] = array();
                                 <div class="timeline__event__icon">
                                     <i class="far fa-times-circle fourth"></i>
                                     <div class="timeline__event__date">
-                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(24); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Summery of Misstatements</a>
+                                        <a class="workflowLink" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(24); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(19); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>" style="text-decoration: none;">Summary of Misstatements</a>
                                     </div>
                                 </div>
                             </div>

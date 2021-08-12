@@ -23,11 +23,37 @@ $add = trim($_POST['firmAdd']);
 $email = trim($_POST['firmEmail']);
 $ser = $_SERVER['HTTP_REFERER'];
 
-if ($con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_email`,`storage`) VALUES ('$name','$add','$email','10000')")== TRUE){
+$checkFirm = $con->query("select * from firm_details where firm_name like '%$name%'");
+if($checkFirm->num_rows > 0){
     echo "<script>
+        swal({
+            icon: 'error',
+            text: 'Additon Failed! Firm Already Exists.',
+        }).then(function(isConfirm) {
+            if (isConfirm) {
+                window.location.href = '$ser';
+            }
+        });
+    </script>";
+}
+else{
+    if ($con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_email`,`storage`) VALUES ('$name','$add','$email','10000')")== TRUE){
+        echo "<script>
+                swal({
+                    icon: 'success',
+                    text: '$name - Firm Added',
+                }).then(function(isConfirm) {
+                    if (isConfirm) {
+                        window.location.href = '$ser';
+                    }
+                });
+            </script>";
+        }
+    else{
+        echo "<script>
             swal({
-                icon: 'success',
-                text: '$name - Firm Added',
+                icon: 'error',
+                text: 'Failed Addition',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';
@@ -35,17 +61,6 @@ if ($con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_e
             });
         </script>";
     }
-else{
-    echo "<script>
-        swal({
-            icon: 'error',
-            text: 'Failed Addition',
-        }).then(function(isConfirm) {
-            if (isConfirm) {
-                window.location.href = '$ser';
-            }
-        });
-    </script>";
 }
 ?>
 </body>

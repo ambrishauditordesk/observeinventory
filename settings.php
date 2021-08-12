@@ -173,11 +173,11 @@ error_reporting(E_ALL);
         </div>
         <div class="side-footer">
             <div class="side-body">
-                <div class="dash">
+                <!-- <div class="dash">
                     <img class="sidenav-icon" src="Icons/pie-chart.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
                     Contacts
                     </svg>
-                </div>
+                </div> -->
             </div>
             <div class="settings">
                 <div class="settings-items-top-div">
