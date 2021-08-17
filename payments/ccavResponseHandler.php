@@ -10,7 +10,7 @@
 	$decryptValues=explode('&', $rcvdString);
 	$dataSize=sizeof($decryptValues);
 	echo "<center>";
-
+	
 	for($i = 0; $i < $dataSize; $i++) 
 	{
 		$information=explode('=',$decryptValues[$i]);

@@ -134,7 +134,7 @@ else
 					<td>Vault Info.	:</td><td><input type="text" name="customer_identifier" value=""/></td>
 				</tr> -->
 		        <tr>
-		        	<td></td><td><INPUT TYPE="submit" class="btn btn-primary" value="CheckOut"></td>
+		        	<td></td><td><INPUT TYPE="submit" class="btn btn-primary" value="Proceed"></td>
 		        </tr>
 	      	</table>
 	      </form>

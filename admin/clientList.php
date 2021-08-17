@@ -716,21 +716,21 @@
                     <form action="addFirm" method="POST" autocomplete="off">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="name">Firm Name</label>
-                                <input type="text" class="form-control" name="firmName">
+                                <label for="name">Full Name</label>
+                                <input type="text" class="form-control" name="name">
                             </div>
                             <div class="form-group">
-                                <label for="name">Firm Address</label>
-                                <textarea class="form-control" name="firmAdd"></textarea>
+                                <label for="name">Firm Name</label>
+                                <input type="text" class="form-control" name="firmName">
                             </div>
                             <div class="form-group">
                                 <label for="name">Firm Email</label>
                                 <input type="email" class="form-control" name="firmEmail">
                             </div>
-                            <!-- <div class="form-group ">
-                                <label for="name">Upload Photo</label>
-                                <input type="file" class="form-control" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg" required>
-                            </div> -->
+                            <div class="form-group">
+                                <label for="name">Firm Address</label>
+                                <textarea class="form-control" name="firmAdd"></textarea>
+                            </div>
                         <div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
