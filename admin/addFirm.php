@@ -17,6 +17,7 @@
 <?php
 
 include '../dbconnection.php';
+include '../customMailer.php';
 
 $name = trim($_POST['firmName']);
 $add = trim($_POST['firmAdd']);
