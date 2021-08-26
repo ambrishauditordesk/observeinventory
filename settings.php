@@ -203,7 +203,7 @@ error_reporting(E_ALL);
             <div class="container-fluid shadow" stickylevel="0" style="z-index:1200;">
                 <div class="row pt-1">
                     <div class="col-md-4">
-                        <!-- <img class="float-left" src="vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
+                        <!-- <img class="float-left" src="vendor/img/Auditors Deske-logo.svg" style="height:45px;"> -->
                         <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
                     </div>
                     <div class="col-md-4 text-center font-2 getContent" href="#">
@@ -505,7 +505,7 @@ error_reporting(E_ALL);
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label for="fullName">Subcription</label>
-                                                    <form  id = "subsForm" action="payments/dataFrom" method="post">
+                                                    <form  id = "subsForm" action="razorpay/pay" method="post">
                                                         <div class="p-0">
                                                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                                             <input type="hidden" name="name" value="<?php echo $row['firm_name']; ?>">
@@ -536,7 +536,7 @@ error_reporting(E_ALL);
                                             <div class="col">
                                                 <div class="form-group mb-0">
                                                     <label for="fullName">Add Storage space</label><br>
-                                                    <form id="storageForm" action="payments/dataFrom" method="post">
+                                                    <form id="storageForm" action="razorpay/pay" method="post">
                                                         <div class="p-0">
                                                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                                             <input type="hidden" name="name" value="<?php echo $row['firm_name']; ?>">
@@ -544,8 +544,8 @@ error_reporting(E_ALL);
                                                             <input type="hidden" name="email" value="<?php echo $row['firm_email']; ?>">
                                                             <input type="hidden" id ="storageAmount" name="storageAmount">
                                                             <input type="hidden" name="amountCheck" value="2">
-                                                            <select class="form-control" id="storage" name="firmStorage" aria-label="Default select example">
-                                                                <option selected>Select Storage</option>
+                                                            <select class="form-control" id="storage" name="firmStorage" aria-label="Default select example" required>
+                                                                <option value="" disabled selected>Select Storage</option>
                                                                 <option value="1000000">1 GB</option>
                                                                 <option value="5000000">5 GB</option>
                                                                 <option value="10000000">10 GB</option>
@@ -571,10 +571,9 @@ error_reporting(E_ALL);
                                                     <input type ="text" class="form-control" id="firm_storage_space_used" value="<?php echo strlen(($row['storage_used'])) <= 3 ? decimal2point((float)($row['storage_used'])).' KB':decimal2point((float)($row['storage_used']/1000)).' MB'?>" readonly>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group mb-0 p-0">
-                                            <label for="fullName">Payment History</label>
-                                            <input type="text" class="form-control" id="payment_history" aria-describedby="fullNameHelp" placeholder="Will show up once payment is done" readonly>
+                                        </div><br>
+                                        <div class="form-group mb-0 p-0 text-center">
+                                            <a id="paymentHistory" target="_blanc" href="paymentHistory"><button class="btn btn-primary">Payment History</button></a>
                                         </div>
                                     </div>
                                     <!-- <div class="col-md-3"> -->
@@ -712,11 +711,12 @@ error_reporting(E_ALL);
         <footer class="sticky-footer">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
                     <?php echo date("Y"); ?></strong></span>
                 </div>
             </div>
         </footer>
+
 
         <!-- Profile Photo Modal -->
         <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

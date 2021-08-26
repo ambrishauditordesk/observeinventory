@@ -30,9 +30,9 @@
          else{
             $this->Cell(80,10,$con->query("SELECT concat('Profit and Loss as on ', dateto) workspaceDate from workspace where client_id = $clientId")->fetch_assoc()['workspaceDate'],0,1,'C');
          }
-         $columnNames = [' ','Particulars', 'As on '.$con->query("SELECT dateto from workspace where id = $wid")->fetch_assoc()['dateto'], 'As on '.$con->query("SELECT datefrom from workspace where id = $wid")->fetch_assoc()['datefrom']];
+         $columnNames = [' ','Particulars', 'As on '.$con->query("SELECT dateto from workspace where id = $wid")->fetch_assoc()['dateto'], 'Adjustments' ,'As on '.$con->query("SELECT datefrom from workspace where id = $wid")->fetch_assoc()['datefrom']];
          //column width
-         $colWidth = array(15, 85, 45, 45);
+         $colWidth = array(10, 70, 40, 30, 40);
          $this->Ln(2.5);
          $this->SetTextColor(255);
          $this->SetFillColor(58, 148, 222);
@@ -86,7 +86,7 @@
    $pdf->SetAutoPageBreak(true);
    $pdf->SetTitle("Unaudited Financial Statement");
    //table footer
-   $colWidth = array(15, 85, 45, 45);
+   $colWidth = array(10, 70, 40, 30, 40);
    $pdf->SetTextColor(0,0,0);
 
    $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
@@ -100,6 +100,7 @@
         $pdf->Cell($colWidth[1],6,strtoupper($accountTypeRow['accounts_type']),'R',0,'L');
         $pdf->Cell($colWidth[2],6,' ','R',0,'R');
         $pdf->Cell($colWidth[3],6,' ','R',0,'R');
+        $pdf->Cell($colWidth[4],6,' ','R',0,'R');
         $pdf->Ln(6);
 
         $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
@@ -122,6 +123,7 @@
                     $pdf->Cell($colWidth[1],6,strtoupper($newWord),"R",0,'L');
                     $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
                     $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
+                    $pdf->Cell($colWidth[4],6,' ',"R",0,'R');
                     $pdf->Ln(6);
                     $newWord = $wordsArray[$lines];
                 }
@@ -132,25 +134,32 @@
             $pdf->Cell($colWidth[1],6,strtoupper($newWord),"R",0,'L');
             $pdf->Cell($colWidth[2],6,' ',"R",0,'R');
             $pdf->Cell($colWidth[3],6,' ',"R",0,'R');
+            $pdf->Cell($colWidth[4],6,' ',"R",0,'R');
             $pdf->Ln(6);
 
 
-            $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+            $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
             $financialStatementCounter = 'a';
             $pdf->SetFont('Arial','',10);
+            $counter = 1;
             while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+
+                $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                $unauditedTotal += $financialStatementRow['unaudited'];
+                $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                $adjustmentTotal += $adjustment;
                 if ($pdf->GetY() > 220) {
                     $pdf->Cell(array_sum($colWidth),0,'','T');
                     $pdf->Ln(0);
                     $pdf->AddPage();
                 }
-                $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
-                $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
                 
                 $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
-                $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'],"R",0,'L');
-                $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['cy_final_bal']),"R",0,'R');
-                $pdf->Cell($colWidth[3],6, numberToCurrency($financialStatementRow['cy_beg_bal']),"R",0,'R');
+                $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'],"R",0,'L');
+                $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['unaudited']),"R",0,'R');
+                $pdf->Cell($colWidth[3],6, numberToCurrency($adjustment),"R",0,'R');
+                $pdf->Cell($colWidth[4],6, numberToCurrency($financialStatementRow['unaudited']+$adjustment),"R",0,'R');
                 $pdf->Ln(6);
             }
         }
@@ -159,8 +168,9 @@
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
         $pdf->Cell($colWidth[1],6,'Total',"R",0,'C');
-        $pdf->Cell($colWidth[2],6, numberToCurrency($cyFinalBalTotal),"R",0,'R');
-        $pdf->Cell($colWidth[3],6, numberToCurrency($cyBegBalTotal),"R",0,'R');
+        $pdf->Cell($colWidth[2],6, numberToCurrency($unauditedTotal),"R",0,'R');
+        $pdf->Cell($colWidth[3],6, numberToCurrency($adjustmentTotal),"R",0,'R');
+        $pdf->Cell($colWidth[4],6, numberToCurrency($auditedTotal),"R",0,'R');
         $pdf->Ln(6);
         
         $pdf->Cell(array_sum($colWidth),0,'','T');
@@ -169,7 +179,7 @@
     $type = 'PL';
     $pdf->AddPage();
     
-    $accountTypeResult = $con->query("SELECT DISTINCT account_type, accountTypeSeqNumber from trial_balance where workspace_id='$wid' and ( account_type like '%Expense%' or account_type like '%Revenue%' ) order by accountTypeSeqNumber");
+    $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
     $typeCounter = 'A';
 
     while($accountTypeRow = $accountTypeResult->fetch_assoc()){
@@ -182,7 +192,7 @@
         $pdf->Cell($colWidth[3],6,' ','R',0,'R');
         $pdf->Ln(6);
 
-        $accountClassResult = $con->query("SELECT account_class from trial_balance where account_type ='".$accountTypeRow['account_type']."' and workspace_id='".$wid."' group by account_class");
+        $accountClassResult = $con->query("SELECT accounts_class from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id='".$wid."' group by accounts_class");
         $accountClassCounter = 1;
         while($accountClassRow = $accountClassResult->fetch_assoc()){
             $pdf->SetFont('Arial','B',10);
@@ -215,22 +225,26 @@
             $pdf->Ln(6);
 
 
-            $financialStatementResult = $con->query("SELECT max(financial_statement) financial_statement, sum(cy_beg_bal) cy_beg_bal, sum(cy_final_bal) cy_final_bal from trial_balance where account_type ='".$accountTypeRow['account_type']."' and account_class ='".$accountClassRow['account_class']."' and workspace_id='".$wid."' group by account_class,account_class,financial_statement order by financial_statement");
+            $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
             $financialStatementCounter = 'a';
             $pdf->SetFont('Arial','',10);
             while($financialStatementRow = $financialStatementResult->fetch_assoc()){
+                $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                $unauditedTotal += $financialStatementRow['unaudited'];
+                $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                $adjustmentTotal += $adjustment;
                 if ($pdf->GetY() > 220) {
                     $pdf->Cell(array_sum($colWidth),0,'','T');
                     $pdf->Ln(0);
                     $pdf->AddPage();
                 }
-                $cyFinalBalTotal += $financialStatementRow['cy_final_bal'];
-                $cyBegBalTotal += $financialStatementRow['cy_beg_bal'];
                 
                 $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
-                $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'],"R",0,'L');
-                $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['cy_final_bal']),"R",0,'R');
-                $pdf->Cell($colWidth[3],6, numberToCurrency($financialStatementRow['cy_beg_bal']),"R",0,'R');
+                $pdf->Cell($colWidth[1],6,'('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'],"R",0,'L');
+                $pdf->Cell($colWidth[2],6, numberToCurrency($financialStatementRow['unaudited']),"R",0,'R');
+                $pdf->Cell($colWidth[3],6, numberToCurrency($adjustment),"R",0,'R');
+                $pdf->Cell($colWidth[4],6, numberToCurrency($financialStatementRow['unaudited']+$adjustment),"R",0,'R');
                 $pdf->Ln(6);
             }
         }
@@ -239,8 +253,9 @@
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($colWidth[0],6,' ', "RL",0,'C');
         $pdf->Cell($colWidth[1],6,'Total',"R",0,'C');
-        $pdf->Cell($colWidth[2],6, numberToCurrency($cyFinalBalTotal),"R",0,'R');
-        $pdf->Cell($colWidth[3],6, numberToCurrency($cyBegBalTotal),"R",0,'R');
+        $pdf->Cell($colWidth[2],6, numberToCurrency($unauditedTotal),"R",0,'R');
+        $pdf->Cell($colWidth[3],6, numberToCurrency($adjustmentTotal),"R",0,'R');
+        $pdf->Cell($colWidth[4],6, numberToCurrency($auditedTotal),"R",0,'R');
         $pdf->Ln(6);
         
         $pdf->Cell(array_sum($colWidth),0,'','T');

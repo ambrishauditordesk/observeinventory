@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -15,6 +15,7 @@
 <body>
     <?php
     include 'dbconnection.php';
+    include 'checkFileAllowedExt.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
@@ -33,6 +34,7 @@
     //File Upload
     $filePresent = 0;
     $uploadOk = 1;
+    $allowFileUpload = 1;
     if(isset($_POST)) {
         if(isset($_POST['account']['des']))
             foreach ($_POST['account']['des'] as $data) {
@@ -67,44 +69,50 @@
         {
             if(!empty($_FILES['file']['name'][$id[$i]])){
                 for($x = 0; $x < sizeof($_FILES['file']['name'][$id[$i]]); $x++){
-                    $str = explode('.',$_FILES['file']['name'][$id[$i]][$x]);
-                    $new= '';
-                    for($j = 0; $j<sizeof($str)-1; $j++){
-                        if($new == ''){
-                            $new .= $str[$j];
-                        }
-                        else{
-                            $new .= ".".$str[$j];
-                        }
-                    }
-                    $name = trim($new." ".$fileDate." .".end($str));
-                    // $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
-                    $tmp_name = $_FILES['file']['tmp_name'][$id[$i]][$x];
-                    $uploadLocation = $con->query("SELECT CONCAT(firm_details.id, '/', client.id, client.name, '/',workspace.id) uploadLocation from workspace inner join client on workspace.client_id = client.id inner join user_client_log on client.id = user_client_log.client_id inner join firm_user_log on user_client_log.user_id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id where workspace.id = $wid group by firm_details.id")->fetch_assoc()['uploadLocation'];
-                    $uploadLocation = explode(' ',$uploadLocation);
-                    $path = 'uploads/';
-                    for($s=0;$s<sizeof($uploadLocation);$s++){
-                        $path .= $uploadLocation[$s];
-                    }
-                    $path .= '/';
-                    $size = (float)($_FILES['file']['size'][$id[$i]][$x])/1000;
-                    
-                    if($uploadOk){
-                        $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
-                        if($sizeCheck->num_rows > 0){   
-                            $result = $sizeCheck->fetch_assoc();
-                            if(($size + $result['storage_used']) < $result['storage']){
-                                $updatedSize = $result['storage_used'] + $size;
-                                $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");
-                                move_uploaded_file($tmp_name, $path.$name);
-                                $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
-                                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$fileDate','File uploaded $name')");
-                                $success = 1;
-                            } 
+                    $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'][$id[$i]][$x],$_FILES['file']['tmp_name'][$id[$i]][$x]);
+                    if($allowFileUpload){
+                        $str = explode('.',$_FILES['file']['name'][$id[$i]][$x]);
+                        $new= '';
+                        for($j = 0; $j<sizeof($str)-1; $j++){
+                            if($new == ''){
+                                $new .= $str[$j];
+                            }
                             else{
-                                $success = 0;
+                                $new .= ".".$str[$j];
                             }
                         }
+                        $name = trim($new." ".$fileDate." .".end($str));
+                        // $name = explode('.',$_FILES['file']['name'][$id[$i]][$x])[0]." ".date('Y-m-d H:i:s').".".explode('.',$_FILES['file']['name'][$id[$i]][$x])[1];
+                        $tmp_name = $_FILES['file']['tmp_name'][$id[$i]][$x];
+                        $uploadLocation = $con->query("SELECT CONCAT(firm_details.id, '/', client.id, client.name, '/',workspace.id) uploadLocation from workspace inner join client on workspace.client_id = client.id inner join user_client_log on client.id = user_client_log.client_id inner join firm_user_log on user_client_log.user_id = firm_user_log.user_id inner join firm_details on firm_user_log.firm_id = firm_details.id where workspace.id = $wid group by firm_details.id")->fetch_assoc()['uploadLocation'];
+                        $uploadLocation = explode(' ',$uploadLocation);
+                        $path = 'uploads/';
+                        for($s=0;$s<sizeof($uploadLocation);$s++){
+                            $path .= $uploadLocation[$s];
+                        }
+                        $path .= '/';
+                        $size = (float)($_FILES['file']['size'][$id[$i]][$x])/1000;
+                        
+                        if($uploadOk){
+                            $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+                            if($sizeCheck->num_rows > 0){   
+                                $result = $sizeCheck->fetch_assoc();
+                                if(($size + $result['storage_used']) < $result['storage']){
+                                    $updatedSize = $result['storage_used'] + $size;
+                                    $con->query("INSERT INTO accounts_log_docs(accounts_log_id, documents) VALUES ('$id[$i]','$name')");
+                                    move_uploaded_file($tmp_name, $path.$name);
+                                    $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                                    $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$fileDate','File uploaded $name')");
+                                    $success = 1;
+                                } 
+                                else{
+                                    $errorText = 'Insufficient Storage kindly contact your Firm Admin!';
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        $errorText = 'Either the file is not allowed or it is malicious.';
                     }
                 }
             }
@@ -118,6 +126,7 @@
                     swal({
                         icon: 'success',
                         text: 'Updated!',
+                        closeOnClickOutside: false,
                     }).then(function(isConfirm) {
                         if (isConfirm) {
                             window.location.href = '$ser';
@@ -129,7 +138,8 @@
             echo "<script>
                     swal({
                         icon: 'error',
-                        text: 'Insufficient Storage kindly contact your Firm Admin!',
+                        text: '".$errorText."',
+                        closeOnClickOutside: false,
                     }).then(function(isConfirm) {
                         if (isConfirm) {
                             window.location.href = '$ser';

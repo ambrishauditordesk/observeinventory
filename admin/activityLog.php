@@ -198,6 +198,17 @@
             </div>
         </div>
 
+        <!-- Footer -->
+        <footer class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                    <?php echo date("Y"); ?></strong></span>
+                </div>
+            </div>
+        </footer>
+
+
         <!-- Profile Photo Modal -->
         <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-size" role="document">

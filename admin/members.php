@@ -301,6 +301,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                    <?php echo date("Y"); ?></strong></span>
+                </div>
+            </div>
+        </footer>
+
+
         <?php
             if(isset($_SESSION['role']) && ($_SESSION['role'] != 3 && $_SESSION['role'] != 5)){
         ?>
@@ -325,13 +337,11 @@
                             </div>
                             <div class="form-group ">
                                 <label for="name">Email Address</label>
-                                <input type="email" class="form-control" name="email" id="email" autocomplete="off"
-                                    required>
+                                <input type="email" class="form-control" name="email" id="email" autocomplete="off" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Password</label>
-                                <input type="password" class="form-control" name="password" id="password" autocomplete="off"
-                                    required>
+                                <input type="password" class="form-control" name="password" id="password" autocomplete="off" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Role</label>
@@ -427,8 +437,14 @@
                                 <label for="name">Role</label>
                                 <select name="role" id="role1" class="form-control">
                                     <option value="">Select role</option>
-                                    <option value="2">Admin</option>
-                                    <option value="3">Member</option>
+                                    <?php 
+                                        if($_SESSION['role'] == 4){
+                                            ?>
+                                        <option value="4">Firm Admin</option>
+                                       <?php }
+                                    ?>
+                                    <option value="2">Audit Admin</option>
+                                    <option value="3">Audit Member</option>
                                 </select>
                             </div>
                             <div class="form-group ">
@@ -485,9 +501,6 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" id="lstview_undo" class="btn btn-danger btn-block">
-                                        undo
-                                    </button>
                                     <button type="button" id="lstview_rightAll" class="btn btn-default btn-block">
                                         <i class="fas fa-angle-double-right"></i>
                                     </button>
@@ -499,9 +512,6 @@
                                     </button>
                                     <button type="button" id="lstview_leftAll" class="btn btn-default btn-block">
                                         <i class="fas fa-angle-double-left"></i>
-                                    </button>
-                                    <button type="button" id="lstview_redo" class="btn btn-warning btn-block">
-                                        redo
                                     </button>
                                 </div>
                                 <div class="col-md-5">
@@ -531,22 +541,22 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div id="help_1">
-                            <p>1. Total members: Reflect the count of your firm members currently actively added your firm software.</p>
+                            <p>1. Total members: Reflects the count of your firm members that are actively added your firm software.</p>
                         </div>
                         <div id="help_2">
-                            <p>2. Register: Use register button to add new team members to your firm ,once you register a member you can allocate clients.</p>
+                            <p>2. Register: Use register button to add new team members to your firm, once you register a member you can allocate clients.</p>
                         </div>
                         <div id="help_3">
-                            <p>3. Edit: You can edit team member information email, name or sign of initials using the edit feature.</p>
+                            <p>3. Edit: You can edit team member information using the edit feature.</p>
                         </div>
                         <div id="help_4">
-                            <p>4. Allocate: Using the allocate button your can assign a specific client to a specific team member.</p>
+                            <p>4. Allocate: Using the allocate button you can assign a specific client to a specific team member.</p>
                         </div>
                         <div id="help_5">
-                            <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                            <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                         </div>
                         <div id="help_6">
-                            <p>6. Client list: Will take you your main page with list of all clients allocated to you.</p>
+                            <p>6. Client list: Will take you to the main page where the list of all clients allocated to you is present.</p>
                         </div>
                         <div id="help_7">
                             <p>7. Settings – Your Settings are personalized based on your role in your firm and can be accessed at all times for chat, email and reaching out to a specialist for any help.</p>
@@ -804,6 +814,7 @@
                 success: function(data){  
                     data = JSON.parse(data);  
                     swal({
+            closeOnClickOutside: false,
                         icon: data['status'] == true? 'success':'error',
                         text: data['text'],
                     }).then(function(isConfirm) {
@@ -830,6 +841,7 @@
             if(firm.length == ''){
                 event.preventDefault();
                 swal({
+            closeOnClickOutside: false,
                     icon: "error",
                     text: "Select Firm!",
                 }).then(function(isConfirm) {
@@ -927,43 +939,98 @@
         var email = $("#email1").val();
         var role = $("#role1").val();
         var active = $("#active1").val();
-        // var signoff = $("#signoff1").val();
         $("#editModal").modal('hide');
 
-        $.ajax({
-            url: "editAMember.php",
-            type: "POST",
-            data: {
-                name: name,
-                email: email,
-                role: role,
-                active: active
-                // signoff: signoff
-            },
-            success: function(data) {
-                if (data) {
-                    swal({
-                        icon: "success",
-                        text: "Updated",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
+        if(role == 4){
+            swal({
+            closeOnClickOutside: false,
+                title: "Are you sure?",
+                text: "You want to change Firm Admin?",
+                icon: "warning",
+                buttons: ['No','Yes'],
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "editAMember.php",
+                        type: "POST",
+                        data: {
+                            name: name,
+                            email: email,
+                            role: role,
+                            active: active
+                        },
+                        success: function(data) {
+                            if (data) {
+                                swal({
+            closeOnClickOutside: false,
+                                    icon: "success",
+                                    text: "Updated",
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                swal({
+            closeOnClickOutside: false,
+                                    icon: "error",
+                                    text: "Failed!",
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            }
                         }
                     });
-                } else {
+                } 
+                else 
+                {
                     swal({
+            closeOnClickOutside: false,
+                        text: "Updation Cancelled!",
                         icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
+                    })
                 }
-            }
-        });
-
-
+            });
+        }
+        else{
+            $.ajax({
+                url: "editAMember.php",
+                type: "POST",
+                data: {
+                    name: name,
+                    email: email,
+                    role: role,
+                    active: active
+                },
+                success: function(data) {
+                    if (data) {
+                        swal({
+            closeOnClickOutside: false,
+                            icon: "success",
+                            text: "Updated",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        swal({
+            closeOnClickOutside: false,
+                            icon: "error",
+                            text: "Failed!",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     });
 
     $(document).on('click', '.allocate', function() {
@@ -1032,13 +1099,28 @@
             if(isset($_SESSION['role']) && !empty($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
                 ?>
                 let firm = $("#firm_id").val();
-                if(firm == ''){
+                if(firm == '' || name == '' || email == '' || password == '' || role == ''){
                     e.preventDefault();
                     swal({
+                        closeOnClickOutside: false,
                         icon: "error",
-                        text: "Select Firm!",
+                        text: "All the fields are required!",
                     }).then(function(isConfirm) {
-                        $('#firm_id').focus();
+                        if(name == ''){
+                            $('#name').focus();
+                        }
+                        else if(email == ''){
+                            $('#email').focus();
+                        }
+                        else if(password == ''){
+                            $('#password').focus();
+                        }
+                        else if(role == ''){
+                            $('#role').focus();
+                        }
+                        else{
+                            $('#firm_id').focus();
+                        }
                     });
                 }
                 else{
@@ -1056,6 +1138,7 @@
                             console.log(response);
                             if (response == 1) {
                                 swal({
+                                    closeOnClickOutside: false,
                                     icon: "success",
                                     text: name + " Added",
                                 }).then(function(isConfirm) {
@@ -1065,6 +1148,7 @@
                                 });
                             } else {
                                 swal({
+                                    closeOnClickOutside: false,
                                     icon: "error",
                                     text: "Already Exists!",
                                 }).then(function(isConfirm) {
@@ -1093,6 +1177,7 @@
                         console.log(response);
                         if (response == 1) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: name + " Added",
                             }).then(function(isConfirm) {
@@ -1102,6 +1187,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: "Already Exists!",
                             }).then(function(isConfirm) {

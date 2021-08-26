@@ -147,7 +147,7 @@ $wid = base64_decode($_GET['wid']);
                 <div class="container-fluid shadow" stickylevel="0" style="z-index:1200;">
                     <div class="row pt-1">
                         <div class="col-md-4">
-                            <!-- <img class="float-left" src="vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
+                            <!-- <img class="float-left" src="vendor/img/Auditors Deske-logo.svg" style="height:45px;"> -->
                             <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
                         </div>
                         <div class="col-md-4 text-center font-2 getContent" href="#">
@@ -232,7 +232,7 @@ $wid = base64_decode($_GET['wid']);
             <footer class="sticky-footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                        <span><strong><span style="color: #8E1C1C;">Auditors Desk </span>&copy;
                         <?php echo date("Y"); ?></strong></span>
                     </div>
                 </div>

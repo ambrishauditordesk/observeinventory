@@ -24,8 +24,8 @@ $htmlContent = '
       <tbody>';
       $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
       $typeCounter = 'A';
-       while($accountTypeRow = $accountTypeResult->fetch_assoc()){
-         $cyBegBalTotal = $cyFinalBalTotal = 0;
+      while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+         $begBalTotal = $auditedTotal = 0;
          $htmlContent .= 
          '<tr>
             <td>('.$typeCounter++.')</td>
@@ -79,7 +79,7 @@ $htmlContent = '
             <td>&nbsp;</td>
             <td>&nbsp;</td>
          </tr>';
-       }
+      }
 $htmlContent .= '</tbody></table></div>';
 $htmlContent .= '<br style="page-break-before: always">';
 $htmlContent .= '
@@ -102,8 +102,8 @@ $htmlContent .= '
       <tbody>';
       $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
       $typeCounter = 'A';
-       while($accountTypeRow = $accountTypeResult->fetch_assoc()){
-         $cyBegBalTotal = $cyFinalBalTotal = 0;
+      while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+         $begBalTotal = $auditedTotal = 0;
          $htmlContent .= 
          '<tr>
             <td>('.$typeCounter++.')</td>
@@ -124,17 +124,17 @@ $htmlContent .= '
             $financialStatementResult = $con->query("SELECT accounts_name, sum(tb_performance_map.amount) unaudited, sum(tb_performance_map.beg_amount) beg_bal from tb_performance_map where workspace_id = $wid and accounts_type = '".$accountTypeRow['accounts_type']."' and accounts_class = '".$accountClassRow['accounts_class']."' GROUP BY accounts_name");
             $financialStatementCounter = 'a';
             while($financialStatementRow = $financialStatementResult->fetch_assoc()){
-                $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
-                $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
-                $audited = $financialStatementRow['unaudited']+$adjustment;
-                $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
-                $begBalTotal += $financialStatementRow['beg_bal'];
+                  $adjustment = $con->query("SELECT summery_of_misstatements_log.account, sum(summery_of_misstatements_log.amount) adj from summery_of_misstatements_log INNER join summery_of_misstatements on summery_of_misstatements_log.summery_of_misstatements_id=summery_of_misstatements.id where summery_of_misstatements.workspace_id = $wid and summery_of_misstatements_log.account = '".$financialStatementRow['accounts_name']."' GROUP BY summery_of_misstatements_log.account");
+                  $adjustment = $adjustment->num_rows > 0 ? $adjustment->fetch_assoc()['adj'] : 0;
+                  $audited = $financialStatementRow['unaudited']+$adjustment;
+                  $auditedTotal += $financialStatementRow['unaudited']+$adjustment;
+                  $begBalTotal += $financialStatementRow['beg_bal'];
                $htmlContent .= 
                '<tr>
                   <td>&nbsp;</td>
                   <td>('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'].'</td>
                   <td>'.numberToCurrency($audited).'</td>
-                  <td>'.numberToCurrency($financialStatementRow['cy_beg_bal']).'</td>
+                  <td>'.numberToCurrency($financialStatementRow['beg_bal']).'</td>
                </tr>';
             }
          }
@@ -157,7 +157,7 @@ $htmlContent .= '
             <td>&nbsp;</td>
             <td>&nbsp;</td>
          </tr>';
-       }
+      }
        $htmlContent .= '
        </tbody>
    </table>

@@ -244,6 +244,7 @@
                swal({
                     icon: data == 1? 'success':'error',
                     text: data == 1? 'Password reset is successful': 'Error happened contact admin',
+                    closeOnClickOutside: false,
                 }).then(function(isConfirm) {
                     if (isConfirm) {
                         window.location.href = 'login';

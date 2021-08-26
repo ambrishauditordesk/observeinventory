@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,6 +19,7 @@
 <body>
     <?php
     include 'dbconnection.php';
+    include 'checkFileAllowedExt.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ../login");
@@ -65,23 +66,29 @@
         if(!empty($_FILES['file']['name'])){
             $filePresent = 1;
             if(!empty($_FILES['file']['name'][0])){
-                $fileName = array();
-                $str = explode(".", $_FILES['file']['name']);
-                $new= '';
-                for($j = 0; $j<sizeof($str)-1; $j++){
-                    if($new == ''){
-                        $new .= $str[$j];
+                $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'][0],$_FILES['file']['tmp_name'][0]);
+                if($allowFileUpload){
+                    $fileName = array();
+                    $str = explode(".", $_FILES['file']['name']);
+                    $new= '';
+                    for($j = 0; $j<sizeof($str)-1; $j++){
+                        if($new == ''){
+                            $new .= $str[$j];
+                        }
+                        else{
+                            $new .= ".".$str[$j];
+                        }
                     }
-                    else{
-                        $new .= ".".$str[$j];
-                    }
+                    $name = trim($new." ".$date." .".end($str));;
+                    // $tmp_name = $fileName['file']['tmp_name'];
+                    // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
+                    $tmp_name = $_FILES['file']['tmp_name'];
+                    $path = $_SESSION['upload_file_location'];
+                    $size = ($_FILES['file']['size']/1000);
                 }
-                $name = trim($new." ".$date." .".end($str));;
-                // $tmp_name = $fileName['file']['tmp_name'];
-                // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
-                $tmp_name = $_FILES['file']['tmp_name'];
-                $path = $_SESSION['upload_file_location'];
-                $size = ($_FILES['file']['size']/1000);
+                else{
+                    $errorText = 'Either the file is not allowed or it is malicious.';
+                }
             }
         }
 
@@ -121,7 +128,7 @@
             echo "<br>";
         }
 
-        if($filePresent){
+        if($filePresent && $allowFileUpload){
             // $con->query("insert into materiality_files(fname,submat_id,workspace_id,status,deletedDate) values ('$name','$submat_id','$wid','0','')");
             $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
             if($sizeCheck->num_rows > 0){   
@@ -137,8 +144,7 @@
                     $flag = 1;
                 }
                 else{
-                    // File write permission is not given in the server.
-                    $error.= "<p>File was not uploaded but record created. Contact Admin ASAP.</p>";
+                    $errorText = 'Insufficient Storage kindly contact your Firm Admin!';
                     $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','$name File uploading failed for Materiality.')");
                     $flag = 0;
                 }
@@ -153,6 +159,7 @@
             swal({
                 icon: 'success',
                 text: 'Updated!',
+                closeOnClickOutside: false,
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';
@@ -164,7 +171,8 @@
         echo "<script>
             swal({
                 icon: 'error',
-                text: 'Insufficient Storage kindly contact your Firm Admin!',
+                text: '".$errorText."',
+                closeOnClickOutside: false,
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

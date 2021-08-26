@@ -46,6 +46,7 @@
     if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
         echo "<script>
                 swal({
+                closeOnClickOutside: false,
                     icon: 'error',
                     text: 'Please Enter a Valid Security Code!',
                 }).then(function(isConfirm) {
@@ -128,6 +129,7 @@
                                 session_destroy();
                                 echo "<script>
                                         swal({
+                                            closeOnClickOutside: false,
                                             icon: 'warning',
                                             text: 'Currently,there is no pending request from your Auditor',
                                         }).then(function(isConfirm) {
@@ -152,6 +154,7 @@
                     $con->query("update loginlog set status = 'Access Denied' where id = $loginLogId");
                     echo "<script>
                             swal({
+                                closeOnClickOutside: false,
                                 icon: 'error',
                                 text: 'Access Denied!',
                             }).then(function(isConfirm) {
@@ -180,6 +183,7 @@
             $con->query("update loginlog set status = 'Failed' where id = $loginLogId");
             echo "<script>
                     swal({
+                        closeOnClickOutside: false,
                         icon: 'error',
                         text: 'Wrong UserName or Password!',
                     }).then(function(isConfirm) {

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,9 +16,10 @@
 </head>
 
 <!-- <body style="background-image: url('Icons/bgwall.jpg');"> -->
-<body">
+<body>
     <?php
     include 'dbconnection.php';
+    include 'checkFileAllowedExt.php';
     session_start();
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");
@@ -62,51 +63,67 @@
     }
     if(isset($_POST['done']))
     {
+        $allowFileUpload = 1;
+        $allowFileUploadCount = 0;
         //File Upload
         if(!empty($_FILES['file']['name'][0])){
             $fileName = array();
             $totalFileSize = 0;
             for($i = 0; $i < count($_FILES['file']['name']); $i++){
-                $str = explode(".", $_FILES['file']['name'][$i]);
-                $new= '';
-                for($j = 0; $j<sizeof($str)-1; $j++){
-                    if($new == ''){
-                        $new .= $str[$j];
-                    }
-                    else{
-                        $new .= ".".$str[$j];
-                    }
-                }
-                $fileName[$i]['name'] = trim($new." ".$date." .".end($str));
-                $fileName[$i]['tmp_name'] = $_FILES['file']['tmp_name'][$i];
-                $fileName[$i]['size'] = $_FILES['file']['size'][$i];
-                $totalFileSize += ((float)$_FILES['file']['size'][$i])/1000;
-            }
-
-            $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
-            if($sizeCheck->num_rows > 0){   
-                $result = $sizeCheck->fetch_assoc();
-                $fileText = "Insufficient Storage kindly contact your Firm Admin!";
-                if(($totalFileSize + $result['storage_used']) < $result['storage']){
-                    $updatedSize = $result['storage_used'] + $totalFileSize;
-                    //move
-                    $path = $_SESSION['upload_file_location'];
-                    for($i = 0; $i < sizeof($fileName); $i++){
-                        $name = $fileName[$i]['name'];
-                        $tmp_name = $fileName[$i]['tmp_name'];
-                        if(move_uploaded_file($tmp_name, $path . $name)){
-                            $con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file,status,deletedDate) values ('$wid','$prog_id','$uid','$name','0','$date')");
-                            $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
-                            $flagFile = 1;
-                            $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");   
+                $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'][$i],$_FILES['file']['tmp_name'][$i]);
+                if($allowFileUpload){
+                    $allowFileUploadCount++;
+                    $str = explode(".", $_FILES['file']['name'][$i]);
+                    $new= '';
+                    for($j = 0; $j<sizeof($str)-1; $j++){
+                        if($new == ''){
+                            $new .= $str[$j];
+                        }
+                        else{
+                            $new .= ".".$str[$j];
                         }
                     }
-                    $fileText = "File uploading faileed kindly, contact your Firm Admin!";
-                    if($flagFile){
-                        $fileText = "File Uploaded Succesfully";
-                    }
+                    $fileName[$i]['name'] = trim($new." ".$date." .".end($str));
+                    $fileName[$i]['tmp_name'] = $_FILES['file']['tmp_name'][$i];
+                    $fileName[$i]['size'] = $_FILES['file']['size'][$i];
+                    $totalFileSize += ((float)$_FILES['file']['size'][$i])/1000;
                 }
-            }       
+            }
+
+            $totalFileCount = $i;
+
+            if($totalFileCount == $allowFileUploadCount){
+                $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
+                if($sizeCheck->num_rows > 0){   
+                    $result = $sizeCheck->fetch_assoc();
+                    $fileText = "Insufficient Storage kindly contact your Firm Admin!";
+                    if(($totalFileSize + $result['storage_used']) < $result['storage']){
+                        $updatedSize = $result['storage_used'] + $totalFileSize;
+                        //move
+                        $path = $_SESSION['upload_file_location'];
+                        for($i = 0; $i < sizeof($fileName); $i++){
+                            $name = $fileName[$i]['name'];
+                            $tmp_name = $fileName[$i]['tmp_name'];
+                            if(move_uploaded_file($tmp_name, $path . $name)){
+                                $con->query("insert into signoff_files_log(workspace_id,prog_id,user_id,file,status,deletedDate) values ('$wid','$prog_id','$uid','$name','0','$date')");
+                                $con->query("update firm_details set storage_used = $updatedSize where id = ".$_SESSION['firm_id']);
+                                $flagFile = 1;
+                                $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','New file upload:- $name')");   
+                            }
+                        }
+                        $fileText = "File uploading failed kindly, contact your Firm Admin!";
+                        if($flagFile){
+                            $fileText = "File Uploaded Succesfully";
+                        }
+                    }
+                    else{
+                        $fileText = 'Insufficient Storage kindly contact your Firm Admin!';
+                    }
+                }    
+            } 
+            else{
+                $fileText = 'Either the file is not allowed or it is malicious.';
+            }  
         }
         
         if(!empty(trim($_POST['newComment']))){
@@ -147,6 +164,7 @@
         swal({
             icon: '".$icon."',
             text: '".$text."',
+            closeOnClickOutside: false,
         }).then(function(isConfirm) {
             if (isConfirm) {
                 localStorage.setItem('uploaded','true');

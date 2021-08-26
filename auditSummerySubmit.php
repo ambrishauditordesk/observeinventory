@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -56,6 +56,7 @@ $add_misstatement = $con->query("insert into summery_of_misstatements(workspace_
     if($add_misstatement == TRUE){
     echo "<script>
             swal({
+                closeOnClickOutside: false,
                 icon: 'success',
                 text: 'Updated!',
             }).then(function(isConfirm) {
@@ -68,6 +69,7 @@ $add_misstatement = $con->query("insert into summery_of_misstatements(workspace_
     else{
     echo "<script>
             swal({
+                closeOnClickOutside: false,
                 icon: 'error',
                 text: 'Error!',
             }).then(function(isConfirm) {

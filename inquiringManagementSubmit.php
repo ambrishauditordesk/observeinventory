@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,6 +17,7 @@
 <body>
 <?php
     include 'dbconnection.php';
+    include 'checkFileAllowedExt.php';
     session_start();   
      
     $ser = $_SERVER['HTTP_REFERER'];
@@ -25,24 +26,31 @@
 
     //File Upload
     $filePresent = 0;
+    $allowFileUpload = 0;
     if(!empty($_FILES['file']['name'])){
         $filePresent = 1;
         if(!empty($_FILES['file']['name'][0])){
-            $fileName = array();
-            $str = explode(".", $_FILES['file']['name']);
-            $new= '';
-            for($j = 0; $j<sizeof($str)-1; $j++){
-                if($new == ''){
-                    $new .= $str[$j];
+            $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'][0],$_FILES['file']['tmp_name'][0]);
+            if($allowFileUpload){
+                $fileName = array();
+                $str = explode(".", $_FILES['file']['name']);
+                $new= '';
+                for($j = 0; $j<sizeof($str)-1; $j++){
+                    if($new == ''){
+                        $new .= $str[$j];
+                    }
+                    else{
+                        $new .= ".".$str[$j];
+                    }
                 }
-                else{
-                    $new .= ".".$str[$j];
-                }
+                $name = trim($new." ".$date." .".end($str));
+                $tmp_name = $_FILES['file']['tmp_name'];
+                $path = $_SESSION['upload_file_location'];
+                $size = ($_FILES['file']['size']/1000);
             }
-            $name = trim($new." ".$date." .".end($str));
-            $tmp_name = $_FILES['file']['tmp_name'];
-            $path = $_SESSION['upload_file_location'];
-            $size = ($_FILES['file']['size']/1000);
+            else{
+                $errorText = 'Either the file is not allowed or it is malicious.';
+            }
         }
     }
     
@@ -61,13 +69,19 @@
             $con->query("UPDATE inquiring_of_management_questions_answer SET answer_option = '$option', answer_textarea = '$textarea' where id = '$id' and workspace_id = '$wid'");
             $flag = 1;
         }
-        $con->query("INSERT INTO inquiring_of_management_questions_textarea(workspace_id,textarea) VALUES('$wid','$textareaResult')");
+        $totalCount = $con->query("SELECT id from inquiring_of_management_questions_textarea where workspace_id = $wid");
+        if($totalCount->num_rows == 0){
+            $con->query("INSERT INTO inquiring_of_management_questions_textarea(workspace_id,textarea) VALUES('$wid','$textareaResult')");
+        }
+        else{
+            $con->query("UPDATE inquiring_of_management_questions_textarea set textarea = '$textareaResult' where workspace_id = $wid");
+        }        
         $email = $_SESSION['email'];
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Inquiring Managements New entery done')");
         // $con->query("update workspace_log set status='1' where program_id='258' and workspace_id='$wid'");
     }
            
-    if($filePresent){
+    if($filePresent && $allowFileUpload){
         $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
         if($sizeCheck->num_rows > 0){   
             $result = $sizeCheck->fetch_assoc();
@@ -80,6 +94,7 @@
             } 
             else{
                 $flag = 0;
+                $errorText = 'Insufficient Storage kindly contact your Firm Admin';
             }
         }
     } 
@@ -89,6 +104,7 @@
             swal({
                 icon: 'success',
                 text: 'Updated!',
+                closeOnClickOutside: false,
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';
@@ -100,7 +116,8 @@
         echo "<script>
             swal({
                 icon: 'error',
-                text: 'Insufficient Storage kindly contact your Firm Admin',
+                text: '".$errorText."',
+                closeOnClickOutside: false,
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

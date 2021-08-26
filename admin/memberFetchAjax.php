@@ -116,7 +116,7 @@ foreach($result as $row)
             }
             else{
                 $sub_array[] = "<label class='mt-2'><span class='helpDesign help_3'>3</span></label>&nbsp;<a href='#' class='icon-hide'><img class='datatable-icon editMember' src='../Icons/edit-1.svg' id='".$row['id']."' style='width: 35% !important;'><img class='datatable-icon editMember' src='../Icons/edit-2.svg' id='".$row['id']."' style='width: 35% !important;'></a>";
-            $sub_array[] = "<label class='mt-2'><span class='helpDesign help_4'>4</span></label><a href='#' class='badge badge-primary allocate' id='".$row['id']."'></i>ALLOCATE</a>";
+                $sub_array[] = "<label class='mt-2'><span class='helpDesign help_4'>4</span></label><a href='#' class='badge badge-primary allocate' id='".$row['id']."'></i>ALLOCATE</a>";
             }
         }
         else{

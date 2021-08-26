@@ -66,7 +66,7 @@ if(isset($_GET['wid']) && !empty($_GET['wid'])){
                         <?php 
                             if($row['active']){
                         ?>
-                        <td><?php $row['CommentCount']; ?></td>
+                        <td><?php echo $row['CommentCount']; ?></td>
                         <td><?php echo $row['FileCount']; ?></td>
                         <td><?php echo $row['PrepareCount']; ?></td>
                         <td><?php echo $row['ReviewCount']; ?></td>

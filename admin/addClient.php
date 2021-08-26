@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -137,6 +137,7 @@ foreach (($_POST['designation']) as $designation) {
 }
 $count = $i;
 $successEmailList = $unSuccessEmailList = '';
+$notDuplicate = 0;
 
 if($uploadOk) {
     $con->query("insert into client(active,added_by_id,added_by_date,name,nickname,incorp_date,const_id,industry_id,address,city,state,pincode,country,pan,gst,tan,cin)
@@ -170,9 +171,10 @@ if($uploadOk) {
                         $('#unsuccessModal').modal();
                     });
                 </script>";
-                break;
+                continue;
             }
-            if($checkDuplicateEmail){
+            else{
+                $notDuplicate = 1;
                 $con->query("insert into user(client_id,name,email,password,accessLevel,active,designation,reset_code,img) values('$cid','$cname[$i]','$email[$i]','$pass[$i]','5','1','$desig[$i]','','')");
                 $uid = $con->insert_id;
                 $con->query("insert into user_client_log(user_id,client_id) values('$uid','$cid')");
@@ -200,26 +202,18 @@ if($uploadOk) {
                 <div>Auditor's Desk Team</div>
                 </div>";
                 if(customMailer($email[$i],$msg,$sub)){
-                    if(empty($successEmailList))
-                        $successEmailList = $email[$i];
-                    else
-                        $successEmailList .= ','.$email[$i];
                     sleep(1);
-                }
-                else{
-                    if(empty($unSuccessEmailList))
-                        $unSuccessEmailList = $email[$i];
-                    else
-                        $unSuccessEmailList .= ','.$email[$i];
                 }
             }
         }
-        echo "<script>
-                $(document).ready(function() {
-                    document.getElementsByTagName('html')[0].style.visibility = 'visible';
-                    $('#successModal').modal();
-                });
-            </script>"; 
+        if($notDuplicate == 1){
+            echo "<script>
+                    $(document).ready(function() {
+                        document.getElementsByTagName('html')[0].style.visibility = 'visible';
+                        $('#successModal').modal();
+                    });
+                </script>"; 
+        }
     }
     else{
         echo "<script>
@@ -253,23 +247,7 @@ else{
             <div class="modal-body">
                 Successfully added <?php echo $name; ?>.<a href="clientList">Click Me!</a>
                 <p>
-                    <?php
-                        if(!empty($successEmailList)){
-                            ?>
-                            Emails has been send with invitation link to:-<br><?php echo $successEmailList; ?><br>
-                            <?php
-                            if(!empty($unSuccessEmailList)){
-                                ?>
-                                    Emails has not been send to:-<br><?php echo $unSuccessEmailList; ?><br>
-                                <?php
-                            }
-                        }
-                        else{
-                            ?>
-                                Emails has not been send to:-<br><?php echo $unSuccessEmailList; ?><br>
-                            <?php
-                        }
-                    ?>
+                    Emails has been send with invitation link.
                 </p>
             </div>
             <div class="modal-footer">

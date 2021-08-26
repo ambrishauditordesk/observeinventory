@@ -335,6 +335,17 @@
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                    <?php echo date("Y"); ?></strong></span>
+                </div>
+            </div>
+        </footer>
+
       <?php
         if($_SESSION['role'] != 3 || $_SESSION['role'] != 5){
             ?>
@@ -524,25 +535,25 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Basic Details<h5>
                             </div>
-                            <input type="hidden" id="date" class="form-control" name="date" value= "" required>
-                            <input type="hidden" id="id" class="form-control" name="id" value= "" required>
-                            <input type="hidden" id="cid" class="form-control" name="cid" value= "" required>
-                            <input type="hidden" id="active" class="form-control" name="active" value= "" required>
+                            <input type="hidden" id="date" class="form-control" name="date" value= "" readonly>
+                            <input type="hidden" id="id" class="form-control" name="id" value= "" readonly>
+                            <input type="hidden" id="cid" class="form-control" name="cid" value= "" readonly>
+                            <input type="hidden" id="active" class="form-control" name="active" value= "" readonly>
                             <div class="form-group ">
                                 <label for="name">Client Name</label>
-                                <input type="text" id="clientname" class="form-control" maxlength="99" name="clientname" value= "" required>
+                                <input type="text" id="clientname" class="form-control" maxlength="99" name="clientname" value= "" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Nick Name</label>
-                                <input type="text" id="nickname" class="form-control" maxlength="99" name="nickname" value= "">
+                                <input type="text" id="nickname" class="form-control" maxlength="99" name="nickname" value= "" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Date of Incorporation/ Birth</label>
-                                <input type="date" id="dob" class="form-control" name="dob" value= "" required>
+                                <input type="date" id="dob" class="form-control" name="dob" value= "" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="country">Constitution</label>
-                                <select class="form-control" id="constitution" name="constitution" required>
+                                <select class="form-control" id="constitution" name="constitution" readonly>
                                     <option>Select Constitution !</option>
                                         <?php
                                             $consQuery = $con->query("select * from constitution");
@@ -556,7 +567,7 @@
                             </div>
                             <div class="form-group ">
                                 <label for="country">Industry</label>
-                                <select class="form-control" id="industry" name="industry" required>
+                                <select class="form-control" id="industry" name="industry" readonly>
                                     <option>Select Industry !</option>
                                     <?php
                                                     $indusQuery = $con->query("select * from industry");
@@ -570,45 +581,45 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Address</label>
-                                <input type="text" id="add" class="form-control" name="add" maxlength="200" value= "">
+                                <input type="text" id="add" class="form-control" name="add" maxlength="200" value= "" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="country">Country</label>
-                                <input type="text" id="country" class="form-control" name="country" maxlength="15" value= "">
+                                <input type="text" id="country" class="form-control" name="country" maxlength="15" value= "" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <input type="text" id="state" class="form-control" name="state" maxlength="15" value= "">
+                                <input type="text" id="state" class="form-control" name="state" maxlength="15" value= "" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="text" id="city" class="form-control" name="city" maxlength="15" value= "">
+                                <input type="text" id="city" class="form-control" name="city" maxlength="15" value= "" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pincode</label>
-                                <input type="text" id="pincode" class="form-control" name="pincode" maxlength="8" value= "" required>
+                                <input type="text" id="pincode" class="form-control" name="pincode" maxlength="8" value= "" readonly>
                             </div>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pan No.</label>
-                                <input type="text" id="panCheckEdit" class="form-control" name="pan" maxlength="10" value= "" style="text-transform:uppercase" required>
+                                <input type="text" id="panCheckEdit" class="form-control" name="pan" maxlength="10" value= "" style="text-transform:uppercase" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="name">GST No.</label>
-                                <input type="text" id="gstCheckEdit" class="form-control" name="gst" maxlength="15" value= "" style="text-transform:uppercase">
+                                <input type="text" id="gstCheckEdit" class="form-control" name="gst" maxlength="15" value= "" style="text-transform:uppercase" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="name">TAN No.</label>
-                                <input type="text" id="tanCheckEdit" class="form-control" name="tan" maxlength="10" value= "" style="text-transform:uppercase">
+                                <input type="text" id="tanCheckEdit" class="form-control" name="tan" maxlength="10" value= "" style="text-transform:uppercase" readonly>
                             </div>
                             <div class="form-group ">
                                 <label for="name">CIN No.</label>
-                                <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase">
+                                <input type="text" id="cinCheckEdit" class="form-control" name="cin" maxlength="21" value= "" style="text-transform:uppercase" readonly>
                             </div>
                             <?php
-                                if($_SESSION['role'] < 3)
+                                if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 || $_SESSION['role'] == 4)
                                 {
                             ?>
                             <div class="form-group ">
@@ -667,7 +678,7 @@
                             <p>2. Team members button helps you add you add your team members and allocation clients to each specific member.</p>
                         </div>
                         <div id="help_3">
-                            <p>3. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                            <p>3. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                         </div>
                         <div id="help_4">
                             <p>4. Total Assigned – Reflects the count of engagements assigned to you included InProgress and completed engagement.</p>
@@ -685,10 +696,10 @@
                             <p>8. Client profile – Once a client is added , you can edit information or update client profile using this feature.</p>
                         </div>
                         <div id="help_9">
-                            <p>9. Client Contacts – You can add client contacts to give them access to see your client document list. All the members on the client contacts can only view your clint request list.</p>
+                            <p>9. Client Contacts – You can add client contacts to give them access to see your client document list. All the members on the client contacts can only view your client request list.</p>
                         </div>
                         <div id="help_10">
-                            <p>10. Status – Active status reflect that the engagement is still in progress and not been freezed. Inactive status means the engagements is no longer available for edits and you should reach out to a firm administrator for further help.</p>
+                            <p>10. Status – Active status reflects that the engagement is still in progress and not been freezed. Inactive status means the engagements is no longer available for edits and you should reach out to a firm administrator for further help.</p>
                         </div>
                         <div id="help_11">
                             <p>11. Client name – Click on your designed client name to access client workspace.</p>
@@ -717,15 +728,15 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="name">Full Name</label>
-                                <input type="text" class="form-control" name="name">
+                                <input type="text" class="form-control" name="name" required>
                             </div>
                             <div class="form-group">
                                 <label for="name">Firm Name</label>
-                                <input type="text" class="form-control" name="firmName">
+                                <input type="text" class="form-control" name="firmName" required> 
                             </div>
                             <div class="form-group">
                                 <label for="name">Firm Email</label>
-                                <input type="email" class="form-control" name="firmEmail">
+                                <input type="email" class="form-control" name="firmEmail" required>
                             </div>
                             <div class="form-group">
                                 <label for="name">Firm Address</label>
@@ -1106,6 +1117,7 @@
                         if(firm.length == ''){
                             event.preventDefault();
                             swal({
+                                closeOnClickOutside: false,
                                 icon: "error",
                                 text: "Select Firm!",
                             }).then(function(isConfirm) {
@@ -1123,6 +1135,7 @@
         if ($(this).val().length == 10){
             if (!panRegex.test($(this).val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "PAN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1135,6 +1148,7 @@
         if ($('#panCheck').val().length == 10){
             if (!panRegex.test($('#panCheck').val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "PAN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1149,6 +1163,7 @@
         if ($(this).val().length === 15){
             if ($(this).val().toUpperCase()){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "GST Number invalid!",
                     }).then(function(isConfirm) {
@@ -1161,6 +1176,7 @@
         if ($('#gstCheck').val().length === 15){
             if (!gstRegex.test($('#gstCheck').val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "GST Number invalid!",
                     }).then(function(isConfirm) {
@@ -1175,6 +1191,7 @@
         if ($(this).val().length == 10){
             if (!tanRegex.test($(this).val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "TAN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1187,6 +1204,7 @@
         if ($('#tanCheck').val().length == 10){
             if (!tanRegex.test($('#tanCheck').val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "TAN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1201,6 +1219,7 @@
         if ($(this).val().length == 21){
             if (!cinRegex.test($(this).val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "CIN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1213,6 +1232,7 @@
         if ($('#cinCheck').val().length == 21){
             if (!cinRegex.test($('#cinCheck').val().toUpperCase())){
                 swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "CIN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1240,6 +1260,7 @@
                 console.log(response);
                 if (response) {
                     swal({
+            closeOnClickOutside: false,
                         icon: "success",
                         text: "Updated!",
                     }).then(function(isConfirm) {
@@ -1249,6 +1270,7 @@
                     });
                 } else {
                     swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "Failed!",
                     }).then(function(isConfirm) {

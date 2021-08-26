@@ -145,7 +145,7 @@
 
                 <div class="row pt-1">
                     <div class="col-md-4">
-                        <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
+                        <!-- <img class="float-left" src="../vendor/img/Auditors Deske-logo.svg" style="height:45px;"> -->
                         <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
                     </div>
                     <div class="col-md-4 text-center font-2 getContent" href="clientList">
@@ -401,6 +401,7 @@
     //             success: function(data){    
     //                 if (data) {
     //                 swal({
+            closeOnClickOutside: false,
     //                     icon: "success",
     //                     text: "Updated",
     //                 }).then(function(isConfirm) {
@@ -410,6 +411,7 @@
     //                 });
     //             } else {
     //                 swal({
+            closeOnClickOutside: false,
     //                     icon: "error",
     //                     text: "Failed!",
     //                 }).then(function(isConfirm) {
@@ -492,6 +494,7 @@
     //         success: function(data) {
     //             if (data) {
     //                 swal({
+            closeOnClickOutside: false,
     //                     icon: "success",
     //                     text: "Updated",
     //                 }).then(function(isConfirm) {
@@ -501,6 +504,7 @@
     //                 });
     //             } else {
     //                 swal({
+            closeOnClickOutside: false,
     //                     icon: "error",
     //                     text: "Failed!",
     //                 }).then(function(isConfirm) {
@@ -591,6 +595,7 @@
     //         success: function(response) {
     //             if (response) {
     //                 swal({
+            closeOnClickOutside: false,
     //                     icon: "success",
     //                     text: name + " Added",
     //                 }).then(function(isConfirm) {
@@ -600,6 +605,7 @@
     //                 });
     //             } else {
     //                 swal({
+            closeOnClickOutside: false,
     //                     icon: "error",
     //                     text: "Already Exists!",
     //                 }).then(function(isConfirm) {

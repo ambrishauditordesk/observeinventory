@@ -29,7 +29,7 @@ else{
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Audit-Edg</title>
+        <title>Auditors Desk</title>
         <link rel="icon" href="img/atllogo.png" type="image/gif" sizes="16x16">
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -56,7 +56,7 @@ else{
             <div class="container d-flex h-100 align-items-center">
                 <div class="mx-auto text-center">
                     <h2 class= "text-white-50 mx-auto mt-2 mb-5"> Welcome To </h2>
-                    <h1 class="mx-auto my-0 text-uppercase">Audit-Edg</h1>
+                    <h1 class="mx-auto my-0 text-uppercase">Auditors Desk</h1>
                     <h2 class="text-white-50 mx-auto mt-2 mb-5">The Collaboration-Tool by Confirmfast.</h2>
 
                     <div class="container my-md-4 text-secondary  font-2">

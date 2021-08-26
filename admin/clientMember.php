@@ -170,7 +170,7 @@
                     </div>
                     <div class="settings-items">
                         <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        Help
+                        <span style="color:#0056b3;">Help</span>
                     </div>
                 </div>
                 <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
@@ -185,7 +185,7 @@
             <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
                 <div class="row pt-1">
                     <div class="col-md-4">
-                        <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
+                        <!-- <img class="float-left" src="../vendor/img/Auditors Deske-logo.svg" style="height:45px;"> -->
                         <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div>
                     </div>
                     <div class="col-md-4 text-center font-2 getContent" href="#">
@@ -390,7 +390,7 @@
                         </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                            <input class="btn btn-primary" type="submit" value="Update">
                         </div>
                     </form>
                 </div>
@@ -501,6 +501,7 @@
             success: function(data) {
                 if (data) {
                     swal({
+            closeOnClickOutside: false,
                         icon: "success",
                         text: "Updated",
                     }).then(function(isConfirm) {
@@ -510,6 +511,7 @@
                     });
                 } else {
                     swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "Failed!",
                     }).then(function(isConfirm) {
@@ -530,38 +532,65 @@
         var email = $("#email").val();
         var password = $("#password").val();
         var design = $("#design1").val();
-        $.ajax({
-            url: "addClientMember.php",
-            type: "POST",
-            data: {
-                name: name,
-                email: email,
-                password: password,
-                design: design,
-                cid: <?php echo $clientId; ?>
-            },
-            success: function(response) {
-                if (response == 1) {
-                    swal({
-                        icon: "success",
-                        text: name + " Added",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-                        icon: "error",
-                        text: "Already Exists!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
+
+        if(name == '' || email == '' || password == '' || design == ''){
+            e.preventDefault();
+            swal({
+                closeOnClickOutside: false,
+                icon: "error",
+                text: "All the fields are required!",
+            }).then(function(isConfirm) {
+                if(name == ''){
+                    $('#name').focus();
                 }
-            }
-        });
+                else if(email == ''){
+                    $('#email').focus();
+                }
+                else if(password == ''){
+                    $('#password').focus();
+                }
+                else{
+                    $('#design1').focus();
+                }
+            });
+        }
+
+        else{
+            $.ajax({
+                url: "addClientMember.php",
+                type: "POST",
+                data: {
+                    name: name,
+                    email: email,
+                    password: password,
+                    design: design,
+                    cid: <?php echo $clientId; ?>
+                },
+                success: function(response) {
+                    if (response == 1) {
+                        swal({
+                closeOnClickOutside: false,
+                            icon: "success",
+                            text: name + " Added",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        swal({
+                closeOnClickOutside: false,
+                            icon: "error",
+                            text: "Already Exists!",
+                        }).then(function(isConfirm) {
+                            if (isConfirm) {
+                                location.reload();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     });
     </script>
 </body>

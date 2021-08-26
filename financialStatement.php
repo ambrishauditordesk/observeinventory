@@ -279,7 +279,7 @@
         <footer class="sticky-footer bg-light">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                    <span><strong><span style="color: #8E1C1C;">Auditors Desk </span>&copy;
                     <?php echo date("Y"); ?></strong></span>
                 </div>
             </div>

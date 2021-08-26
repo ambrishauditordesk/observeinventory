@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Audit-EDG</title>
+    <title>Auditors Desk</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -151,6 +151,7 @@
             swal({
                 icon: 'success',
                 text: '".$responseText."',
+                closeOnClickOutside: false,
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';
@@ -163,6 +164,7 @@
             swal({
                 icon: 'error',
                 text: '".$responseText."',
+                closeOnClickOutside: false,
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

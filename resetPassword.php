@@ -90,6 +90,7 @@
                 swal({
                     icon: 'success',
                     text: 'Check your email for Reset Password link',
+                    closeOnClickOutside: false,
                 }).then(function(isConfirm) {
                     if (isConfirm) {
                         window.location.href = 'login';
@@ -102,6 +103,7 @@
                 swal({
                     icon: 'error',
                     text: 'Please Enter a valid email',
+                    closeOnClickOutside: false,
                 }).then(function(isConfirm) {
                     if (isConfirm) {
                         window.location.href = 'login';

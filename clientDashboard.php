@@ -47,7 +47,7 @@ $_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['wo
 $folderStatus = $con->query("select * from client_temp_folder where workspace_id = $wid");
 if($folderStatus->num_rows == 0){
 
-    function generateRandomFolderName($length = 10) {
+    function generateRandomFolderName($length = 20) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -57,7 +57,12 @@ if($folderStatus->num_rows == 0){
         return $randomString;
     }
     
-    $_SESSION['tempFolderName'] = generateRandomFolderName();
+    // $_SESSION['tempFolderName'] = generateRandomFolderName();
+    
+    // Hasing technique Blow-Fish to stop Brute Force
+    $salt = substr(md5(uniqid(rand(), true)), 0, 22);
+    $_SESSION['tempFolderName'] = substr(str_replace("/", rand(date('Y'), time()), hash('sha256',crypt(generateRandomFolderName(), $salt))), 0, 25);
+
     $con->query("insert into client_temp_folder(workspace_id, folder_name) values('$wid','".$_SESSION['tempFolderName']."')");
     shell_exec('mkdir view/'.$_SESSION['tempFolderName'].'/');
     shell_exec('chmod -R 777 view/'.$_SESSION['tempFolderName'].'/');
@@ -111,7 +116,6 @@ $_SESSION['breadcrumb'] = array();
             color: #525f7f;
         } */
         h2 {
-            margin: 5%;
             text-align: center;
             font-size: 2rem;
             font-weight: 100;
@@ -515,10 +519,10 @@ $_SESSION['breadcrumb'] = array();
                             <p>This only reflects the members in the currently open client file.</p>
                         </div>
                         <div id="help_3">
-                            <p>3. Client List: Will take you your main page with list of all clients allocated to you.</p>
+                            <p>3. Client list: Will take you to the main page where the list of all clients allocated to you is present.</p>
                         </div>
                         <div id="help_4">
-                            <p>4. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                            <p>4. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                         </div>
                         <div id="help_5">
                             <p>5. Diagnostics: Diagnostics report gives you a summary of all applicable work steps being signed off by preparer and reviewer.</p>
@@ -542,8 +546,8 @@ $_SESSION['breadcrumb'] = array();
         <footer class="sticky-footer">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
-                            <?php echo date("Y"); ?></strong></span>
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                    <?php echo date("Y"); ?></strong></span>
                 </div>
             </div>
         </footer>
@@ -848,6 +852,7 @@ $_SESSION['breadcrumb'] = array();
                             swal({
                                 icon: "success",
                                 text: "Thank You for Freezing",
+                                closeOnClickOutside: false,
                             }).then(function (isConfirm) {
                                 if (isConfirm) {
                                     window.location.href = <?php echo "'workspace?gid=".base64_encode(md5(trim($_SESSION['client_id'])))."&xid=".base64_encode(md5(trim($_SESSION['client_id'])))."&yid=".base64_encode(md5(trim($_SESSION['client_id'])))."&zid=".base64_encode(md5(trim($_SESSION['client_id'])))."&aid=".base64_encode(md5(trim($_SESSION['client_id'])))."&sid=".base64_encode(md5(trim($_SESSION['client_id'])))."&cid=".base64_encode(trim($_SESSION['client_id']))."'"?>;

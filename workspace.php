@@ -355,13 +355,13 @@ ini_set('display_startup_errors', 1);
                             <p> Only firm administrator can unlock a workspace once it’s been freeze by the audit team.</p>
                         </div>
                         <div id="help_2">
-                            <p>2. Client list: Will take you your main page with list of all clients allocated to you</p>
+                            <p>2. Client list: Will take you to the main page where the list of all clients allocated to you is present.</p>
                         </div>
                         <div id="help_3">
                             <p>3. Action: You can access the respective workspace using this button and enter the audit dashboard</p>
                         </div>
                         <div id="help_4">
-                            <p>4. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                            <p>4. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                         </div>
                         <div id="help_5">
                             <p>5. Settings – Your Settings are personalized based on your role in your firm and can be accessed at all times for chat, email and reaching out to a specialist for any help.</p> 
@@ -380,7 +380,7 @@ ini_set('display_startup_errors', 1);
         <footer class="sticky-footer">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
                     <?php echo date("Y"); ?></strong></span>
                 </div>
             </div>
@@ -624,6 +624,7 @@ ini_set('display_startup_errors', 1);
                 success: function(data){
                     if (data) {
                     swal({
+            closeOnClickOutside: false,
                         icon: "success",
                         text: "Workspace unlocked!",
                     }).then(function (isConfirm) {

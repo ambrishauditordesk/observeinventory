@@ -11,6 +11,7 @@
         $pass = md5(trim($_POST['password']));
         $tempPass = trim($_POST['password']);
         $role = trim($_POST['role']);
+
         // SignOff Init code
         $signOffArray = explode(' ',$name);
         $signOff = $signOffArray[0][0];
@@ -33,6 +34,7 @@
                 $signOff .='1';
             }
         }
+        
         $checkMail = checkDuplicateEmail($email);
         if($checkMail){
             $regDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");

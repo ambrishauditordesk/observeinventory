@@ -796,7 +796,7 @@
                                                                     if(isset($_SESSION['external']) && $_SESSION['external'] == 1){
                                                                         ?>
                                                                     <td>
-                                                                        <input type="file" name="file[<?php echo $query1['id']; ?>][]" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" multiple>
+                                                                        <input type="file" name="file[<?php echo $query1['id']; ?>][]" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb">
                                                                     </td>
                                                                     <?php
                                                                     }
@@ -883,6 +883,7 @@
                                     </div>
                                     <script>
                                          swal({
+                                            closeOnClickOutside: false,
                                             title: "Download the Excel Template",
                                             text: "No Trial Balance was there, so download the excel and then upload to that.",
                                             icon: "warning",
@@ -2224,10 +2225,10 @@
                                                                             <option value="Qualitative"  <?php if($row['type'] == "Qualitative") echo "selected"; ?>>Qualitative</option>
                                                                         </select>
                                                                     </td>
-                                                                    <td><input name="submitEstimate[name][]" type="text" value="<?php echo $row['nameEstimate']; ?>"></td>
-                                                                    <td><input name="submitEstimate[account][]" type="text" value="<?php echo $row['account']; ?>"></td>
-                                                                    <td><input name="submitEstimate[py][]" type="text" value="<?php echo numberToCurrency(trim($row['py'])); ?>"></td>
-                                                                    <td><input name="submitEstimate[cy][]" type="text" value="<?php echo numberToCurrency(trim($row['cy'])); ?>"></td>
+                                                                    <td><input name="submitEstimate[name][]" type="text" value="<?php echo $row['nameEstimate']; ?>" required></td>
+                                                                    <td><input name="submitEstimate[account][]" type="text" value="<?php echo $row['account']; ?>" required></td>
+                                                                    <td><input name="submitEstimate[py][]" type="text" value="<?php echo numberToCurrency(trim($row['py'])); ?>" required></td>
+                                                                    <td><input name="submitEstimate[cy][]" type="text" value="<?php echo numberToCurrency(trim($row['cy'])); ?>" required></td>
                                                                     <td>
                                                                     <select name="submitEstimate[c][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['c'] == "Low") echo "selected"; ?>>Low</option>
@@ -2690,7 +2691,7 @@
                                 </style>
                                 <br>
                                 <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
-                                <!-- <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a> -->
+                                <a id="financialStatementPdf" target="_blanc" href="bridgePdf"><button class="btn btn-primary">Print to PDF</button></a>
                                 <a id="financialStatementExcel" target="_blanc" href="bridgeExcel"><button class="btn btn-outline-primary">Export to Excel</button></a>
                                 <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
                                     <div class="card">
@@ -2876,7 +2877,7 @@
                             </style>
                             <br>
                             <a href="#" data-toggle="modal" data-target="#financialStatementChangeSequenceModal"><button class="btn btn-secondary">Change Sequence</button></a>
-                            <!-- <a id="financialStatementPdf" target="_blanc" href="financialStatementPdf"><button class="btn btn-primary">Print to PDF</button></a> -->
+                            <a id="financialStatementPdf" target="_blanc" href="auditedFinancialPdf"><button class="btn btn-primary">Print to PDF</button></a>
                             <a id="financialStatementExcel" target="_blanc" href="auditedFinancialExcel"><button class="btn btn-outline-primary">Export to Excel</button></a>
                             <div class="accordion mt-3" id="unauditedBalanceSheetAccordionExample">
                                 <div class="card">
@@ -3248,10 +3249,10 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_5">
-                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                                             </div>
                                             <div id="help_6">
                                                 <p>6. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
@@ -3264,8 +3265,8 @@
                                             </div>
                                             <div id="help_9">
                                                 <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
-                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
                                             </div>
                                             <?php
                                         }
@@ -3279,8 +3280,8 @@
                                             </div>
                                             <div id="help_3">
                                                 <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
-                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_4">
                                                 <p>4. Add program:<p> 
@@ -3290,10 +3291,10 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_5">
-                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                                             </div>
                                             <div id="help_6">
                                                 <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3325,10 +3326,10 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_4">
-                                                <p>4. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                                <p>4. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3363,7 +3364,7 @@
                                                 <p>4. Send Request: Once you click on send request a notification email will be sent to all client contacts containing information about yor new requested items.</p> 
                                             </div>
                                             <div id="help_5">
-                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                                             </div>
                                             <div id="help_6">
                                                 <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3385,7 +3386,7 @@
                                                 <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
                                             </div>
                                             <div id="help_2">
-                                                <p>2. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                                <p>2. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                                             </div>
                                             <div id="help_3">
                                                 <p>3. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3423,7 +3424,7 @@
                                                 <p>5. You can upload your own calculation or any relevant files to this work step</p> 
                                             </div>
                                             <div id="help_6">
-                                                <p>6. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                                <p>6. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                                             </div>
                                             <div id="help_7">
                                                 <p>7. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3510,7 +3511,7 @@
                                                 <p>Please note assets less liabilities should equal zero or assets should be equal to liabilities to save the workdone in the screen.</p>
                                             </div>
                                             <div id="help_7">
-                                                <p>7. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                                <p>7. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                                             </div>
                                             <div id="help_8">
                                                 <p>8. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3537,8 +3538,8 @@
                                             </div>
                                             <div id="help_3">
                                                 <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
-                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disables or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_4">
                                             <p>4. Add program:<p> 
@@ -3548,10 +3549,10 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to unable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_5">
-                                                <p>5. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p> 
+                                                <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                                             </div>
                                             <div id="help_6">
                                                 <p>6. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3574,10 +3575,10 @@
                                         elseif($prog_id == 2){
                                             ?>
                                             <div id="help_1">
-                                                <p> 1. List of accounts are automictically updated based on the information provided in Identify significant account screen. If you wish add any account to the list please add the account in “Identify significant account screen” under “Materiality and identify significant risk and accounts ” and select “YES” in the import. Any account marked as “No” in the import section will not appear in the account list.</p>
+                                                <p> 1. List of accounts are automictically updated based on the information provided in Identify significant account screen. If you wish to add any account to the list please add the account in “Identify significant account screen” under “Materiality and identify significant risk and accounts ” and select “YES” in the import. Any account marked as “No” in the import section will not appear in the account list.</p>
                                             </div>
                                             <div id="help_2">
-                                                <p>2. Profile: User profile reflects brief details about the user and can be edits by firm administrator.</p>
+                                                <p>2. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                                             </div>
                                             <div id="help_3">
                                                 <p>3. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
@@ -3610,11 +3611,12 @@
                 <footer class="sticky-footer">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span><strong><span style="color: #8E1C1C;">Audit-EDG </span>&copy;
+                            <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
                             <?php echo date("Y"); ?></strong></span>
                         </div>
                     </div>
                 </footer>
+
             </div>
         <?php 
             if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
@@ -3855,7 +3857,7 @@
                                         <div class="form-group">
                                             <label for="files">Upload Documents</label>
                                             <div class="form-group">
-                                                <input class="btn btn-upload" type="file" name="file[]" id="uploadedFile" multiple accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf, .xls, .xlxs">
+                                                <input class="btn btn-upload" type="file" name="file[]" id="uploadedFile" accept="application/msword, application/pdf, .doc, .docx, .pdf, .txt, .rtf, .xls, .xlxs">
                                             </div>
                                         </div>
                                         <div class="form-group"><label for="exfiles">Uploaded Files</label>
@@ -4574,6 +4576,7 @@
                 if(sumMisstatements != 0){
                     e.preventDefault();
                     swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "Sum should be ZERO!",
                     })
@@ -4591,6 +4594,7 @@
                 if(sumMisstatements != 0){
                     e.preventDefault();
                     swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "Sum should be ZERO!",
                     })
@@ -4610,6 +4614,7 @@
                         var obj = JSON.parse(response);
                         if (obj.status) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: obj.text,
                             }).then(function (isConfirm) {
@@ -4621,6 +4626,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: obj.text,
                             }).then(function (isConfirm) {
@@ -4651,6 +4657,7 @@
                     success: function (response) {
                         if (response) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: prog_name + " Added",
                             }).then(function (isConfirm) {
@@ -4662,6 +4669,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: "Failed!",
                             }).then(function (isConfirm) {
@@ -4693,6 +4701,7 @@
                     success: function (response) {
                         if (response) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: bspl_name + " Added",
                             }).then(function (isConfirm) {
@@ -4704,6 +4713,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: "Failed!",
                             }).then(function (isConfirm) {
@@ -4721,40 +4731,56 @@
             $('#addMethodSubmit').on('click', function (e) {
                 e.preventDefault();
                 var method_name = $("#method_name").val();
-                $.ajax({
-                    url: "addMethod.php",
-                    type: "POST",
-                    data: {
-                        prog_id: <?php echo $prog_id; ?>,
-                        wid: <?php echo $wid; ?>,
-                        name: method_name
-                    },
-                    success: function (response) {
-                        if (response) {
-                            swal({
-                                icon: "success",
-                                text: method_name + " Added",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
-                                }
-                            });
-                        } else {
-                            swal({
-                                icon: "error",
-                                text: "Failed!",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
-                                }
-                            });
+                if(method_name == ''){
+                    e.preventDefault();
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: "error",
+                        text: "All the fields are required!",
+                    }).then(function(isConfirm) {
+                        if(name == ''){
+                            $('#method_name').focus();
                         }
-                    }
-                });
+                    });
+                }
+                else{
+                    $.ajax({
+                        url: "addMethod.php",
+                        type: "POST",
+                        data: {
+                            prog_id: <?php echo $prog_id; ?>,
+                            wid: <?php echo $wid; ?>,
+                            name: method_name
+                        },
+                        success: function (response) {
+                            if (response) {
+                                swal({
+                                    closeOnClickOutside: false,
+                                    icon: "success",
+                                    text: method_name + " Added",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.href = window.location
+                                                .pathname +
+                                            "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                                    }
+                                });
+                            } else {
+                                swal({
+                                    closeOnClickOutside: false,
+                                    icon: "error",
+                                    text: "Failed!",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.href = window.location
+                                                .pathname +
+                                            "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             });
 
             $('#addAccountSubmit').on('click', function (e) {
@@ -4770,6 +4796,7 @@
                     success: function (response) {
                         if (response) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: "New Request" + " Added",
                             }).then(function (isConfirm) {
@@ -4779,6 +4806,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: "Failed!",
                             }).then(function (isConfirm) {
@@ -4806,6 +4834,7 @@
                         var obj = JSON.parse(response);
                         if (obj.status) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: obj.text,
                             }).then(function (isConfirm) {
@@ -4817,6 +4846,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: obj.text,
                             }).then(function (isConfirm) {
@@ -4844,6 +4874,7 @@
                         var obj = JSON.parse(response);
                         if (obj.status) {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "success",
                                 text: obj.text,
                             }).then(function (isConfirm) {
@@ -4855,6 +4886,7 @@
                             });
                         } else {
                             swal({
+            closeOnClickOutside: false,
                                 icon: "error",
                                 text: obj.text,
                             }).then(function (isConfirm) {
@@ -4875,6 +4907,7 @@
                 if(newComment == '' && fileCount == ''){
                     e.preventDefault();
                     swal({
+            closeOnClickOutside: false,
                         icon: 'success',
                         text: "No changes to be updated!",
                     });
@@ -4900,6 +4933,7 @@
                             text = 'Kindly save before sending invitation.';
                         }
                         swal({
+            closeOnClickOutside: false,
                             icon: obj.status == 1 ? 'success':'error',
                             text: text,
                         }).then(function (isConfirm) {
@@ -4945,6 +4979,7 @@
                         let responseText = data == 1?'Prepare Sign Off is deleted':'Prepare Sign Off not deleted'
                         data = data == 1?'success':'error'
                         swal({
+            closeOnClickOutside: false,
                                 icon: data,
                                 text: responseText,
                             }).then(function (isConfirm) {
@@ -4990,6 +5025,7 @@
                         let responseText = data == 1?'Review Sign Off is deleted':'Review Sign Off not deleted'
                         data = data == 1?'success':'error'
                         swal({
+            closeOnClickOutside: false,
                                 icon: data,
                                 text: responseText,
                             }).then(function (isConfirm) {
@@ -5015,6 +5051,7 @@
                         let responseText = data == 1?'Comment is deleted':'Comment not deleted'
                         data = data == 1?'success':'error'
                         swal({
+            closeOnClickOutside: false,
                             icon: data,
                             text: responseText,
                         }).then((value) => {
@@ -5037,6 +5074,7 @@
                         let responseText = data == 1?'File is deleted':'File not deleted'
                         data = data == 1?'success':'error'
                         swal({
+            closeOnClickOutside: false,
                                 icon: data,
                                 text: responseText,
                             }).then(function (isConfirm) {
@@ -5165,36 +5203,38 @@
             $('#addQuestionSubmit').on('click', function (e) {
                 e.preventDefault();
                 var question_name = $("#question_name").val();
-                $.ajax({
-                    url: "addInquiringManagementQuestionAjax.php",
-                    type: "POST",
-                    data: {
-                        wid: <?php echo $wid; ?>,
-                        name: question_name,
-                    },
-                    success: function (response) {
-                        if (response) {
-                            swal({
-                                icon: "success",
-                                text: "Successfully Added",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            swal({
-                                icon: "error",
-                                text: "Failed!",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    location.reload();
-                                }
-                            });
+                if(question_name != ''){
+                    $.ajax({
+                        url: "addInquiringManagementQuestionAjax.php",
+                        type: "POST",
+                        data: {
+                            wid: <?php echo $wid; ?>,
+                            name: question_name,
+                        },
+                        success: function (response) {
+                            if (response) {
+                                swal({
+                                    icon: "success",
+                                    text: "Successfully Added",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                swal({
+                                    icon: "error",
+                                    text: "Failed!",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            }
                         }
-                    }
-                });
-            });
+                    });
+                }
+            }); 
 
             //Validate Asset=Liability
             
@@ -5226,6 +5266,7 @@
                 if(assetSum != liabilitySum){
                     e.preventDefault()
                     swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "Assets and Liabilities are not matching",
                     });
@@ -5482,6 +5523,7 @@
                     let text = response == 1 ? "Report Saved Successfully" : "Report Did not Saved";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5506,6 +5548,7 @@
                     let text = response == 1 ? "Report Saved Successfully" : "Report Did not Saved";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5530,6 +5573,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Updated";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5554,6 +5598,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5578,6 +5623,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5602,6 +5648,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5626,6 +5673,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5650,6 +5698,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5739,6 +5788,7 @@
                 success: function (response) {
                     if (response) {
                         swal({
+            closeOnClickOutside: false,
                             icon: "success",
                             text: "Successfully Added",
                         }).then(function (isConfirm) {
@@ -5748,6 +5798,7 @@
                         });
                     } else {
                         swal({
+            closeOnClickOutside: false,
                             icon: "error",
                             text: "Failed!",
                         }).then(function (isConfirm) {
@@ -5775,6 +5826,7 @@
                 success: function (response) {
                     if (response) {
                         swal({
+            closeOnClickOutside: false,
                             icon: "success",
                             text: "Successfully Added",
                         }).then(function (isConfirm) {
@@ -5784,6 +5836,7 @@
                         });
                     } else {
                         swal({
+            closeOnClickOutside: false,
                             icon: "error",
                             text: "Failed!",
                         }).then(function (isConfirm) {
@@ -5950,6 +6003,7 @@
                     let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5974,6 +6028,7 @@
                     let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5998,6 +6053,7 @@
                     let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6022,6 +6078,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6046,6 +6103,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6070,6 +6128,7 @@
                     let text = response == "1" ? "Updated Successfully" : "Did not Update";
                     let icon = response == "1" ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6094,6 +6153,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6128,6 +6188,7 @@
                     let text = response == 1 ? "Deleted Successfully" : "Did not Delete";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6152,6 +6213,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6176,6 +6238,7 @@
                     let text = response == "1" ? "Updated Successfully" : "Did not Update";
                     let icon = response == "1" ? "success" : "error";
                     swal({
+            closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -6222,6 +6285,7 @@
                     $("#financialStatementChangeSequenceModal").modal("hide");
                     response = JSON.parse(response);
                     swal({
+            closeOnClickOutside: false,
                         icon: response['status'] == 1? 'success':'error',
                         text: response['text'],
                     }).then(function (isConfirm) {
@@ -7651,6 +7715,7 @@
                     }
                     else{
                         swal({
+            closeOnClickOutside: false,
                             icon: 'error',
                             text: 'File not found',
                         }).then(function (isConfirm) {

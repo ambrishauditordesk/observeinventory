@@ -155,6 +155,43 @@ $htmlContent .= '
             <td>&nbsp;</td>
          </tr>';
        }
-       $htmlContent .= '</tbody></table></div>';
+       $htmlContent .= '</tbody></table></div><br>';
+
+       $htmlContent .= 
+       '<div">
+         <div>
+            <table style="border:1px #fff;">
+               <tr>
+                  <td>Place:egnrgjngrjnjnrjkbngij</td>
+                  <td>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</td>
+                  <td>ABC- ofvmflkvjnrfjvnkgj</td>
+               </tr>
+               <tr>
+                  <td>Date:12/23/4566</td>
+                  <td>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</td>
+                  <td>Chattered Accountant</td>
+               </tr>
+               <tr>
+                  <td>UDIN:123242450407534594375934</td>
+                  <td>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</td>
+                  <td>ABC-245425424555235243</td>
+               </tr>
+            </table>
+         </div><br>
+         <div style="text-align:center;">
+            <table style="border:1px #fff;">
+               <tr>
+                  <td style="text-align:center;">kjfnkjngejfngfdgfd fvgfg</td>
+                  <td style="text-align:center;">Nafgfefgefme fvefgvrtefv</td>
+                  <td style="text-align:center;">efgvefgfvefvefv gbgrfvrvef</td>
+               </tr>
+               <tr>
+                  <td style="text-align:center;">fpgefgjefjv</td>
+                  <td style="text-align:center;">Positfkjgnekjfion</td>
+                  <td style="text-align:center;">Positfoignefjgnion</td>
+               </tr>
+            </table>
+         </div>
+       </div>';
 $htd->createDoc($htmlContent, "Financial Statement.doc", 1);
 ?>

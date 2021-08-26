@@ -184,7 +184,7 @@
             <div class="container-fluid shadow border border-bottom" stickylevel="0" style="z-index:1200;">
                 <div class="row pt-1">
                     <!-- <div class="col-md-3"> -->
-                        <!-- <img class="float-left" src="../vendor/img/audit-edge-logo.svg" style="height:45px;"> -->
+                        <!-- <img class="float-left" src="../vendor/img/Auditors Deske-logo.svg" style="height:45px;"> -->
                         <!-- <div class="ml-2 font-1 h3 py-1 d-inline-block float-left"></div> -->
                     <!-- </div> -->
                     <div class="col-md-12 text-center font-2 getContent" href="#">
@@ -280,6 +280,17 @@
             </div>
         </div>
 
+        <!-- Footer -->
+        <footer class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                    <?php echo date("Y"); ?></strong></span>
+                </div>
+            </div>
+        </footer>
+
+
         <!-- Register a Member Form -->
         <div class="modal fade" id="registerMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -348,7 +359,6 @@
                             <div class="form-group ">
                                 <label for="name">Status</label>
                                 <select name="active" id="active1" class="form-control">
-                                    <option value="">Select Status</option>
                                     <option value="0">Access Denied</option>
                                     <option value="1">Allowed</option>
                                 </select>
@@ -541,6 +551,7 @@
             success: function(data) {
                 if (data) {
                     swal({
+            closeOnClickOutside: false,
                         icon: "success",
                         text: "Updated",
                     }).then(function(isConfirm) {
@@ -550,6 +561,7 @@
                     });
                 } else {
                     swal({
+            closeOnClickOutside: false,
                         icon: "error",
                         text: "Failed!",
                     }).then(function(isConfirm) {
@@ -583,6 +595,7 @@
     //         success: function(response) {
     //             if (response) {
     //                 swal({
+            // closeOnClickOutside: false,
     //                     icon: "success",
     //                     text: name + " Added",
     //                 }).then(function(isConfirm) {
@@ -592,6 +605,7 @@
     //                 });
     //             } else {
     //                 swal({
+            // closeOnClickOutside: false,
     //                     icon: "error",
     //                     text: "Already Exists!",
     //                 }).then(function(isConfirm) {
