@@ -380,12 +380,8 @@ error_reporting(E_ALL);
                                 <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="yourfirmaudit@gmail.com" readonly>
                             </div>
                             <div class="form-group">
-                                <label class="d-block text-danger">24/7 online chat assistance</label>
-                                <input type="text" class="form-control" id="chat" aria-describedby="chatHelp" readonly>
-                            </div>
-                            <div class="form-group">
                                 <label class="d-block text-danger">24/7 Help Desk Number</label>
-                                <input type="text" class="form-control" id="24Number" aria-describedby="24NumberHelp" value="1800-800-6969" readonly>
+                                <input type="text" class="form-control" id="24Number" aria-describedby="24NumberHelp" value="+91 9971130410" readonly>
                             </div>
                             <!-- <button class="btn btn-danger" type="button">Delete Account</button> -->
                         </form>

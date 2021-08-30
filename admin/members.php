@@ -541,7 +541,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div id="help_1">
-                            <p>1. Total members: Reflects the count of your firm members that are actively added your firm software.</p>
+                            <p>1. Total members: Reflects the count of your firm members that are actively added to your firm software.</p>
                         </div>
                         <div id="help_2">
                             <p>2. Register: Use register button to add new team members to your firm, once you register a member you can allocate clients.</p>
@@ -1164,40 +1164,66 @@
             }
             else{
                 ?>
-                 $.ajax({
-                    url: "addMember.php",
-                    type: "POST",
-                    data: {
-                        name: name,
-                        email: email,
-                        password: password,
-                        role:role
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        if (response == 1) {
-                            swal({
-            closeOnClickOutside: false,
-                                icon: "success",
-                                text: name + " Added",
-                            }).then(function(isConfirm) {
-                                if (isConfirm) {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            swal({
-            closeOnClickOutside: false,
-                                icon: "error",
-                                text: "Already Exists!",
-                            }).then(function(isConfirm) {
-                                if (isConfirm) {
-                                    location.reload();
-                                }
-                            });
+                if(name == '' || email == '' || password == '' || role == ''){
+                    e.preventDefault();
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: "error",
+                        text: "All the fields are required!",
+                    }).then(function(isConfirm) {
+                        if(name == ''){
+                            $('#name').focus();
                         }
-                    }
-                });
+                        else if(email == ''){
+                            $('#email').focus();
+                        }
+                        else if(password == ''){
+                            $('#password').focus();
+                        }
+                        else if(role == ''){
+                            $('#role').focus();
+                        }
+                        else{
+                            $('#firm_id').focus();
+                        }
+                    });
+                }
+                else{
+                    $.ajax({
+                        url: "addMember.php",
+                        type: "POST",
+                        data: {
+                            name: name,
+                            email: email,
+                            password: password,
+                            role:role
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if (response == 1) {
+                                swal({
+                                    closeOnClickOutside: false,
+                                    icon: "success",
+                                    text: name + " Added",
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                swal({
+                                    closeOnClickOutside: false,
+                                    icon: "error",
+                                    text: "Already Exists!",
+                                }).then(function(isConfirm) {
+                                    if (isConfirm) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
                 <?php
             }
         ?>

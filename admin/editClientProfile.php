@@ -41,52 +41,52 @@ $ser = $_SERVER['HTTP_REFERER'];
 
 $addedById = trim($_POST['id']);
 
-// Getting the CST Time
-$addedByDate = trim($_POST['date']);
+// // Getting the CST Time
+// $addedByDate = trim($_POST['date']);
 
 $uploadOk = 1;
 
-// Name
-$name = trim($_POST['clientname']);
+// // Name
+// $name = trim($_POST['clientname']);
 
-//Nickname
-$nickName = trim($_POST['nickname']);
+// //Nickname
+// $nickName = trim($_POST['nickname']);
 
-//Date
-$date = trim($_POST['dob']);
+// //Date
+// $date = trim($_POST['dob']);
 
-//Constitution
-$const = trim($_POST['constitution']);
+// //Constitution
+// $const = trim($_POST['constitution']);
 
-//Industry
-$industry = trim($_POST['industry']);
+// //Industry
+// $industry = trim($_POST['industry']);
 
-//Address
-$add = trim($_POST['add']);
+// //Address
+// $add = trim($_POST['add']);
 
-//City
-$city = trim($_POST['city']);
+// //City
+// $city = trim($_POST['city']);
 
-//State
-$state = trim($_POST['state']);
+// //State
+// $state = trim($_POST['state']);
 
-//Pincode
-$pin = trim($_POST['pincode']);
+// //Pincode
+// $pin = trim($_POST['pincode']);
 
-//Country
-$country = trim($_POST['country']);
+// //Country
+// $country = trim($_POST['country']);
 
-//PAN
-$pan = trim($_POST['pan']);
+// //PAN
+// $pan = trim($_POST['pan']);
 
-//GST
-$gst = trim($_POST['gst']);
+// //GST
+// $gst = trim($_POST['gst']);
 
-//TAN
-$tan = trim($_POST['tan']);
+// //TAN
+// $tan = trim($_POST['tan']);
 
-//CIN
-$cin = trim($_POST['cin']);
+// //CIN
+// $cin = trim($_POST['cin']);
 
 $clientID = trim($_POST['cid']);
 
@@ -94,7 +94,7 @@ $active = trim($_POST['active']);
 
 if($uploadOk){
 
-    $con->query("update client set active='$active',added_by_id='$addedById',added_by_date='$addedByDate',name='$name',nickname='$nickName',incorp_date='$date',const_id='$const',industry_id='$industry',address='$add',city='$city',state='$state',pincode='$pin',country='$country',pan='$pan',gst='$gst',tan='$tan',cin='$cin' where id='$clientID'");
+    $con->query("update client set active='$active' where id='$clientID'");
 
     echo "<script>
             swal({

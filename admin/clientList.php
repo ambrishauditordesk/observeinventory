@@ -388,11 +388,7 @@
                                 </div>
                             <?php
                                 }
-                            ?>
-                            <div class="form-group ">
-                                <label for="name">Nick Name</label>
-                                <input type="text" class="form-control" maxlength="99" name="nickname">
-                            </div>
+                            ?>  
                             <div class="form-group ">
                                 <label for="name">Date of Incorporation/ Birth</label>
                                 <input type="date" class="form-control" name="dob" required>
@@ -512,7 +508,7 @@
                         <div class="modal-footer">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
                             <input class="btn btn-warning" type="reset" value="Reset">
-                            <input class="btn btn-primary" type="submit" value="Done">
+                            <input class="btn btn-primary" id="addClientSubmit" type="submit" value="Done">
                         </div>
                     </form>
                 </div>
@@ -553,7 +549,7 @@
                             </div>
                             <div class="form-group ">
                                 <label for="country">Constitution</label>
-                                <select class="form-control" id="constitution" name="constitution" readonly>
+                                <select class="form-control" id="constitution" name="constitution" disabled>
                                     <option>Select Constitution !</option>
                                         <?php
                                             $consQuery = $con->query("select * from constitution");
@@ -567,7 +563,7 @@
                             </div>
                             <div class="form-group ">
                                 <label for="country">Industry</label>
-                                <select class="form-control" id="industry" name="industry" readonly>
+                                <select class="form-control" id="industry" name="industry" disabled>
                                     <option>Select Industry !</option>
                                     <?php
                                                     $indusQuery = $con->query("select * from industry");
@@ -642,11 +638,12 @@
                         <div class="modal-footer  d-flex align-items-center justify-content-center">
                             <!-- <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button> -->
                             <?php
-                                if($_SESSION['role'] < 3)
+                                if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 || $_SESSION['role'] == 4)
                                 {
                             ?>
                             <input class="btn btn-warning" type="reset" value="Reset">
-                            <input class="btn btn-primary" type="submit" value="Done">
+                            <input class="btn btn-primary" type="submit" value="Done">`
+                            
                             <?php 
                                 }
                             ?>
@@ -832,6 +829,19 @@
     $(document).ready(function() {
 
         get_data();
+
+        $('#addClientSubmit').on('submit', function (e) {
+            if ($('#panCheck').val().length < 10){
+                e.preventDefault();
+                swal({
+                    closeOnClickOutside: false,
+                    icon: "error",
+                    text: "PAN Number invalid!",
+                }).then(function(isConfirm) {
+                    $('#panCheck').val('');
+                });
+            }
+        });
 
         $("#helpDescription > div > div > .close").click(function(e){
             $(".helpDesign, #helpDescription").toggle();
@@ -1135,7 +1145,7 @@
         if ($(this).val().length == 10){
             if (!panRegex.test($(this).val().toUpperCase())){
                 swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: "error",
                         text: "PAN Number invalid!",
                     }).then(function(isConfirm) {
@@ -1148,7 +1158,7 @@
         if ($('#panCheck').val().length == 10){
             if (!panRegex.test($('#panCheck').val().toUpperCase())){
                 swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: "error",
                         text: "PAN Number invalid!",
                     }).then(function(isConfirm) {

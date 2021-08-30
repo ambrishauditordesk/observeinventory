@@ -673,7 +673,7 @@
                                             <?php
                                         // }
                                     ?>
-                                    <input type="submit" id="validateSubmit" class="btn btn-success align-middle" value="Save Details"> 
+                                    <input type="submit" id="validateSubmit" class="btn btn-success align-middle" value="Save"> 
                                 </div>
                             </form>
 
@@ -851,14 +851,21 @@
                                                 <label class="mt-2"><span class="helpDesign help_3">3</span></label>
                                             <?php 
                                                 } 
+                                                $checkAccountsLog = $con->query("select accounts_id from accounts_log where workspace_id = $wid");
+                                                if($checkAccountsLog->num_rows > 0){
                                             ?>
-                                            <input type="submit" class="btn btn-success align-middle" value="Save"> &nbsp;
+                                                <input type="submit" class="btn btn-success align-middle" value="Save"> &nbsp;
                                             <?php 
+                                                }
                                             if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
                                                 ?>
                                                 <label class="mt-2"><span class="helpDesign help_4">4</span></label>
+                                                <?php
+                                                    $checkAccountsLog = $con->query("select accounts_id from accounts_log where workspace_id = $wid");
+                                                    if($checkAccountsLog->num_rows > 0){
+                                                ?>
                                                 <input id="sendInvitation" type="button" class="btn bg-violet align-middle" value="Send Request">
-                                            <?php } ?>
+                                            <?php }} ?>
                                         </div>
                                     </form>
                                 </div>
@@ -1078,7 +1085,7 @@
                                     </ul>
                                 </div>
                                 <div class="row d-flex justify-content-center">
-                                    <input type="submit" class="btn btn-success align-middle" value="Submit">
+                                    <input type="submit" class="btn btn-success align-middle" value="Save">
                                 </div>
                             </form>
                             <?php
@@ -3797,7 +3804,6 @@
                             <div class="form-group">
                                 <label for="name">Account Name</label>
                                 <select class="form-control" name="account" id="account" required>
-                                    <option>Select Account !</option>
                                         <?php
                                             $accQuery = $con->query("select * from accounts order by account ASC");
                                             while ($accResult = $accQuery->fetch_assoc()) {
@@ -4796,7 +4802,7 @@
                     success: function (response) {
                         if (response) {
                             swal({
-            closeOnClickOutside: false,
+                                closeOnClickOutside: false,
                                 icon: "success",
                                 text: "New Request" + " Added",
                             }).then(function (isConfirm) {
@@ -4806,7 +4812,7 @@
                             });
                         } else {
                             swal({
-            closeOnClickOutside: false,
+                                closeOnClickOutside: false,
                                 icon: "error",
                                 text: "Failed!",
                             }).then(function (isConfirm) {

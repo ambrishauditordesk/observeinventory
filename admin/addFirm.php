@@ -108,7 +108,9 @@ else{
 
         customMailer($email,$msg,$sub);
     }
-    $flag = 2;
+    else{
+        $flag = 2;
+    }
 
     if($flag == 1){
     echo "<script>

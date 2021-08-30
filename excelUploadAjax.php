@@ -87,6 +87,8 @@ for($i = 1; $i < $totalCount; $i++){
                 $updatedData.= '<strong>Record created:- </strong><br>Recorded created <br> Row No:- '.$i."<br>";
                 $flag = 1;
                 $successCount++;
+                $con->query("update workspace_log set status = 1 where program_id = 245 and workspace_id = $wid");
+                $con->query("update workspace_log set status = 1 where program_id = 395 and workspace_id = $wid");
             }
             else{
                 $errorMessage.="<br>Data is invalid.";

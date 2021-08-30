@@ -137,10 +137,7 @@ else{
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5>Hey <?php echo $_SESSION['name']; ?>!</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <h5>Hey <?php echo $_SESSION['name']; ?>!</h5>
             </div>
             <div class="modal-body">Successfully added Workspace</div>
             <div class="modal-footer">
@@ -155,9 +152,7 @@ else{
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <h5>Hey <?php echo $_SESSION['name']; ?>!</h5>
             </div>
             <div class="modal-body">
                 <?php
@@ -189,5 +184,10 @@ else{
         </div>
     </div>
 </div> 
+
+<script>
+    $('#successModal').modal({backdrop: 'static', keyboard: false})  
+    $('#unsuccessModal').modal({backdrop: 'static', keyboard: false})  
+</script>
 
 

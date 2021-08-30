@@ -80,7 +80,7 @@
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Inquiring Managements New entery done')");
         // $con->query("update workspace_log set status='1' where program_id='258' and workspace_id='$wid'");
     }
-           
+        
     if($filePresent && $allowFileUpload){
         $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
         if($sizeCheck->num_rows > 0){   

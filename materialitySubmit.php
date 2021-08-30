@@ -80,8 +80,6 @@
                         }
                     }
                     $name = trim($new." ".$date." .".end($str));;
-                    // $tmp_name = $fileName['file']['tmp_name'];
-                    // $name = explode(".", $_FILES['file']['name'])[0]."_$submat_id.".explode(".", $_FILES['file']['name'])[1];
                     $tmp_name = $_FILES['file']['tmp_name'];
                     $path = $_SESSION['upload_file_location'];
                     $size = ($_FILES['file']['size']/1000);
@@ -90,7 +88,7 @@
                     $errorText = 'Either the file is not allowed or it is malicious.';
                 }
             }
-        }
+        }       
 
         foreach ($_POST['materialityData']['sLow'] as $data) {
             $sLow[] = $data;
@@ -131,7 +129,7 @@
         if($filePresent && $allowFileUpload){
             // $con->query("insert into materiality_files(fname,submat_id,workspace_id,status,deletedDate) values ('$name','$submat_id','$wid','0','')");
             $sizeCheck = $con->query("select storage,storage_used from firm_details where id=".$_SESSION['firm_id']);
-            if($sizeCheck->num_rows > 0){   
+            if($sizeCheck->num_rows > 0){
                 $result = $sizeCheck->fetch_assoc();
                 if(($size + $result['storage_used']) < $result['storage']){
                     $updatedSize = $result['storage_used'] + $size;

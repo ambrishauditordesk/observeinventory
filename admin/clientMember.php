@@ -168,10 +168,10 @@
                             <img class="sidenav-icon" src="../Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
                         </a>
                     </div>
-                    <div class="settings-items">
+                    <!-- <div class="settings-items">
                         <img class="sidenav-icon" src="../Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
-                        <span style="color:#0056b3;">Help</span>
-                    </div>
+                        <span style="color:#4e73df;">Help</span>
+                    </div> -->
                 </div>
                 <a href="../logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
             </div>

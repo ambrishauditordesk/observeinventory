@@ -154,7 +154,7 @@
         $text = $commentText;
     if($fileText != ''){
         if($commentText != '')
-            $text .= ','. $fileText;
+            $text .= ', '. $fileText;
         else
             $text = $fileText;
     }
