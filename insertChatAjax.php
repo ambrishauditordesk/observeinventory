@@ -3,7 +3,7 @@ include 'dbconnection.php';
 
 
 function checkFileAllowedExt($filename){
-    $allowed = array('jpeg', 'jpg', 'png', 'pdf');
+    $allowed = array('jpeg', 'jpg', 'png', 'pdf', '.gif');
     $data = 1;
     if(sizeof(explode('.', $filename)) != 2){
         $data = 0;
@@ -30,8 +30,8 @@ $text = trim($_POST['chatText']);
 
 if(!empty($_FILES['file']['name'])){
     $filePresent = 1;
-    if(!empty($_FILES['file']['name'][0])){
-        $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'][0],$_FILES['file']['tmp_name'][0]);
+    if(!empty($_FILES['file']['name'])){
+        $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'],$_FILES['file']['tmp_name']);
         if($allowFileUpload){
             $fileName = array();
             $str = explode(".", $_FILES['file']['name']);

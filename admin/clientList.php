@@ -1,4 +1,4 @@
- <?php
+<?php
  ini_set('display_errors', 1);
  ini_set('display_startup_errors', 1);
  error_reporting(E_ALL);
@@ -391,7 +391,7 @@
                             ?>  
                             <div class="form-group ">
                                 <label for="name">Date of Incorporation/ Birth</label>
-                                <input type="date" class="form-control" name="dob" required>
+                                <input type="date" class="form-control" min='1970-01-01' max='<?php echo Date('Y-m-d'); ?>' name="dob" required>
                             </div>
                             <div class="form-group ">
                                 <label for="country">Constitution</label>
@@ -441,7 +441,7 @@
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pincode</label>
-                                <input type="text" class="form-control" name="pincode" maxlength="7" required>
+                                <input type="text" class="form-control" pattern="[0-9]{6}" name="pincode" maxlength="6" required>
                             </div>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
@@ -830,19 +830,6 @@
 
         get_data();
 
-        $('#addClientSubmit').on('submit', function (e) {
-            if ($('#panCheck').val().length < 10){
-                e.preventDefault();
-                swal({
-                    closeOnClickOutside: false,
-                    icon: "error",
-                    text: "PAN Number invalid!",
-                }).then(function(isConfirm) {
-                    $('#panCheck').val('');
-                });
-            }
-        });
-
         $("#helpDescription > div > div > .close").click(function(e){
             $(".helpDesign, #helpDescription").toggle();
         });
@@ -1134,8 +1121,100 @@
                                 $('#firm_id').focus();
                             });
                         }
+
+                        if ($('#panCheck').val().length != 10){
+                            event.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "PAN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#panCheck').val('');
+                            });
+                        }
+
+                        if ($('#tanCheck').val().length != 10){
+                            event.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "TAN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#tanCheck').val('');
+                            });
+                        }
+
+                        if ($('#gstCheck').val().length != 15){
+                            event.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "GST Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#gstCheck').val('');
+                            });
+                        }
+
+                        if ($('#cinCheck').val().length != 21){
+                            event.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "CIN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#cinCheck').val('');
+                            });
+                        }
                     });
                 <?php 
+            }
+            else{
+                ?>
+                    $('#addClientSubmit').on('submit', function (e) {
+                        if ($('#panCheck').val().length != 10){
+                            e.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "PAN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#panCheck').val('');
+                            });
+                        }
+                        if ($('#tanCheck').val().length != 10){
+                            e.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "TAN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#tanCheck').val('');
+                            });
+                        }
+
+                        if ($('#gstCheck').val().length != 15){
+                            e.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "GST Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#gstCheck').val('');
+                            });
+                        }
+
+                        if ($('#cinCheck').val().length != 21){
+                            e.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "CIN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#cinCheck').val('');
+                            });
+                        }
+                    });
+                <?php
             }
         ?>
     });

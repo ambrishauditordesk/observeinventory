@@ -398,12 +398,12 @@ error_reporting(E_ALL);
 
                                     </div> <!-- end chat-history -->
 
-                                    <form id="chatForm">
+                                    <form id="chatForm" enctype="multipart/form-data">
                                         <input type="hidden" id="user_id" name="user_id">
                                         <input type="text" placeholder="Enter Your Queries" id="chatText" name="chatText" autofocus>&nbsp;
                                         <div class="image_upload">
                                             <label for="file"><i class="far fa-2x fa-images pl-3 pt-1"></i></label>
-                                            <input type="file" name="file" id="file" accept=".jpg, .png" />
+                                            <input type="file" name="file" id="file" accept=".jpg, .png, .jpeg, .gif, .pdf" />
                                         </div>
                                         <input class="btn btn-outline-dark ml-2" type="submit" value="Send">
                                     </form>

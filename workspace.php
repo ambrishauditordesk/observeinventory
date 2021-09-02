@@ -404,13 +404,13 @@ ini_set('display_startup_errors', 1);
                                 <div class="col-md-6">
                                     <div class="form-group ">
                                         <label for="name">From</label>
-                                        <input type="date" class="form-control" name="from" required>
+                                        <input type="date" class="form-control" min='1970-01-01' max='2100-12-12' name="from" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group ">
                                         <label for="name">To</label>
-                                        <input type="date" class="form-control" name="to" required>
+                                        <input type="date" class="form-control" min='1970-01-01' max='2100-12-12' name="to" required>
                                     </div>
                                 </div>
                             </div>

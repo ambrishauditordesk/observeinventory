@@ -65,28 +65,26 @@
         //var_dump($_FILES);
         if(!empty($_FILES['file']['name'])){
             $filePresent = 1;
-            if(!empty($_FILES['file']['name'][0])){
-                $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'][0],$_FILES['file']['tmp_name'][0]);
-                if($allowFileUpload){
-                    $fileName = array();
-                    $str = explode(".", $_FILES['file']['name']);
-                    $new= '';
-                    for($j = 0; $j<sizeof($str)-1; $j++){
-                        if($new == ''){
-                            $new .= $str[$j];
-                        }
-                        else{
-                            $new .= ".".$str[$j];
-                        }
+            $allowFileUpload = checkFileAllowedExt($_FILES['file']['name'],$_FILES['file']['tmp_name']);
+            if($allowFileUpload){
+                $fileName = array();
+                $str = explode(".", $_FILES['file']['name']);
+                $new= '';
+                for($j = 0; $j<sizeof($str)-1; $j++){
+                    if($new == ''){
+                        $new .= $str[$j];
                     }
-                    $name = trim($new." ".$date." .".end($str));;
-                    $tmp_name = $_FILES['file']['tmp_name'];
-                    $path = $_SESSION['upload_file_location'];
-                    $size = ($_FILES['file']['size']/1000);
+                    else{
+                        $new .= ".".$str[$j];
+                    }
                 }
-                else{
-                    $errorText = 'Either the file is not allowed or it is malicious.';
-                }
+                $name = trim($new." ".$date." .".end($str));;
+                $tmp_name = $_FILES['file']['tmp_name'];
+                $path = $_SESSION['upload_file_location'];
+                $size = ($_FILES['file']['size']/1000);
+            }
+            else{
+                $errorText = 'Either the file is not allowed or it is malicious.';
             }
         }       
 

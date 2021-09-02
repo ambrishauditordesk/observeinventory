@@ -17,10 +17,11 @@ function checkFileAllowedExt($filename,$tmp_name){
          $data = 0;
       }
    }
-   if($data){
-      $scanFile = scanFile($tmp_name);
-   }
-   return ($scanFile == 0 && $data == 1) ? 1 : 0;
+   // if($data){
+   //    $scanFile = scanFile($tmp_name);
+   // }
+   // return ($scanFile == 0 && $data == 1) ? 1 : 0;
+   return $data;
 
 }
 

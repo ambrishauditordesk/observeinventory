@@ -216,7 +216,7 @@
                                                 echo "<label class=' mt-2'><span class='helpDesign help_6'>6</span></label>";
                                             }
                                             elseif($prog_id == 245){
-                                                echo "<label class=' mt-2'><span class='helpDesign help_5'>5</span></label>";
+                                                echo "<label class=' mt-2'><span class='helpDesign help_4'>4</span></label>";
                                             }
                                             elseif($prog_id == 12 || $prog_id == 2){
                                                 echo "<label class=' mt-2'><span class='helpDesign help_3'>3</span></label>";
@@ -263,7 +263,7 @@
                                 echo "<span class='helpDesign help_10'>10</span>";
                             }
                             elseif($prog_id == 245){
-                                echo "<span class='helpDesign help_7'>7</span>";
+                                echo "<span class='helpDesign help_6'>6</span>";
                             }
                         ?></label>
                     </div>
@@ -302,7 +302,7 @@
                             echo "<span class='helpDesign help_11'>11</span>";
                         }
                         elseif($prog_id == 245){
-                            echo "<span class='helpDesign help_8'>8</span>";
+                            echo "<span class='helpDesign help_7'>7</span>";
                         }
                     ?></label>
                 </div>
@@ -320,7 +320,7 @@
                     if($prog_id == 1 || $prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 247 || $prog_id == 262 || $prog_id == 266 || $prog_id == 19){
                         echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_4'>4</span></label>";
                     } 
-                    elseif($prog_id == 245){
+                    if($prog_id == 245){
                         echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_3'>3</span></label>";
                     }
                     if($prog_id != '245'){
@@ -350,7 +350,7 @@
                         <?php
                     }
                     elseif($prog_id == 245){
-                        echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_4'>4</span></label>";
+                        echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_3'>3</span></label>";
                     }
                     elseif($prog_id == 230){
                         echo "<label class='d-flex justify-content-center align-items-center mt-2'><span class='helpDesign help_6'>6</span></label>";
@@ -452,7 +452,7 @@
                                     echo "<label><span class='helpDesign help_7'>7</span></label>";
                                 }
                                 elseif($prog_id == 245){
-                                    echo "<label><span class='helpDesign help_6'>6</span></label>";
+                                    echo "<label><span class='helpDesign help_5'>5</span></label>";
                                 }
                                 elseif($prog_id == 12 || $prog_id == 2){
                                     echo "<label><span class='helpDesign help_4'>4</span></label>";
@@ -907,7 +907,9 @@
                             else{
                             ?>
                                 <div class="col-md-12 text-center p-top d-flex justify-content-center">
+                                    <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                                     <button class="btn btn-success" data-target="#addExcelModal" data-toggle="modal">Upload Excel</button>&nbsp;
+                                    <label class="mt-2"><span class="helpDesign help_2">2</span></label>
                                     <a class="btn bg-violet" target="_blank" href="tbTemplate">
                                         <span>Download Template</span>
                                     </a>
@@ -3326,29 +3328,19 @@
                                                 <p>2. You can download the instruction template later on for future upload using download template feature.</p>
                                             </div>
                                             <div id="help_3">
-                                                <p>3. Add program:<p> 
-                                                <p><b>Add a Programs:</b></p>
-                                                <p>Click on the “Add program” icon on the top right corner. Now you can use Add program as main task folder and add sub steps within a program. Now you can add Name of the program that you wish to add and select “Add as program” from the program type dropdown. Then click Done.</p>
-                                                <p>Note audit program will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add a program”, a new program will be added on Planning section only. <b>An audit program once created cannot be deleted.</b></p>
-                                                <p><b>Add a Step:</b></p>
-                                                <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
-                                                <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>3. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
                                             </div>
                                             <div id="help_4">
-                                                <p>4. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
+                                                <p>4. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
                                             </div>
                                             <div id="help_5">
-                                                <p>5. Quicklinks – You can access any audit pillar any time using the quick link options. It helps you easily navigate between different section of the program.</p>
+                                                <p>5. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
                                             </div>
                                             <div id="help_6">
-                                                <p>6. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
+                                                <p>6. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
                                             </div>
                                             <div id="help_7">
-                                                <p>7. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                                            </div>
-                                            <div id="help_8">
-                                                <p>8. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                                <p>7. Log out- Simply use this button to log out of your firm workspace and client list.</p>
                                             </div>
                                             <?php
                                         }
@@ -5284,7 +5276,7 @@
                     "destroy": true,
                     "processing": true,
                     "serverSide": true,
-                    "searching": true,
+                    "searching": false,
                     "order": [],
                     "bInfo": false,
                     "drawCallback": function(settings) {
@@ -5782,77 +5774,81 @@
         $('#addProcedureASubmit').on('click', function (e) {
             e.preventDefault();
             var procedure_name = $("#procedure_a_name").val();
-            $.ajax({
-                url: "goingConcernAjax.php",
-                type: "POST",
-                data: {
-                    wid: <?php echo $wid; ?>,
-                    name: procedure_name,
-                    part_name: 'A',
-                    status: '0'
-                },
-                success: function (response) {
-                    if (response) {
-                        swal({
-            closeOnClickOutside: false,
-                            icon: "success",
-                            text: "Successfully Added",
-                        }).then(function (isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        swal({
-            closeOnClickOutside: false,
-                            icon: "error",
-                            text: "Failed!",
-                        }).then(function (isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
+            if(procedure_name != ''){
+                $.ajax({
+                    url: "goingConcernAjax.php",
+                    type: "POST",
+                    data: {
+                        wid: <?php echo $wid; ?>,
+                        name: procedure_name,
+                        part_name: 'A',
+                        status: '0'
+                    },
+                    success: function (response) {
+                        if (response) {
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "success",
+                                text: "Successfully Added",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "Failed!",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
         $('#addProcedureBSubmit').on('click', function (e) {
             e.preventDefault();
             var procedure_name = $("#procedure_b_name").val();
-            $.ajax({
-                url: "goingConcernAjax.php",
-                type: "POST",
-                data: {
-                    wid: <?php echo $wid; ?>,
-                    name: procedure_name,
-                    part_name: 'B',
-                    status: '0'
-                },
-                success: function (response) {
-                    if (response) {
-                        swal({
-            closeOnClickOutside: false,
-                            icon: "success",
-                            text: "Successfully Added",
-                        }).then(function (isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        swal({
-            closeOnClickOutside: false,
-                            icon: "error",
-                            text: "Failed!",
-                        }).then(function (isConfirm) {
-                            if (isConfirm) {
-                                location.reload();
-                            }
-                        });
+            if(procedure_name != ''){
+                $.ajax({
+                    url: "goingConcernAjax.php",
+                    type: "POST",
+                    data: {
+                        wid: <?php echo $wid; ?>,
+                        name: procedure_name,
+                        part_name: 'B',
+                        status: '0'
+                    },
+                    success: function (response) {
+                        if (response) {
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "success",
+                                text: "Successfully Added",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "Failed!",
+                            }).then(function (isConfirm) {
+                                if (isConfirm) {
+                                    location.reload();
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
         $("#addPartABRow, #addPartBBRow").click(function(e){
@@ -6321,166 +6317,147 @@
                     ?>
                         $("#helpButton").click(function(e){
                             $(".helpDesign, #helpDescription").toggle();
-                            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
+                            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
                             $("#help_1").show();
                             $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                         });
                         $(".help_1").click(function(e){
-                            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_1").show();
-                            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
+                            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
                         });
 
                         $(".help_2").click(function(e){
-                            $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_2").show();
-                            $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
+                            $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
                         });
 
                         $(".help_3").click(function(e){
-                            $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_3").show();
-                            $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
+                            $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7").hide();
                         });
 
                         $(".help_4").click(function(e){
-                            $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_4").show();
-                            $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8").hide();
+                            $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7").hide();
                         });
 
                         $(".help_5").click(function(e){
-                            $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_5").show();
-                            $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8").hide();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7").hide();
                         });
                         
                         $(".help_6").click(function(e){
-                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_6").show();
-                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8").hide();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7").hide();
                         });
 
                         $(".help_7").click(function(e){
-                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                             $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                             $("#help_7").show();
-                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8").hide();
-                        });
-
-                        $(".help_8").click(function(e){
-                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                            $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                            $("#help_8").show();
-                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6").hide();
                         });
 
                         $("#right-arrow").click(function(e){
                             if($(".help_1").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_2").show();
-                                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9").hide();
+                                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
                             }
                             else if($(".help_2").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_3").show();
-                                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9").hide();
+                                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7").hide();
                             }
                             else if($(".help_3").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_4").show();
-                                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9").hide();
+                                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7").hide();
                             }
                             else if($(".help_4").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_5").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9").hide();
+                                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7").hide();
                             }
                             else if($(".help_5").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_6").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9").hide();
+                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7").hide();
                             }
                             else if($(".help_6").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_7").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9").hide();
+                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6").hide();
                             }
                             else if($(".help_7").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_8").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9").hide();
-                            }
-                            else if($(".help_8").hasClass("helpDesignSelected")){
-                                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_1").show();
-                                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
+                                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
                             }
                         });
 
                         $("#left-arrow").click(function(e){
                             if($(".help_1").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_8").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
-                            }
-                            else if($(".help_2").hasClass("helpDesignSelected")){
-                                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_1").show();
-                                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
-                            }
-                            else if($(".help_3").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_2").show();
-                                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
-                            }
-                            else if($(".help_4").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_3").show();
-                                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8").hide();
-                            }
-                            else if($(".help_5").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_4").show();
-                                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8").hide();
-                            }
-                            else if($(".help_6").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_5").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8").hide();
-                            }
-                            else if($(".help_7").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                                $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                                $("#help_6").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8").hide();
-                            }
-                            else if($(".help_8").hasClass("helpDesignSelected")){
-                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                                 $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                                 $("#help_7").show();
-                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8").hide();
+                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6").hide();
+                            }
+                            else if($(".help_2").hasClass("helpDesignSelected")){
+                                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                                $("#help_1").show();
+                                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
+                            }
+                            else if($(".help_3").hasClass("helpDesignSelected")){
+                                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                                $("#help_2").show();
+                                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
+                            }
+                            else if($(".help_4").hasClass("helpDesignSelected")){
+                                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                                $("#help_3").show();
+                                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7").hide();
+                            }
+                            else if($(".help_5").hasClass("helpDesignSelected")){
+                                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                                $("#help_4").show();
+                                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7").hide();
+                            }
+                            else if($(".help_6").hasClass("helpDesignSelected")){
+                                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                                $("#help_5").show();
+                                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7").hide();
+                            }
+                            else if($(".help_7").hasClass("helpDesignSelected")){
+                                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                                $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                                $("#help_6").show();
+                                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7").hide();
                             }
                         });
                     <?php
@@ -7446,258 +7423,255 @@
                     <?php
                 }
                 else{
-                    
-
                     ?>
-            // Default Help Jquery
-            // Default Help Jquery
-            $("#helpButton").click(function(e){
-                $(".helpDesign, #helpDescription").toggle();
-                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                $("#help_1").show();
-                $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-            });
-            $(".help_1").click(function(e){
-                $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_1").show();
-                $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    // Default Help Jquery
+                    // Default Help Jquery
+                    $("#helpButton").click(function(e){
+                        $(".helpDesign, #helpDescription").toggle();
+                        $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        $("#help_1").show();
+                        $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                    });
+                    $(".help_1").click(function(e){
+                        $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_1").show();
+                        $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_2").click(function(e){
-                $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_2").show();
-                $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_2").click(function(e){
+                        $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_2").show();
+                        $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_3").click(function(e){
-                $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_3").show();
-                $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_3").click(function(e){
+                        $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_3").show();
+                        $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_4").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_4").show();
-                $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_4").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_4").show();
+                        $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_5").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_5").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
-            
-            $(".help_6").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_6").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_5").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_5").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
+                    
+                    $(".help_6").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_6").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_7").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_7").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_7").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_7").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_8").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_8").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_8").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_8").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_9").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_9").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
-            });
+                    $(".help_9").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_9").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
+                    });
 
-            $(".help_10").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_10").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
-            });
+                    $(".help_10").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_10").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
+                    });
 
-            $(".help_11").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_11").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
-            });
+                    $(".help_11").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_11").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
+                    });
 
-            $(".help_12").click(function(e){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_12").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
-            });
+                    $(".help_12").click(function(e){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_12").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
+                    });
 
-            $("#right-arrow").click(function(e){
-                if($(".help_1").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_2").show();
-                    $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_2").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_3").show();
-                    $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_3").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_4").show();
-                    $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_4").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_5").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_5").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_6").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_6").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_7").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_7").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_8").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_8").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_9").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_9").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_10").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
-                }
-                else if($(".help_10").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_11").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
-                }
-                else if($(".help_11").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_12").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
-                }
-                else if($(".help_12").hasClass("helpDesignSelected")){
-                    $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_1").show();
-                    $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-            });
+                    $("#right-arrow").click(function(e){
+                        if($(".help_1").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_2").show();
+                            $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_2").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_3").show();
+                            $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_3").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_4").show();
+                            $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_4").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_5").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_5").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_6").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_6").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_7").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_7").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_8").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_8").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_9").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_9").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_10").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_10").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_11").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
+                        }
+                        else if($(".help_11").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_12").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
+                        }
+                        else if($(".help_12").hasClass("helpDesignSelected")){
+                            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_1").show();
+                            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                    });
 
-            $("#left-arrow").click(function(e){
-                if($(".help_1").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_12").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
-                }
-                else if($(".help_2").hasClass("helpDesignSelected")){
-                    $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_1").show();
-                    $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_3").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_2").show();
-                    $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_4").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_3").show();
-                    $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_5").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_4").show();
-                    $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_6").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_5").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_7").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_6").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_8").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_7").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_9").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_8").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_10").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_9").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
-                }
-                else if($(".help_11").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_10").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
-                }
-                else if($(".help_12").hasClass("helpDesignSelected")){
-                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                    $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                    $("#help_11").show();
-                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
-                }
-            });
+                    $("#left-arrow").click(function(e){
+                        if($(".help_1").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_12").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_12").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11").hide();
+                        }
+                        else if($(".help_2").hasClass("helpDesignSelected")){
+                            $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_1").show();
+                            $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_3").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_2").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_2").show();
+                            $("#help_1, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_4").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_3").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_3").show();
+                            $("#help_1, #help_2, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_5").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_4").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_4").show();
+                            $("#help_1, #help_2, #help_3, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_6").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_6, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_5").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_5").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_7").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_6").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_8").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_8, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_7").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_8, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_9").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_9, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_8").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_8").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_9, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_10").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_10, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_9").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_9").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_10, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_11").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_11, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_10").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_10").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_11, #help_12").hide();
+                        }
+                        else if($(".help_12").hasClass("helpDesignSelected")){
+                            $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6, .help_7, .help_8, .help_9, .help_10, .help_12").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                            $(".help_11").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                            $("#help_11").show();
+                            $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6, #help_7, #help_8, #help_9, #help_10, #help_12").hide();
+                        }
+                    });
 
-            <?php
+                    <?php
                                 
                 }
-                ?>
-        
-                    });
+            ?>
+        });
     </script>
     <?php
         }

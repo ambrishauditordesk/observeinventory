@@ -436,9 +436,8 @@
                             <div class="form-group ">
                                 <label for="name">Role</label>
                                 <select name="role" id="role1" class="form-control">
-                                    <option value="">Select role</option>
                                     <?php 
-                                        if($_SESSION['role'] == 4){
+                                        if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
                                             ?>
                                         <option value="4">Firm Admin</option>
                                        <?php }
@@ -450,7 +449,6 @@
                             <div class="form-group ">
                                 <label for="name">Status</label>
                                 <select name="active" id="active1" class="form-control">
-                                    <option value="">Select Status</option>
                                     <option value="0">Access Denied</option>
                                     <option value="1">Allowed</option>
                                 </select>
