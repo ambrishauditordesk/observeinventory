@@ -29,7 +29,7 @@
         $pid = $_POST['pid'];
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");
         $ser = $_SERVER['HTTP_REFERER'];
-        $errorText = '';
+        $errorText = 'Nothing to update.';
 
         $_seq = $pid === 239 ? 9 : 15;
         //File Upload
@@ -146,36 +146,36 @@
                 }
                 else{
                     $flag = 0;
-                    $errorText = 'Insufficient Storage kindly contact your Firm Admin!';
+                    $errorText .= 'Insufficient Storage kindly contact your Firm Admin!';
                 }
             }
         }
 
-        // if ($flag) {
-        //     echo "<script>
-        //             swal({
-        //                 icon: 'success',
-        //                 text: 'Updated!',
-        //                 closeOnClickOutside: false,
-        //             }).then(function(isConfirm) {
-        //                 if (isConfirm) {
-        //                     window.location.href = '$ser';
-        //                 }
-        //             });
-        //         </script>";
-        // } else {
-        //     echo "<script>
-        //             swal({
-        //                 icon: 'error',
-        //                 text: '".$errorText."',
-        //                 closeOnClickOutside: false,
-        //             }).then(function(isConfirm) {
-        //                 if (isConfirm) {
-        //                     window.location.href = '$ser';
-        //                 }
-        //             });
-        //         </script>";
-        // }
+        if ($flag) {
+            echo "<script>
+                    swal({
+                        icon: 'success',
+                        text: 'Updated!',
+                        closeOnClickOutside: false,
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = '$ser';
+                        }
+                    });
+                </script>";
+        } else {
+            echo "<script>
+                    swal({
+                        icon: 'error',
+                        text: '".$errorText."',
+                        closeOnClickOutside: false,
+                    }).then(function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = '$ser';
+                        }
+                    });
+                </script>";
+        }
     }
     ?>
 </body>

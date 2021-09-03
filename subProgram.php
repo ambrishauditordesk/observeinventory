@@ -5290,7 +5290,7 @@
                 if(assetSum != liabilitySum){
                     e.preventDefault()
                     swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: "error",
                         text: "Assets and Liabilities are not matching",
                     });
