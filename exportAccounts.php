@@ -104,44 +104,65 @@ $prog_id = $_GET["pid"];
         </thead>
         <tbody>
             <?php
-            $query = "select program.id id, _seq,assets_liabilities_check.program_name, assets_liabilities_check.header_type,workspace_log.amount, workspace_log.type, workspace_log.risk, workspace_log.import from program inner join workspace_log on program.id=workspace_log.program_id inner join assets_liabilities_check on assets_liabilities_check.id=program.id where program.parent_id=2 and workspace_log.workspace_id=$wid order by header_type ,_seq asc";
-            $result = $con->query($query);
-            $i = $liabilityHeader = $assetHeader = 0;
-            while($row = $result->fetch_assoc()){
-                if($row['header_type'] == 0){
-                    if($assetHeader == 0){
-                        $assetHeader = 1;
+            if($prog_id == 239){
+                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                $i = 0;
+                while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                    ?>
+                        <tr><td colspan="6"><?php echo $accountTypeRow['accounts_type']; ?> Accounts</td></tr>
+                    <?php
+                    $queryResult = $con->query("SELECT accounts_name, accounts_type, amount, type, risk, import from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id=$wid");
+                    while($row = $queryResult->fetch_assoc()){
                         ?>
-                            <tr><td colspan="6">Asset Accounts</td></tr>
+                            <tr>
+                            <td><?php echo ++$i; ?></td>
+                            <td><?php echo $row['accounts_name']; ?></td>
+                            <td><?php echo $row['amount']; ?></td>
+                            <td><?php echo $row['type'] == '0'? 'Significant Account':'Non-Significant Account'; ?></td>
+                            <td><?php
+                                if($row['risk']){
+                                    echo $row['risk'] == 1 ? 'Moderate':'High';
+                                }
+                                else{
+                                    echo 'Low';
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $row['import'] == '1'? 'Yes':'No';?></td>
+                        </tr>
                         <?php
                     }
                 }
-                else{
-                    if($liabilityHeader == 0){
-                        $liabilityHeader = 1;
+            }
+            else{
+                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                $i = 0;
+                while($accountTypeRow = $accountTypeResult->fetch_assoc()){
+                    ?>
+                        <tr><td colspan="6"><?php echo $accountTypeRow['accounts_type']; ?> Accounts</td></tr>
+                    <?php
+                    $queryResult = $con->query("SELECT accounts_name, accounts_type, amount, type, risk, import from tb_performance_map where accounts_type ='".$accountTypeRow['accounts_type']."' and workspace_id=$wid");
+                    while($row = $queryResult->fetch_assoc()){
                         ?>
-                            <tr><td colspan="6">Liability Accounts</td></tr>
+                            <tr>
+                            <td><?php echo ++$i; ?></td>
+                            <td><?php echo $row['accounts_name']; ?></td>
+                            <td><?php echo $row['amount']; ?></td>
+                            <td><?php echo $row['type'] == '0'? 'Significant Account':'Non-Significant Account'; ?></td>
+                            <td><?php
+                                if($row['risk']){
+                                    echo $row['risk'] == 1 ? 'Moderate':'High';
+                                }
+                                else{
+                                    echo 'Low';
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $row['import'] == '1'? 'Yes':'No';?></td>
+                        </tr>
                         <?php
                     }
                 }
-                ?>
-                <tr>
-                    <td><?php echo ++$i; ?></td>
-                    <td><?php echo $row['program_name']; ?></td>
-                    <td><?php echo $row['amount']; ?></td>
-                    <td><?php echo $row['type'] == '0'? 'Significant Account':'Non-Significant Account'; ?></td>
-                    <td><?php
-                        if($row['risk']){
-                            echo $row['risk'] == 1 ? 'Moderate':'High';
-                        }
-                        else{
-                            echo 'Low';
-                        }
-                        ?>
-                    </td>
-                    <td><?php echo $row['import'] == '1'? 'Yes':'No';?></td>
-                </tr>
-            <?php
             }
             ?>
         </tbody>

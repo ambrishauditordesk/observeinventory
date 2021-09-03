@@ -578,12 +578,11 @@
                                                         <td scope="row" hidden>
                                                             <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                         </td>
-                                                        <td scope="row" class="mt-4" style="height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align:left;">
-                                                            <?php echo $rowQuery['accounts_name']; ?>
+                                                        <td scope="row">
+                                                            <label  class="mt-2 text-break" style="width: 15rem !important; height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align:left;"><?php echo $rowQuery['accounts_name']; ?></label>
                                                         </td>
                                                         <td scope="row">
-                                                            <label class="mt-2"></label>
-                                                            <input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
+                                                            <input type="number" class="mt-4" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
                                                         </td>
                                                         <td scope="row">
                                                             <label class="mt-2"><span class="helpDesign help_1">1</span></label>
@@ -614,7 +613,7 @@
                                                                     $accountMap = $con->query("SELECT * FROM `program` WHERE parent_id = 2");
                                                                     while ($accountMapResult = $accountMap->fetch_assoc()) {
                                                                 ?>
-                                                                <option value="<?php echo $accountMapResult['id']; ?>" <?php if($rowQuery['mapped_program_id'] == $accountMapResult['id']) echo "selected"; ?>>
+                                                                <option class="text-break" value="<?php echo $accountMapResult['id']; ?>" <?php if($rowQuery['mapped_program_id'] == $accountMapResult['id']) echo "selected"; ?>>
                                                                     <?php echo $accountMapResult['program_name']; ?></option>
                                                                 <?php
                                                                 }
@@ -890,7 +889,6 @@
                                     </div>
                                     <script>
                                          swal({
-                                            closeOnClickOutside: false,
                                             title: "Download the Excel Template",
                                             text: "No Trial Balance was there, so download the excel and then upload to that.",
                                             icon: "warning",
@@ -1009,8 +1007,10 @@
                                                             <td scope="row" hidden>
                                                                 <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                             </td>
-                                                            <td scope="row" class="mt-4" style="height: 4rem !important; display: flex; align-items: center; justify-content: start;"><?php echo $rowQuery['accounts_name']; ?></td>
-                                                            <td scope="row"><input type="number" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01"></td>
+                                                            <td scope="row">
+                                                                <label class="mt-2" style="width: 15rem !important; height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align: left;"><?php echo $rowQuery['accounts_name']; ?></label>
+                                                            </td>
+                                                            <td scope="row"><input type="number" class="mt-4" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01"></td>
                                                             <td scope="row">
                                                                 <label class="mt-2"><span class="helpDesign help_1">1</span></label>
                                                                 <select name="submitData[<?php echo $i;?>][2]" class="form-control"
@@ -2713,7 +2713,7 @@
                                         </div> 
                                         <div id="unauditedBalanceSheet" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne" data-parent="#unauditedBalanceSheetAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
                                             <?php
-                                                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
                                             ?>
                                             <br>
                                             <?php
@@ -2797,7 +2797,7 @@
                                         </div> 
                                         <div id="unauditedProfitLoss" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne" data-parent="#unauditedProfitLossAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
                                             <?php
-                                                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                                $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
                                             ?>
                                             
                                             <?php
@@ -2869,6 +2869,19 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br>
+                                <div class="row d-flex justify-content-center">
+                                    <?php
+                                        $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=525")->fetch_assoc();
+                                        if($checkReviewStatus['total']){
+                                            ?>
+                                                <button class="btn btn-info" id="reviewSubmitBridge">Review Sign-Off</button>
+                                            <?php
+                                        }
+                                    ?>
+                                    &nbsp;
+                                    <button class="btn btn-success" id="prepareSubmitBridge">Prepare Sign-Off</button>
+                                </div>
                             <?php
                         }
                         elseif($prog_id == 526){
@@ -2899,7 +2912,7 @@
                                     </div> 
                                     <div id="unauditedBalanceSheet" class="collapse show" aria-labelledby="unauditedBalanceSheetHeadingOne" data-parent="#unauditedBalanceSheetAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
                                         <?php
-                                            $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
+                                            $accountTypeResult = $con->query("SELECT DISTINCT accounts_type,accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
                                         ?>
                                         <br>
                                         <?php
@@ -2992,7 +3005,7 @@
                                     </div> 
                                     <div id="unauditedProfitLoss" class="collapse show" aria-labelledby="unauditedProfitLossHeadingOne" data-parent="#unauditedProfitLossAccordionExample" style="margin-left: 2.5rem; padding-bottom: 2rem;">
                                         <?php
-                                            $accountTypeResult = $con->query("SELECT DISTINCT accounts_type from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
+                                            $accountTypeResult = $con->query("SELECT DISTINCT accounts_type, accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
                                         ?>
                                         <br>
                                         <?php
@@ -3073,6 +3086,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                                <div class="row d-flex justify-content-center">
+                                    <?php
+                                        $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=526")->fetch_assoc();
+                                        if($checkReviewStatus['total']){
+                                            ?>
+                                                <button class="btn btn-info" id="reviewSubmitAuditedFS">Review Sign-Off</button>
+                                            <?php
+                                        }
+                                    ?>
+                                    &nbsp;
+                                    <button class="btn btn-success" id="prepareSubmitAuditedFS">Prepare Sign-Off</button>
+                                </div>
                         <?php 
                         }
                         else{
@@ -5621,7 +5647,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Update";
                     let icon = response == 1 ? "success" : "error";
                     swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5690,6 +5716,106 @@
                 data:{
                     wid: <?php echo $wid; ?>,
                     prog_id:"8",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+            closeOnClickOutside: false,
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitBridge', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"525",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitBridge', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"525",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+            closeOnClickOutside: false,
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#prepareSubmitAuditedFS', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"526",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#reviewSubmitAuditedFS', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"526",
                     status:"1"
                 },
                 success: function(response){
