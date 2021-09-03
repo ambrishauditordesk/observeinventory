@@ -1349,7 +1349,7 @@
                 console.log(response);
                 if (response) {
                     swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: "success",
                         text: "Updated!",
                     }).then(function(isConfirm) {
@@ -1359,7 +1359,7 @@
                     });
                 } else {
                     swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: "error",
                         text: "Failed!",
                     }).then(function(isConfirm) {

@@ -42,6 +42,7 @@
         $flag = 1;
         $prog_id = trim($_POST['pid']);
         $wid = trim($_POST['wid']);
+        $conclusion = '';
 
         if(isset($_POST['conclusion']) && !empty($_POST['conclusion']))
             $conclusion = trim($_POST['conclusion']);
@@ -77,7 +78,9 @@
         }
 
         $con->query("DELETE FROM going_concern where workspace_id = $wid");
-        $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c, conclusion_text) VALUES('$wid','$conclusion','$descA','$descB','$descC','$conclusionText')");
+        if($conclusion != ''){
+            $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c, conclusion_text) VALUES('$wid','$conclusion','$descA','$descB','$descC','$conclusionText')");
+        }
 
         if(isset($_POST['freeTextA']) && !empty($_POST['freeTextA'])){
 

@@ -3284,7 +3284,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3301,7 +3301,7 @@
                                             <div id="help_9">
                                                 <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
                                             </div>
                                             <?php
                                         }
@@ -3316,7 +3316,7 @@
                                             <div id="help_3">
                                                 <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_4">
                                                 <p>4. Add program:<p> 
@@ -3326,7 +3326,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3564,7 +3564,7 @@
                                             <div id="help_3">
                                                 <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_4">
                                             <p>4. Add program:<p> 
@@ -3574,7 +3574,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can make a disabled work step to enable it by clicking on “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
