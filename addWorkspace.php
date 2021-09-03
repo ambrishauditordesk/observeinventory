@@ -47,8 +47,8 @@ error_reporting(E_ALL);
 include 'dbconnection.php';
 session_start();
 
-$from = trim($_POST['from']);
-$to = trim($_POST['to']);
+$fromDate = trim($_POST['from']);
+$toDate = trim($_POST['to']);
 $clientID = trim($_POST['clientID']);
 $flag = 0;
 
@@ -59,7 +59,7 @@ $diff=date_diff($from,$to);
 $diff = (int)$diff->format("%R%a");
 if( $diff > 0 && $diff <= 730){
     if($subscription['subscribed_workspace'] > $subscription['used_workspace']){
-        $con->query("insert into workspace(client_id,datefrom,dateto) values('$clientID','$from','$to')");
+        $con->query("insert into workspace(client_id,datefrom,dateto) values('$clientID','$fromDate','$toDate')");
         $flag = 1;
     
         $wid = $con->insert_id;
