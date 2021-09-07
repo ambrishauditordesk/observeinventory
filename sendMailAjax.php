@@ -4,7 +4,7 @@
 
     session_start();
     $subject = "You have been invited for the documents upload";
-    $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+    $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
 
     $wid = $_POST['wid'];
     $data = [];

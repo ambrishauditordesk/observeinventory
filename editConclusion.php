@@ -19,19 +19,20 @@
 <?php
     include 'dbconnection.php';
     session_start();
-    $flag = 0;
+    $text = 'Nothing to update.';
     if($_POST){
         $id = trim($_POST['id']);
         $name = trim($_POST['name']);
         $ser = $_SERVER['HTTP_REFERER'];
-        if($con->query("update going_concern_conclusion set going_concern_conclusion_data = '$name' where id = $id") === TRUE){
-            $flag = 1;
+        $going_concern_conclusion = $con->query("select going_concern_conclusion_data from going_concern_conclusion where id  = $id")->fetch_assoc()['going_concern_conclusion_data'];
+        if(trim($going_concern_conclusion) != $name){
+            $con->query("update going_concern_conclusion set going_concern_conclusion_data = '$name' where id = $id");
+            $text = 'Successfully updated.';
         }
-        if($flag){
-            echo "<script>
+        echo "<script>
                 swal({
                     icon: 'success',
-                    text: 'Updated!',
+                    text: '".$text."',
                     closeOnClickOutside: false,
                 }).then(function(isConfirm) {
                     if (isConfirm) {
@@ -39,20 +40,6 @@
                     }
                 });
             </script>";
-        }
-        else{
-            echo "<script>
-                swal({
-                    icon: 'error',
-                    text: 'Error!',
-                    closeOnClickOutside: false,
-                }).then(function(isConfirm) {
-                    if (isConfirm) {
-                        window.location.href = '$ser';
-                    }
-                });
-            </script>";
-        }
     }
 
 ?>

@@ -44,6 +44,7 @@ $_SESSION['workspace_id'] = $wid;
 $_SESSION['upload_file_location'] = $_SESSION['file_location'].'/'.$_SESSION['workspace_id'].'/';   
 
 
+
 $folderStatus = $con->query("select * from client_temp_folder where workspace_id = $wid");
 if($folderStatus->num_rows == 0){
 
@@ -321,7 +322,9 @@ $_SESSION['breadcrumb'] = array();
     <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
-            
+            <?php
+                if($_SESSION['firm_details']['plan'] != 1){
+            ?>
             <li class="nav-item d-flex">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
                 <a class="nav-link d-flex align-items-center" target="_blank" href="diagnosticReport?wid=<?php echo $wid; ?>">
@@ -329,6 +332,9 @@ $_SESSION['breadcrumb'] = array();
                     <span>Diagonistic Report</span>
                 </a>
             </li>
+            <?php
+                }
+            ?>
             <li class="nav-item d-flex">
                 <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_2">2</span></label>
                 <a class="nav-link d-flex align-items-center" href="admin/workspaceMembers?sid=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&cid=<?php echo base64_encode($_SESSION['client_id']); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&jid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
@@ -463,12 +469,13 @@ $_SESSION['breadcrumb'] = array();
                         elseif($queryrow['id']==19)
                             $color='bg-violet';
 
-                            $data = getProgramStatus($queryrow['id'],$wid);
+                        $data = getProgramStatus($queryrow['id'],$wid);
                         
                         $per = round(number_format((float)0, 2, '.', ''));
                         if($querys != 0){
                             $per = round(number_format((float)($data['statusCount']/$data['totalCount'])*100, 2, '.', ''));
                         }
+                        // echo "Status= ".$data['statusCount'].", Total=".$data['totalCount'].'<br>'.$data['query'];
                     ?>
                     <span class="completion <?php echo $color; ?>"><?php echo $per."%"; ?></span>
                     <div class="progress p-0">

@@ -42,7 +42,7 @@
             $user_id = $con->insert_id;
             $roleName = $con->query("select role_name from role where id = $role")->fetch_assoc()['role_name'];
             $sub = "You have been registered as a ".$roleName;
-            $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+            $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
 
             $msg = "<div>
             <div>Hello ".$name.",</div>

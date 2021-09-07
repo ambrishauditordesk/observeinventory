@@ -1,14 +1,21 @@
 <?php
 function getProgramStatus($id, $wid){
-    
+    if (!isset($_SESSION))
+        session_start();
     include 'dbconnection.php';
     
     $data = array();
     
     $data['totalCount'] = $data['statusCount'] = $totalStatusCount = 0;
+
+    $query = "SELECT workspace_log.id id FROM program inner join workspace_log on workspace_log.program_id = program.id WHERE program.parent_id = $id and hasChild = 0 and workspace_log.workspace_id = $wid and import = 1 UNION SELECT workspace_log.id id FROM program inner join workspace_log on workspace_log.program_id = program.id WHERE program.parent_id IN (SELECT id FROM program WHERE program.parent_id = $id) and hasChild = 0 and workspace_log.workspace_id = $wid and import = 1";
+    
+    if($_SESSION['firm_details']['plan'] == 1){
+        $query = "SELECT workspace_log.id id FROM program inner join workspace_log on workspace_log.program_id = program.id WHERE program.parent_id = $id and hasChild = 0 and workspace_log.workspace_id = $wid and import = 1 and program.    firmPlan = 0 UNION SELECT workspace_log.id id FROM program inner join workspace_log on workspace_log.program_id = program.id WHERE program.parent_id IN (SELECT id FROM program WHERE program.parent_id = $id) and hasChild = 0 and workspace_log.workspace_id = $wid and import = 1  and program.firmPlan = 0";
+    }
     
     if($id != 12){
-        $result = $con->query("SELECT workspace_log.id id FROM program inner join workspace_log on workspace_log.program_id = program.id WHERE program.parent_id = $id and hasChild = 0 and workspace_log.workspace_id = $wid and import = 1 UNION SELECT workspace_log.id id FROM program inner join workspace_log on workspace_log.program_id = program.id WHERE program.parent_id IN (SELECT id FROM program WHERE program.parent_id = $id) and hasChild = 0 and workspace_log.workspace_id = $wid and import = 1");
+        $result = $con->query($query);
         if($result->num_rows != 0){
             $totalCount = $result->num_rows;
             while($row = $result->fetch_assoc()){
@@ -17,6 +24,7 @@ function getProgramStatus($id, $wid){
             }
             $data['totalCount'] = $totalCount;
             $data['statusCount'] = $totalStatusCount;
+            $data['query'] = $query;
         }
     }
     else{

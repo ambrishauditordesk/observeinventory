@@ -53,10 +53,10 @@ else
 					<td>Currency	:</td><td><input class="form-control" type="text" name="currency" value="INR"/></td>
 				</tr>
 				<tr>
-					<td>Redirect URL	:</td><td><input class="form-control" type="text" name="redirect_url" value="http://yourfirmaudit.com/AuditSoft/payments/ccavResponseHandler.php"/></td>
+					<td>Redirect URL	:</td><td><input class="form-control" type="text" name="redirect_url" value="http://auditorsdesk.com/AuditSoft/payments/ccavResponseHandler.php"/></td>
 				</tr>
 			 	<tr>
-			 		<td>Cancel URL	:</td><td><input class="form-control" type="text" name="cancel_url" value="http://yourfirmaudit.com/AuditSoft/payments/ccavResponseHandler.php"/></td>
+			 		<td>Cancel URL	:</td><td><input class="form-control" type="text" name="cancel_url" value="http://auditorsdesk.com/AuditSoft/payments/ccavResponseHandler.php"/></td>
 			 	</tr>
 			 	<tr>
 					<td>Language	:</td><td><input class="form-control" type="text" name="language" value="EN" readonly/></td>

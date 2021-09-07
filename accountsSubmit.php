@@ -121,7 +121,7 @@
                     }
                     $checkProgram = $con->query("select id from program where parent_id=2 and def_prog=0 and program_name='".$fetchQuery['accounts_name']."'");
                     if($checkProgram->num_rows < 1){
-                        $con->query("insert into program (parent_id,program_name,hasChild,def_prog,_seq) values('2','".$fetchQuery['accounts_name']."','1','0','$_seq')");
+                        $con->query("insert into program (parent_id,program_name,hasChild,def_prog,_seq,firmPlan) values('2','".$fetchQuery['accounts_name']."','1','0','$_seq','0')");
                         $prog_id = $con->insert_id;
                         $con->query("insert into workspace_log(workspace_id,program_id,import) values('$wid','$prog_id','$import')");
                         $wlid = $con->insert_id;

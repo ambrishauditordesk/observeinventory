@@ -87,8 +87,6 @@ for($i = 1; $i < $totalCount; $i++){
                 $updatedData.= '<strong>Record created:- </strong><br>Recorded created <br> Row No:- '.$i."<br>";
                 $flag = 1;
                 $successCount++;
-                $con->query("update workspace_log set status = 1 where program_id = 245 and workspace_id = $wid");
-                $con->query("update workspace_log set status = 1 where program_id = 395 and workspace_id = $wid");
             }
             else{
                 $errorMessage.="<br>Data is invalid.";
@@ -145,6 +143,8 @@ if($flag){
             }
         }
         $con->query("insert into tb_performance_map(workspace_id,accounts_name,accounts_type,accounts_class,amount,beg_amount ,accountTypeSeqNumber) select '$wid' as workspace_id,financial_statement as accounts_name,account_type as accounts_type,account_class as accounts_class, round(sum(cy_final_bal),2), round(sum(cy_beg_bal),2) ,accountTypeSeqNumber from trial_balance where workspace_id=$wid GROUP BY financial_statement");
+        $con->query("update workspace_log set status = 1 where program_id = 245 and workspace_id = $wid");
+        $con->query("update workspace_log set status = 1 where program_id = 395 and workspace_id = $wid");
     }
     else{
         $con->query("delete from trial_balance where workspace_id = $wid");

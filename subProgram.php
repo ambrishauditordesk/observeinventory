@@ -3102,7 +3102,12 @@
                         <?php 
                         }
                         else{
-                            $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                            if($_SESSION['firm_details']['plan'] == 2){
+                                $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 order by _seq";
+                            }
+                            else{
+                                $query = "select program.*, workspace_log.status status, workspace_log.active active from program inner join workspace_log on program.id = workspace_log.program_id where program.parent_id = '$prog_id' and workspace_log.workspace_id = '$wid' and workspace_log.import = 1 and program.firmPlan = 0 order by _seq";
+                            }
                             $exquery = $con->query($query);
                             if ($exquery->num_rows != 0) {
                                 while ($queryrow = $exquery->fetch_assoc()) {
@@ -3115,7 +3120,7 @@
                                                     }
                                                 ?>
                                                 <a href="subProgram?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>"
-                                                    class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?></b></a>
+                                                    class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?>&nbsp; <?php echo trim($queryrow['id']); ?> </b></a>
                                                     <?php
                                                         if($prog_id == 1){
                                                             echo "<label class=' mt-2'><span class='helpDesign help_2'>2</span></label>";
@@ -3142,11 +3147,11 @@
                                                                 if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24 || $queryrow['id'] == 525 || $queryrow['id'] == 526){ 
                                                                     ?>
                                                                     <a id="<?php echo $queryrow['id']; ?>" href="subProgram?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>">    
-                                                                        <?php  echo trim($queryrow['program_name']); ?> &nbsp;
+                                                                        <?php  echo trim($queryrow['program_name']); ?> &nbsp; <?php echo trim($queryrow['id']); ?>
                                                                     </a>
                                                                 <?php } 
                                                                 else { ?>    
-                                                                    <span class="signoffmodal" id="<?php echo $queryrow['id']; ?>"><?php  echo trim($queryrow['program_name']); ?> &nbsp;</span>
+                                                                    <span class="signoffmodal" id="<?php echo $queryrow['id']; ?>"><?php  echo trim($queryrow['program_name']);?> &nbsp; <?php echo trim($queryrow['id']); ?></span>
                                                                 <?php }
                                                             ?>
                                                         </a> <?php
@@ -3284,7 +3289,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up" which reflects an active work steps.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3301,7 +3306,7 @@
                                             <div id="help_9">
                                                 <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to “Thumbs up” which reflects an active work steps.</p>
                                             </div>
                                             <?php
                                         }
@@ -3316,7 +3321,7 @@
                                             <div id="help_3">
                                                 <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to “Thumbs up” which reflects an active work steps.</p>
                                             </div>
                                             <div id="help_4">
                                                 <p>4. Add program:<p> 
@@ -3326,7 +3331,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up"which reflects an active work steps.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3574,7 +3579,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to "Like/Thumbs up"which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up"which reflects an active work steps.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3871,8 +3876,8 @@
                                         <label class="badge badge-warning form-check-label" for="inlineCheckbox3">R&O</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input name="assertion[]" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="P&D">
-                                        <label class="badge badge-info form-check-label" for="inlineCheckbox3">P&D</label>
+                                        <input name="assertion[]" class="form-check-input" type="checkbox" id="inlineCheckbox4" value="P&D">
+                                        <label class="badge badge-info form-check-label" for="inlineCheckbox4">P&D</label>
                                     </div>
                                 </div>
                             <?php  } ?>
@@ -4957,7 +4962,7 @@
                             text = 'Kindly save before sending invitation.';
                         }
                         swal({
-            closeOnClickOutside: false,
+                            closeOnClickOutside: false,
                             icon: obj.status == 1 ? 'success':'error',
                             text: text,
                         }).then(function (isConfirm) {
@@ -5877,10 +5882,10 @@
             document.body.removeChild(downloadLink);
 
             $('#goingConcernDiv').find('.inputLabel').each(function() {
-                $(this).replaceWith("<input type='text' class='form-group' value='" + $(this).html() + "'/>");
+                $(this).replaceWith("<input type='text' class='form-group col-md-12 col-lg-12 col-sm-12' value='" + $(this).html() + "'/>");
             });
             $('#goingConcernDiv').find('.inputDate').each(function() {
-                $(this).replaceWith("<input type='date' class='form-group' value='" + $(this).html() + "'/>");
+                $(this).replaceWith("<input type='date' class='form-group col-md-12 col-lg-12 col-sm-12' value='" + $(this).html() + "'/>");
             });
 
             $('#goingConcernDiv').find('input[type=radio]').each(function() {

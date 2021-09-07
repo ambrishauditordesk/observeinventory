@@ -117,7 +117,7 @@ if(isset($_POST))
             $sub = "You have been added as a active member";
             $name = $memberDetails['name'];
             $email = $memberDetails['email'];
-            $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+            $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
              
             $msg = "<div>
                 <div>Hello ".$name.",</div>

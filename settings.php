@@ -320,6 +320,7 @@ error_reporting(E_ALL);
                                         <th>Firm Unique ID</th>
                                         <th>Firm Address</th>
                                         <th>Firm Email</th>
+                                        <th>Firm Plan</th>
                                         <!-- <th>Action</th> -->
                                     </thead>
                                     <tbody>  
@@ -333,6 +334,7 @@ error_reporting(E_ALL);
                                                         <td><?php echo 'AE/'.date('Y').'/'.strtoupper(substr(md5($row['id']),3,8)); ?></td>
                                                         <td><?php echo $row['firm_address']; ?></td>
                                                         <td><?php echo $row['firm_email']; ?></td>
+                                                        <td><?php echo $row['plan'] == 1 ? 'Simple Start' : 'Go Pro'; ?></td>                                                        
                                                     </tr>
                                                 <?php
                                             }
@@ -377,7 +379,7 @@ error_reporting(E_ALL);
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">Email Us</label>
-                                <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="yourfirmaudit@gmail.com" readonly>
+                                <input type="text" class="form-control" id="email" aria-describedby="emailHelp" value="auditorsdesk@gmail.com" readonly>
                             </div>
                             <div class="form-group">
                                 <label class="d-block text-danger">24/7 Help Desk Number</label>
@@ -497,6 +499,13 @@ error_reporting(E_ALL);
                                     <div class="container">
                                         <h6>BILLING SETTINGS</h6>
                                         <hr>
+                                        <div class="form-group d-flex justify-content-center m-0">
+                                            <h2 style="color:#254eda"><?php echo $row['plan'] == 1 ? 'SIMPLE START' : 'GO PRO'; ?></h2>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <input type="submit" id="planChange" class="btn btn-block btn-success text-uppercase" style="border-radius:20px; width:20em;background-color: #4eb92b !important;" value="<?php echo $row['plan'] == 1 ? 'Request Go Pro' : 'Request Custom Pro'; ?>">
+                                        </div><br>
+
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group">
@@ -826,6 +835,28 @@ error_reporting(E_ALL);
                 });
             }
         });
+
+        $("#planChange").click(function(){
+            $.ajax({
+                url: "changePlanRequestAjax.php",
+                type: "POST",
+                success: function(data){
+                    let obj = JSON.parse(data)
+                    if(obj == 1){
+                        text = 'Request sent!';
+                    }
+                    else{
+                        text = 'Server Problem.';
+                    }
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: obj == 1 ? 'success':'error',
+                        text: text
+                    })
+                }
+            });
+        });
+
         $('#live-chat header, .selectedUser, #chatAssistance').on('click', function() {
             getChat();
             $('.chat').slideToggle(300, 'swing');

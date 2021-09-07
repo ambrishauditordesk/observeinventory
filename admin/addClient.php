@@ -160,7 +160,7 @@ if($uploadOk) {
     }
     if($_SESSION['role'] > 1 || (($_SESSION['role'] == 1 || $_SESSION['role'] == -1) && $firmLeaderId > 0)) {
         $sub = "You have been added as a Client member";
-        $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+        $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
 
         for($i=0;$i<$count;$i++){
             $checkDuplicateEmail = checkDuplicateEmail($email[$i]);

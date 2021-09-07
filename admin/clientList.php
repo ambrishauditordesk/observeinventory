@@ -441,26 +441,26 @@
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pincode</label>
-                                <input type="text" class="form-control" pattern="[0-9]{6}" name="pincode" maxlength="6" required>
+                                <input type="text" class="form-control" pattern="[0-9]{6}" name="pincode" maxlength="6" placeholder= "123456" required>
                             </div>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Satuatory Information<h5>
                             </div>
                             <div class="form-group ">
                                 <label for="name">Pan No.</label>
-                                <input id="panCheck" type="text" class="form-control" name="pan" maxlength="10" style="text-transform:uppercase" required>
+                                <input id="panCheck" type="text" class="form-control" name="pan" maxlength="10" style="text-transform:uppercase" placeholder = "AAAAA0000A" required>
                             </div>
                             <div class="form-group ">
                                 <label for="name">GST No.</label>
-                                <input id="gstCheck" type="text" class="form-control" name="gst" maxlength="15" style="text-transform:uppercase">
+                                <input id="gstCheck" type="text" class="form-control" name="gst" maxlength="15" style="text-transform:uppercase" placeholder = "07AAAAA0000A1Z5">
                             </div>
                             <div class="form-group ">
                                 <label for="name">TAN No.</label>
-                                <input id="tanCheck" type="text" class="form-control" name="tan" maxlength="10" style="text-transform:uppercase">
+                                <input id="tanCheck" type="text" class="form-control" name="tan" maxlength="10" style="text-transform:uppercase" placeholder = "AAAA00000A">
                             </div>
                             <div class="form-group ">
                                 <label for="name">CIN No.</label>
-                                <input id="cinCheck" type="text" class="form-control" name="cin" maxlength="21" style="text-transform:uppercase">
+                                <input id="cinCheck" type="text" class="form-control" name="cin" maxlength="21" style="text-transform:uppercase" placeholder = "L00000DL0000AAA000000">
                             </div>
                             <div class="form-group ">
                                 <label for="name">Client Contact</label>
@@ -738,6 +738,15 @@
                             <div class="form-group">
                                 <label for="name">Firm Address</label>
                                 <textarea class="form-control" name="firmAdd"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Firm Plan</label>
+                                <select class="form-control" name="firmPlan">
+                                    <option>Select Plan !</option>
+                                    <option value="1">Simple Start</option>
+                                    <option value="2">Go Pro</option>
+                                    <!-- <option value="3">CUstom Pro</option> -->
+                                </select>
                             </div>
                         <div> 
                         <div class="modal-footer justify-content-center">

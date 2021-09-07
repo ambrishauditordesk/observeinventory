@@ -25,6 +25,7 @@ $name = trim($_POST['firmName']);
 $add = trim($_POST['firmAdd']);
 $username = trim($_POST['name']);
 $email = trim($_POST['firmEmail']);
+$plan = trim($_POST['firmPlan']);
 $ser = $_SERVER['HTTP_REFERER'];
 $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");;
 $pass = md5($name.$date);
@@ -71,7 +72,7 @@ else{
         }
 
         $regDate = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");
-        $firmDetails = $con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_email`,`storage`) VALUES ('$name','$add','$email','10000')");
+        $firmDetails = $con->query("INSERT INTO `firm_details`(`firm_name`, `firm_address`, `firm_email`,`storage`,`plan`) VALUES ('$name','$add','$email','10000','$plan')");
         $firm_id = $con->insert_id;
         $userDetails = $con->query("insert into user(name,email,password,accessLevel,active,reg_date,signoff_init,reset_code,img) values('$username', '$email', '$pass','4', '1', '$regDate' , '$signOff' , '', '')");
         $user_id = $con->insert_id;
@@ -79,7 +80,7 @@ else{
         $flag = 1;
     
         $sub = "You have been registered as a Firm Admin ";
-        $loginLink = 'http://yourfirmaudit.com/AuditSoft/login';
+        $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");;
         $tempPass = $name.$date;
 

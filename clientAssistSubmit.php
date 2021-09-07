@@ -35,6 +35,14 @@
     $filePresent = 0;
     $uploadOk = 1;
     $allowFileUpload = 1;
+
+    if(isset($_POST) == ''){
+        $text = 'Nothing to Update';
+    }
+    else{
+        $text = 'Updated';
+    }
+
     if(isset($_POST)) {
         if(isset($_POST['account']['des']))
             foreach ($_POST['account']['des'] as $data) {
@@ -125,7 +133,7 @@
             echo "<script>
                     swal({
                         icon: 'success',
-                        text: 'Updated!',
+                        text: '".$text."!',
                         closeOnClickOutside: false,
                     }).then(function(isConfirm) {
                         if (isConfirm) {
