@@ -475,7 +475,7 @@ $_SESSION['breadcrumb'] = array();
                         if($querys != 0){
                             $per = round(number_format((float)($data['statusCount']/$data['totalCount'])*100, 2, '.', ''));
                         }
-                        // echo "Status= ".$data['statusCount'].", Total=".$data['totalCount'].'<br>'.$data['query'];
+                        // echo "Status= ".$data['statusCount'].", Total=".$data['totalCount'];
                     ?>
                     <span class="completion <?php echo $color; ?>"><?php echo $per."%"; ?></span>
                     <div class="progress p-0">

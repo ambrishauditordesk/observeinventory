@@ -3120,7 +3120,7 @@
                                                     }
                                                 ?>
                                                 <a href="subProgram?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>"
-                                                    class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?>&nbsp; <?php echo trim($queryrow['id']); ?> </b></a>
+                                                    class="custom-list-items custom-list-items-action"><b><?php echo trim($queryrow['program_name']); ?>&nbsp;</b></a>
                                                     <?php
                                                         if($prog_id == 1){
                                                             echo "<label class=' mt-2'><span class='helpDesign help_2'>2</span></label>";
@@ -3147,11 +3147,11 @@
                                                                 if($queryrow['id'] == 247 || $queryrow['id'] == 245 || $queryrow['id'] == 395 || $queryrow['id'] == 496 || $queryrow['id'] == 258 || $queryrow['id'] == 8 || $queryrow['id'] == 259 || $queryrow['id'] == 24 || $queryrow['id'] == 525 || $queryrow['id'] == 526){ 
                                                                     ?>
                                                                     <a id="<?php echo $queryrow['id']; ?>" href="subProgram?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($queryrow['id']); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($queryrow['parent_id']); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>">    
-                                                                        <?php  echo trim($queryrow['program_name']); ?> &nbsp; <?php echo trim($queryrow['id']); ?>
+                                                                        <?php  echo trim($queryrow['program_name']); ?> &nbsp;
                                                                     </a>
                                                                 <?php } 
                                                                 else { ?>    
-                                                                    <span class="signoffmodal" id="<?php echo $queryrow['id']; ?>"><?php  echo trim($queryrow['program_name']);?> &nbsp; <?php echo trim($queryrow['id']); ?></span>
+                                                                    <span class="signoffmodal" id="<?php echo $queryrow['id']; ?>"><?php  echo trim($queryrow['program_name']);?> &nbsp; </span>
                                                                 <?php }
                                                             ?>
                                                         </a> <?php
