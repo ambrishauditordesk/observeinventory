@@ -737,12 +737,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Firm Address</label>
-                                <textarea class="form-control" name="firmAdd"></textarea>
+                                <textarea class="form-control" name="firmAdd" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="name">Firm Plan</label>
-                                <select class="form-control" name="firmPlan">
-                                    <option>Select Plan !</option>
+                                <select class="form-control" name="firmPlan" id= "firmPlan" required>
+                                    <option value="">Select Plan !</option>
                                     <option value="1">Simple Start</option>
                                     <option value="2">Go Pro</option>
                                     <!-- <option value="3">CUstom Pro</option> -->

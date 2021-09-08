@@ -53,8 +53,8 @@ $clientID = trim($_POST['clientID']);
 $flag = 0;
 
 $subscription = $con->query("select subscribed_workspace,used_workspace from firm_details where id =".$_SESSION['firm_id'])->fetch_assoc();
-$from=date_create($from);
-$to=date_create($to);
+$from=date_create($fromDate);
+$to=date_create($toDate);
 $diff=date_diff($from,$to);
 $diff = (int)$diff->format("%R%a");
 if( $diff > 0 && $diff <= 730){
