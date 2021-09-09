@@ -66,15 +66,29 @@
             $id = $answerArray[$i][0];
             $option = $answerArray[$i][1];
             $textarea = $answerArray[$i][2];
-            $con->query("UPDATE inquiring_of_management_questions_answer SET answer_option = '$option', answer_textarea = '$textarea' where id = '$id' and workspace_id = '$wid'");
-            $flag = 1;
+            $checkQuestionAnswer = $con->query("select * from inquiring_of_management_questions_answer where workspace_id = '$wid' and answer_option = '$option' and answer_textarea = '$textarea'")->num_rows;
+            if($checkQuestionAnswer == 0){
+                $con->query("UPDATE inquiring_of_management_questions_answer SET answer_option = '$option', answer_textarea = '$textarea' where id = '$id' and workspace_id = '$wid'");
+                $flag = 1;
+            }
+            else{
+                $errorText = 'Nothing to Update';
+            }
         }
         $totalCount = $con->query("SELECT id from inquiring_of_management_questions_textarea where workspace_id = $wid");
         if($totalCount->num_rows == 0){
             $con->query("INSERT INTO inquiring_of_management_questions_textarea(workspace_id,textarea) VALUES('$wid','$textareaResult')");
+            $flag = 1;
         }
         else{
-            $con->query("UPDATE inquiring_of_management_questions_textarea set textarea = '$textareaResult' where workspace_id = $wid");
+            $checkTextarea  = $con->query("select * from inquiring_of_management_questions_textarea where workspace_id = '$wid' and textarea = '$textareaResult'")->num_rows;
+            if($checkTextarea == 0){
+                $con->query("UPDATE inquiring_of_management_questions_textarea set textarea = '$textareaResult' where workspace_id = $wid");
+                $flag = 1;
+            }
+            else{
+                $errorText = 'Nothing to Update';
+            }
         }        
         $email = $_SESSION['email'];
         $con->query("insert into activity_log(workspace_id, email, activity_date_time, activity_captured) values('$wid', '$email','$date','Inquiring Managements New entery done')");

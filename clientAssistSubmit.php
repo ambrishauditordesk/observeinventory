@@ -118,15 +118,21 @@
                 }
             }
             if(isset($_SESSION['external']) && $_SESSION['external'] != 1){
-                $success = 1;
-                $con->query("update accounts_log set description = '$description[$i]', client_contact_id='$client[$i]', request='$request[$i]',date='$date[$i]' where id = '$id[$i]'");
+                $check = $con->query("select * from accounts_log where description = '$description[$i]' and client_contact_id='$client[$i]' and request='$request[$i]' and date='$date[$i]' and id = '$id[$i]'");
+                if($check->num_rows == 0){
+                    $con->query("update accounts_log set description = '$description[$i]', client_contact_id='$client[$i]', request='$request[$i]',date='$date[$i]' where id = '$id[$i]'");
+                    $success = 1;
+                }
+                else{
+                    $errorText = 'Nothing to Update!';
+                }
             }
         }
         if($success){
             echo "<script>
                     swal({
                         icon: 'success',
-                        text: '".$text."!',
+                        text: 'Updated!',
                         closeOnClickOutside: false,
                     }).then(function(isConfirm) {
                         if (isConfirm) {
