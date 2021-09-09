@@ -78,7 +78,7 @@
         }
 
         $con->query("DELETE FROM going_concern where workspace_id = $wid");
-        if($conclusion != ''){
+        if($conclusion != ''){  
             $con->query("INSERT INTO going_concern(workspace_id, going_concern_radio, desc_a, desc_b, desc_c, conclusion_text) VALUES('$wid','$conclusion','$descA','$descB','$descC','$conclusionText')");
         }
 

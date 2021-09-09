@@ -16,7 +16,15 @@ $newData['comment'] = $data->fetch_all();
 $data = $con->query("select user.signoff_init,prepare_signoff_date from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id='$wid' and prog_id='$id'");
 $newData['prepareSignOff'] = $data->fetch_all();
 
-// $data = $con->query("select user.signoff_init,review_signoff_date from signoff_review_log inner join user on signoff_review_log.user_id=user.id where workspace_id='$wid' and prog_id='$id'");
-// $newData['reviewSignOff'] = $data->fetch_all();
+$data = $con->query("SELECT * FROM assertion WHERE workspace_id = $wid and program_id = $id");
+if($data->num_rows > 0){
+    $i = 0;
+    while($row = $data->fetch_assoc()['assertion_value']){
+        $newData['assertion_value'][$i++] = $row;   
+    }
+}
+else{
+    $newData['assertion_value'] = 0;
+}
 
 echo json_encode($newData);

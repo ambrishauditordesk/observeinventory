@@ -44,7 +44,7 @@ $addedById = trim($_POST['id']);
 // // Getting the CST Time
 // $addedByDate = trim($_POST['date']);
 
-$uploadOk = 1;
+$uploadOk = 0;
 
 // // Name
 // $name = trim($_POST['clientname']);
@@ -89,8 +89,16 @@ $uploadOk = 1;
 // $cin = trim($_POST['cin']);
 
 $clientID = trim($_POST['cid']);
-
 $active = trim($_POST['active']);
+
+$checkActive = $con->query("select active from client where id = $clientID")->fetch_assoc()['active'];
+
+if($active == $checkActive){
+    $uploadOk = 0;
+}
+else{
+    $uploadOk = 1;
+}
 
 if($uploadOk){
 
@@ -112,8 +120,8 @@ if($uploadOk){
         echo "<script>
             swal({
             closeOnClickOutside: false,
-                icon: 'error',
-                text: 'Error!',
+                icon: 'success',
+                text: 'Nothing to update!',
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     window.location.href = '$ser';

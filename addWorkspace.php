@@ -137,7 +137,7 @@ if( $diff > 0 && $diff <= 730){
 else{
     echo "<script>
         $(document).ready(function() {
-            $('#unsuccessModal').modal({backdrop: 'static', keyboard: false});
+            $('#unsuccessWorkspaceModal').modal({backdrop: 'static', keyboard: false});
         });
     </script>";
 }
@@ -191,6 +191,23 @@ else{
                 <?php 
                 }
             ?> 
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!--Unsuccess Modal-->
+<div class="modal fade" id="unsuccessWorkspaceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Hey <?php echo $_SESSION['name']; ?>!</h5>
+            </div>
+            <div class="modal-body">
+                Incorect Date! Date must be in a range of maximum 2 years.
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a class="btn btn-primary" href="workspace?fid=<?php echo base64_encode(md5($clientID)); ?>&xid=<?php echo base64_encode(md5($clientID)); ?>&uid=<?php echo base64_encode(md5($clientID)); ?>&cid=<?php echo base64_encode($clientID); ?>&aid=<?php echo base64_encode(md5($clientID)); ?>&zid=<?php echo base64_encode(md5($clientID)); ?>&qid=<?php echo base64_encode(md5($clientID)); ?>">OK</a>
             </div>
         </div>
     </div>

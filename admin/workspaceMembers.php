@@ -549,27 +549,16 @@
                 active: active
             },
             success: function(data) {
-                if (data) {
-                    swal({
-            closeOnClickOutside: false,
-                        icon: "success",
-                        text: "Updated",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                } else {
-                    swal({
-            closeOnClickOutside: false,
-                        icon: "error",
-                        text: "Failed!",
-                    }).then(function(isConfirm) {
-                        if (isConfirm) {
-                            location.reload();
-                        }
-                    });
-                }
+                data = JSON.parse(data);
+                swal({
+                    closeOnClickOutside: false,
+                    icon: "success",
+                    text: data.text,
+                }).then(function(isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
             }
         });
 

@@ -303,7 +303,17 @@ $_SESSION['breadcrumb'] = array();
                         <a href="settings" class="text-decoration-none">
                             <img class="sidenav-icon" src="Icons/settings.svg" style="width:24px !important; height:24px !important;"/> &nbsp;Settings
                         </a>
+                        <?php
+                            if($_SESSION['firm_details']['plan'] != 1){
+                        ?>
                         <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_6">6</span></label>
+                        <?php
+                            }else{
+                                ?>
+                                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_5">5</span></label>
+                                <?php
+                            }
+                        ?>
                     </div>
                     <div id="helpButton" class="settings-items">
                         <a href="#" class="text-decoration-none"><img class="sidenav-icon" src="Icons/help-circle.svg" style="width:24px !important; height:24px !important;"/> &nbsp;
@@ -312,7 +322,17 @@ $_SESSION['breadcrumb'] = array();
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="logout"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button></a>
-                    <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_7">7</span></label>
+                    <?php
+                        if($_SESSION['firm_details']['plan'] != 1){
+                    ?>
+                        <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_7">7</span></label>
+                    <?php
+                        }else{
+                            ?>
+                                <label class="d-flex justify-content-center align-items-center mt-2"><span class="helpDesign help_6">6</span></label>
+                            <?php
+                        }
+                    ?>
                 </div>
             </div>
         </div>
@@ -422,21 +442,34 @@ $_SESSION['breadcrumb'] = array();
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="span-heading">Audit Program</span>
                     <?php
-                        $querys1 = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 1 and import=1")->fetch_assoc()['total'];
-                        $querys = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and import=1")->fetch_assoc()['total'];
+                        $query = "select program.id id from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' and workspace_log.active = 1 order by _seq";
+                        $exquery = $con->query($query);
+                        $totalProgramCount = $statusProgramCount = 0;
+                        if ($exquery->num_rows != 0) {
+                            while($row = $exquery->fetch_assoc()){
+                                $data = getProgramStatus($row['id'],$wid);
+                                $totalProgramCount += $data['totalCount'];
+                                $statusProgramCount += $data['statusCount'];
+                            }  
+                        }
+                        // $querys1 = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and status = 1 and import=1")->fetch_assoc()['total'];
+                        // $querys = $con->query("SELECT count(workspace_log.id) total FROM workspace_log inner join program on workspace_log.program_id = program.id where workspace_id = $wid and program.hasChild = 0 and import=1")->fetch_assoc()['total'];
 
-                        $totalCount = (int)$con->query("SELECT count(id) total from materiality where workspace_id = $wid")->fetch_assoc()['total'];
-                        $statusCount = (int)$con->query("SELECT count(id) total FROM materiality where workspace_id = $wid and ( standard_low != '' or standard_high != '' or custom != '' or amount != '' )")->fetch_assoc()['total'];
+                        // $totalCount = (int)$con->query("SELECT count(id) total from materiality where workspace_id = $wid")->fetch_assoc()['total'];
+                        // $statusCount = (int)$con->query("SELECT count(id) total FROM materiality where workspace_id = $wid and ( standard_low != '' or standard_high != '' or custom != '' or amount != '' )")->fetch_assoc()['total'];
 
-                        $totalCount += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 and program_id <= 46 ) or ( program_id >= 231 and program_id <= 237 ) and workspace_id = $wid")->fetch_assoc()['total'];
-                        $statusCount += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 or program_id <= 46 ) and ( program_id >= 231 or program_id <= 237 ) and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
+                        // $totalCount += (int)$con->query("SELECT count(id) total FROM tb_performance_map where workspace_id = $wid")->fetch_assoc()['total'];
+                        // $statusCount += (int)$con->query("SELECT count(id) total FROM tb_performance_map where amount != '' and workspace_id = $wid")->fetch_assoc()['total'];
 
-                        $querys += $totalCount;
-                        $querys1 += $statusCount;
+                        // $totalCount += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 and program_id <= 46 ) or ( program_id >= 231 and program_id <= 237 ) and workspace_id = $wid")->fetch_assoc()['total'];
+                        // $statusCount += (int)$con->query("SELECT count(id) total FROM workspace_log where ( program_id >= 35 or program_id <= 46 ) and ( program_id >= 231 or program_id <= 237 ) and workspace_id = $wid and amount != ''")->fetch_assoc()['total'];
+
+                        // $querys += $totalCount;
+                        // $querys1 += $statusCount;
 
                         $per = round(number_format((float)0, 2, '.', ''));
-                        if($querys1 != 0){
-                            $per = round(number_format((float)($querys1/$querys)*100, 2, '.', ''));
+                        if($statusProgramCount != 0){
+                            $per = round(number_format((float)($statusProgramCount/$totalProgramCount)*100, 2, '.', ''));
                         }
                     ?>
                     <span class="color-block"><?php echo $per."%"; ?></span>
@@ -472,7 +505,7 @@ $_SESSION['breadcrumb'] = array();
                         $data = getProgramStatus($queryrow['id'],$wid);
                         
                         $per = round(number_format((float)0, 2, '.', ''));
-                        if($querys != 0){
+                        if($data['statusCount'] != 0){
                             $per = round(number_format((float)($data['statusCount']/$data['totalCount'])*100, 2, '.', ''));
                         }
                         // echo "Status= ".$data['statusCount'].", Total=".$data['totalCount'];
@@ -519,7 +552,7 @@ $_SESSION['breadcrumb'] = array();
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div id="help_1">
-                            <p>1. Audit Pillars : We have divided fieldwork in five pillars. You can not add or remove any pillar .</p>
+                            <p>1. Audit Pillars : We have divided fieldwork in five pillars. You cannot add or remove any pillar .</p>
                         </div>
                         <div id="help_2">
                             <p>2. Audit members : This shows the list of members that currently have access to the particular client file.</p>
@@ -531,17 +564,33 @@ $_SESSION['breadcrumb'] = array();
                         <div id="help_4">
                             <p>4. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
                         </div>
-                        <div id="help_5">
-                            <p>5. Diagnostics: Diagnostics report gives you a summary of all applicable work steps being signed off by preparer and reviewer.</p>
-                            <p>Diagnostics reports give you a quick view of the number of comments and number of files within a particular workplace.</p>
-                            <p>You can review this report to ensure accuracy and completeness of audit before Concluding.</p> 
-                        </div>
-                        <div id="help_6">
-                            <p>6. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
-                        </div>
-                        <div id="help_7">
-                            <p>7. Log out- Simply use this button to log out of your firm workspace and client list.</p>
-                        </div>
+                        <?php
+                            if($_SESSION['firm_details']['plan'] != 1){
+                        ?>
+                            <div id="help_5">
+                                <p>5. Diagnostics: Diagnostics report gives you a summary of all applicable work steps being signed off by preparer and reviewer.</p>
+                                <p>Diagnostics reports give you a quick view of the number of comments and number of files within a particular workplace.</p>
+                                <p>You can review this report to ensure accuracy and completeness of audit before Concluding.</p> 
+                            </div>
+                            <div id="help_6">
+                                <p>6. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                            </div>
+                            <div id="help_7">
+                                <p>7. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                            </div>
+                        <?php
+                            }
+                            else{
+                                ?>
+                                <div id="help_5">
+                                    <p>5. Settings – Your Settings are personalized based on your role in your firm and can be always accessed for chat, email and reaching out to a specialist for any help.</p>
+                                </div>
+                                <div id="help_6">
+                                    <p>6. Log out- Simply use this button to log out of your firm workspace and client list.</p>
+                                </div>
+                            <?php
+                            }  
+                        ?>
                         <i id="left-arrow" class="fas fa-arrow-left"></i>
                         <i id="right-arrow" class="fas fa-arrow-right"></i>
                     </div>
@@ -682,7 +731,7 @@ $_SESSION['breadcrumb'] = array();
         $("#helpDescription > div > div > .close").click(function(e){
             $(".helpDesign, #helpDescription").hide();
         });
-
+        
         $("#helpButton").click(function(e){
             $(".helpDesign, #helpDescription").toggle();
             $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
@@ -733,12 +782,18 @@ $_SESSION['breadcrumb'] = array();
             $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7").hide();
         });
 
+        <?php
+            if($_SESSION['firm_details']['plan'] != 1){
+        ?>
         $(".help_7").click(function(e){
             $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
             $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
             $("#help_7").show();
             $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6").hide();
         });
+        <?php
+            }
+        ?>
 
         $("#right-arrow").click(function(e){
             if($(".help_1").hasClass("helpDesignSelected")){
@@ -771,6 +826,9 @@ $_SESSION['breadcrumb'] = array();
                 $("#help_6").show();
                 $("#help_1, #help_2, #help_3, #help_4, #help_5").hide();
             }
+            <?php
+                if($_SESSION['firm_details']['plan'] != 1){
+            ?>
             else if($(".help_6").hasClass("helpDesignSelected")){
                 $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                 $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
@@ -783,15 +841,42 @@ $_SESSION['breadcrumb'] = array();
                 $("#help_1").show();
                 $("#help_2, #help_3, #help_4, #help_5, #help_6, #help_7").hide();
             }
+            <?php
+                }else{
+                    ?>
+                    else if($(".help_6").hasClass("helpDesignSelected")){
+                        $(".help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_1").show();
+                        $("#help_2, #help_3, #help_4, #help_5, #help_6").hide();
+                    }
+                    <?php
+                }
+            ?>
         });
 
         $("#left-arrow").click(function(e){
-            if($(".help_1").hasClass("helpDesignSelected")){
-                $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
-                $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
-                $("#help_7").show();
-                $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6").hide();
-            }
+            <?php
+                if($_SESSION['firm_details']['plan'] != 1){                                   
+            ?>
+                if($(".help_1").hasClass("helpDesignSelected")){
+                    $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_6").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                    $(".help_7").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                    $("#help_7").show();
+                    $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_6").hide();
+                }
+            <?php 
+                } else {
+                    ?>
+                    if($(".help_1").hasClass("helpDesignSelected")){
+                        $(".help_1, .help_2, .help_3, .help_4, .help_5").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
+                        $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
+                        $("#help_6").show();
+                        $("#help_1, #help_2, #help_3, #help_4, #help_5").hide();
+                    }
+                    <?php
+                }
+            ?>
             else if($(".help_2").hasClass("helpDesignSelected")){
                 $(".help_2, .help_3, .help_4, .help_5, .help_6, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                 $(".help_1").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
@@ -822,12 +907,18 @@ $_SESSION['breadcrumb'] = array();
                 $("#help_5").show();
                 $("#help_1, #help_2, #help_3, #help_4, #help_6, #help_7").hide();
             }
+            <?php
+                if($_SESSION['firm_details']['plan'] != 1){               
+            ?>
             else if($(".help_7").hasClass("helpDesignSelected")){
                 $(".help_1, .help_2, .help_3, .help_4, .help_5, .help_7").removeClass("helpDesignSelected").addClass("helpDesignNotSelected");
                 $(".help_6").removeClass("helpDesignNotSelected").addClass("helpDesignSelected");
                 $("#help_6").show();
                 $("#help_1, #help_2, #help_3, #help_4, #help_5, #help_7").hide();
             }
+            <?php 
+            } 
+            ?>
         });
 
 

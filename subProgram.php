@@ -868,6 +868,25 @@
                                         </div>
                                     </form>
                                 </div>
+                                <?php
+                                    if(isset($_SESSION['role']) && !empty($_SESSION['role']) && $_SESSION['role'] != 5)
+                                    {
+                                ?>
+                                <div class="row d-flex justify-content-center">
+                                    <?php
+                                        $checkReviewStatus = $con->query("select count(signoff_prepare_log.id) total from signoff_prepare_log inner join user on signoff_prepare_log.user_id=user.id where workspace_id=".$wid." and prog_id=526")->fetch_assoc();
+                                        if($checkReviewStatus['total']){
+                                            ?>
+                                                <button class="btn btn-info" id="reviewSubmitSchedule">Review Sign-Off</button>
+                                            <?php
+                                        }
+                                    ?>
+                                    &nbsp;
+                                    <button class="btn btn-success" id="prepareSubmitSchedule">Prepare Sign-Off</button>
+                                </div>
+                                <?php 
+                                }
+                                ?>
                             </div>
                             <?php 
                         }
@@ -2234,10 +2253,10 @@
                                                                             <option value="Qualitative"  <?php if($row['type'] == "Qualitative") echo "selected"; ?>>Qualitative</option>
                                                                         </select>
                                                                     </td>
-                                                                    <td><input name="submitEstimate[name][]" type="text" value="<?php echo $row['nameEstimate']; ?>" required></td>
-                                                                    <td><input name="submitEstimate[account][]" type="text" value="<?php echo $row['account']; ?>" required></td>
-                                                                    <td><input name="submitEstimate[py][]" type="text" value="<?php echo numberToCurrency(trim($row['py'])); ?>" required></td>
-                                                                    <td><input name="submitEstimate[cy][]" type="text" value="<?php echo numberToCurrency(trim($row['cy'])); ?>" required></td>
+                                                                    <td><input class="form-control" name="submitEstimate[name][]" type="text" value="<?php echo $row['nameEstimate']; ?>" required></td>
+                                                                    <td><input class="form-control" name="submitEstimate[account][]" type="text" value="<?php echo $row['account']; ?>" required></td>
+                                                                    <td><input style="padding: 0.375rem 0.75rem;" name="submitEstimate[py][]" type="text" value="<?php echo numberToCurrency(trim($row['py'])); ?>" required></td>
+                                                                    <td><input style="padding: 0.375rem 0.75rem;" name="submitEstimate[cy][]" type="text" value="<?php echo numberToCurrency(trim($row['cy'])); ?>" required></td>
                                                                     <td>
                                                                     <select name="submitEstimate[c][]" class="form-control minWidth150"required>
                                                                         <option value="Low" <?php if($row['c'] == "Low") echo "selected"; ?>>Low</option>
@@ -2363,7 +2382,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="">Documents Observations</label>
-                                            <textarea name= "comments" class="form-control" rows="3"><?php $documentObserve = $con->query("select comments from accounting_estimates_comments where workspace_id=$wid"); if($documentObserve->num_rows > 1) $documentObserve->fetch_assoc()['comments'];?></textarea>
+                                            <textarea name= "comments" class="form-control" rows="3"><?php $documentObserve = $con->query("select comments from accounting_estimates_comments where workspace_id=$wid"); if($documentObserve->num_rows > 0) echo $documentObserve->fetch_assoc()['comments'];?></textarea>
                                         </div>
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <input class="btn btn-upload" type="file" name="file" accept=".pdf, .xls, .xlsx, .txt, .csv, .doc, .docx, .rtf, .xlmb" style="width:30% !important;">&nbsp;
@@ -2456,7 +2475,7 @@
                                                     <tr id="<?php echo $i; ?>">
                                                         <td><input type="text" name="going_concern_name_title_date_a[<?php echo $i; ?>][0]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['name']; ?>"></td>
                                                         <td><input type="text" name="going_concern_name_title_date_a[<?php echo $i; ?>][1]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['title']; ?>"></td>
-                                                        <td><input type="date" class="form-control" name="going_concern_name_title_date_a[<?php echo $i++; ?>][2]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['date']; ?>"></td>
+                                                        <td><input type="date" class="form-control" name="going_concern_name_title_date_a[<?php echo $i++; ?>][2]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['date']; ?>" min='1970-01-01' max='2100-12-12'></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -2466,7 +2485,7 @@
                                                 <tr id="0">
                                                     <td><input type="text" name="going_concern_name_title_date_a[0][0]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
                                                     <td><input type="text" name="going_concern_name_title_date_a[0][1]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
-                                                    <td><input type="date" class="form-control" name="going_concern_name_title_date_a[0][2]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                    <td><input type="date" class="form-control" name="going_concern_name_title_date_a[0][2]" class="form-group col-md-12 col-lg-12 col-sm-12" min='1970-01-01' max='2100-12-12'></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -2546,7 +2565,7 @@
                                                     <tr id="<?php echo $i; ?>">
                                                         <td><input type="text" name="going_concern_name_title_date_b[<?php echo $i; ?>][0]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['name']; ?>"></td>
                                                         <td><input type="text" name="going_concern_name_title_date_b[<?php echo $i; ?>][1]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['title']; ?>"></td>
-                                                        <td><input type="date" class="form-control" name="going_concern_name_title_date_b[<?php echo $i++; ?>][2]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['date']; ?>"></td>
+                                                        <td><input type="date" class="form-control" name="going_concern_name_title_date_b[<?php echo $i++; ?>][2]" class="form-group col-md-12 col-lg-12 col-sm-12" value="<?php echo $row['date']; ?>" min='1970-01-01' max='2100-12-12'></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -2556,7 +2575,7 @@
                                                 <tr id="0">
                                                     <td><input type="text" name="going_concern_name_title_date_b[0][0]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
                                                     <td><input type="text" name="going_concern_name_title_date_b[0][1]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
-                                                    <td><input type="date" class="form-control" name="going_concern_name_title_date_b[0][2]" class="form-group col-md-12 col-lg-12 col-sm-12"></td>
+                                                    <td><input type="date" class="form-control" name="going_concern_name_title_date_b[0][2]" class="form-group col-md-12 col-lg-12 col-sm-12" min='1970-01-01' max='2100-12-12'></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -2617,16 +2636,24 @@
                                         <p><b><i><?php echo $goingConcernDecRadio == '0' ? 'We did not give consideration to modification of our auditor’s report': $goingConcernDecRadio['conclusion_text'] ;?></i></b><i class="fas fa-edit editConclusion" style="color:blue !important; cursor: pointer;" id="<?php echo $goingConcernDecRadio != 0 ? $goingConcernDecRadio['id'] : '0'; ?>" ></i></p>
                                         <p>Choose anyone from the options given below:</p>
                                         <?php
-                                        $conclusionNumber = 0;
+                                        $conclusionNumber = 1;
+                                        $defaultRadioFlag = 1;
                                             $conclusionResult = $con->query("select * from going_concern_conclusion where workspace_id = $wid");
                                             while($conclusionRow = $conclusionResult->fetch_assoc()){
                                                 ?>
                                                 <input type="radio" id="<?php echo $conclusionRow['id']; ?>" name="conclusion" value="<?php echo $conclusionNumber; ?>" 
                                                 <?php 
-                                                    if($goingConcernDecRadio != 0)
-                                                        if($goingConcernDecRadio['going_concern_radio'] == $conclusionNumber) 
+                                                    if($goingConcernDecRadio){
+                                                        if($goingConcernDecRadio['going_concern_radio'] == $conclusionNumber){
+                                                            $defaultRadioFlag = 0;
                                                             echo 'checked';
-                                                ?> >
+                                                        }
+                                                    }
+                                                    if($defaultRadioFlag == 1){
+                                                        $defaultRadioFlag = 0;
+                                                        echo 'checked';
+                                                    }
+                                                ?>>
                                                 <label for="<?php echo $conclusionNumber++; ?>"><?php echo $conclusionRow['going_concern_conclusion_data']; ?>&nbsp;<i class="fas fa-edit editTextarea" style="color:blue !important; cursor: pointer;" id="<?php echo $conclusionRow['id']; ?>" ></i></label><br>
                                                 <?php
                                             }
@@ -3099,7 +3126,7 @@
                                     &nbsp;
                                     <button class="btn btn-success" id="prepareSubmitAuditedFS">Prepare Sign-Off</button>
                                 </div>
-                        <?php 
+                            <?php 
                         }
                         else{
                             if($_SESSION['firm_details']['plan'] == 2){
@@ -3219,6 +3246,7 @@
                                                                 }
                                                             }
                                                         } 
+                                                        if($queryrow['status'] != 1){
                                                         ?>
                                                         <a href="#" id="<?php echo $queryrow['id']; ?>"
                                                             class="buttonActive">
@@ -3228,6 +3256,7 @@
                                                             </i> -->
                                                             <img class="float-right" src="Icons/thumbs-up.svg" />
                                                         </a> <?php
+                                                        }
                                                         if($prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 262 || $prog_id == 266 || $prog_id == 19){
                                                             echo "<label class='float-right'><span class='helpDesign help_3'>3</span></label>";
                                                         }
@@ -3236,13 +3265,16 @@
                                                         }
                                                     } else { ?>
                                                         <span class="text-muted pl-2"><?php echo trim($queryrow['program_name']); ?> &nbsp;</span>
+                                                        <?php
+                                                            if($queryrow['status'] != 1){
+                                                        ?>
                                                         <a href="#" id="<?php echo $queryrow['id']; ?>"
                                                             class="buttonActive">
                                                             <img class="float-right" src="Icons/Icon feather-plus.svg" />
                                                             <!-- <i class="fa fa-ban float-right" aria-hidden="true" style="color:orange !important;"></i> -->
                                                         </a> 
                                                         <?php
-                                                    }
+                                                    } }
                                                 ?>
                                             </div>
                                         </div> <?php
@@ -3289,7 +3321,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up" which reflects an active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up" which reflects an active work step.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3304,24 +3336,24 @@
                                                 <p>8. You can use the threads to go back to the previous screen or any screen within the thread, this helps you save a lot of time and help you navigate through different screens.</p>
                                             </div>
                                             <div id="help_9">
-                                                <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
+                                                <p>9. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side for each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to “Thumbs up” which reflects an active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to “Thumbs up” which reflects an active work step.</p>
                                             </div>
                                             <?php
                                         }
                                         elseif($prog_id == 254 || $prog_id == 255 || $prog_id == 256 || $prog_id == 257 || $prog_id == 266 || $prog_id == 19){
                                             ?>
                                             <div id="help_1">
-                                                <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                                <p> 1. Steps : A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
                                             </div>
                                             <div id="help_2">
-                                                <p>2. Red icons indicate that there is no saved data within this work steps and no sign offs have been done yet. Once a user signs off the step the icons disappear.</p>
+                                                <p>2. Red icons indicate that there is no saved data within this workstep and no sign offs have been done yet. Once a user signs off the step the icon will disappear.</p>
                                             </div>
                                             <div id="help_3">
-                                                <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
+                                                <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side for each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to “Thumbs up” which reflects an active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to “Thumbs up” which reflects an active work step.</p>
                                             </div>
                                             <div id="help_4">
                                                 <p>4. Add program:<p> 
@@ -3331,7 +3363,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up"which reflects an active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up"which reflects an active work step.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -3413,7 +3445,7 @@
                                         elseif($prog_id == 12){
                                             ?>
                                             <div id="help_1">
-                                                <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                                <p> 1. Steps : A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
                                             </div>
                                             <div id="help_2">
                                                 <p>2. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p>
@@ -3561,15 +3593,15 @@
                                         elseif($prog_id == 262){
                                             ?>
                                             <div id="help_1">
-                                                <p> 1. Steps :A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
+                                                <p> 1. Steps : A Step is an individual step that should be used to add task under a program or to create a task as a standalone individual step. All Workporgrams. You can use “Add program” icon on the top right corner to add more worksteps to  Pillar like Planning, Risk assessment, Performance or reporting and conclusion you can add program based on your requirements.</p>
                                             </div>
                                             <div id="help_2">
-                                                <p>2. Red icons indicate that there is no saved data within this work steps and no sign offs have been done yet. Once a user signs off the step the icons disappear.</p>
+                                                <p>2. Red icons indicate that there is no saved data within this workstep and no sign offs have been done yet. Once a user signs off the step the icon will disappear.</p>
                                             </div>
                                             <div id="help_3">
-                                                <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side on each work step.</p>
+                                                <p>3. Thumbs up: You can choose not to work on an suggestive work step by clicking on “Thumbs up” icon located on right hand side for each work step.</p>
                                                 <p>Once you click  on “Thumbs up” The icon will change to “X” which means the work step has been disabled or marked not applicable. All not applicable work steps will be reflected in the diagnostic report.</p>
-                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clickingon “X” and it will change to “Thumbs up” which reflect all active work step.</p>
                                             </div>
                                             <div id="help_4">
                                             <p>4. Add program:<p> 
@@ -3579,7 +3611,7 @@
                                                 <p><b>Add a Step:</b></p>
                                                 <p>Click on the icon “Add program” on the top right corner and add Name of the step for your individual work step and select “Add as Step” from the program type drop-down. This will add a step in the respective section No changes will be saved unless you click Done.</p>
                                                 <p>Note Step will be added in the respective section you currently working on. Example. If you are in planning section of audit and you select “Add as Step”, a new step will be added on Planning section only.</p>
-                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up"which reflects an active work steps.</p>
+                                                <p>You can change a disabled work step to enable by clicking on “X” and it will change to "Like/Thumbs up"which reflects an active work step.</p>
                                             </div>
                                             <div id="help_5">
                                                 <p>5. Profile: User profile reflects brief details about the user and can be edited by firm administrator.</p> 
@@ -4674,43 +4706,55 @@
                 e.preventDefault();
                 var prog_name = $("#prog_name").val();
                 var prog_type = $("#prog_type").val();
-                $.ajax({
-                    url: "addProg.php",
-                    type: "POST",
-                    data: {
-                        prog_id: <?php echo $prog_id; ?>,
-                        wid: <?php echo $wid; ?>,
-                        name: prog_name,
-                        type: prog_type
-                    },
-                    success: function (response) {
-                        if (response) {
-                            swal({
-            closeOnClickOutside: false,
-                                icon: "success",
-                                text: prog_name + " Added",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
-                                }
-                            });
-                        } else {
-                            swal({
-            closeOnClickOutside: false,
-                                icon: "error",
-                                text: "Failed!",
-                            }).then(function (isConfirm) {
-                                if (isConfirm) {
-                                    window.location.href = window.location
-                                            .pathname +
-                                        "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
-                                }
-                            });
+                if(prog_name == ''){
+                    e.preventDefault();
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: "error",
+                        text: "Program Name can't be empty!",
+                    }).then(function(isConfirm) {
+                        $('#prog_name').focus();
+                    });
+                }
+                else{
+                    $.ajax({
+                        url: "addProg.php",
+                        type: "POST",
+                        data: {
+                            prog_id: <?php echo $prog_id; ?>,
+                            wid: <?php echo $wid; ?>,
+                            name: prog_name,
+                            type: prog_type
+                        },
+                        success: function (response) {
+                            if (response) {
+                                swal({
+                                    closeOnClickOutside: false,
+                                    icon: "success",
+                                    text: prog_name + " Added",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.href = window.location
+                                                .pathname +
+                                            "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                                    }
+                                });
+                            } else {
+                                swal({
+                                    closeOnClickOutside: false,
+                                    icon: "error",
+                                    text: "Failed!",
+                                }).then(function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.href = window.location
+                                                .pathname +
+                                            "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                                    }
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
 
             $('#addbsplSubmit').on('click', function (e) {
@@ -5143,8 +5187,6 @@
                                 }
                             }
                         }
-                        
-
                         obj.file.forEach(function (value) {
                             $('#signoffModal #filenames').append(
                                 '<li class="custom-list-items custom-list-items-action" id="' +value[0] + '"><a href="#" class="fileEditDownload" id="'+value[1]+'">' +value[1] + '</a>&nbsp;<a href="#"><i id="'+value[0]+'" class="fas fa-times-circle deleteFile" style="color:red !important;"></a></li>');
@@ -5163,6 +5205,23 @@
                             obj.pname['program_name'] +
                             '</h5><button class="close refreshmodal" type="button" id="'+id+'" hidden><span aria-hidden="true"><i class="fas fa-redo" style="font-size: 1.3rem !important;"></i></span></button><button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-left: 0 !important;"><span aria-hidden="true">×</span></button>'
                         );
+                        if(obj.assertion_value.length != 0){
+                            for(i in obj.assertion_value){
+                                if($('#inlineCheckbox1').val() == obj.assertion_value[i]){
+                                    $('#inlineCheckbox1').attr('checked',true);
+                                    
+                                }
+                                if($('#inlineCheckbox2').val() == obj.assertion_value[i]){
+                                    $('#inlineCheckbox2').attr('checked',true);
+                                }
+                                if($('#inlineCheckbox3').val() == obj.assertion_value[i]){
+                                    $('#inlineCheckbox3').attr('checked',true);
+                                }
+                                if($('#inlineCheckbox4').val() == obj.assertion_value[i]){
+                                    $('#inlineCheckbox4').attr('checked',true);
+                                }
+                            }
+                        }
                     }
                 });
                 $("#signoffModal #prog_id").val(id);
@@ -5602,7 +5661,7 @@
                     let text = response == 1 ? "Updated Successfully" : "Did not Updated";
                     let icon = response == 1 ? "success" : "error";
                     swal({
-            closeOnClickOutside: false,
+                        closeOnClickOutside: false,
                         icon: icon,
                         text: text,
                     }).then(function (isConfirm) {
@@ -5838,6 +5897,58 @@
                 }
             });
         });
+
+        $(document).on('click', '#prepareSubmitSchedule', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"247",
+                    status:"0"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+                        closeOnClickOutside: false,
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $(document).on('click', '#reviewSubmitSchedule', function(e){
+            $.ajax({
+                url:"prepareReviewAjax.php",
+                type:"POST",
+                data:{
+                    wid: <?php echo $wid; ?>,
+                    prog_id:"247",
+                    status:"1"
+                },
+                success: function(response){
+                    let text = response == 1 ? "Updated Successfully" : "Did not Update";
+                    let icon = response == 1 ? "success" : "error";
+                    swal({
+            closeOnClickOutside: false,
+                        icon: icon,
+                        text: text,
+                    }).then(function (isConfirm) {
+                        if (isConfirm) {
+                            window.location.href = window.location.pathname + "?<?php echo base64_encode(md5(time())); ?>&gid=<?php echo base64_encode(md5(time())); ?>&fid=<?php echo base64_encode(md5(time())); ?>&eid=<?php echo base64_encode(md5(time())); ?>&pid=<?php echo base64_encode($prog_id); ?>&cid=<?php echo base64_encode(md5(time())); ?>&bid=<?php echo base64_encode(md5(time())); ?>&aid=<?php echo base64_encode(md5(time())); ?>&parent_id=<?php echo base64_encode($prog_parentId); ?>&zid=<?php echo base64_encode(md5(time())); ?>&yid=<?php echo base64_encode(md5(time())); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5(time())); ?>";
+                        }
+                    });
+                }
+            });
+        });
+        
         
         function exportGoingConcern(){
             $("#addPartAARow, #addPartABRow, #addPartBARow, #addPartBBRow").hide();

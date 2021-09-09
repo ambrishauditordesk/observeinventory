@@ -91,9 +91,7 @@
                 </div>";
 
                 customMailer($_SESSION['email'],$msg,$sub);                
-
             }
-            $_SESSION['role'] = 2;
             $con->query("update user set accessLevel='$role' where email = '$email'");
             $flag = 1;
         }

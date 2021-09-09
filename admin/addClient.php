@@ -139,6 +139,14 @@ $count = $i;
 $successEmailList = $unSuccessEmailList = '';
 $notDuplicate = 0;
 
+for($i=0;$i<$count;$i++){
+    $checkDuplicateEmail = checkDuplicateEmail($email[$i]);
+    if(!$checkDuplicateEmail){
+        $uploadOk = 0;
+        break;
+    }
+}
+
 if($uploadOk) {
     $con->query("insert into client(active,added_by_id,added_by_date,name,nickname,incorp_date,const_id,industry_id,address,city,state,pincode,country,pan,gst,tan,cin)
     values('1','$addedById','$addedByDate','$name','$nickName','$date','$const','$industry','$add','$city','$state','$pin','$country','$pan','$gst','$tan','$cin')");

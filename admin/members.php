@@ -437,7 +437,7 @@
                                 <label for="name">Role</label>
                                 <select name="role" id="role1" class="form-control">
                                     <?php 
-                                        if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
+                                        if($_SESSION['role'] == 4){
                                             ?>
                                         <option value="4">Firm Admin</option>
                                        <?php }
@@ -941,7 +941,7 @@
 
         if(role == 4){
             swal({
-            closeOnClickOutside: false,
+                closeOnClickOutside: false,
                 title: "Are you sure?",
                 text: "You want to change Firm Admin?",
                 icon: "warning",
@@ -962,17 +962,17 @@
                         success: function(data) {
                             if (data) {
                                 swal({
-            closeOnClickOutside: false,
+                                    closeOnClickOutside: false,
                                     icon: "success",
                                     text: "Updated",
                                 }).then(function(isConfirm) {
                                     if (isConfirm) {
-                                        location.reload();
+                                        location.href='../logout';
                                     }
                                 });
                             } else {
                                 swal({
-            closeOnClickOutside: false,
+                                    closeOnClickOutside: false,
                                     icon: "error",
                                     text: "Failed!",
                                 }).then(function(isConfirm) {
