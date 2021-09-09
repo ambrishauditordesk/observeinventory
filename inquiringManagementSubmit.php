@@ -66,7 +66,7 @@
             $id = $answerArray[$i][0];
             $option = $answerArray[$i][1];
             $textarea = $answerArray[$i][2];
-            $checkQuestionAnswer = $con->query("select * from inquiring_of_management_questions_answer where workspace_id = '$wid' and answer_option = '$option' and answer_textarea = '$textarea'")->num_rows;
+            $checkQuestionAnswer = $con->query("select * from inquiring_of_management_questions_answer where workspace_id = '$wid' and answer_option = '$option' and answer_textarea = '$textarea' and id='$id'")->num_rows;
             if($checkQuestionAnswer == 0){
                 $con->query("UPDATE inquiring_of_management_questions_answer SET answer_option = '$option', answer_textarea = '$textarea' where id = '$id' and workspace_id = '$wid'");
                 $flag = 1;

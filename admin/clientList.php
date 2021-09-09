@@ -795,43 +795,43 @@
     <!-- Page level custom scripts -->
     <script src="../js/custom.js"></script>
     <script>
-    function get_data() {
-        var dataTable = $('#clientListTable').DataTable({
-            "destroy": true,
-            "processing": true,
-            "serverSide": true,
-            "searching": true,
-            "order": [],
-            "bInfo": false,
-            "fnRowCallback": function(nRow, aData, iDisplayIndex) {
-                $("td:first", nRow).html(iDisplayIndex + 1);
-                return nRow;
-            },
-            "drawCallback": function(settings) {
-                var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
-                pagination.toggle(this.api().page.info().pages > 1);
-                $(".helpDesign, #helpDescription").hide();
-            },
-            "columnDefs": [
-                { orderable: false, targets: -6 },
-                { orderable: false, targets: -4 }
-            ],
-            "ajax": {
-                url: "clientListFetchAjax.php",
-                type: "POST",
-                async: false
-            }
-        });
+        function get_data() {
+            var dataTable = $('#clientListTable').DataTable({
+                "destroy": true,
+                "processing": true,
+                "serverSide": true,
+                "searching": true,
+                "order": [],
+                "bInfo": false,
+                "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+                    $("td:first", nRow).html(iDisplayIndex + 1);
+                    return nRow;
+                },
+                "drawCallback": function(settings) {
+                    var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+                    pagination.toggle(this.api().page.info().pages > 1);
+                    $(".helpDesign, #helpDescription").hide();
+                },
+                "columnDefs": [
+                    { orderable: false, targets: -6 },
+                    { orderable: false, targets: -4 }
+                ],
+                "ajax": {
+                    url: "clientListFetchAjax.php",
+                    type: "POST",
+                    async: false
+                }
+            });
 
-        dataTable.on( 'draw', function () {
-            var body = $( dataTable.table().body() );
-    
-            body.unhighlight();
-            body.highlight( dataTable.search() );  
-        });
-    }
+            dataTable.on( 'draw', function () {
+                var body = $( dataTable.table().body() );
+        
+                body.unhighlight();
+                body.highlight( dataTable.search() );  
+            });
+        }
 
-    $(document).ready(function() {
+        $(document).ready(function() {
 
         get_data();
 
@@ -1110,118 +1110,6 @@
         else if(!darkmode){
             document.documentElement.classList.remove('dark-mode');
         }
-
-        <?php
-            if(isset($_SESSION['role']) && !empty($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
-                ?>
-                    $("#addClientForm").submit(function(event){
-                        let firm = $("#firm_id").val();
-                        if(firm.length == ''){
-                            event.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "Select Firm!",
-                            }).then(function(isConfirm) {
-                                $('#firm_id').focus();
-                            });
-                        }
-
-                        if ($('#panCheck').val().length != 10){
-                            event.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "PAN Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#panCheck').val('');
-                            });
-                        }
-
-                        if ($('#tanCheck').val().length != 10){
-                            event.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "TAN Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#tanCheck').val('');
-                            });
-                        }
-
-                        if ($('#gstCheck').val().length != 15){
-                            event.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "GST Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#gstCheck').val('');
-                            });
-                        }
-
-                        if ($('#cinCheck').val().length != 21){
-                            event.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "CIN Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#cinCheck').val('');
-                            });
-                        }
-                    });
-                <?php 
-            }
-            else{
-                ?>
-                    $('#addClientSubmit').on('submit', function (e) {
-                        if ($('#panCheck').val().length != 10){
-                            e.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "PAN Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#panCheck').val('');
-                            });
-                        }
-                        if ($('#tanCheck').val().length != 10){
-                            e.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "TAN Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#tanCheck').val('');
-                            });
-                        }
-
-                        if ($('#gstCheck').val().length != 15){
-                            e.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "GST Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#gstCheck').val('');
-                            });
-                        }
-
-                        if ($('#cinCheck').val().length != 21){
-                            e.preventDefault();
-                            swal({
-                                closeOnClickOutside: false,
-                                icon: "error",
-                                text: "CIN Number invalid!",
-                            }).then(function(isConfirm) {
-                                $('#cinCheck').val('');
-                            });
-                        }
-                    });
-                <?php
-            }
-        ?>
     });
 
     let panRegex = /[A-Z]{5}\d{4}[A-Z]{1}/;
@@ -1418,6 +1306,120 @@
     });
 
     </script>
+    <script>
+        <?php
+            if(isset($_SESSION['role']) && !empty($_SESSION['role']) && ( $_SESSION['role'] == 1 || $_SESSION['role'] == -1 )){
+                ?>
+                    $("#addClientSubmit").click(function(event){
+                        let firm = $("#firm_id").val();
+                        if(firm.length == ''){
+                            event.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "Select Firm!",
+                            }).then(function(isConfirm) {
+                                $('#firm_id').focus();
+                            });
+                        }
+
+                        if ($('#panCheck').val().length < 10){
+                            event.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "PAN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#panCheck').val('');
+                            });
+                        }
+
+                        // if ($('#tanCheck').val().length < 10){
+                        //     event.preventDefault();
+                        //     swal({
+                        //         closeOnClickOutside: false,
+                        //         icon: "error",
+                        //         text: "TAN Number invalid!",
+                        //     }).then(function(isConfirm) {
+                        //         $('#tanCheck').val('');
+                        //     });
+                        // }
+
+                        // if ($('#gstCheck').val().length < 15){
+                        //     event.preventDefault();
+                        //     swal({
+                        //         closeOnClickOutside: false,
+                        //         icon: "error",
+                        //         text: "GST Number invalid!",
+                        //     }).then(function(isConfirm) {
+                        //         $('#gstCheck').val('');
+                        //     });
+                        // }
+
+                        // if ($('#cinCheck').val().length < 21){
+                        //     event.preventDefault();
+                        //     swal({
+                        //         closeOnClickOutside: false,
+                        //         icon: "error",
+                        //         text: "CIN Number invalid!",
+                        //     }).then(function(isConfirm) {
+                        //         $('#cinCheck').val('');
+                        //     });
+                        // }
+                    });
+                <?php 
+            }
+            else{
+                ?>
+                    $('#addClientSubmit').click(function (e) {
+                        if ($('#panCheck').val().length < 10){
+                            e.preventDefault();
+                            swal({
+                                closeOnClickOutside: false,
+                                icon: "error",
+                                text: "PAN Number invalid!",
+                            }).then(function(isConfirm) {
+                                $('#panCheck').val('');
+                            });
+                        }
+                        // if ($('#tanCheck').val().length < 10){
+                        //     e.preventDefault();
+                        //     swal({
+                        //         closeOnClickOutside: false,
+                        //         icon: "error",
+                        //         text: "TAN Number invalid!",
+                        //     }).then(function(isConfirm) {
+                        //         $('#tanCheck').val('');
+                        //     });
+                        // }
+
+                        // if ($('#gstCheck').val().length < 15){
+                        //     e.preventDefault();
+                        //     swal({
+                        //         closeOnClickOutside: false,
+                        //         icon: "error",
+                        //         text: "GST Number invalid!",
+                        //     }).then(function(isConfirm) {
+                        //         $('#gstCheck').val('');
+                        //     });
+                        // }
+
+                        // if ($('#cinCheck').val().length < 21){
+                        //     e.preventDefault();
+                        //     swal({
+                        //         closeOnClickOutside: false,
+                        //         icon: "error",
+                        //         text: "CIN Number invalid!",
+                        //     }).then(function(isConfirm) {
+                        //         $('#cinCheck').val('');
+                        //     });
+                        // }
+                    });
+                <?php
+            }
+        ?>    
+    </script>
+
 </body>
 
 </html>

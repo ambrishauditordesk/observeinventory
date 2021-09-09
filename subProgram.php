@@ -2323,10 +2323,10 @@
                                                                 <option value="Qualitative">Qualitative</option>
                                                             </select>
                                                         </td>
-                                                        <td><input name="submitEstimate[name][]" type="text"></td>
-                                                        <td><input name="submitEstimate[account][]" type="text"></td>
-                                                        <td> <input name="submitEstimate[py][]" type="number"> </td>
-                                                        <td> <input name="submitEstimate[cy][]" type="number"> </td>
+                                                        <td><input name="submitEstimate[name][]" class="form-control" type="text"></td>
+                                                        <td><input name="submitEstimate[account][]" class = "form-control" type="text"></td>
+                                                        <td> <input name="submitEstimate[py][]" type="number" style="padding: 0.375rem 0.75rem;"> </td>
+                                                        <td> <input name="submitEstimate[cy][]" type="number" style="padding: 0.375rem 0.75rem;"> </td>
                                                         <td>
                                                             <select name="submitEstimate[c][]" class="form-control minWidth150"required>
                                                                 <option value="Low">Low</option>

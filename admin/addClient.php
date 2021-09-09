@@ -69,7 +69,7 @@ if($_SESSION['role'] == -1 || $_SESSION['role'] == 1){
 }
 
 //Nickname
-$nickName = trim($_POST['nickname']);
+$nickName = trim($_POST['dob']);
 
 //Date
 $date = trim($_POST['dob']);
