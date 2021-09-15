@@ -41,7 +41,7 @@ $ser = $_SERVER['HTTP_REFERER'];
 if(!empty($_FILES['image']['name'])){
     $filePresent = 1;
     if(!empty($_FILES['image']['name'][0])){
-        $allowFileUpload = checkFileAllowedExt($_FILES['image']['name'][0],$_FILES['file']['tmp_name'][0]);
+        $allowFileUpload = checkFileAllowedExt($_FILES['image']['name'],$_FILES['image']['tmp_name']);
         if($allowFileUpload){
             $fileName = array();
             $str = explode(".", $_FILES['image']['name']);

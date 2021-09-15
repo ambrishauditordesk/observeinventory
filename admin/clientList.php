@@ -778,7 +778,7 @@
                         </div> 
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
-                            <input class="btn btn-primary" type="submit" id="registerSubmit" value="Update">
+                            <input class="btn btn-primary" type="submit" value="Update">
                         </div>
                     </form>
                 </div>

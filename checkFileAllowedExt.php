@@ -7,7 +7,7 @@ function checkFileAllowedExt($filename,$tmp_name){
       'xlt', 'xml', 'xlam', 'xla', 'xlw', 
       'xlr', 'txt', 'pdf', 'doc', 'docm', 
       'docx', 'dot', 'dotm', 'dotx', 'rtf',
-      'wps', 'xml', 'xml', 'xps', 'csv');
+      'wps', 'xml', 'xml', 'xps', 'csv', 'jpeg', 'png', 'jpg');
    $data = $scanFile = 1;
    if(sizeof(explode('.', $filename)) != 2){
       $data = 0;
