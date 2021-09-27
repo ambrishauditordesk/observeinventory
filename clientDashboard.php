@@ -472,15 +472,30 @@ $_SESSION['breadcrumb'] = array();
                             $per = round(number_format((float)($statusProgramCount/$totalProgramCount)*100, 2, '.', ''));
                         }
                     ?>
+                    <?php
+                        if($_SESSION['firm_details']['plan'] == 2){
+                    ?>
                     <span class="color-block"><?php echo $per."%"; ?></span>
+                    <?php } ?>
                 </div>
+                <?php
+                    if($_SESSION['firm_details']['plan'] == 2){
+                ?>
                 <div class="progress col-md-8 p-0" style="height:25px; margin:0 !important;">
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $per; ?>%; color:<?php if($per == 0) echo "#000"; else echo "#fff"; ?>;"></div>
                 </div>
+                <?php
+                    }
+                ?>
             </div><br>
             <div class="col-md-12 d-flex" style="flex-direction:column;">
                 <?php
-                $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
+                if($_SESSION['firm_details']['plan'] == 2){
+                    $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' order by _seq";
+                }
+                else{
+                    $query = "select program.* from program inner join workspace_log on program.id=workspace_log.program_id where program.parent_id='0' and workspace_log.workspace_id='$wid' and firmPlan = 0 order by _seq";
+                }
                 $exquery = $con->query($query);
                 if ($exquery->num_rows != 0) {
                     while ($queryrow = $exquery->fetch_assoc()) {?>
@@ -515,7 +530,6 @@ $_SESSION['breadcrumb'] = array();
                         <div class="progress-bar progress-bar-striped progress-bar-animated <?php echo $color; ?>" role="progressbar" style="width: <?php echo $per; ?>%; color: <?php if($per == 0) echo "#000"; else echo "#fff"; ?>;" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     </div>
-
                 </div>
                 <?php }}
                     ?>

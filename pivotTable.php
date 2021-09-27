@@ -171,8 +171,8 @@ $wid = base64_decode($_GET['wid']);
                                 <tr>
                                     <th scope="col shadow-remove">Account Number</th>
                                     <th scope="col shadow-remove">Account Name</th>
-                                    <th scope="col shadow-remove">CY Begining Balance</th>
-                                    <th scope="col shadow-remove">CY Final Balance</th>
+                                    <th scope="col shadow-remove">CY Opening Balance</th>
+                                    <th scope="col shadow-remove">CY Closing Balance</th>
                                     <th scope="col shadow-remove">Variance(&#8377;)</th>
                                     <th scope="col shadow-remove">Variance(%)</th>
                                 </tr>

@@ -1,6 +1,5 @@
 <?php
    include 'dbconnection.php';
-   include 'moneyFormatterFPDF.php';
    session_start();
    $wid = $_SESSION['workspace_id'];
    $clientId = $_SESSION['client_id'];
@@ -55,8 +54,8 @@
                      '<tr>
                         <td>&nbsp;</td>
                         <td>('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'].'</td>
-                        <td>'.numberToCurrency($financialStatementRow['cy_final_bal']).'</td>
-                        <td>'.numberToCurrency($financialStatementRow['cy_beg_bal']).'</td>
+                        <td>'.($financialStatementRow['cy_final_bal']).'</td>
+                        <td>'.($financialStatementRow['cy_beg_bal']).'</td>
                      </tr>';
                   }
                }
@@ -70,8 +69,8 @@
                <tr>
                   <td>&nbsp;</td>
                   <td>Total</td>
-                  <td>'.numberToCurrency($cyFinalBalTotal).'</td>
-                  <td>'.numberToCurrency($cyBegBalTotal).'</td>
+                  <td>'.($cyFinalBalTotal).'</td>
+                  <td>'.($cyBegBalTotal).'</td>
                </tr>
                <tr>
                   <td>&nbsp;</td>
@@ -133,8 +132,8 @@
                      '<tr>
                         <td>&nbsp;</td>
                         <td>('.$financialStatementCounter++.') '.$financialStatementRow['financial_statement'].'</td>
-                        <td>'.numberToCurrency($financialStatementRow['cy_final_bal']).'</td>
-                        <td>'.numberToCurrency($financialStatementRow['cy_beg_bal']).'</td>
+                        <td>'.($financialStatementRow['cy_final_bal']).'</td>
+                        <td>'.($financialStatementRow['cy_beg_bal']).'</td>
                      </tr>';
                   }
                }
@@ -148,8 +147,8 @@
                <tr>
                   <td>&nbsp;</td>
                   <td>Total</td>
-                  <td>'.numberToCurrency($cyFinalBalTotal).'</td>
-                  <td>'.numberToCurrency($cyBegBalTotal).'</td>
+                  <td>'.($cyFinalBalTotal).'</td>
+                  <td>'.($cyBegBalTotal).'</td>
                </tr>
                <tr>
                   <td>&nbsp;</td>
@@ -223,18 +222,18 @@
          $htmlContent .= 
             '<tr>
                <td>'.$liabilityName.'</td>
-               <td>'.numberToCurrency($amount).'</td>
+               <td>'.($amount).'</td>
                <td>'.$finalArrayOfAssets[$i][0].'</td>
-               <td>'.numberToCurrency($finalArrayOfAssets[$i][1]).'</td>
+               <td>'.($finalArrayOfAssets[$i][1]).'</td>
             </tr>';
       }
 
       $htmlContent .= 
             '<tr>
                <td>TOTAL</td>
-               <td>'.numberToCurrency($totalLiabilities).'</td>
+               <td>'.($totalLiabilities).'</td>
                <td>TOTAL</td>
-               <td>'.numberToCurrency($totalAssets).'</td>
+               <td>'.($totalAssets).'</td>
             </tr>';
             
       $htmlContent .= '
@@ -307,7 +306,7 @@
                <td>'.$finalArrayOfPurchase[$i][0].'</td>
                <td>'.$finalArrayOfPurchase[$i][1].'</td>
                <td>'.$name.'</td>
-               <td>'.numberToCurrency($amount).'</td>
+               <td>'.($amount).'</td>
             </tr>';
       }
       //gross profit
@@ -316,15 +315,15 @@
       $htmlContent .= 
             '<tr>
                <td>Gross Profit</td>
-               <td>'.numberToCurrency($grossTotal).'</td>
+               <td>'.($grossTotal).'</td>
                <td>&nbsp;</td>
                <td>&nbsp;</td>
             </tr>
             <tr>
                <td>TOTAL</td>
-               <td>'.numberToCurrency($totalAmountForPurchase).'</td>
+               <td>'.($totalAmountForPurchase).'</td>
                <td>TOTAL</td>
-               <td>'.numberToCurrency($totalAmountForSales).'</td>
+               <td>'.($totalAmountForSales).'</td>
             </tr>';
 
       $arrayOfExpenses = $con->query("SELECT distinct account_class from trial_balance where workspace_id = $wid and account_type like '%Expenses%'");
@@ -366,15 +365,15 @@
          $htmlContent .= 
          '<tr>
             <td>'.$finalArrayOfExpenses[$i][0].'</td>
-            <td>'.numberToCurrency($finalArrayOfExpenses[$i][1]).'</td>';
+            <td>'.($finalArrayOfExpenses[$i][1]).'</td>';
          if($i == 0) {
             $htmlContent .= 
          '<td>By Gross Profit</td>
-         <td>'.numberToCurrency($grossTotal).'</td>';
+         <td>'.($grossTotal).'</td>';
          } else {
             $htmlContent .= 
             '<td>'.$name.'</td>
-            <td>'.numberToCurrency($amount).'</td>';
+            <td>'.($amount).'</td>';
          }
 
          $htmlContent .= '</tr>';
@@ -383,15 +382,15 @@
       $htmlContent .= 
             '<tr>
                <td>To Net profit</td>
-               <td>'.numberToCurrency($totalAmountForExpense).'</td>
+               <td>'.($totalAmountForExpense).'</td>
                <td>&nbsp;</td>
                <td>&nbsp;</td>
             </tr>
             <tr>
                <td>TOTAL</td>
-               <td>'.numberToCurrency($totalAmountForExpense).'</td>
+               <td>'.($totalAmountForExpense).'</td>
                <td>TOTAL</td>
-               <td>'.numberToCurrency($totalAmountForIncome).'</td>
+               <td>'.($totalAmountForIncome).'</td>
             </tr>';
       $htmlContent .= '
             </tbody>

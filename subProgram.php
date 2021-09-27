@@ -331,9 +331,25 @@
                                     <img class="nav-icon" src="Icons/plus-circle-1.svg" style="height:35px; width:35px;"/>&nbsp;&nbsp;
                                     <span>Add Programme</span>
                                 </a>
+                            </li> &nbsp;
+                            <li class="nav-item d-flex">
+                                <a class="nav-link d-flex align-items-center" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(247); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(1); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
+                                    <img class="nav-icon" src="Icons/download.png" style="height:40px; width:45px;"/>
+                                    <span>Client Assistance Schedule</span>
+                                </a>
                             </li>
                         <?php
                     } 
+                }
+                if($prog_id == 2){
+                    ?>
+                    <li class="nav-item d-flex">
+                        <a class="nav-link d-flex align-items-center" href="subProgram?did=<?php echo base64_encode(md5($clientName)); ?>&gid=<?php echo base64_encode(md5($clientName)); ?>&fid=<?php echo base64_encode(md5($clientName)); ?>&eid=<?php echo base64_encode(md5($clientName)); ?>&pid=<?php echo base64_encode(247); ?>&cid=<?php echo base64_encode(md5($clientName)); ?>&bid=<?php echo base64_encode(md5($clientName)); ?>&aid=<?php echo base64_encode(md5($clientName)); ?>&parent_id=<?php echo base64_encode(1); ?>&zid=<?php echo base64_encode(md5($clientName)); ?>&yid=<?php echo base64_encode(md5($clientName)); ?>&wid=<?php echo base64_encode($wid); ?>&xid=<?php echo base64_encode(md5($clientName)); ?>">
+                            <img class="nav-icon" src="Icons/download.png" style="height:40px; width:45px;"/>
+                            <span>Client Assistance Schedule</span>
+                        </a>
+                    </li>
+                <?php 
                 }
             ?>
             <!-- Dropdown -->
@@ -555,6 +571,7 @@
                                 <?php
                                     $queryBS = $con->query("SELECT distinct accounts_type,accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type not like '%Expense%' and accounts_type not like '%Revenue%' ) order by accountTypeSeqNumber");
                                     $i = 0;
+                                    $highlight = 0;
                                     while($rowQueryBS = $queryBS->fetch_assoc()){
                                     ?>
                                         <table class="table table-hover">
@@ -579,7 +596,7 @@
                                                             <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                         </td>
                                                         <td scope="row">
-                                                            <label  class="mt-2 text-break" style="width: 15rem !important; height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align:left;"><?php echo $rowQuery['accounts_name']; ?></label>
+                                                            <label  class="mt-2 text-break" style=" <?php if($rowQuery['amount'] < $scopes['balance_asset'] || $rowQuery['amount'] < $scopes['balance_liability']){?> color:#254eda; <?php } ?>width: 15rem !important; height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align:left;"><?php echo $rowQuery['accounts_name']; ?></label>
                                                         </td>
                                                         <td scope="row">
                                                             <input type="number" class="mt-4" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01">
@@ -998,7 +1015,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
 
                             <form id="balanceSheetForm" action="accountsSubmit" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="wid" value="<?php echo $wid;?>">
@@ -1006,7 +1023,7 @@
                                 <?php
                                     $queryPL = $con->query("SELECT distinct accounts_type,accountTypeSeqNumber from tb_performance_map where workspace_id='$wid' and ( accounts_type like '%Expense%' or accounts_type like '%Revenue%' ) order by accountTypeSeqNumber");
                                     $i = 0;
-                                    while($rowQueryPL = $queryPL->fetch_assoc()){
+                                    while($rowQueryPL = $queryPL->fetch_assoc()){ 
                                     ?>
                                         <table class="table table-hover">
                                             <thead>
@@ -1025,12 +1042,13 @@
                                                     $queryAccount = $con->query("select * from tb_performance_map where workspace_id=$wid and accounts_type='".$rowQueryPL['accounts_type']."'");
                                                     while ($rowQuery = $queryAccount->fetch_assoc()) {
                                                 ?>
+                                                
                                                         <tr>
                                                             <td scope="row" hidden>
                                                                 <input type="hidden" name="submitData[<?php echo $i;?>][0]" value="<?php echo $rowQuery['id']; ?>">
                                                             </td>
                                                             <td scope="row">
-                                                                <label class="mt-2" style="width: 15rem !important; height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align: left;"><?php echo $rowQuery['accounts_name']; ?></label>
+                                                                <label class="mt-2" style="<?php if($rowQuery['amount'] < $rowScopes['pl_income'] || $rowQuery['amount'] < $rowScopes['pl_expense']){?> color:#254eda; <?php } ?>width: 15rem !important; height: 4rem !important; display: flex; align-items: center; justify-content: start; text-align: left;"><?php echo $rowQuery['accounts_name']; ?></label>
                                                             </td>
                                                             <td scope="row"><input type="number" class="mt-4" name="submitData[<?php echo $i;?>][1]" value="<?php echo $rowQuery['amount']; ?>" size="15" step="0.01"></td>
                                                             <td scope="row">

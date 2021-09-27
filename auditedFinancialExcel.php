@@ -1,6 +1,5 @@
 <?php
 include 'dbconnection.php';
-include 'moneyFormatterFPDF.php';
 session_start();
 $wid = $_SESSION['workspace_id'];
 $clientId = $_SESSION['client_id'];
@@ -55,8 +54,8 @@ $htmlContent = '
                '<tr>
                   <td>&nbsp;</td>
                   <td>('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'].'</td>
-                  <td>'.numberToCurrency($audited).'</td>
-                  <td>'.numberToCurrency($financialStatementRow['beg_bal']).'</td>
+                  <td>'.($audited).'</td>
+                  <td>'.($financialStatementRow['beg_bal']).'</td>
                </tr>';
             }
          }
@@ -70,8 +69,8 @@ $htmlContent = '
          <tr>
             <td>&nbsp;</td>
             <td>Total</td>
-            <td>'.numberToCurrency($auditedTotal).'</td>
-            <td>'.numberToCurrency($begBalTotal).'</td>
+            <td>'.($auditedTotal).'</td>
+            <td>'.($begBalTotal).'</td>
          </tr>
          <tr>
             <td>&nbsp;</td>
@@ -133,8 +132,8 @@ $htmlContent .= '
                '<tr>
                   <td>&nbsp;</td>
                   <td>('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'].'</td>
-                  <td>'.numberToCurrency($audited).'</td>
-                  <td>'.numberToCurrency($financialStatementRow['beg_bal']).'</td>
+                  <td>'.($audited).'</td>
+                  <td>'.($financialStatementRow['beg_bal']).'</td>
                </tr>';
             }
          }
@@ -148,8 +147,8 @@ $htmlContent .= '
          <tr>
             <td>&nbsp;</td>
             <td>Total</td>
-            <td>'.numberToCurrency($auditedTotal).'</td>
-            <td>'.numberToCurrency($begBalTotal).'</td>
+            <td>'.($auditedTotal).'</td>
+            <td>'.($begBalTotal).'</td>
          </tr>
          <tr>
             <td>&nbsp;</td>

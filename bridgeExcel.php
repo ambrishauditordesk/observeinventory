@@ -1,6 +1,5 @@
 <?php
 include 'dbconnection.php';
-include 'moneyFormatterFPDF.php';
 session_start();
 $wid = $_SESSION['workspace_id'];
 $clientId = $_SESSION['client_id'];
@@ -56,9 +55,9 @@ $htmlContent = '
                '<tr>
                   <td>&nbsp;</td>
                   <td>('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'].'</td>
-                  <td>'.numberToCurrency($financialStatementRow['unaudited']).'</td>
-                  <td>'.numberToCurrency($adjustment).'</td>
-                  <td>'.numberToCurrency($financialStatementRow['unaudited']+$adjustment).'</td>
+                  <td>'.($financialStatementRow['unaudited']).'</td>
+                  <td>'.($adjustment).'</td>
+                  <td>'.($financialStatementRow['unaudited']+$adjustment).'</td>
                </tr>';
             }
          }
@@ -72,9 +71,9 @@ $htmlContent = '
          <tr>
             <td>&nbsp;</td>
             <td>Total</td>
-            <td>'.numberToCurrency($unauditedTotal).'</td>
-            <td>'.numberToCurrency($adjustmentTotal).'</td>
-            <td>'.numberToCurrency($auditedTotal).'</td>
+            <td>'.($unauditedTotal).'</td>
+            <td>'.($adjustmentTotal).'</td>
+            <td>'.($auditedTotal).'</td>
          </tr>
          <tr>
             <td>&nbsp;</td>
@@ -137,9 +136,9 @@ $htmlContent .= '
                '<tr>
                   <td>&nbsp;</td>
                   <td>('.$financialStatementCounter++.') '.$financialStatementRow['accounts_name'].'</td>
-                  <td>'.numberToCurrency($financialStatementRow['unaudited']).'</td>
-                  <td>'.numberToCurrency($adjustment).'</td>
-                  <td>'.numberToCurrency($financialStatementRow['unaudited']+ $adjustment).'</td>
+                  <td>'.($financialStatementRow['unaudited']).'</td>
+                  <td>'.($adjustment).'</td>
+                  <td>'.($financialStatementRow['unaudited']+ $adjustment).'</td>
                </tr>';
             }
          }
@@ -153,9 +152,9 @@ $htmlContent .= '
          <tr>
             <td>&nbsp;</td>
             <td>Total</td>
-            <td>'.numberToCurrency($unauditedTotal).'</td>
-            <td>'.numberToCurrency($adjustmentTotal).'</td>
-            <td>'.numberToCurrency($auditedTotal).'</td>
+            <td>'.($unauditedTotal).'</td>
+            <td>'.($adjustmentTotal).'</td>
+            <td>'.($auditedTotal).'</td>
          </tr>
          <tr>
             <td>&nbsp;</td>
