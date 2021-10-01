@@ -24,7 +24,7 @@
             $uid= $con->insert_id;
         
             $sub = "You have been registered as a Client member";
-            $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
+            $loginLink = 'http://auditorsdesk.com/login';
 
             $msg = "<div>
             <div>Hello ".$name.",</div>

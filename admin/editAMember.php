@@ -41,7 +41,7 @@
                 $con->query("update user set accessLevel = 2 where id = $loggedInID");
 
                 $sub = "You have been promoted as a Firm Admin";
-                $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
+                $loginLink = 'http://auditorsdesk.com/login';
 
                 $msg = "<div>
                 <div>Hello ".$name.",</div>

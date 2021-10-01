@@ -12,7 +12,7 @@ if($con->query("select id from user where id = $id and reset_code != '' ")->num_
       $user = $con->query("select email, name from user where id = $id")->fetch_assoc();
       $name = $user['name'];
       $email = $user['email'];
-      $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
+      $loginLink = 'http://auditorsdesk.com/login';
 
       $msg = "<div>
          <div>Hello ".$name.",</div>

@@ -80,7 +80,7 @@ else{
         $flag = 1;
     
         $sub = "You have been registered as a Firm Admin ";
-        $loginLink = 'http://auditorsdesk.com/AuditSoft/login';
+        $loginLink = 'http://auditorsdesk.com/login';
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y");;
         $tempPass = $name.$date;
 

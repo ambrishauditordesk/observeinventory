@@ -63,7 +63,7 @@
          $resetCode = bin2hex(random_bytes(50));
          $con->query("update user set reset_code = '$resetCode' where id = $id");
          
-         $resetLink = 'http://auditorsdesk.com/AuditSoft/reset?code='.$resetCode.'&email='.$email;
+         $resetLink = 'http://auditorsdesk.com/reset?code='.$resetCode.'&email='.$email;
 
          $msg = "<div>
          <div>Hello ".$name.",</div>
