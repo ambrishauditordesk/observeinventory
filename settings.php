@@ -500,32 +500,32 @@ error_reporting(E_ALL);
                                         <h6>BILLING SETTINGS</h6>
                                         <hr>
                                         <div class="form-group d-flex justify-content-center m-0">
-                                            <h2 style="color:#254eda"><?php echo $row['plan'] == 1 ? 'SIMPLE START' : 'GO PRO'; ?></h2>
+                                            <h2 style="color:#254eda;border:2px solid #254eda"><?php echo $row['plan'] == 1 ? 'SIMPLE START' : 'GO PRO'; ?></h2>
                                         </div>
-                                        <div class="d-flex justify-content-center">
-                                            <input type="submit" id="planChange" class="btn btn-block btn-success text-uppercase" style="border-radius:20px; width:20em;background-color: #4eb92b !important;" value="<?php echo $row['plan'] == 1 ? 'Request Go Pro' : 'Request Custom Pro'; ?>">
-                                        </div><br>
+                                        <!-- <div class="d-flex justify-content-center">
+                                            <input type="submit" id="planChange" class="btn btn-block btn-success text-uppercase" style="border-radius:20px; width:20em;background-color: #4eb92b !important;" value="<?php //echo $row['plan'] == 1 ? 'Request Go Pro' : 'Request Custom Pro'; ?>">
+                                        </div><br> -->
 
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label for="fullName">Subcription</label>
+                                                    <!-- <label for="fullName">Subcription</label> -->
                                                     <form  id = "subsForm" action="razorpay/pay" method="post">
                                                         <div class="p-0">
                                                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                                             <input type="hidden" name="name" value="<?php echo $row['firm_name']; ?>">
                                                             <input type="hidden" name="address" value="<?php echo $row['firm_address']; ?>">
                                                             <input type="hidden" name="email" value="<?php echo $row['firm_email']; ?>">
-                                                            <input type="hidden" id ="amount" name="amount">
-                                                            <input type="hidden" name="amountCheck" value="1">
-                                                            <input type="number" id="noOfWorkspace" name ="subscription" class="form-control" placeholder="Enter the number of clients" required>
+                                                            <!-- <input type="hidden" id ="amount" name="amount"> -->
+                                                            <!-- <input type="hidden" name="amountCheck" value="1"> -->
+                                                            <!-- <input type="number" id="noOfWorkspace" name ="subscription" class="form-control" placeholder="Enter the number of clients" required> -->
                                                         </div>
-                                                        <div class="mt-1">
+                                                        <!-- <div class="mt-1">
                                                             <label><h6>&#8377;1499/Client</h6></label>
-                                                        </div>
-                                                        <div class="col-md-4 p-0">
+                                                        </div> -->
+                                                        <!-- <div class="col-md-4 p-0">
                                                             <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
-                                                        </div>
+                                                        </div> -->
                                                        
                                                     </form>
                                                 </div>
@@ -540,7 +540,7 @@ error_reporting(E_ALL);
                                             </div>
                                             <div class="col">
                                                 <div class="form-group mb-0">
-                                                    <label for="fullName">Add Storage space</label><br>
+                                                    <!-- <label for="fullName">Add Storage space</label><br> -->
                                                     <form id="storageForm" action="razorpay/pay" method="post">
                                                         <div class="p-0">
                                                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
@@ -549,7 +549,7 @@ error_reporting(E_ALL);
                                                             <input type="hidden" name="email" value="<?php echo $row['firm_email']; ?>">
                                                             <input type="hidden" id ="storageAmount" name="storageAmount">
                                                             <input type="hidden" name="amountCheck" value="2">
-                                                            <select class="form-control" id="storage" name="firmStorage" aria-label="Default select example" required>
+                                                            <!-- <select class="form-control" id="storage" name="firmStorage" aria-label="Default select example" required>
                                                                 <option value="" disabled selected>Select Storage</option>
                                                                 <option value="1000000">1 GB</option>
                                                                 <option value="5000000">5 GB</option>
@@ -557,14 +557,14 @@ error_reporting(E_ALL);
                                                                 <option value="15000000">15 GB</option>
                                                                 <option value="20000000">20 GB</option>
                                                                 <option value="25000000">25 GB</option>
-                                                            </select>
+                                                            </select> -->
                                                         </div>
-                                                        <div class="mt-1">
+                                                        <!-- <div class="mt-1">
                                                             <label><h6>&#8377;100/GB monthly</h6></label>
                                                         </div>
                                                         <div class="col-md-4 p-0">
                                                             <input type="submit" class="btn btn-block btn-primary text-uppercase" style="border-radius:20px;" value="Buy">
-                                                        </div>
+                                                        </div> -->
                                                     </form>
                                                 </div><br>
                                                 <div class="form-group mb-0 p-0">
@@ -577,9 +577,9 @@ error_reporting(E_ALL);
                                                 </div>
                                             </div>
                                         </div><br>
-                                        <div class="form-group mb-0 p-0 text-center">
+                                        <!-- <div class="form-group mb-0 p-0 text-center">
                                             <a id="paymentHistory" target="_blanc" href="paymentHistory"><button class="btn btn-primary">Payment History</button></a>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <!-- <div class="col-md-3"> -->
                                         <!-- CARDS -->
