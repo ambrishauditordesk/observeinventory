@@ -2,7 +2,9 @@
     if(isset($_POST))
     {
         include 'dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         $prog_id = trim($_POST['prog_id']);
         $wid = trim($_POST['wid']);
         $name = trim($_POST['name']);

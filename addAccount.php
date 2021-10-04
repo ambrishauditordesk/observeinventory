@@ -2,7 +2,9 @@
     if(isset($_POST))
     {
         include 'dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         $wid = trim($_POST['wid']);
         $accid = trim($_POST['account_id']);
         $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");

@@ -2,7 +2,9 @@
     if(isset($_POST))
     {
         include 'dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         $id = trim($_POST['id']);
         $type = trim($_POST['type']);
         if($type == 1){

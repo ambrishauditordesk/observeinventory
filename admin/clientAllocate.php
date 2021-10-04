@@ -3,7 +3,9 @@ if(isset($_POST))
     {
         include '../dbconnection.php';
         include '../customMailer.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
 
         $data['status'] = false;
         $data['text'] = 'Failed to allocate';

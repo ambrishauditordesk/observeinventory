@@ -1,6 +1,8 @@
 <?php
 include 'dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 $wid = $_SESSION['workspace_id'];
 $clientId = $_SESSION['client_id'];
 $htmlContent = '

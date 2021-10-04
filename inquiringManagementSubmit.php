@@ -18,7 +18,9 @@
 <?php
     include 'dbconnection.php';
     include 'checkFileAllowedExt.php';
-    session_start();   
+    if(!isset($_SESSION)){
+       session_start();
+    }   
      
     $ser = $_SERVER['HTTP_REFERER'];
     $flag = 0;

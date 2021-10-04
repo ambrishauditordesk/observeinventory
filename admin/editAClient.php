@@ -1,6 +1,8 @@
 <?php
     include '../dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
 
     // Getting the Logged In User ID
     $id = trim($_POST['id']);

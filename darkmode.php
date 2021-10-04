@@ -1,6 +1,8 @@
 <?php
     include 'dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
 
     $id = trim($_POST['id']);
     $active = trim($_POST['active']);

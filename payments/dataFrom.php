@@ -1,7 +1,9 @@
 <?php
 
 include '../dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $id = $_POST['id'];
 $name = $_POST['name'];

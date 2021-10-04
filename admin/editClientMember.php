@@ -2,7 +2,9 @@
     if(isset($_POST))
     {
         include '../dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         
         $data['status'] = true;
         $data['text'] = "Nothing to update!";

@@ -2,7 +2,9 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
     include 'dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: ./");
     }

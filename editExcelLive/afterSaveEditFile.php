@@ -4,7 +4,9 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 include "../dbconnection.php";
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $cid = $_SESSION['client_id'];
 $wid = $_SESSION['workspace_id'];

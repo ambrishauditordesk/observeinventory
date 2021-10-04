@@ -2,7 +2,9 @@
     include 'dbconnection.php';
     include 'customMailer.php';
 
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
     $subject = "You have been invited for the documents upload";
     $loginLink = 'http://auditorsdesk.com/login';
 

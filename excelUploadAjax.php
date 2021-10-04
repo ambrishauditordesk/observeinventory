@@ -35,7 +35,9 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 require 'vendor/autoload.php';
 include 'dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 $wid = $_POST['wid'];
 $parent_id = $_POST['parent_id'];
 $pid = $_POST['pid'];

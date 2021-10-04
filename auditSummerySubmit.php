@@ -24,7 +24,9 @@
 <body>
 <?php
 include 'dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $wid = $_GET['wid'];
 $adjustment_number = trim($_POST['adjustment_number']);

@@ -2,7 +2,9 @@
     if(isset($_POST))
     {
         include 'dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         $id = trim($_POST['id']);
         $result = $con->query("select workspace_id, prog_id from signoff_comments_log where id = '$id'")->fetch_assoc();
         $wid = $result['workspace_id'];

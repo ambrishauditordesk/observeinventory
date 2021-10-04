@@ -2,7 +2,9 @@
     include 'dbconnection.php';
     include 'customMailer.php';
 
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
 
     $subject = $_SESSION['firm_details']['firm_name']." Firm has requested to upgrade their plan. ";
     $date = date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "d-m-Y H:m:s");

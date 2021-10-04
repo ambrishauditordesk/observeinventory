@@ -1,6 +1,8 @@
 <?php 
 include '../dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 $cid = $_POST['cid'];
 $column = array('','name','email','active','design','edit');
 $query = "SELECT * FROM user where client_id='$cid'";

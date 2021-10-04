@@ -58,7 +58,9 @@ exit;
 
 require 'vendor/autoload.php';
 
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $providerName = '';
 

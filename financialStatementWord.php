@@ -2,7 +2,9 @@
    include_once 'HtmlToDoc.class.php';  
    include 'dbconnection.php';
    include 'moneyFormatterFPDF.php';
-   session_start();
+   if(!isset($_SESSION)){
+       session_start();
+    }
    $wid = $_SESSION['workspace_id'];
    $clientId = $_SESSION['client_id'];
    $htmlContent = '';

@@ -1,6 +1,8 @@
 <?php
     include 'dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
     $flag = 0;
     if($_POST){
         $status = trim($_POST['status']);

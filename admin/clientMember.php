@@ -1,6 +1,8 @@
 <?php
     include '../dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
 
     if (isset($_SESSION['external']) && !empty($_SESSION['external']) && $_SESSION['external'] == 1){
         $checkAccess = $con->query("select id from accounts_log where client_contact_id = ".$_SESSION['id'])->num_rows;

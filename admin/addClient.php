@@ -31,7 +31,9 @@
 include '../dbconnection.php';
 include '../customMailer.php';
 include '../checkDuplicateEmail.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $cname = array();
 $email = array();

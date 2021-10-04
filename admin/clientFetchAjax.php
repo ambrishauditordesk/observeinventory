@@ -1,6 +1,8 @@
 <?php 
 include '../dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 $cid = $_POST['cid'];
 $column = array('','name','nickname','doi','const','indus','add','country','state','city','pin','pan','gst','tan','cin');
 $query = "select a.*,b.const const,c.industry industry from client a inner join constitution b on a.const_id=b.id inner join industry c on a.industry_id=c.id where a.id='$cid'";

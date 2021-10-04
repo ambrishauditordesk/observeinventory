@@ -18,7 +18,9 @@
 <body>
 <?php
     include 'dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
     $text = 'Nothing to update.';
     if($_POST){
         $id = trim($_POST['id']);

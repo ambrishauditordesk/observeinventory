@@ -4,7 +4,9 @@
         include '../dbconnection.php';
         include '../customMailer.php';
 
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         $name = trim($_POST['name']);
         $email = trim($_POST['email']);
         $pass = md5(trim($_POST['password']));

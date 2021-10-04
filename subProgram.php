@@ -6,7 +6,9 @@
     include 'dbconnection.php';
     include 'moneyFormatter.php';
     include 'decimal2point.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
 
     if (!isset($_SESSION['email']) && empty($_SESSION['email'])) {
         header("Location: login");

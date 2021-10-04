@@ -3,7 +3,9 @@
     if(isset($_POST))
     {
         include 'dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
 
         $wid = trim($_POST['wid']);
         $questionName = trim($_POST['name']);

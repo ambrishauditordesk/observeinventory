@@ -1,7 +1,9 @@
 <?php
 include 'dbconnection.php';
 include 'moneyFormatter.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $account = base64_decode($_GET['account']);
 $wid = base64_decode($_GET['wid']);

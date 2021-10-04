@@ -1,7 +1,9 @@
 <?php
 function getProgramStatus($id, $wid){
     if (!isset($_SESSION))
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
     include 'dbconnection.php';
     
     $data = array();

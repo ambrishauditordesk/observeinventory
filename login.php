@@ -1,6 +1,8 @@
 <?php
     include 'dbconnection.php';
-	session_start();
+	if(!isset($_SESSION)){
+       session_start();
+    }
 
 	if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
         $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));

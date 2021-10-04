@@ -45,7 +45,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include 'dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 
 $fromDate = trim($_POST['from']);
 $toDate = trim($_POST['to']);

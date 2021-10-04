@@ -1,5 +1,7 @@
 <?php
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 if(isset($_SESSION['external_client_id']) && !empty($_SESSION['external_client_id']) && $_SESSION['external_client_id']  != ''){
     header('Location: workspace?cid='.$_SESSION['external_client_id']);
 }

@@ -42,7 +42,9 @@
     crossorigin="anonymous"></script>
 <?php 
     include 'dbconnection.php';
-    session_start();
+    if(!isset($_SESSION)){
+       session_start();
+    }
     if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
         echo "<script>
                 swal({

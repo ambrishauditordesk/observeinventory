@@ -34,7 +34,9 @@
 <body>
 <?php
 include '../dbconnection.php';
-session_start();
+if(!isset($_SESSION)){
+       session_start();
+    }
 if(isset($_POST)){
 
 $ser = $_SERVER['HTTP_REFERER'];

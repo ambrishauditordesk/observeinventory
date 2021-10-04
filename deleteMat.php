@@ -2,7 +2,9 @@
     if(isset($_POST))
     {
         include 'dbconnection.php';
-        session_start();
+        if(!isset($_SESSION)){
+       session_start();
+    }
         $mat_id = trim($_POST['mat_id']);
         $wid = trim($_POST['wid']);
         $res = array();
