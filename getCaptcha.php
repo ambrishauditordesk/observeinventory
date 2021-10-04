@@ -1,7 +1,5 @@
 <?php 
-	if(!isset($_SESSION)){
-       session_start();
-    }
+        session_start();
 	$captcha = '';
 	$captchaHeight = 60;
 	$captchaWidth = 140;
