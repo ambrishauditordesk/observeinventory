@@ -94,7 +94,7 @@
             <!-- <div style="border-bottom:1px solid;"> -->
             <div>
                 <a href="<?php if(isset($_SESSION['external_client_id']) && $_SESSION['external_client_id'] == '') echo "admin/clientList"; else echo "workspace?cid=".$_SESSION['client_id']; ?>">
-                    <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp;
+                    <img class="sidenav-icon" src="Icons/Group-1.jpeg"/> &nbsp;
                    
                 </a>
             </div>

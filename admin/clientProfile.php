@@ -110,7 +110,7 @@
     <!-- SideBar -->
     <div class="sidenav">
         <div class="side-header">
-            <img class="sidenav-icon" src="../Icons/Group-1.png"/> &nbsp;
+            <img class="sidenav-icon" src="../Icons/Group-1.jpeg"/> &nbsp;
            
         </div>
 

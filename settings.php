@@ -169,7 +169,7 @@ error_reporting(E_ALL);
         <div class="side-header">
             <!-- <div style="border-bottom:1px solid;"> -->
             <div>
-                <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp;
+                <img class="sidenav-icon" src="Icons/Group-1.jpeg"/> &nbsp;
                
             </div>
         </div>
@@ -718,7 +718,7 @@ error_reporting(E_ALL);
         <footer class="sticky-footer">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                    <span><strong><span style="color: #02519c;">Luthra & Luthra LLP</span>&nbsp;&copy;
                     <?php echo date("Y"); ?></strong></span>
                 </div>
             </div>

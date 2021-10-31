@@ -173,8 +173,8 @@
                     else 
                         echo "workspace?qid=".base64_encode(md5(time()))."&gid=".base64_encode(md5(time()))."&fid=".base64_encode(md5(time()))."&eid=".base64_encode(md5(time()))."&pid=".base64_encode(md5(time()))."&cid=".base64_encode($clientId)."&bid=".base64_encode(md5(time()))."&aid=".base64_encode(md5(time()))."&parent_id=".base64_encode(md5(time()))."&zid=".base64_encode(md5(time()))."&yid=".base64_encode(md5(time()))."&wid=".base64_encode($wid)."&xid=".base64_encode(md5(time()));
                     ?>">
-                    <!-- <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp; -->
-                    <img class="sidenav-icon" src="Icons/Group-1.png"/> &nbsp;
+                    <!-- <img class="sidenav-icon" src="Icons/Group-1.jpeg"/> &nbsp; -->
+                    <img class="sidenav-icon" src="Icons/Group-1.jpeg"/> &nbsp;
                 </a>
             </div>
         </div>
@@ -3696,7 +3696,7 @@
                 <footer class="sticky-footer">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span><strong><span style="color: #4eb92b;">Auditors</span><span style="color: #254eda;">Desk</span>&copy;
+                            <span><strong><span style="color: #02519c;">Luthra & Luthra LLP</span>&nbsp;&copy;
                             <?php echo date("Y"); ?></strong></span>
                         </div>
                     </div>
