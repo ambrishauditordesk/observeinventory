@@ -61,6 +61,8 @@ ini_set('display_startup_errors', 1);
 <html lang="en">
 
 <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+
     <title> WORKSPACE </title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

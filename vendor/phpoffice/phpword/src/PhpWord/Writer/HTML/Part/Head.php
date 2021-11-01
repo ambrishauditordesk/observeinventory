@@ -55,7 +55,9 @@ class Head extends AbstractPart
 
         $content = '';
 
-        $content .= '<head>' . PHP_EOL;
+        $content .= '<head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+' . PHP_EOL;
         $content .= '<meta charset="UTF-8" />' . PHP_EOL;
         $content .= '<title>' . $title . '</title>' . PHP_EOL;
         foreach ($propertiesMapping as $key => $value) {

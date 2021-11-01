@@ -14,6 +14,8 @@ $wid = base64_decode($_GET['wid']);
 <html lang="en">
 
     <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+
         <title> <?php echo strtoupper($_SESSION['name'] . " Financial Statement"); ?> </title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">

@@ -6,6 +6,8 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+
 <meta charset="utf-8">
 <meta http-equiv="refresh" content="5;url=login" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">

@@ -114,7 +114,9 @@ class Docx_reader {
 
             $children = $xml->children($namespaces['w']);
 
-            $html = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title><style>span.block { display: block; }</style></head><body>';
+            $html = '<!doctype html><html><head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title></title><style>span.block { display: block; }</style></head><body>';
 
             foreach ($children->body->p as $p) {
                 $style = '';

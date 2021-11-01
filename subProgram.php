@@ -51,6 +51,8 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+
     <title> <?php if (!isset($_SESSION['name']) && empty($_SESSION['name'])) echo strtoupper($_SESSION['name'] . " Dashboard"); ?> </title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -5539,7 +5541,9 @@
                     success: function (response) {
                         if(response){
                             // Creating a MS Doc file
-                            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+                            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+<meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
                             var postHtml = "</body></html>";
                             var element = document.getElementById('DraftReportHtml').innerHTML;
                             var html = preHtml+element+postHtml;
@@ -5995,7 +5999,9 @@
             });
 
             // Creating a MS Doc file
-            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+<meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
             var postHtml = "</body></html>";
             var html = preHtml+document.getElementById("goingConcernDiv").innerHTML+postHtml;
             var blob = new Blob(['\ufeff', html], {

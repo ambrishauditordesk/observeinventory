@@ -21,6 +21,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link href="css/custom.css" rel="stylesheet">

@@ -51,7 +51,9 @@ class HTML_TO_DOC{
         xmlns:o="urn:schemas-microsoft-com:office:office" 
         xmlns:w="urn:schemas-microsoft-com:office:word" 
         xmlns="http://www.w3.org/TR/REC-html40"> 
-        <head> 
+        <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+ 
         <meta http-equiv=Content-Type content="text/html; charset=utf-8"> 
         <meta name=ProgId content=Word.Document> 
         <meta name=Generator content="Microsoft Word 9"> 
@@ -163,7 +165,9 @@ class HTML_TO_DOC{
         } 
     } 
     /** 
-     * Parse the html and remove <head></head> part if present into html 
+     * Parse the html and remove <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+</head> part if present into html 
      * 
      * @param String $html 
      * @return void 
@@ -172,11 +176,15 @@ class HTML_TO_DOC{
     function _parseHtml($html){ 
         $html = preg_replace("/<!DOCTYPE((.|\n)*?)>/ims", "", $html); 
         $html = preg_replace("/<script((.|\n)*?)>((.|\n)*?)<\/script>/ims", "", $html); 
-        preg_match("/<head>((.|\n)*?)<\/head>/ims", $html, $matches); 
+        preg_match("/<head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+((.|\n)*?)<\/head>/ims", $html, $matches); 
         $head = !empty($matches[1])?$matches[1]:''; 
         preg_match("/<title>((.|\n)*?)<\/title>/ims", $head, $matches); 
         $this->title = !empty($matches[1])?$matches[1]:''; 
-        $html = preg_replace("/<head>((.|\n)*?)<\/head>/ims", "", $html); 
+        $html = preg_replace("/<head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+((.|\n)*?)<\/head>/ims", "", $html); 
         $head = preg_replace("/<title>((.|\n)*?)<\/title>/ims", "", $head); 
         $head = preg_replace("/<\/?head>/ims", "", $head); 
         $html = preg_replace("/<\/?body((.|\n)*?)>/ims", "", $html); 

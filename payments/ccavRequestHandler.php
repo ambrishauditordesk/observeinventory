@@ -1,5 +1,7 @@
 <html>
 <head>
+    <link rel="icon" href="https://ksacademy.co.in/images/chartered_accountants/ca.png">
+
 <title> Non-Seamless-kit</title>
 </head>
 <body>
