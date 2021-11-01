@@ -17,8 +17,8 @@ function customMailer($to,$msg,$sub){
    $mail->SMTPSecure = "ssl";
    $mail->Port = 465;
    
-   $mail->Username = "AKIA4LA24ZR3T54W7ZSR";
-   $mail->Password = "BGZxCA8c2PqJnUs8SLD+4dbtufNZyPqvSg3D3DHQ/HO2";
+   $mail->Username = "";
+   $mail->Password = "";
    $mail->Host = "email-smtp.ap-south-1.amazonaws.com";
    $mail->Mailer = "smtp";
    $mail->setFrom('donotreply@auditorsdesk.in','Do-Not-Reply');
