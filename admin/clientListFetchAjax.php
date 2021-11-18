@@ -80,6 +80,7 @@ function getTotalClient($id){
     $html = "<label class='mt-2'><span class='helpDesign help_11'>11</span>".$result['total']."</label>";
     return $html;
 }
+
 function getTotalWorkspace($used_workspace){
     global $con;
     $sql = "SELECT COUNT(used_workspace) as total FROM firm_details where used_workspace";
@@ -88,6 +89,7 @@ function getTotalWorkspace($used_workspace){
     $html = "<label class='mt-2'><span class='helpDesign help_11'>11</span>".$result['total']."</label>";
     return $html;
 }
+
 function getTotalStorage($storage){
     global $con;
     $sql = "SELECT COUNT(storage) as total FROM firm_details where storage";
