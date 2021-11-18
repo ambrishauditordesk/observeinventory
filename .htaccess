@@ -10,21 +10,21 @@ RewriteRule ^(.*)$ $1.php [NC,L]
   Header set Content-Disposition attachment
 </FilesMatch>
 
-# RewriteEngine on
-# RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
-# RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
-# RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
-# ErrorDocument 404 http://localhost/AuditSoft/error
-# ErrorDocument 403 http://localhost/AuditSoft/error
-# ErrorDocument 500 http://localhost/AuditSoft/error
-
  RewriteEngine on
- RewriteCond %{HTTP_REFERER} !^http://(www\.)?auditorsdesk [NC]
- RewriteCond %{HTTP_REFERER} !^http://(www\.)?auditorsdesk.*$ [NC]
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
+ RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
  RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
- ErrorDocument 404 http://auditorsdesk.com/error
- ErrorDocument 403 http://auditorsdesk.com/error
- ErrorDocument 500 http://auditorsdesk.com/error
+ ErrorDocument 404 http://localhost/AuditSoft/error
+ ErrorDocument 403 http://localhost/AuditSoft/error
+ ErrorDocument 500 http://localhost/AuditSoft/error
+
+# RewriteEngine on
+# RewriteCond %{HTTP_REFERER} !^http://(www\.)?auditorsdesk [NC]
+# RewriteCond %{HTTP_REFERER} !^http://(www\.)?auditorsdesk.*$ [NC]
+# RewriteRule \.(doc|docx|xlxs|txt|pdf|rtf|js|css)$ - [F]
+# ErrorDocument 404 http://auditorsdesk.com/error
+# ErrorDocument 403 http://auditorsdesk.com/error
+# ErrorDocument 500 http://auditorsdesk.com/error
 
 # RewriteEngine on
 # RewriteCond %{HTTP_REFERER} !^http://(www\.)?atlats [NC]

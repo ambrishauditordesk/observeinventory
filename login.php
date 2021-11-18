@@ -52,13 +52,13 @@
 					<form method = "post" action = "validate.php">
 						<input type="text" name = "email" placeholder="Email" required>
 						<input type="password" name = "password" placeholder="Password" required>
-						<div class="form-group" style="display:flex; align-items:center">
-							<img src="getCaptcha?rand=<?php echo rand(); ?>" id='captcha'>
+						<!--<div class="form-group" style="display:flex; align-items:center">
+							<img src="getCaptcha?rand=<?php// echo rand(); ?>" id='captcha'>
 							<a href="#"><i id="reloadCaptcha" class="fas fa-redo-alt"></i></a>
-						</div>
-						<div class="form-group">
+						</div>-->
+						<!--<div class="form-group">
 							<input type="text" name="vercode" class="form-control" placeholder="Enter the Security Code" autocomplete="off" required>
-						</div>
+						</div>-->
 						<input type="submit"  value= "Login">
 					</form>
 			</div>

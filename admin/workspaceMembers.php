@@ -73,12 +73,12 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-mainbg border-bottom">
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
-            <!-- <li class="nav-item d-flex">
+            <!--<li class="nav-item d-flex">
                 <a class="nav-link d-flex align-items-center" href="clientList">
                     <span>List Clients</span>&nbsp;&nbsp;
                     <i class="fas fa-list fa-1x"></i>
                 </a>
-            </li> -->
+            </li>-->
             <?php 
             if(!empty($wid))
             {

@@ -49,20 +49,20 @@ session_start();
     crossorigin="anonymous"></script>
 <?php 
     include 'dbconnection.php';
-    if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
-        echo "<script>
-                swal({
-                closeOnClickOutside: false,
-                    icon: 'error',
-                    text: 'Please Enter a Valid Security Code!',
-                }).then(function(isConfirm) {
-                    if (isConfirm) {
-                        window.location.href = 'login';
-                    }
-                });
-            </script>";
-    }
-    else{
+    // if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
+    //     echo "<script>
+    //             swal({
+    //             closeOnClickOutside: false,
+    //                 icon: 'error',
+    //                 text: 'Please Enter a Valid Security Code!',
+    //             }).then(function(isConfirm) {
+    //                 if (isConfirm) {
+    //                     window.location.href = 'login';
+    //                 }
+    //             });
+    //         </script>";
+    // }
+    // else{
         if (isset($_SESSION['logged_in_date']) && !empty($_SESSION['logged_in_date'])){
             $currentDate = date_create(date("Y-m-d H:i:s",strtotime(date_format(date_create("now", new DateTimeZone('Asia/Kolkata')), "Y-m-d H:i:s"))));
             $loggedInDate = date_create(date("Y-m-d H:i:s",strtotime($_SESSION['logged_in_date'])));
@@ -199,5 +199,5 @@ session_start();
                     });
                 </script>";
         }
-    } 
+    // } 
 ?>

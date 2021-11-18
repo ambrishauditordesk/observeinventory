@@ -1,8 +1,8 @@
 <?php
     $servername = "localhost";
     $dbuser = "root";
-    $dbpass = "root";
-    $dbname= "audit";
+    $dbpass = "";
+    $dbname= "auditorsdesk";
 // Create connection
     $con = new mysqli($servername, $dbuser, $dbpass , $dbname);
     $con->query("SET NAMES 'utf8'");

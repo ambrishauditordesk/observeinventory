@@ -214,7 +214,7 @@
                     <div class="row">
                         <div class="card-body" style="width:10px; height:100% !important; border-radius: 12px; background-color: white;">
                         <!-- UI PArt in custom.css -->
-                        <span class="client-list"> Client List </span> <hr>
+                        <span class="firm-list"> Firm List </span> <hr>
                             <div class="table-responsive">
                                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                                     <div class="row">
@@ -223,13 +223,14 @@
                                                 <thead class="dark-invert">
                                                     <tr class="ro">
                                                         <th scope="col">Sl</th>
-                                                        <th scope="col">Client Name</th>
-                                                        <th scope="col">Client Profile</th>
-                                                        <th scope="col">Type</th>
-                                                        <th scope="col">Created On</th>
+                                                        <th scope="col">Firm Name</th>
+                                                        <th scope="col">Numbers of clients</th>
+                                                        <th scope="col">Number of workspaces</th>
+                                                        <th scope="col">Number of firm member</th>
                                                         <th scope="col">Status</th>
+                                                        
                                                     </tr>
-                                                </thead>
+                                             </thead>
                                             </table>
                                         </div>
                                     </div>
@@ -244,7 +245,7 @@
                 <div id="content" class="toggleContents">
                     <div class="container pt-4">
                         <div class="">
-                            <div class="card">
+                            <!--<div class="card">
                                 <div class="card-body">
                                     <h6 class="card-title">Total Assigned</h6>
                                     <h6 class="">
@@ -340,7 +341,7 @@
             </div>
         </div>
 
-        <!-- Footer -->
+        <-- Footer -->
         <footer class="sticky-footer">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
@@ -369,8 +370,8 @@
                                 </button>
                             </div>
                             <div class="form-group ">
-                                <label for="name">Client Name</label>
-                                <input type="text" class="form-control" maxlength="99" name="clientname" required>
+                                <label for="name">firm name</label>
+                                <input type="text" class="form-control" maxlength="99" name="firmname" required>
                             </div>
                             <?php
                             if($_SESSION['role'] == 1 || $_SESSION['role'] == -1){
@@ -817,8 +818,8 @@
                     $(".helpDesign, #helpDescription").hide();
                 },
                 "columnDefs": [
-                    { orderable: false, targets: -6 },
-                    { orderable: false, targets: -4 }
+                    { orderable: false, targets: -4 },
+                    { orderable: false, targets: -2 }
                 ],
                 "ajax": {
                     url: "clientListFetchAjax.php",
