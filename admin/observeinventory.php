@@ -173,9 +173,9 @@ table, th, td {
           
 
         <h4 class='text-center'>Observation Procedures</h4>
-         <div class="table-responsive">
+          <div class="table-responsive">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-    
+     -->
          <table class="table">
   <thead class="table-primary">
 <tr>
